@@ -231,11 +231,15 @@ end
 -- @treturn[1] material The cached material
 -- @treturn[2] nil If the material doesn't exist in the filesystem
 function ix.util.GetMaterial(materialPath, materialParameters)
+	local key = materialPath .. (materialParameters and materialParameters or "")
+	key = key:lower()
+	key = key:gsub("%W", "")
+
 	-- Cache the material.
 	ix.util.cachedMaterials = ix.util.cachedMaterials or {}
-	ix.util.cachedMaterials[materialPath] = ix.util.cachedMaterials[materialPath] or Material(materialPath, materialParameters)
+	ix.util.cachedMaterials[key] = ix.util.cachedMaterials[key] or Material(materialPath, materialParameters)
 
-	return ix.util.cachedMaterials[materialPath]
+	return ix.util.cachedMaterials[key]
 end
 
 --- Attempts to find a player by matching their name or Steam ID.
