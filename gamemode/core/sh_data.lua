@@ -28,7 +28,7 @@ function ix.data.Set(key, value, bGlobal, bIgnoreMap)
 	-- If we're not ignoring the map, create a folder for the map.
 	file.CreateDir(path)
 	-- Write the data using JSON encoding.
-	file.Write(path .. key .. ".txt", util.TableToJSON({value}))
+	file.Write(path .. key .. ".txt", util.TableToJSON({value}, true))
 
 	-- Cache the data value here.
 	ix.data.stored[key] = value
