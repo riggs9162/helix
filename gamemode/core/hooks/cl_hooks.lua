@@ -292,7 +292,7 @@ function GM:OnCharacterMenuCreated(panel)
 	end
 end
 
-local LOWERED_ANGLES = Angle(30, 0, -25)
+LOWERED_ANGLES = Angle(5, -5, -5)
 
 function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 	if (!IsValid(weapon)) then
