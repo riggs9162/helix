@@ -396,6 +396,10 @@ if (SERVER) then
 			entity:SetBodygroup(i, self:GetBodygroup(i))
 		end
 
+		for i = 0, 31 do
+			entity:SetSubMaterial(i, self:GetSubMaterial(i))
+		end
+
 		entity:Spawn()
 
 		if (!bDontSetPlayer) then
