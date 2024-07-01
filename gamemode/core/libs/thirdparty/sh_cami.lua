@@ -433,8 +433,7 @@ CAMI.GetPlayersWithAccess
 function CAMI.GetPlayersWithAccess(privilegeName, callback, targetPly,
 extraInfoTbl)
     local allowedPlys = {}
-    local allPlys = player.GetAll()
-    local countdown = #allPlys
+    local countdown = player.GetCount()
 
     local function onResult(ply, hasAccess, _)
         countdown = countdown - 1
@@ -443,7 +442,7 @@ extraInfoTbl)
         if countdown == 0 then callback(allowedPlys) end
     end
 
-    for _, ply in ipairs(allPlys) do
+    for _, ply in player.Iterator() do
         CAMI.PlayerHasAccess(ply, privilegeName,
             function(...) onResult(ply, ...) end,
             targetPly, extraInfoTbl)
