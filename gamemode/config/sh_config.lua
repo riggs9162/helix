@@ -1,4 +1,3 @@
-
 -- You can change the default language by setting this in your schema.
 ix.config.language = "english"
 
@@ -15,9 +14,9 @@ ix.config.Add("maxCharacters", 5, "The maximum number of characters a player can
 	data = {min = 1, max = 50},
 	category = "characters"
 })
-
-ix.config.Add("defaultFlags", "pte", "The default flags of character.", nil, {category = "characters"})
-
+ix.config.Add("defaultFlags", "", "The default flags of character.", nil, {
+	category = "characters"
+})
 ix.config.Add("color", Color(75, 119, 190, 255), "The main color theme for the framework.", function(oldValue, newValue)
 	if (newValue.a != 255) then
 		ix.config.Set("color", ColorAlpha(newValue, 255))
@@ -33,13 +32,11 @@ ix.config.Add("font", "Roboto Th", "The font used to display titles.", function(
 		hook.Run("LoadFonts", newValue, ix.config.Get("genericFont"))
 	end
 end, {category = "appearance"})
-
 ix.config.Add("genericFont", "Roboto", "The font used to display generic texts.", function(oldValue, newValue)
 	if (CLIENT) then
 		hook.Run("LoadFonts", ix.config.Get("font"), newValue)
 	end
 end, {category = "appearance"})
-
 ix.config.Add("maxAttributes", 100, "The maximum amount each attribute can be.", nil, {
 	data = {min = 0, max = 100},
 	category = "characters"
