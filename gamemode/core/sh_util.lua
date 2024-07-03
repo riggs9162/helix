@@ -287,6 +287,37 @@ function ix.util.StringMatches(a, b)
 	return false
 end
 
+--- A more extreme version of `ix.util.StringMatches` that will check all the words in both strings to see if they match. This
+-- function is useful for checking if a string is similar to another string, but not necessarily the same.
+-- @realm shared
+-- @string a First string to check
+-- @string b Second string to check
+-- @treturn bool Whether or not the strings are equivalent
+function ix.util.StringMatchesExtreme(a, b)
+	if (a and b) then
+		local a2, b2 = a:utf8lower(), b:utf8lower()
+
+		-- Check if the actual letters match.
+		if (a == b) then return true end
+		if (a2 == b2) then return true end
+
+		-- Be less strict and search.
+		if (a:find(b)) then return true end
+		if (a2:find(b2)) then return true end
+
+		-- Check if the words match.
+		for _, word in ipairs(string.Explode("%s", b)) do
+			if (a:find(word)) then return true end
+		end
+
+		for _, word in ipairs(string.Explode("%s", b2)) do
+			if (a2:find(word)) then return true end
+		end
+	end
+
+	return false
+end
+
 --- Returns a string that has the named arguments in the format string replaced with the given arguments.
 -- @realm shared
 -- @string format Format string
