@@ -377,7 +377,7 @@ local defaultAccessHandler = {["CAMI.PlayerHasAccess"] =
 }
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly,
 extraInfoTbl)
-    local hasAccess, reason = false, ""
+    local hasAccess, reason = nil, nil
     local callback_ = callback or function(hA, r) hasAccess, reason = hA, r end
 
     hook.Run("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
