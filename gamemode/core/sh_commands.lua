@@ -303,6 +303,7 @@ ix.command.Add("CharGiveItem", {
 
 		if (bSuccess) then
 			target:GetPlayer():NotifyLocalized("itemCreated")
+			hook.Run("OnPlayerItemGiven", target, uniqueID, amount)
 
 			if (target != client:GetCharacter()) then
 				return "@itemCreated"
