@@ -328,6 +328,10 @@ if (SERVER) then
 	-- end)
 	-- -- prints "Hello, <text>" in the player's chat
 	function meta:RequestString(title, subTitle, callback, default)
+		title = title or "Helix"
+		subTitle = subTitle or "String Request"
+		default = default or ""
+
 		local time = math.floor(os.time())
 
 		self.ixStrReqs = self.ixStrReqs or {}
