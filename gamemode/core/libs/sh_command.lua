@@ -517,6 +517,7 @@ if (SERVER) then
 
 			if (IsValid(client)) then
 				ix.log.Add(client, "command", COMMAND_PREFIX .. command.name, argumentsTable and table.concat(argumentsTable, " "))
+				hook.Run("PlayerRunCommand", client, command.name, argumentsTable)
 			end
 		else
 			client:Notify(feedback)

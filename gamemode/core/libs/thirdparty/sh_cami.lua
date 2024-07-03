@@ -99,7 +99,7 @@ CAMI.RegisterUsergroup
 function CAMI.RegisterUsergroup(usergroup, source)
     usergroups[usergroup.Name] = usergroup
 
-    hook.Call("CAMI.OnUsergroupRegistered", nil, usergroup, source)
+    hook.Run("CAMI.OnUsergroupRegistered", nil, usergroup, source)
     return usergroup
 end
 
@@ -130,7 +130,7 @@ function CAMI.UnregisterUsergroup(usergroupName, source)
     local usergroup = usergroups[usergroupName]
     usergroups[usergroupName] = nil
 
-    hook.Call("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
+    hook.Run("CAMI.OnUsergroupUnregistered", nil, usergroup, source)
 
     return true
 end
@@ -242,7 +242,7 @@ CAMI.RegisterPrivilege
 function CAMI.RegisterPrivilege(privilege)
     privileges[privilege.Name] = privilege
 
-    hook.Call("CAMI.OnPrivilegeRegistered", nil, privilege)
+    hook.Run("CAMI.OnPrivilegeRegistered", nil, privilege)
 
     return privilege
 end
@@ -269,7 +269,7 @@ function CAMI.UnregisterPrivilege(privilegeName)
     local privilege = privileges[privilegeName]
     privileges[privilegeName] = nil
 
-    hook.Call("CAMI.OnPrivilegeUnregistered", nil, privilege)
+    hook.Run("CAMI.OnPrivilegeUnregistered", nil, privilege)
 
     return true
 end
@@ -377,10 +377,10 @@ local defaultAccessHandler = {["CAMI.PlayerHasAccess"] =
 }
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly,
 extraInfoTbl)
-    local hasAccess, reason = nil, nil
+    local hasAccess, reason = false, ""
     local callback_ = callback or function(hA, r) hasAccess, reason = hA, r end
 
-    hook.Call("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
+    hook.Run("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
         privilegeName, callback_, targetPly, extraInfoTbl)
 
     if callback ~= nil then return end
@@ -492,7 +492,7 @@ CAMI.SteamIDHasAccess
 ]]
 function CAMI.SteamIDHasAccess(actorSteam, privilegeName, callback,
 targetSteam, extraInfoTbl)
-    hook.Call("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam,
+    hook.Run("CAMI.SteamIDHasAccess", defaultAccessHandler, actorSteam,
         privilegeName, callback, targetSteam, extraInfoTbl)
 end
 
@@ -519,7 +519,7 @@ CAMI.SignalUserGroupChanged
             Identifier for your own admin mod. Can be anything.
 ]]
 function CAMI.SignalUserGroupChanged(ply, old, new, source)
-    hook.Call("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
+    hook.Run("CAMI.PlayerUsergroupChanged", nil, ply, old, new, source)
 end
 
 --[[
@@ -545,5 +545,5 @@ CAMI.SignalSteamIDUserGroupChanged
             Identifier for your own admin mod. Can be anything.
 ]]
 function CAMI.SignalSteamIDUserGroupChanged(steamId, old, new, source)
-    hook.Call("CAMI.SteamIDUsergroupChanged", nil, steamId, old, new, source)
+    hook.Run("CAMI.SteamIDUsergroupChanged", nil, steamId, old, new, source)
 end
