@@ -48,6 +48,10 @@ do
 	end
 
 	function playerMeta:SaveData()
+		if (self:IsBot()) then
+			return
+		end
+		
 		local name = self:SteamName()
 		local steamID64 = self:SteamID64()
 
