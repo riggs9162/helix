@@ -166,7 +166,7 @@ local resetCalled = 0
 
 concommand.Add("ix_wipedb", function(client, cmd, arguments)
 	-- can only be ran through the server's console
-	if (!IsValid(client)) then
+	if (!IsValid(client) or client:IsListenServerHost()) then
 		if (resetCalled < RealTime()) then
 			resetCalled = RealTime() + 3
 
