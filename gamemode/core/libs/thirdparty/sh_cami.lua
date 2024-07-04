@@ -377,13 +377,17 @@ local defaultAccessHandler = {["CAMI.PlayerHasAccess"] =
 }
 function CAMI.PlayerHasAccess(actorPly, privilegeName, callback, targetPly,
 extraInfoTbl)
-    local hasAccess, reason = nil, nil
+    local hasAccess, reason = false, nil
     local callback_ = callback or function(hA, r) hasAccess, reason = hA, r end
 
     hook.Run("CAMI.PlayerHasAccess", defaultAccessHandler, actorPly,
         privilegeName, callback_, targetPly, extraInfoTbl)
 
     if callback ~= nil then return end
+
+    if ( hasAccess == nil ) then
+        hasAccess = false
+    end
 
     if hasAccess == nil then
         local err = [[The function CAMI.PlayerHasAccess was used to find out
