@@ -297,8 +297,13 @@ function ix.util.StringMatchesExtreme(a, b)
 	if (a and b) then
 		local a2, b2 = a:utf8lower(), b:utf8lower()
 
-		-- Check by using the normal method first.
-		if (ix.util.StringMatches(a, b)) then return true end
+		-- Check if the actual letters match.
+		if (a == b) then return true end
+		if (a2 == b2) then return true end
+
+		-- Be less strict and search.
+		if (a:find(b)) then return true end
+		if (a2:find(b2)) then return true end
 
 		-- Take apart the strings into tables of words.
 		for _, v in ipairs(string.Explode("%s", a2, true)) do
