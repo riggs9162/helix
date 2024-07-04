@@ -45,6 +45,8 @@ do
 				end
 			end)
 		query:Execute()
+
+		hook.Run("PlayerDataLoaded", self)
 	end
 
 	function playerMeta:SaveData()
@@ -61,6 +63,8 @@ do
 			query:Update("data", util.TableToJSON(self.ixData))
 			query:Where("steamid", steamID64)
 		query:Execute()
+
+		hook.Run("PlayerDataSaved", self)
 	end
 
 	function playerMeta:SetData(key, value, bNoNetworking)
@@ -73,6 +77,8 @@ do
 				net.WriteType(value)
 			net.Send(self)
 		end
+
+		hook.Run("PlayerDataUpdated", self, key, value)
 	end
 end
 
