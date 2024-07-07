@@ -88,7 +88,7 @@ if (SERVER) then
 
 	ix.log.AddType("playerHurt", function(client, ...)
 		local arg = {...}
-		return L("%s has taken %d damage from %s.", client:Name(), arg[1], arg[2])
+		return L("\"%s\" has taken \"%d\" damage from \"%s\" on the \"%s\" limb, leaving them with \"%d\" health.", client:Name(), arg[1], arg[2], arg[3], arg[4])
 	end, FLAG_WARNING)
 
 	ix.log.AddType("playerDeath", function(client, ...)

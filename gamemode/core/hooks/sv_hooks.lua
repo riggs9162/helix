@@ -668,6 +668,18 @@ function GM:GetPlayerPainSound(client)
 	end
 end
 
+local limbTranslator = {
+	[HITGROUP_LEFTLEG] = "left leg",
+	[HITGROUP_RIGHTLEG] = "right leg",
+	[HITGROUP_LEFTARM] = "left arm",
+	[HITGROUP_RIGHTARM] = "right arm",
+	[HITGROUP_HEAD] = "head",
+	[HITGROUP_CHEST] = "chest",
+	[HITGROUP_STOMACH] = "stomach",
+	[HITGROUP_GEAR] = "gear",
+	[HITGROUP_GENERIC] = "generic"
+}
+
 function GM:PlayerHurt(client, attacker, health, damage)
 	if ((client.ixNextPain or 0) < CurTime() and health > 0) then
 		local painSound = hook.Run("GetPlayerPainSound", client) or painSounds[math.random(1, #painSounds)]
@@ -680,7 +692,10 @@ function GM:PlayerHurt(client, attacker, health, damage)
 		client.ixNextPain = CurTime() + 0.33
 	end
 
-	ix.log.Add(client, "playerHurt", damage, attacker:GetName() ~= "" and attacker:GetName() or attacker:GetClass())
+	local hitGroup = client:LastHitGroup() or HITGROUP_GENERIC
+	local limb = limbTranslator[hitGroup] or "unknown"
+
+	ix.log.Add(client, "playerHurt", damage, attacker:GetName() ~= "" and attacker:GetName() or attacker:GetClass(), limb, health)
 end
 
 function GM:PlayerDeathThink(client)
