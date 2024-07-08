@@ -114,7 +114,13 @@ end
 -- @number identifier Index of the class
 -- @treturn table Class table
 function ix.class.Get(identifier)
-	return ix.class.list[identifier]
+	for _, v in ipairs(ix.class.list) do
+		if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or v.index == identifier) then
+			return v
+		end
+	end
+
+	return nil
 end
 
 --- Retrieves the players in a class
