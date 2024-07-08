@@ -159,7 +159,7 @@ function PANEL:Paint(width, height)
 	local bTransition = self.lastCharacter:GetModel() != errorModel
 	local modelFOV = (ScrW() > ScrH() * 1.8) and 92 or 70
 
-	cam.Start3D(self.cameraPosition, self.cameraAngle, modelFOV, x, y, width, height)
+	cam.Start3D(self.cameraPosition, self.cameraAngle, self.cameraFOV or modelFOV, x, y, width, height)
 		render.SuppressEngineLighting(true)
 		render.SetLightingOrigin(self.activeCharacter:GetPos())
 
