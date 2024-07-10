@@ -1,11 +1,10 @@
-
---[[--
+/*
 Helper library for loading/getting class information.
 
 Classes are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
 in your schema, and have "police recruit" and "police chief" as different classes in your faction. Anyone can join a class in
 their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
-]]
+*/
 // @module ix.class
 
 if (SERVER) then
@@ -91,18 +90,15 @@ function ix.class.CanSwitchTo(client, class)
         return false, "not correct team"
     end
 
-    if (client:GetCharacter():GetClass() == class) then
-        return false, "same class request"
-    end
-
     if (info.limit > 0) then
         if (#ix.class.GetPlayers(info.index) >= info.limit) then
             return false, "class is full"
         end
     end
 
-    if (hook.Run("CanPlayerJoinClass", client, class, info) == false) then
-        return false
+    local canJoin, reason = hook.Run("CanPlayerJoinClass", client, class, info)
+    if (canJoin == false) then
+        return canJoin, reason
     end
 
     // See if the class allows the player to join it.
@@ -131,8 +127,11 @@ function ix.class.GetPlayers(class)
     local players = {}
 
     for _, v in player.Iterator() do
-        local char = v:GetCharacter()
+        if not ( IsValid(v) ) then
+            continue
+        end
 
+        local char = v:GetCharacter()
         if (char and char:GetClass() == class) then
             table.insert(players, v)
         end
@@ -176,7 +175,7 @@ if (SERVER) then
 
         local goClass
 
-        for k, v in pairs(ix.class.list) do
+        for k, v in ipairs(ix.class.list) do
             if (v.faction == client:Team() and v.isDefault) then
                 goClass = k
 
