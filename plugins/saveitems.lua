@@ -13,7 +13,7 @@ PLUGIN.description = "Saves items that were dropped."
     function PLUGIN:ShouldDeleteSavedItems()
         return true
     end
-]]--
+*/
 
 // as title says.
 

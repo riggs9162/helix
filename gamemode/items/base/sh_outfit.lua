@@ -26,7 +26,7 @@ ITEM.bodyGroups = {
     ["blade"] = 1,
     ["bladeblur"] = 1
 }
-]]--
+*/
 
 // Inventory drawing
 if (CLIENT) then

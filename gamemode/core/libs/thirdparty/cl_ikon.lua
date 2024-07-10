@@ -36,11 +36,11 @@
     MUST -
             Include Copyright
             Include License
-]]--
+*/
 
 /*
     Default Tables.
-]]--
+*/
 
 ikon = ikon or {}
 ikon.cache = ikon.cache or {}
@@ -57,7 +57,7 @@ local schemaName = schemaName or (Schema and Schema.folder)
 /*
     Initialize hooks and RT Screens.
     returns nothing
-]]--
+*/
 function ikon:init()
     if (self.dev) then
         hook.Add("HUDPaint", "ikon_dev2", ikon.showResult)
@@ -68,7 +68,7 @@ function ikon:init()
     /*
         Being good at gmod is knowing all of stinky hacks
                                         - Black Tea (2017)
-    ]]--
+    */
     ikon.haloAdd = ikon.haloAdd or halo.Add
     function halo.Add(...)
         if (ikon.rendering != true) then
@@ -89,7 +89,7 @@ end
 
 /*
     IKON Library Essential Material/Texture Declare
-]]--
+*/
 
 local TEXTURE_FLAGS_CLAMP_S = 0x0004
 local TEXTURE_FLAGS_CLAMP_T = 0x0008
@@ -173,7 +173,7 @@ function ikon:renderHook()
 
             /*
                 Add more effects on the Models!
-            ]]--
+            */
             if (ikon.info and ikon.info.drawHook) then
                 ikon.info.drawHook(entity)
             end
@@ -212,7 +212,7 @@ function ikon:renderHook()
                 /*
                     Thanks for Noiwex
                     NxServ.eu
-                ]]--
+                */
                 cam.Start2D()
                     surface.SetMaterial(mat_outline)
                     surface.DrawTexturedRectUV(-2, 0, w, h, 0, 0, w / ikon.max, h / ikon.max)
@@ -246,7 +246,7 @@ end
 /*
     Renders the Icon with given arguments.
     returns nothing
-]]--
+*/
 function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     if (#ikon.requestList > 0) then return IKON_BUSY end
     if (ikon.requestList[name]) then return IKON_PROCESSING end
@@ -318,7 +318,7 @@ end
 /*
     Gets rendered icon with given unique name.
     returns IMaterial
-]]--
+*/
 function ikon:GetIcon(name)
     if (ikon.cache[name]) then
         return ikon.cache[name] // yeah return cache
