@@ -38,7 +38,7 @@ CAMI.Version = version
 local CAMI_PRIVILEGE = {}
 /// Optional function to check if a player has access to this privilege
 /// (and optionally execute it on another player)
----
+///
 /// ⚠ **Warning**: This function may not be called by all admin mods
 /// @param actor GPlayer @The player
 /// @param target GPlayer | nil @Optional - the target
@@ -74,7 +74,7 @@ local usergroups = CAMI.GetUsergroups and CAMI.GetUsergroups() or {
 local privileges = CAMI.GetPrivileges and CAMI.GetPrivileges() or {}
 
 /// Registers a usergroup with CAMI.
----
+///
 /// Use the source parameter to make sure CAMI.RegisterUsergroup function and
 /// the CAMI.OnUsergroupRegistered hook don't cause an infinite loop
 /// @param usergroup CAMI_USERGROUP @The structure for the usergroup you want to register
@@ -92,9 +92,9 @@ end
 
 /// Unregisters a usergroup from CAMI. This will call a hook that will notify
 /// all other admin mods of the removal.
----
+///
 /// ⚠ **Warning**: Call only when the usergroup is to be permanently removed.
----
+///
 /// Use the source parameter to make sure CAMI.UnregisterUsergroup function and
 /// the CAMI.OnUsergroupUnregistered hook don't cause an infinite loop
 /// @param usergroupName string @The name of the usergroup.
@@ -126,7 +126,7 @@ end
 
 /// Checks to see if potentialAncestor is an ancestor of usergroupName.
 /// All usergroups are ancestors of themselves.
----
+///
 /// Examples:
 /// * `user` is an ancestor of `admin` and also `superadmin`
 /// * `admin` is an ancestor of `superadmin`, but not `user`
@@ -149,11 +149,11 @@ function CAMI.UsergroupInherits(usergroupName, potentialAncestor)
 end
 
 /// Find the base group a usergroup inherits from.
----
+///
 /// This function traverses down the inheritence chain, so for example if you have
 /// `user` -> `group1` -> `group2`
 /// this function will return `user` if you pass it `group2`.
----
+///
 /// ℹ **NOTE**: All usergroups must eventually inherit either user, admin or superadmin.
 /// @param usergroupName string @The name of the usergroup
 /// @return "'user'" | "'admin'" | "'superadmin'" @The name of the root usergroup
@@ -169,7 +169,7 @@ function CAMI.InheritanceRoot(usergroupName)
 end
 
 /// Registers an addon privilege with CAMI.
----
+///
 /// ⚠ **Warning**: This should only be used by addons. Admin mods must *NOT*
 ///  register their privileges using this function.
 /// @param privilege CAMI_PRIVILEGE
@@ -184,7 +184,7 @@ end
 
 /// Unregisters a privilege from CAMI.
 /// This will call a hook that will notify any admin mods of the removal.
----
+///
 /// ⚠ **Warning**: Call only when the privilege is to be permanently removed.
 /// @param privilegeName string @The name of the privilege.
 /// @return boolean @Whether the unregistering succeeded.
@@ -253,10 +253,10 @@ local defaultAccessHandler = {["CAMI.PlayerHasAccess"] =
 
 /// Checks if a player has access to a privilege
 /// (and optionally can execute it on targetPly)
----
+///
 /// This function is designed to be asynchronous but will be invoked
 ///  synchronously if no callback is passed.
----
+///
 /// ⚠ **Warning**: If the currently installed admin mod does not support
 ///                 synchronous queries, this function will throw an error!
 /// @param actorPly GPlayer @The player to query
@@ -290,7 +290,7 @@ end
 
 /// Get all the players on the server with a certain privilege
 /// (and optionally who can execute it on targetPly)
----
+///
 /// ℹ **NOTE**: This is an asynchronous function!
 /// @param privilegeName string @The privilege to query
 /// @param callback fun(players: GPlayer[]) @Callback to receive the answer
@@ -322,7 +322,7 @@ end
 
 /// Checks if a (potentially offline) SteamID has access to a privilege
 /// (and optionally if they can execute it on a target SteamID)
----
+///
 /// ℹ **NOTE**: This is an asynchronous function!
 /// @param actorSteam string | nil @The SteamID to query
 /// @param privilegeName string @The privilege to query
@@ -338,7 +338,7 @@ end
 /// Signify that your admin mod has changed the usergroup of a player. This
 /// function communicates to other admin mods what it thinks the usergroup
 /// of a player should be.
----
+///
 /// Listen to the hook to receive the usergroup changes of other admin mods.
 /// @param ply GPlayer @The player for which the usergroup is changed
 /// @param old string @The previous usergroup of the player.
@@ -351,7 +351,7 @@ end
 /// Signify that your admin mod has changed the usergroup of a disconnected
 /// player. This communicates to other admin mods what it thinks the usergroup
 /// of a player should be.
----
+///
 /// Listen to the hook to receive the usergroup changes of other admin mods.
 /// @param steamId string @The steam ID of the player for which the usergroup is changed
 /// @param old string @The previous usergroup of the player.

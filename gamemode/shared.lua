@@ -6,7 +6,7 @@
 /// A table of variable types that are used throughout the framework. It represents types as a table with the keys being the
 // name of the type, and the values being some number value. **You should never directly use these number values!** Using the
 // values from this table will ensure backwards compatibility if the values in this table change.
---
+//
 // This table also contains the numerical values of the types as keys. This means that if you need to check if a type exists, or
 // if you need to get the name of a type, you can do a table lookup with a numerical value. Note that special types are not
 // included since they are not real types that can be compared with.
@@ -30,7 +30,7 @@
 // @usage // checking if type exists
 // print(ix.type[2] != nil)
 // > true
---
+//
 // // getting name of type
 // print(ix.type[ix.type.string])
 // > "string"

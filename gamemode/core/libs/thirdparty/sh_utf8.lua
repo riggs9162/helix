@@ -1,15 +1,15 @@
 // $Id: utf8.lua 179 2009-04-03 18:10:03Z pasta $
---
+//
 // Provides UTF-8 aware string functions implemented in pure lua:
 // * string.utf8len(s)
 // * string.utf8sub(s, i, j)
 // * string.utf8reverse(s)
---
+//
 // If utf8data.lua (containing the lower<->upper case mappings) is loaded, these
 // additional functions are available:
 // * string.utf8upper(s)
 // * string.utf8lower(s)
---
+//
 // All functions behave as their non UTF-8 aware counterparts with the exception
 // that UTF-8 characters are used instead of bytes for all units.
 
@@ -42,7 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 // ABNF from RFC 3629
---
+//
 // UTF8-octets = *( UTF8-char )
 // UTF8-char   = UTF8-1 / UTF8-2 / UTF8-3 / UTF8-4
 // UTF8-1      = %x00-7F
@@ -52,7 +52,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // UTF8-4      = %xF0 %x90-BF 2( UTF8-tail ) / %xF1-F3 3( UTF8-tail ) /
 //               %xF4 %x80-8F 2( UTF8-tail )
 // UTF8-tail   = %x80-BF
---
+//
 
 ix.util.Include("data/sh_utf8_casemap.lua")
 

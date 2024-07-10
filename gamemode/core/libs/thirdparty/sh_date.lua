@@ -336,10 +336,10 @@ THE SOFTWARE.
    local function date_parse(str)
     local y,m,d, h,r,s,  z,  w,u, j,  e,  k,  x,v,c,  chkfin,  dn,df;
     local sw = newstrwalker(gsub(gsub(str, "(%b())", ""),"^(%s*)","")) // remove comment, trim leading space
-    --local function error_out() print(y,m,d,h,r,s) end
-    local function error_dup(q) /*error_out()]] error("duplicate value: " .. (q or "") .. sw:aimchr()) end
-    local function error_syn(q) /*error_out()]] error("syntax error: " .. (q or "") .. sw:aimchr()) end
-    local function error_inv(q) /*error_out()]] error("invalid date: " .. (q or "") .. sw:aimchr()) end
+    local function error_out() print(y,m,d,h,r,s) end
+    local function error_dup(q) /*error_out()*/ error("duplicate value: " .. (q or "") .. sw:aimchr()) end
+    local function error_syn(q) /*error_out()*/ error("syntax error: " .. (q or "") .. sw:aimchr()) end
+    local function error_inv(q) /*error_out()*/ error("invalid date: " .. (q or "") .. sw:aimchr()) end
     local function sety(q) y = y and error_dup() or tonumber(q); end
     local function setm(q) m = (m or w or j) and error_dup(m or w or j) or tonumber(q) end
     local function setd(q) d = d and error_dup() or tonumber(q) end
