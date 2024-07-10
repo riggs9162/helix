@@ -1,4 +1,4 @@
---[[
+/*
     mysql - 1.0.3
     A simple MySQL wrapper for Garry's Mod.
 
@@ -27,7 +27,7 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
---*/
+*/
 
 mysql = mysql or {
     module = "sqlite"
@@ -37,9 +37,9 @@ local QueueTable = {}
 local tostring = tostring
 local table = table
 
---[[
+/*
     Replacement tables
---*/
+*/
 
 local Replacements = {
     sqlite = {
@@ -53,15 +53,15 @@ local Replacements = {
     }
 }
 
---[[
+/*
     Phrases
---*/
+*/
 
 local MODULE_NOT_EXIST = "[mysql] The %s module does not exist!\n"
 
---[[
+/*
     Begin Query Class.
---*/
+*/
 
 local QUERY_CLASS = {}
 QUERY_CLASS.__index = QUERY_CLASS
@@ -441,9 +441,9 @@ function QUERY_CLASS:Execute(bQueueQuery)
     end
 end
 
---[[
+/*
     End Query Class.
---*/
+*/
 
 function mysql:Select(tableName)
     return QUERY_CLASS:New(tableName, "SELECT")

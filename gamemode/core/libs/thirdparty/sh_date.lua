@@ -7,7 +7,7 @@
 // Licensed under MIT, http://opensource.org/licenses/MIT
 // https://github.com/Tieske/date
 
---[[
+/*
 The MIT License (MIT) http://opensource.org/licenses/MIT
 
 Copyright (c) 2013-2017 Thijs Schreijer
@@ -31,7 +31,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
---[[ CONSTANTS ]]--
+/* CONSTANTS ]]--
   local HOURPERDAY  = 24
   local MINPERHOUR  = 60
   local MINPERDAY    = 1440  // 24*60
@@ -46,7 +46,7 @@ THE SOFTWARE.
   local DAYNUM_MIN = -365242500 // Mon Jan 01 1000000 BCE 00:00:00
   local DAYNUM_DEF =  0 // Mon Jan 01 0001 00:00:00
   local _;
---[[ LOCAL ARE FASTER ]]--
+/* LOCAL ARE FASTER ]]--
   local type     = type
   local pairs    = pairs
   local error    = error
@@ -60,7 +60,7 @@ THE SOFTWARE.
   local pack     = table.pack or function(...) return { n = select('#', ...), ... } end
   local setmetatable = setmetatable
   local getmetatable = getmetatable
---[[ EXTRA FUNCTIONS ]]--
+/* EXTRA FUNCTIONS ]]--
   local fmt  = string.format
   local lwr  = string.lower
   local upr  = string.upper
@@ -97,7 +97,7 @@ THE SOFTWARE.
   end
   local function fnil() end
   local function fret(x)return x;end
---[[ DATE FUNCTIONS ]]--
+/* DATE FUNCTIONS ]]--
   local DATE_EPOCH // to be set later
   local sl_weekdays = {
     [0]="Sunday",[1]="Monday",[2]="Tuesday",[3]="Wednesday",[4]="Thursday",[5]="Friday",[6]="Saturday",
@@ -153,7 +153,7 @@ THE SOFTWARE.
     local mi = floor((100*d + 52)/3060)
     return (floor((mi + 2)/12) + y), mod(mi + 2,12), (d - floor((mi*306 + 5)/10) + 1)
   end
-  --[[ for floats or int32 Lua Number data type
+  /* for floats or int32 Lua Number data type
   local function breakdaynum2(g)
     local g, n = g + 306;
     local n400 = floor(g/DI400Y);n = mod(g,DI400Y);
@@ -222,7 +222,7 @@ THE SOFTWARE.
   local function makedaynum_isoywd(y,w,d)
     return isow1(y) + 7*w + d - 8 // simplified: isow1(y) + ((w-1)*7) + (d-1)
   end
---[[ THE DATE MODULE ]]--
+/* THE DATE MODULE ]]--
   local fmtstr  = "%x %X";
 --#if not DATE_OBJECT_AFX then
   local date = {}
@@ -230,7 +230,7 @@ THE SOFTWARE.
 // Version:  VMMMRRRR; V-Major, M-Minor, R-Revision;  e.g. 5.45.321 == 50450321
   date.version = 20010001 // 2.1.1
 --#end // not DATE_OBJECT_AFX
---[[ THE DATE OBJECT ]]--
+/* THE DATE OBJECT ]]--
   local dobj = {}
   dobj.__index = dobj
   dobj.__metatable = dobj
@@ -337,9 +337,9 @@ THE SOFTWARE.
     local y,m,d, h,r,s,  z,  w,u, j,  e,  k,  x,v,c,  chkfin,  dn,df;
     local sw = newstrwalker(gsub(gsub(str, "(%b())", ""),"^(%s*)","")) // remove comment, trim leading space
     --local function error_out() print(y,m,d,h,r,s) end
-    local function error_dup(q) --[[error_out()]] error("duplicate value: " .. (q or "") .. sw:aimchr()) end
-    local function error_syn(q) --[[error_out()]] error("syntax error: " .. (q or "") .. sw:aimchr()) end
-    local function error_inv(q) --[[error_out()]] error("invalid date: " .. (q or "") .. sw:aimchr()) end
+    local function error_dup(q) /*error_out()]] error("duplicate value: " .. (q or "") .. sw:aimchr()) end
+    local function error_syn(q) /*error_out()]] error("syntax error: " .. (q or "") .. sw:aimchr()) end
+    local function error_inv(q) /*error_out()]] error("invalid date: " .. (q or "") .. sw:aimchr()) end
     local function sety(q) y = y and error_dup() or tonumber(q); end
     local function setm(q) m = (m or w or j) and error_dup(m or w or j) or tonumber(q) end
     local function setd(q) d = d and error_dup() or tonumber(q) end
@@ -439,7 +439,7 @@ THE SOFTWARE.
     end
   end
 
- --[[ THE DATE OBJECT METHODS ]]--
+ /* THE DATE OBJECT METHODS ]]--
   function dobj:normalize()
     local dn, df = fix(self.daynum), self.dayfrc
     self.daynum, self.dayfrc = dn + floor(df/TICKSPERDAY), mod(df, TICKSPERDAY)
@@ -684,7 +684,7 @@ THE SOFTWARE.
 
   function dobj:copy() return date_new(self.daynum, self.dayfrc) end
 
---[[ THE LOCAL DATE OBJECT METHODS ]]--
+/* THE LOCAL DATE OBJECT METHODS ]]--
   function dobj:tolocal()
     local dn,df = self.daynum, self.dayfrc
     local bias  = getbiasutc2(self)

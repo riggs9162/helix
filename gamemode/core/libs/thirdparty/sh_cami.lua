@@ -1,4 +1,4 @@
---[[
+/*
 CAMI - Common Admin Mod Interface.
 Copyright 2020 CAMI Contributors
 
@@ -279,7 +279,7 @@ extraInfoTbl)
     if hasAccess == nil then
         local err = [[The function CAMI.PlayerHasAccess was used to find out
         whether Player %s has privilege "%s", but an admin mod did not give an
-        immediate answer!*/
+        immediate answer!]]
         error(string.format(err,
             actorPly:IsPlayer() and actorPly:Nick() or tostring(actorPly),
             privilegeName))

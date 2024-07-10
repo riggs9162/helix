@@ -13,7 +13,7 @@ SWEP.Author = "Chessnut"
 SWEP.Instructions = [[Primary Fire: Throw/Punch
 Secondary Fire: Knock/Pickup
 Secondary Fire + Mouse: Rotate Object
-Reload: Drop*/
+Reload: Drop]]
 SWEP.Purpose = "Hitting things and knocking on doors."
 SWEP.Drop = false
 

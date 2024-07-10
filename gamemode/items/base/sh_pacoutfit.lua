@@ -8,7 +8,7 @@ ITEM.height = 1
 ITEM.outfitCategory = "hat"
 ITEM.pacData = {}
 
---[[
+/*
 ITEM.pacData = {
     [1] = {
         ["children"] = {
@@ -52,7 +52,7 @@ ITEM.bodyGroups = {
     ["bladeblur"] = 1
 }
 
---*/
+*/
 
 // Inventory drawing
 if (CLIENT) then

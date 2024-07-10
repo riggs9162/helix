@@ -46,7 +46,7 @@ local colourmap = {
     ["ltturq"] =    {    r=128,    g=255,    b=255,    a=255    },
 }
 
---[[
+/*
     Name: colourMatch(c)
     Desc: Match a colour name to an rgb value.
    Usage: ** INTERNAL ** Do not use!
@@ -57,7 +57,7 @@ local function colourMatch(c)
     return colourmap[c]
 end
 
---[[
+/*
     Name: ExtractParams(p1,p2,p3)
     Desc: This function is used to extract the tag information.
    Usage: ** INTERNAL ** Do not use!
@@ -123,7 +123,7 @@ local function ExtractParams(p1,p2,p3)
     end
 end
 
---[[
+/*
     Name: CheckTextOrTag(p)
     Desc: This function places data in the "blocks" table
           depending of if p is a tag, or some text
@@ -146,7 +146,7 @@ local function CheckTextOrTag(p)
     end
 end
 
---[[
+/*
     Name: ProcessMatches(p1,p2,p3)
     Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
    Usage: ** INTERNAL ** Do not use!
@@ -159,7 +159,7 @@ end
 
 local MarkupObject = {}
 
---[[
+/*
     Name: MarkupObject:Create()
     Desc: Called by Parse. Creates a new table, and setups the
           metatable.
@@ -173,7 +173,7 @@ function MarkupObject:create()
     return o
 end
 
---[[
+/*
     Name: MarkupObject:GetWidth()
     Desc: Returns the width of a markup block
    Usage: ml:GetWidth()
@@ -182,7 +182,7 @@ function MarkupObject:GetWidth()
     return self.totalWidth
 end
 
---[[
+/*
     Name: MarkupObject:GetHeight()
     Desc: Returns the height of a markup block
    Usage: ml:GetHeight()
@@ -195,7 +195,7 @@ function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
 
---[[
+/*
     Name: MarkupObject:Draw(xOffset, yOffset, halign, valign, alphaoverride)
     Desc: Draw the markup text to the screen as position
           xOffset, yOffset. Halign and Valign can be used
@@ -249,7 +249,7 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     end
 end
 
---[[
+/*
     Name: Parse(ml, maxwidth)
     Desc: Parses the pseudo-html markup language, and creates a
           MarkupObject, which can be used to the draw the

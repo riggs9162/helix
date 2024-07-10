@@ -293,13 +293,13 @@ ix.command.Add("DoorSetTitle", {
                 return "@invalidArg", 1
             end
 
-            --[[
+            /*
                 NOTE: Here, we are setting two different networked names.
                 The title is a temporary name, while the other name is the
                 default name for the door. The reason for this is so when the
                 server closes while someone owns the door, it doesn't save THEIR
                 title, which could lead to unwanted things.
-            --*/
+            */
 
             name = name:utf8sub(1, 24)
 

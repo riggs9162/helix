@@ -1,4 +1,4 @@
---[[
+/*
     BLACK TEA ICON LIBRARY FOR NUTSCRIPT 1.1
 
     The MIT License (MIT)
@@ -38,7 +38,7 @@
             Include License
 ]]--
 
---[[
+/*
     Default Tables.
 ]]--
 
@@ -54,7 +54,7 @@ IKON_SOMETHINGWRONG = -1
 
 local schemaName = schemaName or (Schema and Schema.folder)
 
---[[
+/*
     Initialize hooks and RT Screens.
     returns nothing
 ]]--
@@ -65,7 +65,7 @@ function ikon:init()
         hook.Remove("HUDPaint", "ikon_dev2")
     end
 
-    --[[
+    /*
         Being good at gmod is knowing all of stinky hacks
                                         - Black Tea (2017)
     ]]--
@@ -87,7 +87,7 @@ function ikon:init()
     file.CreateDir("helix/icons/" .. schemaName)
 end
 
---[[
+/*
     IKON Library Essential Material/Texture Declare
 ]]--
 
@@ -171,7 +171,7 @@ function ikon:renderHook()
                 render.SetStencilFailOperation(STENCILOPERATION_REPLACE)
             end
 
-            --[[
+            /*
                 Add more effects on the Models!
             ]]--
             if (ikon.info and ikon.info.drawHook) then
@@ -209,7 +209,7 @@ function ikon:renderHook()
                 render.SetBlend(1)
                 render.SetStencilCompareFunction(STENCILCOMPARISONFUNCTION_NOTEQUAL)
 
-                --[[
+                /*
                     Thanks for Noiwex
                     NxServ.eu
                 ]]--
@@ -243,7 +243,7 @@ function ikon:showResult()
     surface.DrawTexturedRect(x, 0, w, h)
 end
 
---[[
+/*
     Renders the Icon with given arguments.
     returns nothing
 ]]--
@@ -315,7 +315,7 @@ function ikon:renderIcon(name, w, h, mdl, camInfo, updateCache)
     return true
 end
 
---[[
+/*
     Gets rendered icon with given unique name.
     returns IMaterial
 ]]--

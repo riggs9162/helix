@@ -1,14 +1,14 @@
 // You can change the default language by setting this in your schema.
 ix.config.language = "english"
 
---[[
+/*
     DO NOT CHANGE ANYTHING BELOW THIS.
 
     This is the Helix main configuration file.
     This file DOES NOT set any configurations, instead it just prepares them.
     To set the configuration, there is a "Config" tab in the F1 menu for super admins and above.
     Use the menu to change the variables, not this file.
---*/
+*/
 
 ix.config.Add("maxCharacters", 5, "The maximum number of characters a player can have.", nil, {
     data = {min = 1, max = 50},

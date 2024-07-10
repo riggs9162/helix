@@ -1,4 +1,4 @@
---[[
+/*
 DEVELOPMENTAL VERSION;
 VERSION 1.2.2
 Copyright thelastpenguin™

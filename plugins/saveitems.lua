@@ -3,7 +3,7 @@ PLUGIN.name = "Save Items"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "Saves items that were dropped."
 
---[[
+/*
     function PLUGIN:OnSavedItemLoaded(items)
         for k, v in ipairs(items) do
             // do something

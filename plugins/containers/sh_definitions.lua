@@ -1,4 +1,4 @@
---[[
+/*
     ix.container.Register(model, {
         name = "Crate",
         description = "A simple wooden create.",
