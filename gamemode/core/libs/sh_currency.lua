@@ -1,5 +1,5 @@
 
--// A library representing the server's currency system.
+/// A library representing the server's currency system.
 // @module ix.currency
 
 ix.currency = ix.currency or {}
@@ -8,7 +8,7 @@ ix.currency.singular = ix.currency.singular or "dollar"
 ix.currency.plural = ix.currency.plural or "dollars"
 ix.currency.model = ix.currency.model or "models/props_lab/box01a.mdl"
 
--// Sets the currency type.
+/// Sets the currency type.
 // @realm shared
 // @string symbol The symbol of the currency.
 // @string singular The name of the currency in it's singular form.
@@ -21,7 +21,7 @@ function ix.currency.Set(symbol, singular, plural, model)
     ix.currency.model = model
 end
 
--// Returns a formatted string according to the current currency.
+/// Returns a formatted string according to the current currency.
 // @realm shared
 // @number amount The amount of cash being formatted.
 // @treturn string The formatted string.
@@ -33,7 +33,7 @@ function ix.currency.Get(amount)
     end
 end
 
--// Spawns an amount of cash at a specific location on the map.
+/// Spawns an amount of cash at a specific location on the map.
 // @realm shared
 // @vector pos The position of the money to be spawned.
 // @number amount The amount of cash being spawned.

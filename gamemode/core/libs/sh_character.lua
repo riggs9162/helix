@@ -9,7 +9,7 @@ character data using these functions!
 
 ix.char = ix.char or {}
 
--// Characters that are currently loaded into memory. This is **not** a table of characters that players are currently using.
+/// Characters that are currently loaded into memory. This is **not** a table of characters that players are currently using.
 // Characters are automatically loaded when a player joins the server. Entries are not cleared once the player disconnects, as
 // some data is needed after the player has disconnected. Clients will also keep their own version of this table, so don't
 // expect it to be the same as the server's.
@@ -21,14 +21,14 @@ ix.char = ix.char or {}
 // > character[1]
 ix.char.loaded = ix.char.loaded or {}
 
--// Variables that are stored on characters. This table is populated automatically by `ix.char.RegisterVar`.
+/// Variables that are stored on characters. This table is populated automatically by `ix.char.RegisterVar`.
 // @realm shared
 // @table ix.char.vars
 // @usage print(ix.char.vars["name"])
 // > table: 0xdeadbeef
 ix.char.vars = ix.char.vars or {}
 
--// Functions similar to `ix.char.loaded`, but is serverside only. This contains a table of all loaded characters grouped by
+/// Functions similar to `ix.char.loaded`, but is serverside only. This contains a table of all loaded characters grouped by
 // the SteamID64 of the player that owns them.
 // @realm server
 // @table ix.char.cache
@@ -37,7 +37,7 @@ ix.char.cache = ix.char.cache or {}
 ix.util.Include("helix/gamemode/core/meta/sh_character.lua")
 
 if (SERVER) then
-    -// Creates a character object with its assigned properties and saves it to the database.
+    /// Creates a character object with its assigned properties and saves it to the database.
     // @realm server
     // @tab data Properties to assign to this character. If fields are missing from the table, then it will use the default
     // value for that property
@@ -88,7 +88,7 @@ if (SERVER) then
         query:Execute()
     end
 
-    -// Loads all of a player's characters into memory.
+    /// Loads all of a player's characters into memory.
     // @realm server
     // @player client Player to load the characters for
     // @func[opt=nil] callback Function to call when the characters have been loaded
@@ -221,7 +221,7 @@ if (SERVER) then
         query:Execute()
     end
 
-    -// Adds character properties to a table. This is done automatically by `ix.char.Restore`, so that should be used instead if
+    /// Adds character properties to a table. This is done automatically by `ix.char.Restore`, so that should be used instead if
     // you are loading characters.
     // @realm server
     // @internal
@@ -269,7 +269,7 @@ if (SERVER) then
     end
 end
 
--// Creates a new empty `Character` object. If you are looking to create a usable character, see `ix.char.Create`.
+/// Creates a new empty `Character` object. If you are looking to create a usable character, see `ix.char.Create`.
 // @realm shared
 // @internal
 // @tab data Character vars to assign
@@ -309,15 +309,15 @@ function ix.char.HookVar(varName, hookName, func)
 end
 
 do
-    -// Default character vars
+    /// Default character vars
     // @classmod Character
 
-    -// Sets this character's name. This is automatically networked.
+    /// Sets this character's name. This is automatically networked.
     // @realm server
     // @string name New name for the character
     // @function SetName
 
-    -// Returns this character's name
+    /// Returns this character's name
     // @realm shared
     // @treturn string This character's current name
     // @function GetName
@@ -365,12 +365,12 @@ do
         end
     })
 
-    -// Sets this character's physical description. This is automatically networked.
+    /// Sets this character's physical description. This is automatically networked.
     // @realm server
     // @string description New description for this character
     // @function SetDescription
 
-    -// Returns this character's physical description.
+    /// Returns this character's physical description.
     // @realm shared
     // @treturn string This character's current description
     // @function GetDescription
@@ -404,13 +404,13 @@ do
         alias = "Desc"
     })
 
-    -// Sets this character's model. This sets the player's current model to the given one, and saves it to the character.
+    /// Sets this character's model. This sets the player's current model to the given one, and saves it to the character.
     // It is automatically networked.
     // @realm server
     // @string model New model for the character
     // @function SetModel
 
-    -// Returns this character's model.
+    /// Returns this character's model.
     // @realm shared
     // @treturn string This character's current model
     // @function GetModel
@@ -523,7 +523,7 @@ do
 
     // SetClass shouldn't be used here, character:JoinClass should be used instead
 
-    -// Returns this character's current class.
+    /// Returns this character's current class.
     // @realm shared
     // @treturn number Index of the class this character is in
     // @function GetClass
@@ -531,13 +531,13 @@ do
         bNoDisplay = true,
     })
 
-    -// Sets this character's faction. Note that this doesn't do the initial setup for the player after the faction has been
+    /// Sets this character's faction. Note that this doesn't do the initial setup for the player after the faction has been
     // changed, so you'll have to update some character vars manually.
     // @realm server
     // @number faction Index of the faction to transfer this character to
     // @function SetFaction
 
-    -// Returns this character's faction.
+    /// Returns this character's faction.
     // @realm shared
     // @treturn number Index of the faction this character is currently in
     // @function GetFaction
@@ -675,12 +675,12 @@ do
         end
     })
 
-    -// Sets this character's current money. Money is only networked to the player that owns this character.
+    /// Sets this character's current money. Money is only networked to the player that owns this character.
     // @realm server
     // @number money New amount of money this character should have
     // @function SetMoney
 
-    -// Returns this character's money. This is only valid on the server and the owning client.
+    /// Returns this character's money. This is only valid on the server and the owning client.
     // @realm shared
     // @treturn number Current money of this character
     // @function GetMoney
@@ -692,7 +692,7 @@ do
         bNoDisplay = true
     })
 
-    -// Sets a data field on this character. This is useful for storing small bits of data that you need persisted on this
+    /// Sets a data field on this character. This is useful for storing small bits of data that you need persisted on this
     // character. This is networked only to the owning client. If you are going to be accessing this data field frequently with
     // a getter/setter, consider using `ix.char.RegisterVar` instead.
     // @realm server
@@ -700,7 +700,7 @@ do
     // @param value Any value to store in the field, as long as it's supported by GMod's JSON parser
     // @function SetData
 
-    -// Returns a data field set on this character. If it doesn't exist, it will return the given default or `nil`. This is only
+    /// Returns a data field set on this character. If it doesn't exist, it will return the given default or `nil`. This is only
     // valid on the server and the owning client.
     // @realm shared
     // @string key Name of the field that's holding the data
@@ -792,7 +792,7 @@ do
         end
     })
 
-    -// Returns the Unix timestamp of when this character was created (i.e the value of `os.time()` at the time of creation).
+    /// Returns the Unix timestamp of when this character was created (i.e the value of `os.time()` at the time of creation).
     // @realm server
     // @treturn number Unix timestamp of when this character was created
     // @function GetCreateTime
@@ -804,7 +804,7 @@ do
         bNotModifiable = true
     })
 
-    -// Returns the Unix timestamp of when this character was last used by its owning player.
+    /// Returns the Unix timestamp of when this character was last used by its owning player.
     // @realm server
     // @treturn number Unix timestamp of when this character was last used
     // @function GetLastJoinTime
@@ -817,7 +817,7 @@ do
         bSaveLoadInitialOnly = true
     })
 
-    -// Returns the schema that this character belongs to. This is useful if you are running multiple schemas off of the same
+    /// Returns the schema that this character belongs to. This is useful if you are running multiple schemas off of the same
     // database, and need to differentiate between them.
     // @realm server
     // @treturn string Schema this character belongs to
@@ -831,7 +831,7 @@ do
         bSaveLoadInitialOnly = true
     })
 
-    -// Returns the 64-bit Steam ID of the player that owns this character.
+    /// Returns the 64-bit Steam ID of the player that owns this character.
     // @realm server
     // @treturn string Owning player's Steam ID
     // @function GetSteamID
@@ -1201,13 +1201,13 @@ do
 end
 
 do
-    -// Character util functions for player
+    /// Character util functions for player
     // @classmod Player
 
     local playerMeta = FindMetaTable("Player")
     playerMeta.SteamName = playerMeta.SteamName or playerMeta.Name
 
-    -// Returns this player's currently possessed `Character` object if it exists.
+    /// Returns this player's currently possessed `Character` object if it exists.
     // @realm shared
     // @treturn[1] Character Currently loaded character
     // @treturn[2] nil If this player has no character loaded
@@ -1217,7 +1217,7 @@ do
 
     playerMeta.GetChar = playerMeta.GetCharacter
 
-    -// Returns this player's current name.
+    /// Returns this player's current name.
     // @realm shared
     // @treturn[1] string Name of this player's currently loaded character
     // @treturn[2] string Steam name of this player if the player has no character loaded

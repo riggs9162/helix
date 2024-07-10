@@ -21,7 +21,7 @@ ix.date.start = ix.date.start or CurTime() // arbitrary start time for calculati
 if (SERVER) then
     util.AddNetworkString("ixDateSync")
 
-    -// Loads the date from disk.
+    /// Loads the date from disk.
     // @realm server
     // @internal
     function ix.date.Initialize()
@@ -46,7 +46,7 @@ if (SERVER) then
         ix.date.current = ix.date.lib.construct(currentDate)
     end
 
-    -// Updates the internal in-game date/time representation and resets the offset.
+    /// Updates the internal in-game date/time representation and resets the offset.
     // @realm server
     // @internal
     function ix.date.ResolveOffset()
@@ -54,7 +54,7 @@ if (SERVER) then
         ix.date.start = CurTime()
     end
 
-    -// Updates the time scale of the in-game date/time. The time scale is given in seconds per minute (i.e how many real life
+    /// Updates the time scale of the in-game date/time. The time scale is given in seconds per minute (i.e how many real life
     // seconds it takes for an in-game minute to pass). You should avoid using this function and use the in-game config menu to
     // change the time scale instead.
     // @realm server
@@ -65,7 +65,7 @@ if (SERVER) then
         ix.date.timeScale = secondsPerMinute
     end
 
-    -// Sends the current date to a player. This is done automatically when the player joins the server.
+    /// Sends the current date to a player. This is done automatically when the player joins the server.
     // @realm server
     // @internal
     // @player[opt=nil] client Player to send the date to, or `nil` to send to everyone
@@ -83,7 +83,7 @@ if (SERVER) then
         end
     end
 
-    -// Saves the current in-game date to disk.
+    /// Saves the current in-game date to disk.
     // @realm server
     // @internal
     function ix.date.Save()
@@ -111,7 +111,7 @@ else
     end)
 end
 
--// Returns the currently set date.
+/// Returns the currently set date.
 // @realm shared
 // @treturn date Current in-game date
 function ix.date.Get()
@@ -120,7 +120,7 @@ function ix.date.Get()
     return ix.date.current:copy():addminutes(minutesSinceStart)
 end
 
--// Returns a string formatted version of a date.
+/// Returns a string formatted version of a date.
 // @realm shared
 // @string format Format string
 // @date[opt=nil] currentDate Date to format. If nil, it will use the currently set date
@@ -129,7 +129,7 @@ function ix.date.GetFormatted(format, currentDate)
     return (currentDate or ix.date.Get()):fmt(format)
 end
 
--// Returns a serialized version of a date. This is useful when you need to network a date to clients, or save a date to disk.
+/// Returns a serialized version of a date. This is useful when you need to network a date to clients, or save a date to disk.
 // @realm shared
 // @date[opt=nil] currentDate Date to serialize. If nil, it will use the currently set date
 // @treturn table Serialized date
@@ -137,7 +137,7 @@ function ix.date.GetSerialized(currentDate)
     return ix.date.lib.serialize(currentDate or ix.date.Get())
 end
 
--// Returns a date object from a table or serialized date.
+/// Returns a date object from a table or serialized date.
 // @realm shared
 // @param currentDate Date to construct
 // @treturn date Constructed date object

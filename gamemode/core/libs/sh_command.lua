@@ -7,7 +7,7 @@ restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-co
 ]]
 // @module ix.command
 
--// When registering commands with `ix.command.Add`, you'll need to pass in a valid command structure. This is simply a table
+/// When registering commands with `ix.command.Add`, you'll need to pass in a valid command structure. This is simply a table
 // with various fields defined to describe the functionality of the command.
 // @realm shared
 // @table CommandStructure
@@ -40,7 +40,7 @@ restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-co
 --
 // Keep in mind that this is a **SHARED** callback; the command will not show up the client if the callback returns `false`.
 
--// Rather than checking the validity for arguments in your command's `OnRun` function, you can have Helix do it for you to
+/// Rather than checking the validity for arguments in your command's `OnRun` function, you can have Helix do it for you to
 // reduce the amount of boilerplate code that needs to be written. This can be done by populating the `arguments` field.
 --
 // When using the `arguments` field in your command, you are specifying specific types that you expect to receive when the
@@ -148,7 +148,7 @@ local function ArgumentCheckStub(command, client, given)
     return result
 end
 
--// Creates a new command.
+/// Creates a new command.
 // @realm shared
 // @string command Name of the command (recommended in UpperCamelCase)
 // @tparam CommandStructure data Data describing the command
@@ -305,7 +305,7 @@ function ix.command.Add(command, data)
     ix.command.list[command] = data
 end
 
--// Returns true if a player is allowed to run a certain command.
+/// Returns true if a player is allowed to run a certain command.
 // @realm shared
 // @player client Player to check access for
 // @string command Name of the command to check access for
@@ -324,7 +324,7 @@ function ix.command.HasAccess(client, command)
     return false
 end
 
--// Returns a table of arguments from a given string.
+/// Returns a table of arguments from a given string.
 // Words separated by spaces will be considered one argument. To have an argument containing multiple words, they must be
 // contained within quotation marks.
 // @realm shared
@@ -373,7 +373,7 @@ function ix.command.ExtractArgs(text)
     return arguments
 end
 
--// Returns an array of potential commands by unique id.
+/// Returns an array of potential commands by unique id.
 // When bSorted is true, the commands will be sorted by name. When bReorganize is true, it will move any exact match to the top
 // of the array. When bRemoveDupes is true, it will remove any commands that have the same NAME.
 // @realm shared
@@ -434,7 +434,7 @@ end
 if (SERVER) then
     util.AddNetworkString("ixCommand")
 
-    -// Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
+    /// Attempts to find a player by an identifier. If unsuccessful, a notice will be displayed to the specified player. The
     // search criteria is derived from `ix.util.FindPlayer`.
     // @realm server
     // @player client Player to give a notification to if the player could not be found
@@ -452,7 +452,7 @@ if (SERVER) then
         end
     end
 
-    -// Forces a player to execute a command by name.
+    /// Forces a player to execute a command by name.
     // @realm server
     // @player client Player who is executing the command
     // @string command Full name of the command to be executed. This string gets lowered, but it's good practice to stick with
@@ -524,7 +524,7 @@ if (SERVER) then
         end
     end
 
-    -// Parses a chat string and runs the command if one is found. Specifically, it checks for commands in a string with the
+    /// Parses a chat string and runs the command if one is found. Specifically, it checks for commands in a string with the
     // format `/CommandName some arguments`
     // @realm server
     // @player client Player who is executing the command
@@ -600,7 +600,7 @@ if (SERVER) then
         end
     end)
 else
-    -// Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
+    /// Request the server to run a command. This mimics similar functionality to the client typing `/CommandName` in the chatbox.
     // @realm client
     // @string command Unique ID of the command
     // @param ... Arguments to pass to the command

@@ -564,7 +564,7 @@ end
 
 vgui.Register("ixSlider", PANEL, "EditablePanel")
 
--// Alternative to DLabel that adds extra functionality.
+/// Alternative to DLabel that adds extra functionality.
 // This panel is meant for drawing single-line text. It can add extra kerning (spaces between letters), and it can forcefully
 // scale the text down to fit the current width, without cutting off any letters. Text scaling is most useful when docking this
 // this panel without knowing what the width could be. For example, text scaling is used for the character name in the character
@@ -581,92 +581,92 @@ vgui.Register("ixSlider", PANEL, "EditablePanel")
 // @panel ixLabel
 PANEL = {}
 
--// Sets the text for this label to display.
+/// Sets the text for this label to display.
 // @realm client
 // @string text Text to display
 // @function SetText
 
--// Returns the current text for this panel.
+/// Returns the current text for this panel.
 // @realm client
 // @treturn string Current text
 // @function GetText
 AccessorFunc(PANEL, "text", "Text", FORCE_STRING)
 
--// Sets the color of the text to use when drawing.
+/// Sets the color of the text to use when drawing.
 // @realm client
 // @color color New color to use
 // @function SetTextColor
 
--// Returns the current text color for this panel.
+/// Returns the current text color for this panel.
 // @realm client
 // @treturn color Current text color
 // @function GetTextColor
 AccessorFunc(PANEL, "color", "TextColor")
 
--// Sets the color of the background to draw behind the text.
+/// Sets the color of the background to draw behind the text.
 // @realm client
 // @color color New color to use
 // @function SetBackgroundColor
 
--// Returns the current background color for this panel.
+/// Returns the current background color for this panel.
 // @realm client
 // @treturn color Current background color
 // @function GetBackgroundColor
 AccessorFunc(PANEL, "backgroundColor", "BackgroundColor")
 
--// Sets the spacing between each character of the text in pixels. Set to `0` to disable. Kerning is disabled by default.
+/// Sets the spacing between each character of the text in pixels. Set to `0` to disable. Kerning is disabled by default.
 // @realm client
 // @number kerning How far apart to draw each letter
 // @function SetKerning
 
--// Returns the current kerning for this panel.
+/// Returns the current kerning for this panel.
 // @realm client
 // @treturn number Current kerning
 // @function GetKerning
 AccessorFunc(PANEL, "kerning", "Kerning", FORCE_NUMBER)
 
--// Sets the font used to draw the text.
+/// Sets the font used to draw the text.
 // @realm client
 // @string font Name of the font to use
 // @function SetFont
 
--// Returns the current font for this panel.
+/// Returns the current font for this panel.
 // @realm client
 // @treturn string Name of current font
 // @function GetFont
 AccessorFunc(PANEL, "font", "Font", FORCE_STRING)
 
--// Changes how the text is aligned when drawing. Valid content alignment values include numbers `1` through `9`. Each number's
+/// Changes how the text is aligned when drawing. Valid content alignment values include numbers `1` through `9`. Each number's
 // corresponding alignment is based on its position on a numpad. For example, `1` is bottom-left, `5` is centered, `9` is
 // top-right, etc.
 // @realm client
 // @number alignment Alignment to use
 // @function SetContentAlignment
 
--// Returns the current content alignment for this panel.
+/// Returns the current content alignment for this panel.
 // @realm client
 // @treturn number Current content alignment
 // @function GetContentAlignment
 AccessorFunc(PANEL, "contentAlignment", "ContentAlignment", FORCE_NUMBER)
 
--// Whether or not to scale the width of the text down to fit the width of this panel, if needed.
+/// Whether or not to scale the width of the text down to fit the width of this panel, if needed.
 // @realm client
 // @bool bScale Whether or not to scale
 // @function SetScaleWidth
 
--// Returns whether or not this panel will scale its text down to fit its width.
+/// Returns whether or not this panel will scale its text down to fit its width.
 // @realm client
 // @treturn bool Whether or not this panel will scale its text
 // @function GetScaleWidth
 AccessorFunc(PANEL, "bScaleWidth", "ScaleWidth", FORCE_BOOL)
 
--// How much spacing to use around the text when its drawn. This uses uniform padding on the top, left, right, and bottom of
+/// How much spacing to use around the text when its drawn. This uses uniform padding on the top, left, right, and bottom of
 // this panel.
 // @realm client
 // @number padding Padding to use
 // @function SetPadding
 
--// Returns how much padding this panel has around its text.
+/// Returns how much padding this panel has around its text.
 // @realm client
 // @treturn number Current padding
 // @function GetPadding
@@ -696,7 +696,7 @@ function PANEL:SetFont(font)
     self.scaledFont = font
 end
 
--// Sets the drop shadow to draw behind the text.
+/// Sets the drop shadow to draw behind the text.
 // @realm client
 // @number distance How far away to draw the shadow in pixels. Set to `0` to disable
 // @color[opt] color Color of the shadow. Defaults to a dimmed version of the text color
@@ -707,7 +707,7 @@ end
 
 PANEL.SetExpensiveShadow = PANEL.SetDropShadow // aliasing for easier conversion from DLabels
 
--// Returns the X and Y location of the text taking into account the text alignment and padding.
+/// Returns the X and Y location of the text taking into account the text alignment and padding.
 // @realm client
 // @internal
 // @number width Width of the panel
@@ -751,7 +751,7 @@ function PANEL:CalculateAlignment(width, height, textWidth, textHeight)
     return x, y
 end
 
--// Draws the current text with the current kerning.
+/// Draws the current text with the current kerning.
 // @realm client
 // @internal
 // @number width Width of the panel
@@ -782,7 +782,7 @@ function PANEL:DrawKernedText(width, height)
     end
 end
 
--// Draws the current text.
+/// Draws the current text.
 // @realm client
 // @internal
 // @number width Width of the panel
@@ -845,7 +845,7 @@ function PANEL:Paint(width, height)
     end
 end
 
--// Returns the size of the text, taking into account the current kerning.
+/// Returns the size of the text, taking into account the current kerning.
 // @realm client
 // @bool[opt=false] bCalculate Whether or not to recalculate the content size instead of using the cached copy
 // @treturn number Width of the text
@@ -871,7 +871,7 @@ function PANEL:GetContentSize(bCalculate)
     return self.contentSize[1], self.contentSize[2]
 end
 
--// Sets the size of the panel to fit the content size with the current padding. The content size is recalculated when this
+/// Sets the size of the panel to fit the content size with the current padding. The content size is recalculated when this
 // method is called.
 // @realm client
 function PANEL:SizeToContents()

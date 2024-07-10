@@ -12,7 +12,7 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local meta = FindMetaTable("Player")
 
 if (SERVER) then
-    -// Returns the amount of time the player has played on the server.
+    /// Returns the amount of time the player has played on the server.
     // @realm shared
     // @treturn number Number of seconds the player has played on the server
     function meta:GetPlayTime()
@@ -26,14 +26,14 @@ else
     end
 end
 
--// Returns `true` if the player has their weapon raised.
+/// Returns `true` if the player has their weapon raised.
 // @realm shared
 // @treturn bool Whether or not the player has their weapon raised
 function meta:IsWepRaised()
     return self:GetNetVar("raised", false)
 end
 
--// Returns `true` if the player is restricted - that is to say that they are considered "bound" and cannot interact with
+/// Returns `true` if the player is restricted - that is to say that they are considered "bound" and cannot interact with
 // objects normally (e.g hold weapons, use items, etc). An example of this would be a player in handcuffs.
 // @realm shared
 // @treturn bool Whether or not the player is restricted
@@ -41,7 +41,7 @@ function meta:IsRestricted()
     return self:GetNetVar("restricted", false)
 end
 
--// Returns `true` if the player is able to shoot their weapon.
+/// Returns `true` if the player is able to shoot their weapon.
 // @realm shared
 // @treturn bool Whether or not the player can shoot their weapon
 function meta:CanShootWeapon()
@@ -50,7 +50,7 @@ end
 
 local vectorLength2D = FindMetaTable("Vector").Length2D
 
--// Returns `true` if the player is running. Running in this case means that their current speed is greater than their
+/// Returns `true` if the player is running. Running in this case means that their current speed is greater than their
 // regularly set walk speed.
 // @realm shared
 // @treturn bool Whether or not the player is running
@@ -58,7 +58,7 @@ function meta:IsRunning()
     return vectorLength2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
--// Returns `true` if the player currently has a female model. This checks if the model has `female`, `alyx` or `mossman` in its
+/// Returns `true` if the player currently has a female model. This checks if the model has `female`, `alyx` or `mossman` in its
 // name, or if the player's model class is `citizen_female`.
 // @realm shared
 // @treturn bool Whether or not the player has a female model
@@ -69,7 +69,7 @@ function meta:IsFemale()
         ix.anim.GetModelClass(model) == "citizen_female"
 end
 
--// Whether or not this player is stuck and cannot move.
+/// Whether or not this player is stuck and cannot move.
 // @realm shared
 // @treturn bool Whether or not this player is stuck
 function meta:IsStuck()
@@ -80,7 +80,7 @@ function meta:IsStuck()
     }, self).StartSolid
 end
 
--// Returns a good position in front of the player for an entity to be placed. This is usually used for item entities.
+/// Returns a good position in front of the player for an entity to be placed. This is usually used for item entities.
 // @realm shared
 // @entity entity Entity to get a position for
 // @treturn vector Best guess for a good drop position in front of the player
@@ -114,7 +114,7 @@ function meta:GetItemDropPos(entity)
     return trace.HitPos
 end
 
--// Performs a time-delay action that requires this player to look at an entity. If this player looks away from the entity
+/// Performs a time-delay action that requires this player to look at an entity. If this player looks away from the entity
 // before the action timer completes, the action is cancelled. This is usually used in conjunction with `SetAction` to display
 // progress to the player.
 // @realm shared
@@ -158,7 +158,7 @@ function meta:DoStaredAction(entity, callback, time, onCancel, distance)
     end)
 end
 
--// Resets all bodygroups this player's model has to their defaults (`0`).
+/// Resets all bodygroups this player's model has to their defaults (`0`).
 // @realm shared
 function meta:ResetBodygroups()
     for i = 0, (self:GetNumBodyGroups() - 1) do
@@ -171,7 +171,7 @@ if (SERVER) then
     util.AddNetworkString("ixActionBarReset")
     util.AddNetworkString("ixStringRequest")
 
-    -// Sets whether or not this player's current weapon is raised.
+    /// Sets whether or not this player's current weapon is raised.
     // @realm server
     // @bool bState Whether or not the raise the weapon
     // @entity[opt=GetActiveWeapon()] weapon Weapon to raise or lower. You should pass this argument if you already have a
@@ -201,7 +201,7 @@ if (SERVER) then
         end
     end
 
-    -// Inverts this player's weapon raised state. You should use `SetWepRaised` instead of this if you already have a reference
+    /// Inverts this player's weapon raised state. You should use `SetWepRaised` instead of this if you already have a reference
     // to this player's current weapon.
     // @realm server
     function meta:ToggleWepRaised()
@@ -222,7 +222,7 @@ if (SERVER) then
         end
     end
 
-    -// Performs a delayed action that requires this player to hold use on an entity. This is displayed to this player as a
+    /// Performs a delayed action that requires this player to hold use on an entity. This is displayed to this player as a
     // closing ring over their crosshair.
     // @realm server
     // @number time How much time in seconds this player has to hold use for
@@ -261,7 +261,7 @@ if (SERVER) then
         end
     end
 
-    -// Displays a progress bar for this player that takes the given amount of time to complete.
+    /// Displays a progress bar for this player that takes the given amount of time to complete.
     // @realm server
     // @string text Text to display above the progress bar
     // @number[opt=5] time How much time in seconds to wait before the timer completes
@@ -316,7 +316,7 @@ if (SERVER) then
         end
     end
 
-    -// Opens up a text box on this player's screen for input and returns the result. Remember to sanitize the user's input if
+    /// Opens up a text box on this player's screen for input and returns the result. Remember to sanitize the user's input if
     // it's needed!
     // @realm server
     // @string title Title to display on the panel
@@ -345,7 +345,7 @@ if (SERVER) then
         net.Send(self)
     end
 
-    -// Sets this player's restricted status.
+    /// Sets this player's restricted status.
     // @realm server
     // @bool bState Whether or not to restrict this player
     // @bool bNoMessage Whether or not to suppress the restriction notification
@@ -384,7 +384,7 @@ if (SERVER) then
         end
     end
 
-    -// Creates a ragdoll entity of this player that will be synced with clients. This does **not** affect the player like
+    /// Creates a ragdoll entity of this player that will be synced with clients. This does **not** affect the player like
     // `SetRagdolled` does.
     // @realm server
     // @bool[opt=false] bDontSetPlayer Whether or not to avoid setting the ragdoll's owning player
@@ -435,7 +435,7 @@ if (SERVER) then
         return entity
     end
 
-    -// Sets this player's ragdoll status.
+    /// Sets this player's ragdoll status.
     // @realm server
     // @bool bState Whether or not to ragdoll this player
     // @number[opt=0] time How long this player should stay ragdolled for. Set to `0` if they should stay ragdolled until they

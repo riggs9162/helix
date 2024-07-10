@@ -1,5 +1,5 @@
 
--// Helper library for reading/writing files to the data folder.
+/// Helper library for reading/writing files to the data folder.
 // @module ix.data
 
 ix.data = ix.data or {}
@@ -8,7 +8,7 @@ ix.data.stored = ix.data.stored or {}
 // Create a folder to store data in.
 file.CreateDir("helix")
 
--// Populates a file in the `data/helix` folder with some serialized data.
+/// Populates a file in the `data/helix` folder with some serialized data.
 // @realm shared
 // @string key Name of the file to save
 // @param value Some sort of data to save
@@ -36,7 +36,7 @@ function ix.data.Set(key, value, bGlobal, bIgnoreMap)
     return path
 end
 
--// Retrieves the contents of a saved file in the `data/helix` folder.
+/// Retrieves the contents of a saved file in the `data/helix` folder.
 // @realm shared
 // @string key Name of the file to load
 // @param default Value to return if the file could not be loaded successfully
@@ -88,7 +88,7 @@ function ix.data.Get(key, default, bGlobal, bIgnoreMap, bRefresh)
     return default
 end
 
--// Deletes the contents of a saved file in the `data/helix` folder.
+/// Deletes the contents of a saved file in the `data/helix` folder.
 // @realm shared
 // @string key Name of the file to delete
 // @bool[opt=false] bGlobal Whether or not the data is in the `data/helix` folder, or the `data/helix/schema` folder,

@@ -17,7 +17,7 @@ ix.class.list = {}
 
 local charMeta = ix.meta.character
 
--// Loads classes from a directory.
+/// Loads classes from a directory.
 // @realm shared
 // @internal
 // @string directory The path to the class files.
@@ -72,7 +72,7 @@ function ix.class.LoadFromDir(directory)
     end
 end
 
--// Determines if a player is allowed to join a specific class.
+/// Determines if a player is allowed to join a specific class.
 // @realm shared
 // @player client Player to check
 // @number class Index of the class
@@ -109,7 +109,7 @@ function ix.class.CanSwitchTo(client, class)
     return info:CanSwitchTo(client)
 end
 
--// Retrieves a class table.
+/// Retrieves a class table.
 // @realm shared
 // @number identifier Index of the class
 // @treturn table Class table
@@ -123,7 +123,7 @@ function ix.class.Get(identifier)
     return nil
 end
 
--// Retrieves the players in a class
+/// Retrieves the players in a class
 // @realm shared
 // @number class Index of the class
 // @treturn table Table of players in the class
@@ -142,10 +142,10 @@ function ix.class.GetPlayers(class)
 end
 
 if (SERVER) then
-    -// Character class methods
+    /// Character class methods
     // @classmod Character
 
-    -// Makes this character join a class. This automatically calls `KickClass` for you.
+    /// Makes this character join a class. This automatically calls `KickClass` for you.
     // @realm server
     // @number class Index of the class to join
     // @treturn bool Whether or not the character has successfully joined the class
@@ -168,7 +168,7 @@ if (SERVER) then
         return false
     end
 
-    -// Kicks this character out of the class they are currently in.
+    /// Kicks this character out of the class they are currently in.
     // @realm server
     function charMeta:KickClass()
         local client = self:GetPlayer()

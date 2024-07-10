@@ -353,7 +353,7 @@ ix.anim.fastZombie = {
 
 local translations = {}
 
--// Sets a model's animation class.
+/// Sets a model's animation class.
 // @realm shared
 // @string model Model name to set the animation class for
 // @string class Animation class to assign to the model
@@ -366,7 +366,7 @@ function ix.anim.SetModelClass(model, class)
     translations[model:lower()] = class
 end
 
--// Gets a model's animation class.
+/// Gets a model's animation class.
 // @realm shared
 // @string model Model to get the animation class for
 // @treturn[1] string Animation class of the model
@@ -412,10 +412,10 @@ if (SERVER) then
 
     local playerMeta = FindMetaTable("Player")
 
-    -// Player anim methods
+    /// Player anim methods
     // @classmod Player
 
-    -// Forces this player's model to play an animation sequence. It also prevents the player from firing their weapon while the
+    /// Forces this player's model to play an animation sequence. It also prevents the player from firing their weapon while the
     // animation is playing.
     // @realm server
     // @string sequence Name of the animation sequence to play
@@ -477,7 +477,7 @@ if (SERVER) then
         return false
     end
 
-    -// Forcefully stops this player's model from playing an animation that was started by `ForceSequence`.
+    /// Forcefully stops this player's model from playing an animation that was started by `ForceSequence`.
     // @realm server
     function playerMeta:LeaveSequence()
         hook.Run("PlayerLeaveSequence", self)

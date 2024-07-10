@@ -53,10 +53,10 @@ function SetNetVar(key, value, receiver) // luacheck: globals SetNetVar
     end
 end
 
--// Player networked variable functions
+/// Player networked variable functions
 // @classmod Player
 
--// Synchronizes networked variables to the client.
+/// Synchronizes networked variables to the client.
 // @realm server
 // @internal
 function playerMeta:SyncVars()
@@ -89,7 +89,7 @@ function playerMeta:SyncVars()
     end
 end
 
--// Retrieves a local networked variable. If it is not set, it'll return the default that you've specified.
+/// Retrieves a local networked variable. If it is not set, it'll return the default that you've specified.
 // Locally networked variables can only be retrieved from the owning player when used from the client.
 // @realm shared
 // @string key Identifier of the local variable
@@ -106,7 +106,7 @@ function playerMeta:GetLocalVar(key, default)
     return default
 end
 
--// Sets the value of a local networked variable.
+/// Sets the value of a local networked variable.
 // @realm server
 // @string key Identifier of the local variable
 // @param value New value to assign to the local variable
@@ -124,10 +124,10 @@ function playerMeta:SetLocalVar(key, value)
     net.Send(self)
 end
 
--// Entity networked variable functions
+/// Entity networked variable functions
 // @classmod Entity
 
--// Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
+/// Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
 // @realm shared
 // @string key Identifier of the networked variable
 // @param default Default value to return if the networked variable is not set
@@ -143,7 +143,7 @@ function entityMeta:GetNetVar(key, default)
     return default
 end
 
--// Sets the value of a networked variable.
+/// Sets the value of a networked variable.
 // @realm server
 // @string key Identifier of the networked variable
 // @param value New value to assign to the networked variable
@@ -162,7 +162,7 @@ function entityMeta:SetNetVar(key, value, receiver)
     self:SendNetVar(key, receiver)
 end
 
--// Sends a networked variable.
+/// Sends a networked variable.
 // @realm server
 // @internal
 // @string key Identifier of the networked variable
@@ -180,7 +180,7 @@ function entityMeta:SendNetVar(key, receiver)
     end
 end
 
--// Clears all of the networked variables.
+/// Clears all of the networked variables.
 // @realm server
 // @internal
 // @tab[opt=nil] receiver The players to clear the networked variable for

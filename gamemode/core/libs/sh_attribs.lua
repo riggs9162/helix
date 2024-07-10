@@ -40,14 +40,14 @@ function ix.attributes.Setup(client)
 end
 
 do
-    -// Character attribute methods
+    /// Character attribute methods
     // @classmod Character
     local charMeta = ix.meta.character
 
     if (SERVER) then
         util.AddNetworkString("ixAttributeUpdate")
 
-        -// Increments one of this character's attributes by the given amount.
+        /// Increments one of this character's attributes by the given amount.
         // @realm server
         // @string key Name of the attribute to update
         // @number value Amount to add to the attribute
@@ -78,7 +78,7 @@ do
             hook.Run("CharacterAttributeUpdated", client, self, key, value)
         end
 
-        -// Sets the value of an attribute for this character.
+        /// Sets the value of an attribute for this character.
         // @realm server
         // @string key Name of the attribute to update
         // @number value New value for the attribute
@@ -109,7 +109,7 @@ do
             hook.Run("CharacterAttributeUpdated", client, self, key, value)
         end
 
-        -// Temporarily increments one of this character's attributes. Useful for things like consumable items.
+        /// Temporarily increments one of this character's attributes. Useful for things like consumable items.
         // @realm server
         // @string boostID Unique ID to use for the boost to remove it later
         // @string attribID Name of the attribute to boost
@@ -125,7 +125,7 @@ do
             return self:SetVar("boosts", boosts, nil, self:GetPlayer())
         end
 
-        -// Removes a temporary boost from this character.
+        /// Removes a temporary boost from this character.
         // @realm server
         // @string boostID Unique ID of the boost to remove
         // @string attribID Name of the attribute that was boosted
@@ -153,7 +153,7 @@ do
         end)
     end
 
-    -// Returns all boosts that this character has for the given attribute. This is only valid on the server and owning client.
+    /// Returns all boosts that this character has for the given attribute. This is only valid on the server and owning client.
     // @realm shared
     // @string attribID Name of the attribute to find boosts for
     // @treturn[1] table Table of boosts that this character has for the attribute
@@ -164,14 +164,14 @@ do
         return boosts[attribID]
     end
 
-    -// Returns all boosts that this character has. This is only valid on the server and owning client.
+    /// Returns all boosts that this character has. This is only valid on the server and owning client.
     // @realm shared
     // @treturn table Table of boosts this character has
     function charMeta:GetBoosts()
         return self:GetVar("boosts", {})
     end
 
-    -// Returns the current value of an attribute. This is only valid on the server and owning client.
+    /// Returns the current value of an attribute. This is only valid on the server and owning client.
     // @realm shared
     // @string key Name of the attribute to get
     // @number default Value to return if the attribute doesn't exist

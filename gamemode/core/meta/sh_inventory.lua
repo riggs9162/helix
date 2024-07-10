@@ -32,7 +32,7 @@ META.h = META.h or 4
 META.vars = META.vars or {}
 META.receivers = META.receivers or {}
 
--// Returns a string representation of this inventory
+/// Returns a string representation of this inventory
 // @realm shared
 // @treturn string String representation
 // @usage print(ix.item.inventories[1])
@@ -41,7 +41,7 @@ function META:__tostring()
     return "inventory["..(self.id or 0).."]"
 end
 
--// Initializes the inventory with the provided arguments.
+/// Initializes the inventory with the provided arguments.
 // @realm shared
 // @internal
 // @number id The `Inventory`'s database ID.
@@ -57,14 +57,14 @@ function META:Initialize(id, width, height)
     self.receivers = {}
 end
 
--// Returns this inventory's database ID. This is guaranteed to be unique.
+/// Returns this inventory's database ID. This is guaranteed to be unique.
 // @realm shared
 // @treturn number Unique ID of inventory
 function META:GetID()
     return self.id or 0
 end
 
--// Sets the grid size of this inventory.
+/// Sets the grid size of this inventory.
 // @realm shared
 // @internal
 // @number width New width of inventory
@@ -74,7 +74,7 @@ function META:SetSize(width, height)
     self.h = height
 end
 
--// Returns the grid size of this inventory.
+/// Returns the grid size of this inventory.
 // @realm shared
 // @treturn number Width of inventory
 // @treturn number Height of inventory
@@ -96,7 +96,7 @@ function META:Print(printPos)
 end
 
 
--// Searches the inventory to find any stacked items.
+/// Searches the inventory to find any stacked items.
 // A common problem with developing, is that items will sometimes error out, or get corrupt.
 // Sometimes, the server knows things you don't while developing live
 // This function can be helpful for getting rid of those pesky errors.
@@ -122,7 +122,7 @@ function META:FindError()
     end
 end
 
--// Prints out the id, width, height, slots and each item in each slot of an `Inventory`, used for debugging.
+/// Prints out the id, width, height, slots and each item in each slot of an `Inventory`, used for debugging.
 // @realm shared
 function META:PrintAll()
     print("------------------------")
@@ -145,7 +145,7 @@ function META:PrintAll()
     print("------------------------")
 end
 
--// Returns the player that owns this inventory.
+/// Returns the player that owns this inventory.
 // @realm shared
 // @treturn[1] Player Owning player
 // @treturn[2] nil If no connected player owns this inventory
@@ -157,7 +157,7 @@ function META:GetOwner()
     end
 end
 
--// Sets the player that owns this inventory.
+/// Sets the player that owns this inventory.
 // @realm shared
 // @player owner The player to take control over the inventory.
 // @bool fullUpdate Whether or not to update the inventory immediately to the new owner.
@@ -188,7 +188,7 @@ function META:SetOwner(owner, fullUpdate)
     self.owner = owner
 end
 
--// Checks whether a player has access to an inventory
+/// Checks whether a player has access to an inventory
 // @realm shared
 // @internal
 // @player client Player to check access for
@@ -206,7 +206,7 @@ function META:OnCheckAccess(client)
     return bAccess
 end
 
--// Checks whether or not an `Item` can fit into the `Inventory` starting from `x` and `y`.
+/// Checks whether or not an `Item` can fit into the `Inventory` starting from `x` and `y`.
 // Internally used by FindEmptySlot, in most cases you are better off using that.
 // This function will search if all of the slots within `x + width` and `y + width` are empty,
 // ignoring any space the `Item` itself already occupies.
@@ -245,7 +245,7 @@ function META:CanItemFit(x, y, w, h, item2)
 end
 
 
--// Returns the amount of slots currently filled in the Inventory.
+/// Returns the amount of slots currently filled in the Inventory.
 // @realm shared
 // @treturn number The amount of slots currently filled.
 function META:GetFilledSlotCount()
@@ -262,7 +262,7 @@ function META:GetFilledSlotCount()
     return count
 end
 
--// Finds an empty slot of a specified width and height.
+/// Finds an empty slot of a specified width and height.
 // In most cases, to check if an `Item` can actually fit in the `Inventory`,
 // as if it can't, it will just return `nil`.
 --
@@ -315,7 +315,7 @@ function META:FindEmptySlot(w, h, onlyMain)
     end
 end
 
--// Returns the item that currently exists within `x` and `y` in the `Inventory`.
+/// Returns the item that currently exists within `x` and `y` in the `Inventory`.
 // Items that have a width or height greater than 0 occupy more than 1 x and y.
 // @realm shared
 // @number x The `x` coordindate to search in.
@@ -328,7 +328,7 @@ function META:GetItemAt(x, y)
     end
 end
 
--// Removes an item from the inventory.
+/// Removes an item from the inventory.
 // @realm shared
 // @number id The item instance ID to remove
 // @bool[opt=false] bNoReplication Whether or not the item's removal should not be replicated
@@ -387,7 +387,7 @@ function META:Remove(id, bNoReplication, bNoDelete, bTransferring)
     return x2, y2
 end
 
--// Adds a player as a receiver on this `Inventory`
+/// Adds a player as a receiver on this `Inventory`
 // Receivers are players who will be networked the items inside the inventory.
 --
 // Calling this will *not* automatically sync it's current contents to the client.
@@ -400,7 +400,7 @@ function META:AddReceiver(client)
     self.receivers[client] = true
 end
 
--// The opposite of `AddReceiver`.
+/// The opposite of `AddReceiver`.
 // This function does not check the validity of `client`, therefore if `client` doesn't exist, it will error.
 // @realm shared
 // @player client The player to remove from the receiver list.
@@ -408,7 +408,7 @@ function META:RemoveReceiver(client)
     self.receivers[client] = nil
 end
 
--// Get all of the receivers this `Inventory` has.
+/// Get all of the receivers this `Inventory` has.
 // Receivers are players who will be networked the items inside the inventory.
 --
 // This function will automatically sort out invalid players for you.
@@ -428,7 +428,7 @@ function META:GetReceivers()
     return result
 end
 
--// Returns a count of a *specific* `Item`s in the `Inventory`
+/// Returns a count of a *specific* `Item`s in the `Inventory`
 // @realm shared
 // @string uniqueID The Unique ID of the item.
 // @bool onlyMain Whether or not to exclude bags that are present from the search.
@@ -454,7 +454,7 @@ function META:GetItemCount(uniqueID, onlyMain)
     return i
 end
 
--// Returns a table of all `Item`s in the `Inventory` by their Unique ID.
+/// Returns a table of all `Item`s in the `Inventory` by their Unique ID.
 // Not to be confused with `GetItemsByID` or `GetItemByID` which take in an Item Instance's ID instead.
 // @realm shared
 // @string uniqueID The Unique ID of the item.
@@ -472,7 +472,7 @@ function META:GetItemsByUniqueID(uniqueID, onlyMain)
     return items
 end
 
--// Returns a table of `Item`s by their base.
+/// Returns a table of `Item`s by their base.
 // @realm shared
 // @string baseID The base to search for.
 // @bool bOnlyMain Whether or not to exclude bags that are present from the search.
@@ -488,7 +488,7 @@ function META:GetItemsByBase(baseID, bOnlyMain)
     return items
 end
 
--// Get an item by it's specific Database ID.
+/// Get an item by it's specific Database ID.
 // @realm shared
 // @number id The ID to search for.
 // @bool onlyMain Whether or not to exclude bags that are present from the search.
@@ -501,7 +501,7 @@ function META:GetItemByID(id, onlyMain)
     end
 end
 
--// Get a table of `Item`s by their specific Database ID.
+/// Get a table of `Item`s by their specific Database ID.
 // It's important to note that while in 99% of cases,
 // items will have a unique Database ID, developers or random GMod weirdness could
 // cause a second item with the same ID to appear, even though, `ix.item.instances` will only store one of those.
@@ -524,7 +524,7 @@ end
 
 // This function may pretty heavy.
 
--// Returns a table of all the items that an `Inventory` has.
+/// Returns a table of all the items that an `Inventory` has.
 // @realm shared
 // @bool onlyMain Whether or not to exclude bags from this search.
 // @treturn table The items this `Inventory` has.
@@ -555,7 +555,7 @@ function META:GetItems(onlyMain)
     return items
 end
 
--// Returns an iterator that returns all contained items, a better way to iterate items than `pairs(inventory:GetItems())`
+/// Returns an iterator that returns all contained items, a better way to iterate items than `pairs(inventory:GetItems())`
 // @realm shared
 // @treturn function iterator
 function META:Iter()
@@ -581,7 +581,7 @@ function META:Iter()
 end
 
 // This function may pretty heavy.
--// Returns a table of all the items that an `Inventory` has.
+/// Returns a table of all the items that an `Inventory` has.
 // @realm shared
 // @bool onlyMain Whether or not to exclude bags from this search.
 // @treturn table The items this `Inventory` has.
@@ -603,7 +603,7 @@ function META:GetBags()
 
     return invs
 end
--// Returns the item with the given unique ID (e.g `"handheld_radio"`) if it exists in this inventory.
+/// Returns the item with the given unique ID (e.g `"handheld_radio"`) if it exists in this inventory.
 // This method checks both
 // this inventory, and any bags that this inventory has inside of it.
 // @realm shared
@@ -646,7 +646,7 @@ function META:HasItem(targetID, data)
     return false
 end
 
--// Checks whether or not the `Inventory` has a table of items.
+/// Checks whether or not the `Inventory` has a table of items.
 // This function takes a table with **no** keys and runs in order of first item > last item,
 --this is due to the usage of the `#` operator in the function.
 --
@@ -678,7 +678,7 @@ function META:HasItems(targetIDs)
     return count <= 0, targetIDs
 end
 
--// Whether or not an `Inventory` has an item of a base, optionally with specified data.
+/// Whether or not an `Inventory` has an item of a base, optionally with specified data.
 // This function has an optional `data` argument, which will take a `table`.
 // it will match if the data of the item is correct or not.
 --
@@ -723,7 +723,7 @@ function META:HasItemOfBase(baseID, data)
 end
 
 if (SERVER) then
-    -// Sends a specific slot to a character.
+    /// Sends a specific slot to a character.
     // This will *not* send all of the slots of the `Item` to the character, items can occupy multiple slots.
     --
     // This will call `OnSendData` on the Item using all of the `Inventory`'s receivers.
@@ -757,7 +757,7 @@ if (SERVER) then
         end
     end
 
-    -// Sets whether  or not an `Inventory` should save.
+    /// Sets whether  or not an `Inventory` should save.
     // This will prevent an `Inventory` from updating in the Database, if the inventory is already saved,
     // it will not be deleted when unloaded.
     // @realm server
@@ -766,7 +766,7 @@ if (SERVER) then
         self.noSave = bNoSave
     end
 
-    -// Gets whether or not an `Inventory` should save.
+    /// Gets whether or not an `Inventory` should save.
     // Inventories that are marked to not save will not update in the Database, if they inventory is already saved,
     // it will not be deleted when unloaded.
     // @realm server
@@ -776,7 +776,7 @@ if (SERVER) then
         return self.noSave or true
     end
 
-    -// Add an item to the inventory.
+    /// Add an item to the inventory.
     // @realm server
     // @param uniqueID The item unique ID (e.g `"handheld_radio"`) or instance ID (e.g `1024`) to add to the inventory
     // @number[opt=1] quantity The quantity of the item to add
@@ -936,7 +936,7 @@ if (SERVER) then
         end
     end
 
-    -// Syncs the `Inventory` to the receiver.
+    /// Syncs the `Inventory` to the receiver.
     // This will call Item.OnSendData on every item in the `Inventory`.
     // @realm server
     // @player receiver The player to

@@ -308,7 +308,7 @@ function ix.plugin.SetUnloaded(uniqueID, state, bNoSave)
 end
 
 if (SERVER) then
-    -// Runs the `LoadData` and `PostLoadData` hooks for the gamemode, schema, and plugins. Any plugins that error during the
+    /// Runs the `LoadData` and `PostLoadData` hooks for the gamemode, schema, and plugins. Any plugins that error during the
     // hook will have their `SaveData` and `PostLoadData` hooks removed to prevent them from saving junk data.
     // @internal
     // @realm server
@@ -363,7 +363,7 @@ do
         return hook.ixCall(name, gm, ...)
     end
 
-    -// Runs the given hook in a protected call so that the calling function will continue executing even if any errors occur
+    /// Runs the given hook in a protected call so that the calling function will continue executing even if any errors occur
     // while running the hook. This function is much more expensive to call than `hook.Run`, so you should avoid using it unless
     // you absolutely need to avoid errors from stopping the execution of your function.
     // @internal

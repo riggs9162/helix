@@ -30,7 +30,7 @@ Check out `Character:GiveFlags` and `Character:TakeFlags` for additional info.
 ix.flag = ix.flag or {}
 ix.flag.list = ix.flag.list or {}
 
--// Creates a flag. This should be called shared in order for the client to be aware of the flag's existence.
+/// Creates a flag. This should be called shared in order for the client to be aware of the flag's existence.
 // @realm shared
 // @string flag Alphanumeric character to use for the flag
 // @string description Description of the flag
@@ -72,10 +72,10 @@ do
     local character = ix.meta.character
 
     if (SERVER) then
-        -// Flag util functions for character
+        /// Flag util functions for character
         // @classmod Character
 
-        -// Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
+        /// Sets this character's accessible flags. Note that this method overwrites **all** flags instead of adding them.
         // @realm server
         // @string flags Flag(s) this charater is allowed to have
         // @see GiveFlags
@@ -83,7 +83,7 @@ do
             self:SetData("f", flags)
         end
 
-        -// Adds a flag to the list of this character's accessible flags. This does not overwrite existing flags.
+        /// Adds a flag to the list of this character's accessible flags. This does not overwrite existing flags.
         // @realm server
         // @string flags Flag(s) this character should be given
         // @usage character:GiveFlags("pet")
@@ -115,7 +115,7 @@ do
             end
         end
 
-        -// Removes this character's access to the given flags.
+        /// Removes this character's access to the given flags.
         // @realm server
         // @string flags Flag(s) to remove from this character
         // @usage // for a character with "pet" flags
@@ -145,7 +145,7 @@ do
         end
     end
 
-    -// Returns all of the flags this character has.
+    /// Returns all of the flags this character has.
     // @realm shared
     // @treturn string Flags this character has represented as one string. You can access individual flags by iterating through
     // the string letter by letter
@@ -153,7 +153,7 @@ do
         return self:GetData("f", "")
     end
 
-    -// Returns `true` if the character has the given flag(s).
+    /// Returns `true` if the character has the given flag(s).
     // @realm shared
     // @string flags Flag(s) to check access for
     // @treturn bool Whether or not this character has access to the given flag(s)

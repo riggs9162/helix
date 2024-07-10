@@ -17,7 +17,7 @@ Example usage:
 ]]
 // @module ix.storage
 
--// There are some parameters you can customize when opening an inventory as a storage object with `ix.storage.Open`.
+/// There are some parameters you can customize when opening an inventory as a storage object with `ix.storage.Open`.
 // @realm server
 // @table StorageInfoStructure
 // @field[type=entity] entity Entity to "attach" the inventory to. This is used to provide a location for the inventory for
@@ -43,7 +43,7 @@ if (SERVER) then
     util.AddNetworkString("ixStorageMoneyGive")
     util.AddNetworkString("ixStorageMoneyUpdate")
 
-    -// Returns whether or not the given inventory has a storage context and is being looked at by other players.
+    /// Returns whether or not the given inventory has a storage context and is being looked at by other players.
     // @realm server
     // @inventory inventory Inventory to check
     // @treturn bool Whether or not `inventory` is in use
@@ -59,7 +59,7 @@ if (SERVER) then
         return false
     end
 
-    -// Returns whether or not an inventory is in use by a specific player.
+    /// Returns whether or not an inventory is in use by a specific player.
     // @realm server
     // @inventory inventory Inventory to check
     // @player client Player to check
@@ -76,7 +76,7 @@ if (SERVER) then
         return false
     end
 
-    -// Creates a storage context on the given inventory.
+    /// Creates a storage context on the given inventory.
     // @realm server
     // @internal
     // @inventory inventory Inventory to create a storage context for
@@ -102,7 +102,7 @@ if (SERVER) then
         end
     end
 
-    -// Removes a storage context from an inventory if it exists.
+    /// Removes a storage context from an inventory if it exists.
     // @realm server
     // @internal
     // @inventory inventory Inventory to remove a storage context from
@@ -117,7 +117,7 @@ if (SERVER) then
         end
     end
 
-    -// Synchronizes an inventory with a storage context to the given client.
+    /// Synchronizes an inventory with a storage context to the given client.
     // @realm server
     // @internal
     // @player client Player to sync storage for
@@ -144,7 +144,7 @@ if (SERVER) then
         net.Send(client)
     end
 
-    -// Adds a receiver to a given inventory with a storage context.
+    /// Adds a receiver to a given inventory with a storage context.
     // @realm server
     // @internal
     // @player client Player to sync storage for
@@ -179,7 +179,7 @@ if (SERVER) then
         return false
     end
 
-    -// Removes a storage receiver and removes the context if there are no more receivers.
+    /// Removes a storage receiver and removes the context if there are no more receivers.
     // @realm server
     // @internal
     // @player client Player to remove from receivers
@@ -213,7 +213,7 @@ if (SERVER) then
         return false
     end
 
-    -// Makes a player open an inventory that they can interact with. This can be called multiple times on the same inventory,
+    /// Makes a player open an inventory that they can interact with. This can be called multiple times on the same inventory,
     // if the info passed allows for multiple users.
     // @realm server
     // @player client Player to open the inventory for
@@ -257,7 +257,7 @@ if (SERVER) then
         end
     end
 
-    -// Forcefully makes clients close this inventory if they have it open.
+    /// Forcefully makes clients close this inventory if they have it open.
     // @realm server
     // @inventory inventory Inventory to close
     function ix.storage.Close(inventory)

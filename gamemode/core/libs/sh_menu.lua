@@ -7,7 +7,7 @@ from the panel that shows up for the player.
 ]]
 // @module ix.menu
 
--// You'll need to pass a table of options to `ix.menu.Open` to populate the menu. This table consists of strings as its keys
+/// You'll need to pass a table of options to `ix.menu.Open` to populate the menu. This table consists of strings as its keys
 // and functions as its values. These correspond to the text displayed in the menu and the callback to run, respectively.
 --
 // Example usage:
@@ -26,7 +26,7 @@ from the panel that shows up for the player.
 ix.menu = ix.menu or {}
 
 if (CLIENT) then
-    -// Opens up a context menu for the given entity.
+    /// Opens up a context menu for the given entity.
     // @realm client
     // @tparam MenuOptionsStructure options Data describing what options to display
     // @entity[opt] entity Entity to send commands to
@@ -43,14 +43,14 @@ if (CLIENT) then
         return true
     end
 
-    -// Checks whether or not an entity menu is currently open.
+    /// Checks whether or not an entity menu is currently open.
     // @realm client
     // @treturn boolean Whether or not an entity menu is open
     function ix.menu.IsOpen()
         return IsValid(ix.menu.panel)
     end
 
-    -// Notifies the server of an option that was chosen for the given entity.
+    /// Notifies the server of an option that was chosen for the given entity.
     // @realm client
     // @entity entity Entity to call option on
     // @string choice Option that was chosen

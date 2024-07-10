@@ -1,5 +1,5 @@
 
--// Helper library for loading/getting faction information.
+/// Helper library for loading/getting faction information.
 // @module ix.faction
 
 ix.faction = ix.faction or {}
@@ -31,7 +31,7 @@ local CITIZEN_MODELS = {
     "models/humans/group01/female_04.mdl"
 }
 
--// Loads factions from a directory.
+/// Loads factions from a directory.
 // @realm shared
 // @string directory The path to the factions files.
 function ix.faction.LoadFromDir(directory)
@@ -80,7 +80,7 @@ function ix.faction.LoadFromDir(directory)
     end
 end
 
--// Retrieves a faction table.
+/// Retrieves a faction table.
 // @realm shared
 // @param identifier Index or name of the faction
 // @treturn table Faction table
@@ -90,7 +90,7 @@ function ix.faction.Get(identifier)
     return ix.faction.indices[identifier] or ix.faction.teams[identifier]
 end
 
--// Retrieves a faction index.
+/// Retrieves a faction index.
 // @realm shared
 // @string uniqueID Unique ID of the faction
 // @treturn number Faction index
@@ -103,7 +103,7 @@ function ix.faction.GetIndex(uniqueID)
 end
 
 if (CLIENT) then
-    -// Returns true if a faction requires a whitelist.
+    /// Returns true if a faction requires a whitelist.
     // @realm client
     // @number faction Index of the faction
     // @treturn bool Whether or not the faction requires a whitelist

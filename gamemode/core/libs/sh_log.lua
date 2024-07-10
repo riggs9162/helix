@@ -50,7 +50,7 @@ if (SERVER) then
 
     ix.log.types = ix.log.types or {}
 
-    -// Adds a log type
+    /// Adds a log type
     // @realm server
     // @string logType Log category
     // @string format The string format that log messages should use
@@ -92,7 +92,7 @@ if (SERVER) then
         end
     end
 
-    -// Add a log message
+    /// Add a log message
     // @realm server
     // @player client Player who instigated the log
     // @string logType Log category

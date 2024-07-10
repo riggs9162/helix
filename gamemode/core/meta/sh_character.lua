@@ -24,7 +24,7 @@ if (!ix.db) then
     ix.util.Include("../libs/sv_database.lua")
 end
 
--// Returns a string representation of this character
+/// Returns a string representation of this character
 // @realm shared
 // @treturn string String representation
 // @usage print(ix.char.loaded[1])
@@ -33,7 +33,7 @@ function CHAR:__tostring()
     return "character["..(self.id or 0).."]"
 end
 
--// Returns true if this character is equal to another character. Internally, this checks character IDs.
+/// Returns true if this character is equal to another character. Internally, this checks character IDs.
 // @realm shared
 // @char other Character to compare to
 // @treturn bool Whether or not this character is equal to the given character
@@ -43,7 +43,7 @@ function CHAR:__eq(other)
     return self:GetID() == other:GetID()
 end
 
--// Returns this character's database ID. This is guaranteed to be unique.
+/// Returns this character's database ID. This is guaranteed to be unique.
 // @realm shared
 // @treturn number Unique ID of character
 function CHAR:GetID()
@@ -51,7 +51,7 @@ function CHAR:GetID()
 end
 
 if (SERVER) then
-    -// Saves this character's info to the database.
+    /// Saves this character's info to the database.
     // @realm server
     // @func[opt=nil] callback Function to call when the save has completed.
     // @usage ix.char.loaded[1]:Save(function()
@@ -91,7 +91,7 @@ if (SERVER) then
         end
     end
 
-    -// Networks this character's information to make the given player aware of this character's existence. If the receiver is
+    /// Networks this character's information to make the given player aware of this character's existence. If the receiver is
     // not the owner of this character, it will only be sent a limited amount of data (as it does not need anything else).
     // This is done automatically by the framework.
     // @internal
@@ -136,7 +136,7 @@ if (SERVER) then
     end
 
     // Sets up the "appearance" related inforomation for the character.
-    -// Applies the character's appearance and synchronizes information to the owning player.
+    /// Applies the character's appearance and synchronizes information to the owning player.
     // @realm server
     // @internal
     // @bool[opt] bNoNetworking Whether or not to sync the character info to other players
@@ -189,7 +189,7 @@ if (SERVER) then
         end
     end
 
-    -// Forces a player off their current character, and sends them to the character menu to select a character.
+    /// Forces a player off their current character, and sends them to the character menu to select a character.
     // @realm server
     function CHAR:Kick()
         // Kill the player so they are not standing anywhere.
@@ -213,7 +213,7 @@ if (SERVER) then
         end
     end
 
-    -// Forces a player off their current character, and prevents them from using the character for the specified amount of time.
+    /// Forces a player off their current character, and prevents them from using the character for the specified amount of time.
     // @realm server
     // @number[opt] time Amount of seconds to ban the character for. If left as `nil`, the character will be banned permanently
     function CHAR:Ban(time)
@@ -230,7 +230,7 @@ if (SERVER) then
     end
 end
 
--// Returns the player that owns this character.
+/// Returns the player that owns this character.
 // @realm shared
 // @treturn player Player that owns this character
 function CHAR:GetPlayer()

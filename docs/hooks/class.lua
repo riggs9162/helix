@@ -9,7 +9,7 @@ valid in class tables that are created in `schema/classes/sh_classname.lua`, and
 ]]
 // @hooks Class
 
--// Whether or not a player can switch to this class.
+/// Whether or not a player can switch to this class.
 // @realm shared
 // @player client Client that wants to switch to this class
 // @treturn bool True if the player is allowed to switch to this class
@@ -19,14 +19,14 @@ valid in class tables that are created in `schema/classes/sh_classname.lua`, and
 function CanSwitchTo(client)
 end
 
--// Called when a character has left this class and has joined a different one. You can get the class the character has
+/// Called when a character has left this class and has joined a different one. You can get the class the character has
 // has joined by calling `character:GetClass()`.
 // @realm server
 // @player client Player who left this class
 function OnLeave(client)
 end
 
--// Called when a character has joined this class.
+/// Called when a character has joined this class.
 // @realm server
 // @player client Player who has joined this class
 // @usage function CLASS:OnSet(client)
@@ -35,7 +35,7 @@ end
 function OnSet(client)
 end
 
--// Called when a character in this class has spawned in the world.
+/// Called when a character in this class has spawned in the world.
 // @realm server
 // @player client Player that has just spawned
 function OnSpawn(client)

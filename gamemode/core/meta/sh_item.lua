@@ -172,7 +172,7 @@ ITEM.description = ITEM.description or "An item that is undefined."
 ITEM.id = ITEM.id or 0
 ITEM.uniqueID = "undefined"
 
--// Returns a string representation of this item.
+/// Returns a string representation of this item.
 // @realm shared
 // @treturn string String representation
 // @usage print(ix.item.instances[1])
@@ -181,7 +181,7 @@ function ITEM:__tostring()
     return "item["..self.uniqueID.."]["..self.id.."]"
 end
 
--// Returns true if this item is equal to another item. Internally, this checks item IDs.
+/// Returns true if this item is equal to another item. Internally, this checks item IDs.
 // @realm shared
 // @item other Item to compare to
 // @treturn bool Whether or not this item is equal to the given item
@@ -191,21 +191,21 @@ function ITEM:__eq(other)
     return self:GetID() == other:GetID()
 end
 
--// Returns this item's database ID. This is guaranteed to be unique.
+/// Returns this item's database ID. This is guaranteed to be unique.
 // @realm shared
 // @treturn number Unique ID of item
 function ITEM:GetID()
     return self.id
 end
 
--// Returns the name of the item.
+/// Returns the name of the item.
 // @realm shared
 // @treturn string The name of the item
 function ITEM:GetName()
     return (CLIENT and L(self.name) or self.name)
 end
 
--// Returns the description of the item.
+/// Returns the description of the item.
 // @realm shared
 // @treturn string The description of the item
 function ITEM:GetDescription()
@@ -214,14 +214,14 @@ function ITEM:GetDescription()
     return L(self.description or "noDesc")
 end
 
--// Returns the model of the item.
+/// Returns the model of the item.
 // @realm shared
 // @treturn string The model of the item
 function ITEM:GetModel()
     return self.model
 end
 
--// Returns the skin of the item.
+/// Returns the skin of the item.
 // @realm shared
 // @treturn number The skin of the item
 function ITEM:GetSkin()
@@ -232,21 +232,21 @@ function ITEM:GetMaterial()
     return nil
 end
 
--// Returns the ID of the owning character, if one exists.
+/// Returns the ID of the owning character, if one exists.
 // @realm shared
 // @treturn number The owning character's ID
 function ITEM:GetCharacterID()
     return self.characterID
 end
 
--// Returns the SteamID64 of the owning player, if one exists.
+/// Returns the SteamID64 of the owning player, if one exists.
 // @realm shared
 // @treturn number The owning player's SteamID64
 function ITEM:GetPlayerID()
     return self.playerID
 end
 
--// A utility function which prints the item's details.
+/// A utility function which prints the item's details.
 // @realm shared
 // @bool[opt=false] detail Whether additional detail should be printed or not(Owner, X position, Y position)
 function ITEM:Print(detail)
@@ -257,7 +257,7 @@ function ITEM:Print(detail)
     end
 end
 
--// A utility function printing the item's stored data.
+/// A utility function printing the item's stored data.
 // @realm shared
 function ITEM:PrintData()
     self:Print(true)
@@ -267,7 +267,7 @@ function ITEM:PrintData()
     end
 end
 
--// Calls one of the item's methods.
+/// Calls one of the item's methods.
 // @realm shared
 // @string method The method to be called
 // @player client The client to pass when calling the method, if applicable
@@ -293,7 +293,7 @@ function ITEM:Call(method, client, entity, ...)
     self.entity = oldEntity
 end
 
--// Returns the player that owns this item.
+/// Returns the player that owns this item.
 // @realm shared
 // @treturn player Player owning this item
 function ITEM:GetOwner()
@@ -314,7 +314,7 @@ function ITEM:GetOwner()
     end
 end
 
--// Sets a key within the item's data.
+/// Sets a key within the item's data.
 // @realm shared
 // @string key The key to store the value within
 // @param[opt=nil] value The value to store within the key
@@ -354,7 +354,7 @@ function ITEM:SetData(key, value, receivers, noSave, noCheckEntity)
     end
 end
 
--// Returns the value stored on a key within the item's data.
+/// Returns the value stored on a key within the item's data.
 // @realm shared
 // @string key The key in which the value is stored
 // @param[opt=nil] default The value to return in case there is no value stored in the key
@@ -390,7 +390,7 @@ function ITEM:GetData(key, default)
     return
 end
 
--// Changes the function called on specific events for the item.
+/// Changes the function called on specific events for the item.
 // @realm shared
 // @string name The name of the hook
 // @func func The function to call once the event occurs
@@ -400,7 +400,7 @@ function ITEM:Hook(name, func)
     end
 end
 
--// Changes the function called after hooks for specific events for the item.
+/// Changes the function called after hooks for specific events for the item.
 // @realm shared
 // @string name The name of the hook
 // @func func The function to call after the original hook was called
@@ -410,7 +410,7 @@ function ITEM:PostHook(name, func)
     end
 end
 
--// Removes the item.
+/// Removes the item.
 // @realm shared
 // @bool bNoReplication Whether or not the item's removal should not be replicated.
 // @bool bNoDelete Whether or not the item should not be fully deleted
@@ -499,7 +499,7 @@ function ITEM:Remove(bNoReplication, bNoDelete)
 end
 
 if (SERVER) then
-    -// Returns the item's entity.
+    /// Returns the item's entity.
     // @realm server
     // @treturn entity The entity of the item
     function ITEM:GetEntity()
@@ -512,7 +512,7 @@ if (SERVER) then
         end
     end
 
-    -// Spawn an item entity based off the item table.
+    /// Spawn an item entity based off the item table.
     // @realm server
     // @param[type=vector] position The position in which the item's entity will be spawned
     // @param[type=angle] angles The angles at which the item's entity will spawn
@@ -548,7 +548,7 @@ if (SERVER) then
         end
     end
 
-    -// Transfers an item to a specific inventory.
+    /// Transfers an item to a specific inventory.
     // @realm server
     // @number invID The inventory to transfer the item to
     // @number x The X position to which the item should be transferred on the new inventory

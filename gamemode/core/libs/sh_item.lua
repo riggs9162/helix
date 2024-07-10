@@ -103,7 +103,7 @@ function ix.item.Instance(index, uniqueID, itemData, x, y, callback, characterID
     end
 end
 
--// Retrieves an item table.
+/// Retrieves an item table.
 // @realm shared
 // @string identifier Unique ID of the item
 // @treturn item Item table
@@ -806,7 +806,7 @@ do
         end)
     end
 
-    -// Instances and spawns a given item type.
+    /// Instances and spawns a given item type.
     // @realm server
     // @string uniqueID Unique ID of the item
     // @vector position The position in which the item's entity will be spawned
@@ -824,10 +824,10 @@ do
     end
 end
 
--// Inventory util functions for character
+/// Inventory util functions for character
 // @classmod Character
 
--// Returns this character's associated `Inventory` object.
+/// Returns this character's associated `Inventory` object.
 // @function GetInventory
 // @realm shared
 // @treturn Inventory This character's inventory

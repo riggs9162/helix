@@ -11,7 +11,7 @@ regular gamemode hooks.
 ]]
 // @hooks Faction
 
--// Called when the default name for a character needs to be retrieved (i.e upon initial creation).
+/// Called when the default name for a character needs to be retrieved (i.e upon initial creation).
 // @realm shared
 // @player client Client to get the default name for
 // @treturn string Default name for the newly created character
@@ -21,7 +21,7 @@ regular gamemode hooks.
 function GetDefaultName(client)
 end
 
--// Called when a character has been initally created and assigned to this faction.
+/// Called when a character has been initally created and assigned to this faction.
 // @realm server
 // @player client Client that owns the character
 // @char character Character that has been created
@@ -32,13 +32,13 @@ end
 function OnCharacterCreated(client, character)
 end
 
--// Called when a character in this faction has spawned in the world.
+/// Called when a character in this faction has spawned in the world.
 // @realm server
 // @player client Player that has just spawned
 function OnSpawn(client)
 end
 
--// Called when a player's character has been transferred to this faction.
+/// Called when a player's character has been transferred to this faction.
 // @realm server
 // @char character Character that was transferred
 // @usage function FACTION:OnTransferred(character)

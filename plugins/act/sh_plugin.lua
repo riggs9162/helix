@@ -19,7 +19,7 @@ CAMI.RegisterPrivilege({
     MinAccess = "user"
 })
 
--// Registers a sequence as a performable animation.
+/// Registers a sequence as a performable animation.
 // @realm shared
 // @string name Name of the animation (in CamelCase)
 // @string modelClass Model class to add this animation to
@@ -58,7 +58,7 @@ function ix.act.Register(name, modelClass, data)
     end
 end
 
--// Removes a sequence from being performable if it has been previously registered.
+/// Removes a sequence from being performable if it has been previously registered.
 // @realm shared
 // @string name Name of the animation
 function ix.act.Remove(name)

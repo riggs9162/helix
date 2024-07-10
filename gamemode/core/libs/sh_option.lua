@@ -29,7 +29,7 @@ ix.option = ix.option or {}
 ix.option.stored = ix.option.stored or {}
 ix.option.categories = ix.option.categories or {}
 
--// Creates a client-side configuration option with the given information.
+/// Creates a client-side configuration option with the given information.
 // @realm shared
 // @string key Unique ID for this option
 // @ixtype optionType Type of this option
@@ -53,7 +53,7 @@ function ix.option.Add(key, optionType, default, data)
     categories[category] = categories[category] or {}
     categories[category][key] = true
 
-    -// You can specify additional optional arguments for `ix.option.Add` by passing in a table of specific fields as the fourth
+    /// You can specify additional optional arguments for `ix.option.Add` by passing in a table of specific fields as the fourth
     // argument.
     // @table OptionStructure
     // @realm shared
@@ -108,7 +108,7 @@ function ix.option.Add(key, optionType, default, data)
     }
 end
 
--// Loads all saved options from disk.
+/// Loads all saved options from disk.
 // @realm shared
 // @internal
 function ix.option.Load()
@@ -127,7 +127,7 @@ function ix.option.Load()
     end
 end
 
--// Returns all of the available options. Note that this does contain the actual values of the options, just their properties.
+/// Returns all of the available options. Note that this does contain the actual values of the options, just their properties.
 // @realm shared
 // @treturn table Table of all options
 // @usage PrintTable(ix.option.GetAll())
@@ -141,7 +141,7 @@ function ix.option.GetAll()
 end
 
 
--// Returns all of the available options grouped by their categories. The returned table contains category tables, that contain
+/// Returns all of the available options grouped by their categories. The returned table contains category tables, that contain
 // all the options in that category as an array (this is so you can sort them if you'd like).
 // @realm shared
 // @bool[opt=false] bRemoveHidden Remove entries that are marked as hidden
@@ -177,7 +177,7 @@ end
 if (CLIENT) then
     ix.option.client = ix.option.client or {}
 
-    -// Sets an option value for the local player.
+    /// Sets an option value for the local player.
     // This function will error when an invalid key is passed.
     // @realm client
     // @string key Unique ID of the option
@@ -209,7 +209,7 @@ if (CLIENT) then
         end
     end
 
-    -// Retrieves an option value for the local player. If it is not set, it'll return the default that you've specified.
+    /// Retrieves an option value for the local player. If it is not set, it'll return the default that you've specified.
     // @realm client
     // @string key Unique ID of the option
     // @param default Default value to return if the option is not set
@@ -231,14 +231,14 @@ if (CLIENT) then
         return default
     end
 
-    -// Saves all options to disk.
+    /// Saves all options to disk.
     // @realm client
     // @internal
     function ix.option.Save()
         ix.data.Set("options", ix.option.client, true, true)
     end
 
-    -// Syncs all networked options to the server.
+    /// Syncs all networked options to the server.
     // @realm client
     function ix.option.Sync()
         local options = {}
@@ -267,7 +267,7 @@ else
 
     ix.option.clients = ix.option.clients or {}
 
-    -// Retrieves an option value from the specified player. If it is not set, it'll return the default that you've specified.
+    /// Retrieves an option value from the specified player. If it is not set, it'll return the default that you've specified.
     // This function will error when an invalid player is passed.
     // @realm server
     // @player client Player to retrieve option value from

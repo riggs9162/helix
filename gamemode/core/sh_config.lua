@@ -1,5 +1,5 @@
 
--// Helper library for creating/setting config options.
+/// Helper library for creating/setting config options.
 // @module ix.config
 
 ix.config = ix.config or {}
@@ -20,7 +20,7 @@ CAMI.RegisterPrivilege({
     MinAccess = "superadmin"
 })
 
--// Creates a config option with the given information.
+/// Creates a config option with the given information.
 // @realm shared
 // @string key Unique ID of the config
 // @param value Default value that this config will have
@@ -67,7 +67,7 @@ function ix.config.Add(key, value, description, callback, data, bNoNetworking, b
     }
 end
 
--// Sets the default value for a config option.
+/// Sets the default value for a config option.
 // @realm shared
 // @string key Unique ID of the config
 // @param value Default value for the config option
@@ -97,7 +97,7 @@ function ix.config.ForceSet(key, value, noSave)
     end
 end
 
--// Sets the value of a config option.
+/// Sets the value of a config option.
 // @realm shared
 // @string key Unique ID of the config
 // @param value New value to assign to the config
@@ -125,7 +125,7 @@ function ix.config.Set(key, value)
     end
 end
 
--// Retrieves a value of a config option. If it is not set, it'll return the default that you've specified.
+/// Retrieves a value of a config option. If it is not set, it'll return the default that you've specified.
 // @realm shared
 // @string key Unique ID of the config
 // @param default Default value to return if the config is not set
@@ -145,7 +145,7 @@ function ix.config.Get(key, default)
     return default
 end
 
--// Loads all saved config options from disk.
+/// Loads all saved config options from disk.
 // @realm shared
 // @internal
 function ix.config.Load()
@@ -194,7 +194,7 @@ if (SERVER) then
         net.Send(client)
     end
 
-    -// Saves all config options to disk.
+    /// Saves all config options to disk.
     // @realm server
     // @internal
     function ix.config.Save()

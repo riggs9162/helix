@@ -33,7 +33,7 @@ ix.lang = ix.lang or {}
 ix.lang.stored = ix.lang.stored or {}
 ix.lang.names = ix.lang.names or {}
 
--// Loads language files from a directory.
+/// Loads language files from a directory.
 // @realm shared
 // @internal
 // @string directory Directory to load language files from
@@ -55,7 +55,7 @@ function ix.lang.LoadFromDir(directory)
     end
 end
 
--// Adds phrases to a language. This is used when you aren't adding entries through the files in the `languages/` folder. A
+/// Adds phrases to a language. This is used when you aren't adding entries through the files in the `languages/` folder. A
 // common use case is adding language phrases in a single-file plugin.
 // @realm shared
 // @string language The ID of the language

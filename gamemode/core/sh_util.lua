@@ -1,5 +1,5 @@
 
--// Various useful helper functions.
+/// Various useful helper functions.
 // @module ix.util
 
 ix.type = ix.type or {
@@ -29,7 +29,7 @@ ix.type = ix.type or {
 
 ix.blurRenderQueue = {}
 
--// Includes a lua file based on the prefix of the file. This will automatically call `include` and `AddCSLuaFile` based on the
+/// Includes a lua file based on the prefix of the file. This will automatically call `include` and `AddCSLuaFile` based on the
 // current realm. This function should always be called shared to ensure that the client will receive the file from the server.
 // @realm shared
 // @string fileName Path of the Lua file to include. The path is relative to the file that is currently running this function
@@ -62,7 +62,7 @@ function ix.util.Include(fileName, realm)
     end
 end
 
--// Includes multiple files in a directory.
+/// Includes multiple files in a directory.
 // @realm shared
 // @string directory Directory to include files from
 // @bool[opt] bFromLua Whether or not to search from the base `lua/` folder, instead of contextually basing from `schema/`
@@ -86,7 +86,7 @@ function ix.util.IncludeDir(directory, bFromLua)
     end
 end
 
--// Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
+/// Removes the realm prefix from a file name. The returned string will be unchanged if there is no prefix found.
 // @realm shared
 // @string name String to strip prefix from
 // @treturn string String stripped of prefix
@@ -98,7 +98,7 @@ function ix.util.StripRealmPrefix(name)
     return (prefix == "sh_" or prefix == "sv_" or prefix == "cl_") and name:sub(4) or name
 end
 
--// Returns `true` if the given input is a color table. This is necessary since the engine `IsColor` function only checks for
+/// Returns `true` if the given input is a color table. This is necessary since the engine `IsColor` function only checks for
 // color metatables - which are not used for regular Lua color types.
 // @realm shared
 // @param input Input to check
@@ -108,7 +108,7 @@ function ix.util.IsColor(input)
         isnumber(input.a) and isnumber(input.g) and isnumber(input.b) and (input.a and isnumber(input.a) or input.a == nil)
 end
 
--// Returns a dimmed version of the given color by the given scale.
+/// Returns a dimmed version of the given color by the given scale.
 // @realm shared
 // @color color Color to dim
 // @number multiplier What to multiply the red, green, and blue values by
@@ -120,7 +120,7 @@ function ix.util.DimColor(color, multiplier, alpha)
     return Color(color.r * multiplier, color.g * multiplier, color.b * multiplier, alpha or 255)
 end
 
--// Sanitizes an input value with the given type. This function ensures that a valid type is always returned. If a valid value
+/// Sanitizes an input value with the given type. This function ensures that a valid type is always returned. If a valid value
 // could not be found, it will return the default value for the type. This only works for simple types - e.g it does not work
 // for player, character, or Steam ID types.
 // @realm shared
@@ -177,7 +177,7 @@ do
         end
     }
 
-    -// Returns the `ix.type` of the given value.
+    /// Returns the `ix.type` of the given value.
     // @realm shared
     // @param value Value to get the type of
     // @treturn ix.type Type of value
@@ -223,7 +223,7 @@ function ix.util.GetAddress()
     return table.concat(ip, ".")..":"..GetConVarString("hostport")
 end
 
--// Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function
+/// Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function
 // if you aren't locally storing a `Material()` call.
 // @realm shared
 // @string materialPath Path to the material
@@ -242,7 +242,7 @@ function ix.util.GetMaterial(materialPath, materialParameters)
     return ix.util.cachedMaterials[key]
 end
 
--// Attempts to find a player by matching their name or Steam ID.
+/// Attempts to find a player by matching their name or Steam ID.
 // @realm shared
 // @string identifier Search query
 // @bool[opt=false] bAllowPatterns Whether or not to accept Lua patterns in `identifier`
@@ -265,7 +265,7 @@ function ix.util.FindPlayer(identifier, bAllowPatterns)
     end
 end
 
--// Checks to see if two strings are equivalent using a fuzzy manner. Both strings will be lowered, and will return `true` if
+/// Checks to see if two strings are equivalent using a fuzzy manner. Both strings will be lowered, and will return `true` if
 // the strings are identical, or if `b` is a substring of `a`.
 // @realm shared
 // @string a First string to check
@@ -290,7 +290,7 @@ function ix.util.StringMatches(a, b)
     return false
 end
 
--// A more extreme version of `ix.util.StringMatches` that will check all the words in both strings to see if they match. This
+/// A more extreme version of `ix.util.StringMatches` that will check all the words in both strings to see if they match. This
 // function is useful for checking if a string is similar to another string, but not necessarily the same.
 // @realm shared
 // @string a First string to check
@@ -325,7 +325,7 @@ function ix.util.StringMatchesExtreme(a, b)
     return false
 end
 
--// Returns a string that has the named arguments in the format string replaced with the given arguments.
+/// Returns a string that has the named arguments in the format string replaced with the given arguments.
 // @realm shared
 // @string format Format string
 // @tparam tab|... Arguments to pass to the formatted string. If passed a table, it will use that table as the lookup table for
@@ -364,7 +364,7 @@ do
         ["afk"] = true,
         ["url"] = true
     }
-    -// Returns a string that is the given input with spaces in between each CamelCase word. This function will ignore any words
+    /// Returns a string that is the given input with spaces in between each CamelCase word. This function will ignore any words
     // that do not begin with a capital letter. The words `ooc`, `looc`, `afk`, and `url` will be automatically transformed
     // into uppercase text. This will not capitalize non-ASCII letters due to limitations with Lua's pattern matching.
     // @realm shared
@@ -416,7 +416,7 @@ do
         return value, character
     end
 
-    -// Returns an iterator for characters. The resulting key/values will be a player and their corresponding characters. This
+    /// Returns an iterator for characters. The resulting key/values will be a player and their corresponding characters. This
     // iterator skips over any players that do not have a valid character loaded.
     // @realm shared
     // @treturn Iterator
@@ -436,7 +436,7 @@ if (CLIENT) then
     local blur = ix.util.GetMaterial("pp/blurscreen")
     local surface = surface
 
-    -// Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
+    /// Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
     // blurring disabled.
     // @realm client
     // @tparam panel panel Panel to draw the blur for
@@ -470,7 +470,7 @@ if (CLIENT) then
         end
     end
 
-    -// Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `ix.util.DrawBlur`
+    /// Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `ix.util.DrawBlur`
     // instead.
     // @realm client
     // @number x X-position of the rectangle
@@ -507,7 +507,7 @@ if (CLIENT) then
         end
     end
 
-    -// Pushes a 3D2D blur to be rendered in the world. The draw function will be called next frame in the
+    /// Pushes a 3D2D blur to be rendered in the world. The draw function will be called next frame in the
     // `PostDrawOpaqueRenderables` hook.
     // @realm client
     // @func drawFunc Function to call when it needs to be drawn
@@ -515,7 +515,7 @@ if (CLIENT) then
         ix.blurRenderQueue[#ix.blurRenderQueue + 1] = drawFunc
     end
 
-    -// Draws some text with a shadow.
+    /// Draws some text with a shadow.
     // @realm client
     // @string text Text to draw
     // @number x X-position of the text
@@ -538,7 +538,7 @@ if (CLIENT) then
         }, 1, alpha or (color.a * 0.575))
     end
 
-    -// Wraps text so it does not pass a certain width. This function will try and break lines between words if it can,
+    /// Wraps text so it does not pass a certain width. This function will try and break lines between words if it can,
     // otherwise it will break a word if it's too long.
     // @realm client
     // @string text Text to wrap
@@ -685,7 +685,7 @@ if (CLIENT) then
         return quadarc
     end
 
-    -// Resets all stencil values to known good (i.e defaults)
+    /// Resets all stencil values to known good (i.e defaults)
     // @realm client
     function ix.util.ResetStencilValues()
         render.SetStencilWriteMask(0xFF)
@@ -993,7 +993,7 @@ end
 
 // Time related stuff.
 do
-    -// Gets the current time in the UTC time-zone.
+    /// Gets the current time in the UTC time-zone.
     // @realm shared
     // @treturn number Current time in UTC
     function ix.util.GetUTCTime()
@@ -1014,7 +1014,7 @@ do
     TIME_UNITS["mo"] = TIME_UNITS["d"] * 30    // Months
     TIME_UNITS["y"] = TIME_UNITS["d"] * 365    // Years
 
-    -// Gets the amount of seconds from a given formatted string. If no time units are specified, it is assumed minutes.
+    /// Gets the amount of seconds from a given formatted string. If no time units are specified, it is assumed minutes.
     // The valid values are as follows:
     --
     // - `s` - Seconds
@@ -1145,7 +1145,7 @@ end
 
 local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or "../../hl2/sound/"
 
--// Emits sounds one after the other from an entity.
+/// Emits sounds one after the other from an entity.
 // @realm shared
 // @entity entity Entity to play sounds from
 // @tab sounds Sound paths to play
@@ -1190,8 +1190,8 @@ function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
     return delay
 end
 
--// Merges the contents of the second table with the content in the first one. The destination table will be modified.
--// If element is table but not metatable object, value's elements will be changed only.
+/// Merges the contents of the second table with the content in the first one. The destination table will be modified.
+/// If element is table but not metatable object, value's elements will be changed only.
 // @realm shared
 // @tab destination The table you want the source table to merge with
 // @tab source The table you want to merge with the destination table

@@ -19,14 +19,14 @@ for _, v in pairs(list.Get("Vehicles")) do
     end
 end
 
--// Returns `true` if this entity is a chair.
+/// Returns `true` if this entity is a chair.
 // @realm shared
 // @treturn bool Whether or not this entity is a chair
 function meta:IsChair()
     return CHAIR_CACHE[self:GetModel()]
 end
 
--// Returns `true` if this entity is a door. Internally, this checks to see if the entity's class has `door` in its name.
+/// Returns `true` if this entity is a door. Internally, this checks to see if the entity's class has `door` in its name.
 // @realm shared
 // @treturn bool Whether or not the entity is a door
 function meta:IsDoor()
@@ -36,7 +36,7 @@ function meta:IsDoor()
 end
 
 if (SERVER) then
-    -// Returns `true` if the given entity is a button or door and is locked.
+    /// Returns `true` if the given entity is a button or door and is locked.
     // @realm server
     // @treturn bool Whether or not this entity is locked; `false` if this entity cannot be locked at all
     // (e.g not a button or door)
@@ -58,7 +58,7 @@ if (SERVER) then
         return false
     end
 
-    -// Returns the neighbouring door entity for double doors.
+    /// Returns the neighbouring door entity for double doors.
     // @realm shared
     // @treturn[1] Entity This door's partner
     // @treturn[2] nil If the door does not have a partner
@@ -66,7 +66,7 @@ if (SERVER) then
         return self.ixPartner
     end
 
-    -// Returns the entity that is blocking this door from opening.
+    /// Returns the entity that is blocking this door from opening.
     // @realm server
     // @treturn[1] Entity Entity that is blocking this door
     // @treturn[2] nil If this entity is not a door, or there is no blocking entity
@@ -76,7 +76,7 @@ if (SERVER) then
         return datatable.pBlocker
     end
 
-    -// Blasts a door off its hinges. Internally, this hides the door entity, spawns a physics prop with the same model, and
+    /// Blasts a door off its hinges. Internally, this hides the door entity, spawns a physics prop with the same model, and
     // applies force to the prop.
     // @realm server
     // @vector velocity Velocity to apply to the door

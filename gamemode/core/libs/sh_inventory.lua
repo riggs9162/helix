@@ -8,7 +8,7 @@ ix.inventory = ix.inventory or {}
 
 ix.util.Include("helix/gamemode/core/meta/sh_inventory.lua")
 
--// Retrieves an inventory table.
+/// Retrieves an inventory table.
 // @realm shared
 // @number invID Index of the inventory
 // @treturn Inventory Inventory table
@@ -22,7 +22,7 @@ function ix.inventory.Create(width, height, id)
     return inventory
 end
 
--// Loads an inventory and associated items from the database into memory. If you are passing a table into `invID`, it
+/// Loads an inventory and associated items from the database into memory. If you are passing a table into `invID`, it
 // requires a table where the key is the inventory ID, and the value is a table of the width and height values. See below
 // for an example.
 // @realm server

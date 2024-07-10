@@ -1,12 +1,12 @@
 
--// Notification helper functions
+/// Notification helper functions
 // @module ix.notice
 
 if (SERVER) then
     util.AddNetworkString("ixNotify")
     util.AddNetworkString("ixNotifyLocalized")
 
-    -// Sends a notification to a specified recipient.
+    /// Sends a notification to a specified recipient.
     // @realm server
     // @string message Message to notify
     // @player[opt=nil] recipient Player to be notified
@@ -21,7 +21,7 @@ if (SERVER) then
         end
     end
 
-    -// Sends a translated notification to a specified recipient.
+    /// Sends a translated notification to a specified recipient.
     // @realm server
     // @string message Message to notify
     // @player[opt=nil] recipient Player to be notified
@@ -39,19 +39,19 @@ if (SERVER) then
     end
 
     do
-        -// Notification util functions for players
+        /// Notification util functions for players
         // @classmod Player
 
         local playerMeta = FindMetaTable("Player")
 
-        -// Displays a prominent notification in the top-right of this player's screen.
+        /// Displays a prominent notification in the top-right of this player's screen.
         // @realm shared
         // @string message Text to display in the notification
         function playerMeta:Notify(message)
             ix.util.Notify(message, self)
         end
 
-        -// Displays a notification for this player with the given language phrase.
+        /// Displays a notification for this player with the given language phrase.
         // @realm shared
         // @string message ID of the phrase to display to the player
         // @param ... Arguments to pass to the phrase
@@ -62,7 +62,7 @@ if (SERVER) then
             ix.util.NotifyLocalized(message, self, ...)
         end
 
-        -// Displays a notification for this player in the chatbox.
+        /// Displays a notification for this player in the chatbox.
         // @realm shared
         // @string message Text to display in the notification
         function playerMeta:ChatNotify(message)
@@ -73,7 +73,7 @@ if (SERVER) then
             })
         end
 
-        -// Displays a notification for this player in the chatbox with the given language phrase.
+        /// Displays a notification for this player in the chatbox with the given language phrase.
         // @realm shared
         // @string message ID of the phrase to display to the player
         // @param ... Arguments to pass to the phrase

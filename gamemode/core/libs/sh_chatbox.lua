@@ -12,7 +12,7 @@ to create your own chat classes.
 
 ix.chat = ix.chat or {}
 
--// List of all chat classes that have been registered by the framework, where each key is the name of the chat class, and value
+/// List of all chat classes that have been registered by the framework, where each key is the name of the chat class, and value
 // is the chat class data. Accessing a chat class's data is useful for when you want to copy some functionality or properties
 // to use in your own. Note that if you're accessing this table, you should do so inside of the `InitializedChatClasses` hook.
 // @realm shared
@@ -33,7 +33,7 @@ Name = "Helix - Bypass OOC Timer",
 // note we can't use commas in the "color" field's default value since the metadata is separated by commas which will break the
 // formatting for that field
 
--// Chat messages can have different classes or "types" of messages that have different properties. This can include how the
+/// Chat messages can have different classes or "types" of messages that have different properties. This can include how the
 // text is formatted, color, hearing distance, etc.
 // @realm shared
 // @table ChatClassStructure
@@ -93,7 +93,7 @@ Name = "Helix - Bypass OOC Timer",
 //         chat.AddText(color_white, speaker:GetName(), ": ", text)
 //     end
 
--// Registers a new chat type with the information provided. Chat classes should usually be created inside of the
+/// Registers a new chat type with the information provided. Chat classes should usually be created inside of the
 // `InitializedChatClasses` hook.
 // @realm shared
 // @string chatType Name of the chat type
@@ -196,7 +196,7 @@ function ix.chat.Register(chatType, data)
     ix.chat.classes[chatType] = data
 end
 
--// Identifies which chat mode should be used.
+/// Identifies which chat mode should be used.
 // @realm shared
 // @player client Player who is speaking
 // @string message Message to parse
@@ -269,7 +269,7 @@ function ix.chat.Parse(client, message, bNoSend)
     return chatType, message, anonymous
 end
 
--// Formats a string to fix basic grammar - removing extra spacing at the beginning and end, capitalizing the first character,
+/// Formats a string to fix basic grammar - removing extra spacing at the beginning and end, capitalizing the first character,
 // and making sure it ends in punctuation.
 // @realm shared
 // @string text String to format
@@ -292,7 +292,7 @@ end
 if (SERVER) then
     util.AddNetworkString("ixChatMessage")
 
-    -// Send a chat message using the specified chat type.
+    /// Send a chat message using the specified chat type.
     // @realm server
     // @player speaker Player who is speaking
     // @string chatType Name of the chat type
