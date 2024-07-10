@@ -1,5 +1,5 @@
 
---[[--
+/*
 Persistent date and time handling.
 
 All of Lua's time functions are dependent on the Unix epoch, which means we can't have dates that go further than 1970. This
@@ -9,7 +9,7 @@ since the epoch.
 ## Futher documentation
 This library makes use of a third-party date library found at https://github.com/Tieske/date - you can find all documentation
 regarding the `date` object and its methods there.
-]]
+*/
 // @module ix.date
 
 ix.date = ix.date or {}

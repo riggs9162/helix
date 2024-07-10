@@ -1,5 +1,5 @@
 
---[[--
+/*
 Client-side configuration management.
 
 The `option` library provides a cleaner way to manage any arbitrary data on the client without the hassle of managing CVars. It
@@ -22,7 +22,7 @@ client, unless `hidden` returns `true` when using `ix.option.Add`.
 
 Note that the labels for each option in the menu will use a language phrase to show the name. For example, if your option is
 named `headbob`, then you'll need to define a language phrase called `optHeadbob` that will be used as the option title.
-]]
+*/
 // @module ix.option
 
 ix.option = ix.option or {}

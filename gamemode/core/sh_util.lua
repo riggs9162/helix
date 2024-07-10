@@ -1054,7 +1054,7 @@ end
 --[[
     Credit to TFA for figuring this mess out.
     Original: https://steamcommunity.com/sharedfiles/filedetails/?id=903541818
-]]
+*/
 
 if (system.IsLinux()) then
     local cache = {}

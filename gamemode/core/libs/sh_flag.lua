@@ -1,5 +1,5 @@
 
---[[--
+/*
 Grants abilities to characters.
 
 Flags are a simple way of adding/removing certain abilities to players on a per-character basis. Helix comes with a few flags
@@ -24,7 +24,7 @@ functionality whenever the flag is added or removed. For example:
     > false
 
 Check out `Character:GiveFlags` and `Character:TakeFlags` for additional info.
-]]
+*/
 // @module ix.flag
 
 ix.flag = ix.flag or {}

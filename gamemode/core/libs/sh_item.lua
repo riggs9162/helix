@@ -1,6 +1,6 @@
---[[--
+/*
 Item manipulation and helper functions.
-]]
+*/
 // @module ix.item
 
 ix.item = ix.item or {}

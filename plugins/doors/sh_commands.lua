@@ -299,7 +299,7 @@ ix.command.Add("DoorSetTitle", {
                 default name for the door. The reason for this is so when the
                 server closes while someone owns the door, it doesn't save THEIR
                 title, which could lead to unwanted things.
-            --]]
+            --*/
 
             name = name:utf8sub(1, 24)
 

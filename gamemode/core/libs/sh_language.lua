@@ -1,5 +1,5 @@
 
---[[--
+/*
 Multi-language phrase support.
 
 Helix has support for multiple languages, and you can easily leverage this system for use in your own schema, plugins, etc.
@@ -26,7 +26,7 @@ Phrases are also usable on the server, but only when trying to localize a phrase
 does not have a set language. An example:
     Entity(1):ChatPrint(L("areaEditMode"))
     > // "Area Edit Mode" will print in the player's chatbox
-]]
+*/
 // @module ix.lang
 
 ix.lang = ix.lang or {}

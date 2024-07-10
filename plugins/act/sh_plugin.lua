@@ -1,8 +1,8 @@
 
---[[--
+/*
 Provides players the ability to perform animations.
 
-]]
+*/
 // @module ix.act
 
 local PLUGIN = PLUGIN

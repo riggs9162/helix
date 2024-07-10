@@ -52,7 +52,7 @@ ITEM.bodyGroups = {
     ["bladeblur"] = 1
 }
 
---]]
+--*/
 
 // Inventory drawing
 if (CLIENT) then

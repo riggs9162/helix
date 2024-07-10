@@ -1,5 +1,5 @@
 
---[[--
+/*
 Player manipulation of inventories.
 
 This library provides an easy way for players to manipulate other inventories. The only functions that you should need are
@@ -14,7 +14,7 @@ Example usage:
         searchText = "Rummaging...",
         searchTime = 4
     })
-]]
+*/
 // @module ix.storage
 
 /// There are some parameters you can customize when opening an inventory as a storage object with `ix.storage.Open`.

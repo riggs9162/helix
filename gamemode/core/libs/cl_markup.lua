@@ -50,7 +50,7 @@ local colourmap = {
     Name: colourMatch(c)
     Desc: Match a colour name to an rgb value.
    Usage: ** INTERNAL ** Do not use!
-]]
+*/
 local function colourMatch(c)
     c = string.lower(c)
 
@@ -61,7 +61,7 @@ end
     Name: ExtractParams(p1,p2,p3)
     Desc: This function is used to extract the tag information.
    Usage: ** INTERNAL ** Do not use!
-]]
+*/
 local function ExtractParams(p1,p2,p3)
 
     if (string.utf8sub(p1, 1, 1) == "/") then
@@ -128,7 +128,7 @@ end
     Desc: This function places data in the "blocks" table
           depending of if p is a tag, or some text
    Usage: ** INTERNAL ** Do not use!
-]]
+*/
 local function CheckTextOrTag(p)
     if (p == "") then return end
     if (p == nil) then return end
@@ -150,7 +150,7 @@ end
     Name: ProcessMatches(p1,p2,p3)
     Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
    Usage: ** INTERNAL ** Do not use!
-]]
+*/
 local function ProcessMatches(p1,p2,p3)
     if (p1) then CheckTextOrTag(p1) end
     if (p2) then CheckTextOrTag(p2) end
@@ -164,7 +164,7 @@ local MarkupObject = {}
     Desc: Called by Parse. Creates a new table, and setups the
           metatable.
    Usage: ** INTERNAL ** Do not use!
-]]
+*/
 function MarkupObject:create()
     local o = {}
     setmetatable(o, self)
@@ -177,7 +177,7 @@ end
     Name: MarkupObject:GetWidth()
     Desc: Returns the width of a markup block
    Usage: ml:GetWidth()
-]]
+*/
 function MarkupObject:GetWidth()
     return self.totalWidth
 end
@@ -186,7 +186,7 @@ end
     Name: MarkupObject:GetHeight()
     Desc: Returns the height of a markup block
    Usage: ml:GetHeight()
-]]
+*/
 function MarkupObject:GetHeight()
     return self.totalHeight
 end
@@ -202,7 +202,7 @@ end
           to align the text. Alphaoverride can be used to override
           the alpha value of the text-colour.
    Usage: MarkupObject:Draw(100, 100)
-]]
+*/
 function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     for i = 1, #self.blocks do
         local blk = self.blocks[i]
@@ -259,7 +259,7 @@ end
           Maxwidth can be used to make the text wrap to a specific
           width.
    Usage: markup.Parse("<font=Default>changed font</font>\n<colour=255,0,255,255>changed colour</colour>")
-]]
+*/
 function ix.markup.Parse(ml, maxwidth)
 
     ml = utf8.force(ml)

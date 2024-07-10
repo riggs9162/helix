@@ -1,10 +1,10 @@
 
---[[--
+/*
 Entity menu manipulation.
 
 The `menu` library allows you to open up a context menu of arbitrary options whose callbacks will be ran when they are selected
 from the panel that shows up for the player.
-]]
+*/
 // @module ix.menu
 
 /// You'll need to pass a table of options to `ix.menu.Open` to populate the menu. This table consists of strings as its keys

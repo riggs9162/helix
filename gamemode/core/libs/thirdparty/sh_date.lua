@@ -29,7 +29,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-]]
+*/
 
 --[[ CONSTANTS ]]--
   local HOURPERDAY  = 24
@@ -165,7 +165,7 @@ THE SOFTWARE.
     local mi = floor((100*d + 52)/3060)
     return (floor((mi + 2)/12) + y), mod(mi + 2,12), (d - floor((mi*306 + 5)/10) + 1)
   end
-  ]]
+  */
   // day fraction from time
   local function makedayfrc(h,r,s,t)
     return ((h*60 + r)*60 + s)*TICKSPERSEC + t

@@ -1,5 +1,5 @@
 
---[[--
+/*
 Holds items within a grid layout.
 
 Inventories are an object that contains `Item`s in a grid layout. Every `Character` will have exactly one inventory attached to
@@ -21,7 +21,7 @@ You may be looking for the following common functions:
 `GetID` Which gets the inventory's ID.
 
 `HasItem` Which checks if the inventory has an item.
-]]
+*/
 // @classmod Inventory
 
 local META = ix.meta.inventory or ix.middleclass("ix_inventory")

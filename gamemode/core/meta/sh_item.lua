@@ -1,5 +1,5 @@
 
---[[--
+/*
 Interactable entities that can be held in inventories.
 
 Items are objects that are contained inside of an `Inventory`, or as standalone entities if they are dropped in the world. They
@@ -52,10 +52,10 @@ in your item class file with the same name. See the `bags` base for example usag
 ## Item icons (`ItemIconStructure`)
 Icons for items sometimes don't line up quite right, in which case you can modify an item's `iconCam` value and line up the
 rendered model as needed. See `ItemIconStructure` for more details.
-]]
+*/
 // @classmod Item
 
---[[--
+/*
 All item functions live inside of an item's `functions` table. An item function entry includes a few methods and fields you can
 use to customize the functionality and appearance of the item function. An example item function is below:
 
@@ -85,7 +85,7 @@ use to customize the functionality and appearance of the item function. An examp
             return IsValid(client) and client:IsAdmin()
         end
     }
-]]
+*/
 // @table ItemFunctionStructure
 // @realm shared
 // @field[type=string,opt] name Language phrase to use when displaying this item function's name in the UI. If not specified,
@@ -111,7 +111,7 @@ use to customize the functionality and appearance of the item function. An examp
 --
 // The same arguments from `OnCanRun` and `OnRun` apply to this function.
 
---[[--
+/*
 Changing the way an item's icon is rendered is done by modifying the location and angle of the model, as well as the FOV of the
 camera. You can tweak the values in code, or use the `ix_dev_icon` console command to visually position the model and camera. An
 example entry for an item's icon is below:
@@ -124,14 +124,14 @@ example entry for an item's icon is below:
 
 Note that this will probably not work for your item's specific model, since every model has a different size, origin, etc. All
 item icons need to be tweaked individually.
-]]
+*/
 // @table ItemIconStructure
 // @realm client
 // @field[type=vector] pos Location of the model relative to the camera. +X is forward, +Z is up
 // @field[type=angle] ang Angle of the model
 // @field[type=number] fov FOV of the camera
 
---[[--
+/*
 When creating an item class, the file will have a global table `ITEM` set that you use to define the item's values/methods. An
 example item class is below:
 
@@ -145,7 +145,7 @@ example item class is below:
 
 Note that the below list only includes the default fields available for *all* items, and not special ones defined in custom
 item bases.
-]]
+*/
 // @table ItemStructure
 // @realm shared
 // @field[type=string] name Display name of the item

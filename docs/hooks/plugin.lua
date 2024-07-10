@@ -1,12 +1,12 @@
 
 // luacheck: ignore 111
 
---[[--
+/*
 Global hooks for general use.
 
 Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your plugin with
 `PLUGIN:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
-]]
+*/
 // @hooks Plugin
 
 /// Adjusts the data used just before creating a new character.

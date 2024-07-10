@@ -1,5 +1,5 @@
 
---[[--
+/*
 Contains information about a player's current game state.
 
 Characters are a fundamental object type in Helix. They are distinct from players, where players are the representation of a
@@ -11,7 +11,7 @@ They contain all information that is not persistent with the player; names, desc
 part, you'll want to keep all information stored on the character since it will probably be different or change if the
 player switches to another character. An easy way to do this is to use `ix.char.RegisterVar` to easily create accessor functions
 for variables that automatically save to the character object.
-]]
+*/
 // @classmod Character
 
 local CHAR = ix.meta.character or {}

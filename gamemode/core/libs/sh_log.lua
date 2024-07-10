@@ -1,5 +1,5 @@
 
---[[--
+/*
 Logging helper functions.
 
 Predefined flags:
@@ -9,7 +9,7 @@ Predefined flags:
     FLAG_DANGER
     FLAG_SERVER
     FLAG_DEV
-]]
+*/
 // @module ix.log
 
 // luacheck: globals FLAG_NORMAL FLAG_SUCCESS FLAG_WARNING FLAG_DANGER FLAG_SERVER FLAG_DEV

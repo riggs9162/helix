@@ -1,7 +1,7 @@
 
---[[--
+/*
 Inventory manipulation and helper functions.
-]]
+*/
 // @module ix.inventory
 
 ix.inventory = ix.inventory or {}

@@ -26,7 +26,7 @@ V 1.2.1
  - fixed deserialization bug.
 THANKS TO...
  - VERCAS for the inspiration.
-]]
+*/
 
 
 local pon = {};

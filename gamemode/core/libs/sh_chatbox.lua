@@ -1,5 +1,5 @@
 
---[[--
+/*
 Chat manipulation and helper functions.
 
 Chat messages are a core part of the framework - it's takes up a good chunk of the gameplay, and is also used to interact with
@@ -7,7 +7,7 @@ the framework. Chat messages can have types or "classes" that describe how the m
 will have some type of class: `ic` for regular in-character speech, `me` for actions, `ooc` for out-of-character, etc. These
 chat classes can affect how the message is displayed in each player's chatbox. See `ix.chat.Register` and `ChatClassStructure`
 to create your own chat classes.
-]]
+*/
 // @module ix.chat
 
 ix.chat = ix.chat or {}
