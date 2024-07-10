@@ -238,14 +238,14 @@ function PANEL:Init()
     self.copy.DoClick = function()
         local camPos = self.model:GetCamPos()
         local camAng = self.model:GetLookAng()
-		local str = "ITEM.model = \""..self.model:GetModel().."\"\n"
-		.."ITEM.width = "..math.Round(self.width:GetValue()).."\n"
-		.."ITEM.height = "..math.Round(self.height:GetValue()).."\n"
-		.."ITEM.iconCam = {\n"
-		.."\tpos = Vector("..math.Round(camPos.x, 2)..", "..math.Round(camPos.y, 2)..", "..math.Round(camPos.z, 2).."),\n"
-		.."\tang = Angle("..math.Round(camAng.p, 2)..", "..math.Round(camAng.y, 2)..", "..math.Round(camAng.r, 2).."),\n"
-		.."\tfov = "..math.Round(self.model:GetFOV(), 2).."\n"
-		.."}\n"
+        local str = "ITEM.model = \""..self.model:GetModel().."\"\n"
+        .."ITEM.width = "..math.Round(self.width:GetValue()).."\n"
+        .."ITEM.height = "..math.Round(self.height:GetValue()).."\n"
+        .."ITEM.iconCam = {\n"
+        .."\tpos = Vector("..math.Round(camPos.x, 2)..", "..math.Round(camPos.y, 2)..", "..math.Round(camPos.z, 2).."),\n"
+        .."\tang = Angle("..math.Round(camAng.p, 2)..", "..math.Round(camAng.y, 2)..", "..math.Round(camAng.r, 2).."),\n"
+        .."\tfov = "..math.Round(self.model:GetFOV(), 2).."\n"
+        .."}\n"
 
         SetClipboardText(str)
         ix.util.Notify(L("iconEditorCopied"))

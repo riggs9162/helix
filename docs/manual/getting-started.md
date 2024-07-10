@@ -68,8 +68,8 @@ Schema.name = "My Schema"
 Schema.author = "me!"
 Schema.description = "My awesome schema."
 
--- include your other schema files
+// include your other schema files
 ix.util.Include("cl_schema.lua")
 ix.util.Include("sv_schema.lua")
--- etc.
+// etc.
 ```

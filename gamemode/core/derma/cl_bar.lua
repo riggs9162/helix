@@ -1,142 +1,142 @@
 
--- bar manager
--- this manages positions for bar panels
+// bar manager
+// this manages positions for bar panels
 local PANEL = {}
 
 AccessorFunc(PANEL, "padding", "Padding", FORCE_NUMBER)
 
 function PANEL:Init()
-	self:SetSize(ScrW() * 0.35, ScrH())
-	self:SetPos(4, 4)
-	self:ParentToHUD()
+    self:SetSize(ScrW() * 0.35, ScrH())
+    self:SetPos(4, 4)
+    self:ParentToHUD()
 
-	self.bars = {}
-	self.padding = 2
+    self.bars = {}
+    self.padding = 2
 
-	-- add bars that were registered before manager creation
-	for _, v in ipairs(ix.bar.list) do
-		v.panel = self:AddBar(v.index, v.color, v.priority)
-	end
+    // add bars that were registered before manager creation
+    for _, v in ipairs(ix.bar.list) do
+        v.panel = self:AddBar(v.index, v.color, v.priority)
+    end
 end
 
 function PANEL:GetAll()
-	return self.bars
+    return self.bars
 end
 
 function PANEL:Clear()
-	for k, v in ipairs(self.bars) do
-		v:Remove()
+    for k, v in ipairs(self.bars) do
+        v:Remove()
 
-		table.remove(self.bars, k)
-	end
+        table.remove(self.bars, k)
+    end
 end
 
 function PANEL:AddBar(index, color, priority)
-	local panel = self:Add("ixInfoBar")
-	panel:SetSize(self:GetWide(), BAR_HEIGHT)
-	panel:SetVisible(false)
-	panel:SetID(index)
-	panel:SetColor(color)
-	panel:SetPriority(priority)
+    local panel = self:Add("ixInfoBar")
+    panel:SetSize(self:GetWide(), BAR_HEIGHT)
+    panel:SetVisible(false)
+    panel:SetID(index)
+    panel:SetColor(color)
+    panel:SetPriority(priority)
 
-	self.bars[#self.bars + 1] = panel
-	self:Sort()
+    self.bars[#self.bars + 1] = panel
+    self:Sort()
 
-	return panel
+    return panel
 end
 
 function PANEL:RemoveBar(panel)
-	local toRemove
+    local toRemove
 
-	for k, v in ipairs(self.bars) do
-		if (v == panel) then
-			toRemove = k
-			break
-		end
-	end
+    for k, v in ipairs(self.bars) do
+        if (v == panel) then
+            toRemove = k
+            break
+        end
+    end
 
-	if (toRemove) then
-		table.remove(self.bars, toRemove)
+    if (toRemove) then
+        table.remove(self.bars, toRemove)
 
-		-- Decrease index value for the next bars
-		for i = toRemove, #self.bars do
-			ix.bar.list[i].index = i
-			self.bars[i]:SetID(i)
-		end
-	end
+        // Decrease index value for the next bars
+        for i = toRemove, #self.bars do
+            ix.bar.list[i].index = i
+            self.bars[i]:SetID(i)
+        end
+    end
 
-	panel:Remove()
-	self:Sort()
+    panel:Remove()
+    self:Sort()
 end
 
--- sort bars by priority
+// sort bars by priority
 function PANEL:Sort()
-	table.sort(self.bars, function(a, b)
-		return a:GetPriority() < b:GetPriority()
-	end)
+    table.sort(self.bars, function(a, b)
+        return a:GetPriority() < b:GetPriority()
+    end)
 end
 
--- update target Y positions
+// update target Y positions
 function PANEL:Organize()
-	local currentY = 0
+    local currentY = 0
 
-	for _, v in ipairs(self.bars) do
-		if (!v:IsVisible()) then
-			continue
-		end
+    for _, v in ipairs(self.bars) do
+        if (!v:IsVisible()) then
+            continue
+        end
 
-		v:SetPos(0, currentY)
+        v:SetPos(0, currentY)
 
-		currentY = currentY + self.padding + v:GetTall()
-	end
+        currentY = currentY + self.padding + v:GetTall()
+    end
 
-	self:SetSize(self:GetWide(), currentY)
+    self:SetSize(self:GetWide(), currentY)
 end
 
 function PANEL:Think()
-	local menu = (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing()) and ix.gui.characterMenu
-		or IsValid(ix.gui.menu) and ix.gui.menu
-	local fraction = menu and 1 - menu.currentAlpha / 255 or 1
+    local menu = (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing()) and ix.gui.characterMenu
+        or IsValid(ix.gui.menu) and ix.gui.menu
+    local fraction = menu and 1 - menu.currentAlpha / 255 or 1
 
-	self:SetAlpha(255 * fraction)
+    self:SetAlpha(255 * fraction)
 
-	-- don't update bars when not visible
-	if (fraction == 0) then
-		return
-	end
+    // don't update bars when not visible
+    if (fraction == 0) then
+        return
+    end
 
-	local curTime = CurTime()
-	local bShouldHide = hook.Run("ShouldHideBars")
-	local bAlwaysShow = ix.option.Get("alwaysShowBars", false)
+    local curTime = CurTime()
+    local bShouldHide = hook.Run("ShouldHideBars")
+    local bAlwaysShow = ix.option.Get("alwaysShowBars", false)
 
-	for _, v in ipairs(self.bars) do
-		local info = ix.bar.list[v:GetID()]
-		local realValue, barText = info.GetValue()
+    for _, v in ipairs(self.bars) do
+        local info = ix.bar.list[v:GetID()]
+        local realValue, barText = info.GetValue()
 
-		if (bShouldHide or realValue == false) then
-			v:SetVisible(false)
-			continue
-		end
+        if (bShouldHide or realValue == false) then
+            v:SetVisible(false)
+            continue
+        end
 
-		if (v:GetDelta() != realValue) then
-			v:SetLifetime(curTime + 5)
-		end
+        if (v:GetDelta() != realValue) then
+            v:SetLifetime(curTime + 5)
+        end
 
-		if (v:GetLifetime() < curTime and !info.visible and !bAlwaysShow and !hook.Run("ShouldBarDraw", info)) then
-			v:SetVisible(false)
-			continue
-		end
+        if (v:GetLifetime() < curTime and !info.visible and !bAlwaysShow and !hook.Run("ShouldBarDraw", info)) then
+            v:SetVisible(false)
+            continue
+        end
 
-		v:SetVisible(true)
-		v:SetValue(realValue)
-		v:SetText(isstring(barText) and barText or "")
-	end
+        v:SetVisible(true)
+        v:SetValue(realValue)
+        v:SetText(isstring(barText) and barText or "")
+    end
 
-	self:Organize()
+    self:Organize()
 end
 
 function PANEL:OnRemove()
-	self:Clear()
+    self:Clear()
 end
 
 vgui.Register("ixInfoBarManager", PANEL, "Panel")
@@ -151,47 +151,47 @@ AccessorFunc(PANEL, "delta", "Delta", FORCE_NUMBER)
 AccessorFunc(PANEL, "lifetime", "Lifetime", FORCE_NUMBER)
 
 function PANEL:Init()
-	self.value = 0
-	self.delta = 0
-	self.lifetime = 0
+    self.value = 0
+    self.delta = 0
+    self.lifetime = 0
 
-	self.bar = self:Add("DPanel")
-	self.bar:SetPaintedManually(true)
-	self.bar:Dock(FILL)
-	self.bar:DockMargin(2, 2, 2, 2)
-	self.bar.Paint = function(this, width, height)
-		width = width * math.min(self.delta, 1)
+    self.bar = self:Add("DPanel")
+    self.bar:SetPaintedManually(true)
+    self.bar:Dock(FILL)
+    self.bar:DockMargin(2, 2, 2, 2)
+    self.bar.Paint = function(this, width, height)
+        width = width * math.min(self.delta, 1)
 
-		derma.SkinFunc("PaintInfoBar", self, width, height, self.color)
-	end
+        derma.SkinFunc("PaintInfoBar", self, width, height, self.color)
+    end
 
-	self.label = self:Add("DLabel")
-	self.label:SetFont("ixSmallFont")
-	self.label:SetContentAlignment(5)
-	self.label:SetText("")
-	self.label:SetTextColor(Color(240, 240, 240))
-	self.label:SetExpensiveShadow(2, Color(20, 20, 20))
-	self.label:SetPaintedManually(true)
-	self.label:SizeToContents()
-	self.label:Dock(FILL)
+    self.label = self:Add("DLabel")
+    self.label:SetFont("ixSmallFont")
+    self.label:SetContentAlignment(5)
+    self.label:SetText("")
+    self.label:SetTextColor(Color(240, 240, 240))
+    self.label:SetExpensiveShadow(2, Color(20, 20, 20))
+    self.label:SetPaintedManually(true)
+    self.label:SizeToContents()
+    self.label:Dock(FILL)
 end
 
 function PANEL:SetText(text)
-	self.label:SetText(text)
-	self.label:SizeToContents()
+    self.label:SetText(text)
+    self.label:SizeToContents()
 end
 
 function PANEL:Think()
-	self.delta = math.Approach(self.delta, self.value, FrameTime())
+    self.delta = math.Approach(self.delta, self.value, FrameTime())
 end
 
 function PANEL:Paint(width, height)
-	derma.SkinFunc("PaintInfoBarBackground", self, width, height)
+    derma.SkinFunc("PaintInfoBarBackground", self, width, height)
 end
 
 vgui.Register("ixInfoBar", PANEL, "Panel")
 
 if (IsValid(ix.gui.bars)) then
-	ix.gui.bars:Remove()
-	ix.gui.bars = vgui.Create("ixInfoBarManager")
+    ix.gui.bars:Remove()
+    ix.gui.bars = vgui.Create("ixInfoBarManager")
 end

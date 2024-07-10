@@ -28,21 +28,21 @@ local tween = {
   ]]
 }
 
--- easing
+// easing
 
--- Adapted from https://github.com/EmmanuelOga/easing. See LICENSE.txt for credits.
--- For all easing functions:
--- t = time == how much time has to pass for the tweening to complete
--- b = begin == starting property value
--- c = change == ending - beginning
--- d = duration == running time. How much time has passed *right now*
+// Adapted from https://github.com/EmmanuelOga/easing. See LICENSE.txt for credits.
+// For all easing functions:
+// t = time == how much time has to pass for the tweening to complete
+// b = begin == starting property value
+// c = change == ending - beginning
+// d = duration == running time. How much time has passed *right now*
 
 local pow, sin, cos, pi, sqrt, abs, asin = math.pow, math.sin, math.cos, math.pi, math.sqrt, math.abs, math.asin
 
--- linear
+// linear
 local function linear(t, b, c, d) return c * t / d + b end
 
--- quad
+// quad
 local function inQuad(t, b, c, d) return c * pow(t / d, 2) + b end
 local function outQuad(t, b, c, d)
   t = t / d
@@ -58,7 +58,7 @@ local function outInQuad(t, b, c, d)
   return inQuad((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- cubic
+// cubic
 local function inCubic (t, b, c, d) return c * pow(t / d, 3) + b end
 local function outCubic(t, b, c, d) return c * (pow(t / d - 1, 3) + 1) + b end
 local function inOutCubic(t, b, c, d)
@@ -72,7 +72,7 @@ local function outInCubic(t, b, c, d)
   return inCubic((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- quart
+// quart
 local function inQuart(t, b, c, d) return c * pow(t / d, 4) + b end
 local function outQuart(t, b, c, d) return -c * (pow(t / d - 1, 4) - 1) + b end
 local function inOutQuart(t, b, c, d)
@@ -85,7 +85,7 @@ local function outInQuart(t, b, c, d)
   return inQuart((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- quint
+// quint
 local function inQuint(t, b, c, d) return c * pow(t / d, 5) + b end
 local function outQuint(t, b, c, d) return c * (pow(t / d - 1, 5) + 1) + b end
 local function inOutQuint(t, b, c, d)
@@ -98,7 +98,7 @@ local function outInQuint(t, b, c, d)
   return inQuint((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- sine
+// sine
 local function inSine(t, b, c, d) return -c * cos(t / d * (pi / 2)) + c + b end
 local function outSine(t, b, c, d) return c * sin(t / d * (pi / 2)) + b end
 local function inOutSine(t, b, c, d) return -c / 2 * (cos(pi * t / d) - 1) + b end
@@ -107,7 +107,7 @@ local function outInSine(t, b, c, d)
   return inSine((t * 2) -d, b + c / 2, c / 2, d)
 end
 
--- expo
+// expo
 local function inExpo(t, b, c, d)
   if t == 0 then return b end
   return c * pow(2, 10 * (t / d - 1)) + b - c * 0.001
@@ -128,7 +128,7 @@ local function outInExpo(t, b, c, d)
   return inExpo((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- circ
+// circ
 local function inCirc(t, b, c, d) return(-c * (sqrt(1 - pow(t / d, 2)) - 1) + b) end
 local function outCirc(t, b, c, d)  return(c * sqrt(1 - pow(t / d - 1, 2)) + b) end
 local function inOutCirc(t, b, c, d)
@@ -142,11 +142,11 @@ local function outInCirc(t, b, c, d)
   return inCirc((t * 2) - d, b + c / 2, c / 2, d)
 end
 
--- elastic
+// elastic
 local function calculatePAS(p,a,c,d)
   p, a = p or d * 0.3, a or 0
-  if a < abs(c) then return p, c, p / 4 end -- p, a, s
-  return p, a, p / (2 * pi) * asin(c/a) -- p,a,s
+  if a < abs(c) then return p, c, p / 4 end // p, a, s
+  return p, a, p / (2 * pi) * asin(c/a) // p,a,s
 end
 local function inElastic(t, b, c, d, a, p)
   local s
@@ -180,7 +180,7 @@ local function outInElastic(t, b, c, d, a, p)
   return inElastic((t * 2) - d, b + c / 2, c / 2, d, a, p)
 end
 
--- back
+// back
 local function inBack(t, b, c, d, s)
   s = s or 1.70158
   t = t / d
@@ -203,7 +203,7 @@ local function outInBack(t, b, c, d, s)
   return inBack((t * 2) - d, b + c / 2, c / 2, d, s)
 end
 
--- bounce
+// bounce
 local function outBounce(t, b, c, d)
   t = t / d
   if t < 1 / 2.75 then return c * (7.5625 * t * t) + b end
@@ -243,7 +243,7 @@ tween.easing = {
 
 
 
--- private stuff
+// private stuff
 
 local function copyTables(destination, keysTable, valuesTable)
   valuesTable = valuesTable or keysTable
@@ -318,7 +318,7 @@ local function applyValues(subject, target)
   end
 end
 
--- Tween methods
+// Tween methods
 
 local Tween = {}
 local Tween_mt = {__index = Tween}
@@ -334,7 +334,7 @@ function Tween:set(clock)
     self.clock = 0
     applyValues(self.subject, self.initial)
 
-  elseif self.clock >= self.duration then -- the tween has expired
+  elseif self.clock >= self.duration then // the tween has expired
 
     self.clock = self.duration
     applyValues(self.subject, self.target)
@@ -358,7 +358,7 @@ function Tween:update(dt)
 end
 
 
--- Public interface
+// Public interface
 
 function tween.new(duration, subject, target, easing)
   easing = getEasingFunction(easing)

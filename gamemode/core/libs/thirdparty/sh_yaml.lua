@@ -47,7 +47,7 @@ table_print_value = function(value, indent, done)
       )
     end
 
-    rep = rep .. string.rep(" ", indent) -- indent it
+    rep = rep .. string.rep(" ", indent) // indent it
     rep = rep .. "}"
 
     done[value] = false
@@ -179,17 +179,17 @@ exports.tokenize = function (str)
         if token[1] == "{" or token[1] == "[" then
           inline = true
         elseif token.const then
-          -- Since word pattern contains last char we're re-adding it
+          // Since word pattern contains last char we're re-adding it
           str = token[2][2] .. str
           token.raw = token.raw:sub(1, #token.raw - #token[2][2])
         elseif token[1] == "id" then
-          -- Since id pattern contains last semi-colon we're re-adding it
+          // Since id pattern contains last semi-colon we're re-adding it
           str = token[2][2] .. str
           token.raw = token.raw:sub(1, #token.raw - #token[2][2])
-          -- Trim
+          // Trim
           token[2][1] = string_trim(token[2][1])
         elseif token[1] == "string" then
-          -- Finding numbers
+          // Finding numbers
           local snip = token[2][1]
           if not token.force_text then
             if snip:match("^(%d+%.%d+)$") or snip:match("^(%d+)$") then
@@ -229,10 +229,10 @@ exports.tokenize = function (str)
               push(stack, token)
             end
           end
-        end -- if token[1] == XXX
+        end // if token[1] == XXX
         token.row = row
         break
-      end -- if #captures > 0
+      end // if #captures > 0
     end
 
     if not ignore then
