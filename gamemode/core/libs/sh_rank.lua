@@ -192,7 +192,7 @@ if (SERVER) then
         hook.Run("PlayerJoinedRank", client, goRank)
     end
 
-    function GAMEMODE:PlayerJoinedRank(client, rank, oldRank)
+    function GM:PlayerJoinedRank(client, rank, oldRank)
         local info = ix.rank.list[rank]
         local info2 = ix.rank.list[oldRank]
 
@@ -255,7 +255,3 @@ ix.command.Add("CharSetRank", {
         end
     end
 })
-
-hook.Add("InitializedPlugins", "ixLoadRanks", function()
-    ix.rank.LoadFromDir(engine.ActiveGamemode().."/schema/ranks")
-end)
