@@ -82,6 +82,20 @@ do
             end
         end
     end
+
+    function playerMeta:GetRankData()
+        local char = self:GetCharacter()
+
+        if (char) then
+            local rank = char:GetRank()
+
+            if (rank) then
+                local rankData = ix.rank.list[rank]
+
+                return rankData
+            end
+        end
+    end
 end
 
 do
