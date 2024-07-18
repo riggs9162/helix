@@ -61,6 +61,9 @@ if (CLIENT) then
                         if (self.orderedIndex > #self.ordered) then
                             self.orderedIndex = 1
                         end
+
+                        // Reset PVS, we're moving to a new scene.
+                        client.ixMapSceneSentPVS = false
                     else
                         local keys = {}
 
@@ -88,7 +91,29 @@ if (CLIENT) then
             view.origin = realOrigin + realAngles:Up()*y3 + realAngles:Right()*x3
             view.angles = realAngles + Angle(y3 * -0.5, x3 * -0.5, 0)
 
+            // Send the PVS to the server if it's not already sent.
+            if (!client.ixMapSceneSentPVS) then
+                local pvs = {}
+
+                table.insert(pvs, value[1])
+                table.insert(pvs, value[3])
+
+                net.Start("ixMapScenePVS")
+                    net.WriteTable(pvs)
+                net.SendToServer()
+
+                client.ixMapSceneSentPVS = true
+            end
+
             return view
+        else
+            // Reset PVS, we're not in the character menu.
+            if (client.ixMapSceneSentPVS) then
+                net.Start("ixMapScenePVS")
+                net.SendToServer()
+
+                client.ixMapSceneSentPVS = false
+            end
         end
     end
 
@@ -160,6 +185,13 @@ else
     util.AddNetworkString("ixMapSceneAddPair")
     util.AddNetworkString("ixMapSceneRemovePair")
 
+    util.AddNetworkString("ixMapScenePVS")
+
+    net.Receive("ixMapScenePVS", function(_, client)
+        local origin = net.ReadTable()
+        client.ixMapSceneOrigins = origin
+    end)
+
     function PLUGIN:SaveScenes()
         self:SetData(self.scenes)
     end
@@ -200,6 +232,22 @@ else
         end
 
         self:SaveScenes()
+    end
+
+    function PLUGIN:SetupPlayerVisibility(client, viewEntity)
+        if (IsValid(viewEntity) and !viewEntity:TestPVS(client)) then
+            return
+        end
+
+        if (!client.ixMapSceneOrigins) then
+            return
+        end
+
+        for _, v in ipairs(client.ixMapSceneOrigins) do
+            if (isvector(v)) then
+                AddOriginToPVS(v)
+            end
+        end
     end
 end
 
