@@ -419,9 +419,6 @@ function GM:NetworkEntityCreated(entity)
     end
 end
 
-local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
-local hasVignetteMaterial = !vignette:IsError()
-
 function GM:CalcView(client, origin, angles, fov)
     local view = self.BaseClass:CalcView(client, origin, angles, fov) or {}
     local entity = Entity(client:GetLocalVar("ragdoll", 0))
@@ -530,7 +527,8 @@ end
 
 local mathApproach = math.Approach
 local surface = surface
-
+local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
+local hasVignetteMaterial = !vignette:IsError()
 local blurDelta = 0
 local blurGoal = 0
 function GM:HUDPaintBackground()
