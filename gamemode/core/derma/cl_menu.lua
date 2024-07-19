@@ -381,7 +381,6 @@ function PANEL:Think()
 
     if (bTabDown and (self.noAnchor or CurTime() + 0.4) < CurTime() and self.anchorMode) then
         self.anchorMode = false
-        surface.PlaySound("buttons/lightswitch2.wav")
     end
 
     if ((!self.anchorMode and !bTabDown) or gui.IsGameUIVisible()) then
