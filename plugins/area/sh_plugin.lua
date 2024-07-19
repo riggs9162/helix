@@ -56,10 +56,13 @@ function ix.area.GetNearestArea(position, distance)
         return a[2] < b[2]
     end)
 
-    local area = found[1][1]
-    if (area and ix.area.stored[area]) then
-        return area
+    if ( found and found[1] ) then
+        local area = found[1][1]
+        if (area and ix.area.stored[area]) then
+            return area
+        end
     end
+
 
     return nil
 end
