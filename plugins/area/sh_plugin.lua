@@ -39,6 +39,31 @@ function ix.area.AddType(type, name)
     ix.area.types[type] = CLIENT and name or true
 end
 
+// returns the nearest and closest area from the specified position
+function ix.area.GetNearestArea(position, distance)
+    local found = {}
+    for id, info in pairs(ix.area.stored) do
+        local center = PLUGIN:GetLocalAreaPosition(info.startPosition, info.endPosition)
+        local areaDistance = center:Distance(position)
+
+        if (areaDistance <= distance) then
+            found[#found + 1] = {id, areaDistance}
+        end
+    end
+
+    // return the area with the shortest distance
+    table.sort(found, function(a, b)
+        return a[2] < b[2]
+    end)
+
+    local area = found[1][1]
+    if (area and ix.area.stored[area]) then
+        return area
+    end
+
+    return nil
+end
+
 function PLUGIN:SetupAreaProperties()
     ix.area.AddType("area")
 
