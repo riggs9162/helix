@@ -56,12 +56,16 @@ function ix.area.GetNearestArea(position, distance)
         return a[2] < b[2]
     end)
 
+    if (#found == 0) then
+        return "unknown location"
+    end
+
     local area = found[1][1]
     if (area and ix.area.stored[area]) then
         return area
     end
 
-    return nil
+    return "unknown location"
 end
 
 function PLUGIN:SetupAreaProperties()
