@@ -11,14 +11,75 @@ local realOrigin = Vector(0, 0, 0)
 local realAngles = Angle(0, 0, 0)
 local view = {}
 
+ix.config.Add("mapSceneSmooth", 100, "How smooth the camera should move between scenes.", nil, {
+    data = {decimals = 0, min = 0, max = 100},
+    category = "Map Scenes"
+})
+
+ix.config.Add("mapSceneTime", 30, "How long it should take to transition between scenes.", nil, {
+    data = {decimals = 0, min = 0, max = 180},
+    category = "Map Scenes"
+})
+
+ix.config.Add("mapSceneLinear", false, "Should the camera move in a more smooth or linear fashion? If true, the camera will move in a more linear fashion.", nil, {
+    category = "Map Scenes"
+})
+
+ix.config.Add("mapSceneMouseInput", true, "Should the camera also move based on mouse input?", nil, {
+    category = "Map Scenes"
+})
+
+local function Approach(fraction, start, finish)
+    fraction = fraction * ix.config.Get("mapSceneSmooth", 100) * 0.01
+    
+    if (ix.config.Get("mapSceneLinear", false)) then
+        return math.Approach(start, finish, fraction * math.abs(finish - start))
+    else
+        return Lerp(fraction, start, finish)
+    end
+end
+
+local function ApproachVector(fraction, start, finish)
+    return Vector(Approach(fraction, start.x, finish.x), Approach(fraction, start.y, finish.y), Approach(fraction, start.z, finish.z))
+end
+
+local function ApproachAngle(fraction, start, finish)
+    return Angle(Approach(fraction, start.p, finish.p), Approach(fraction, start.y, finish.y), Approach(fraction, start.r, finish.r))
+end
+
 if (CLIENT) then
     PLUGIN.ordered = PLUGIN.ordered or {}
+    PLUGIN.startTime = 0
+    PLUGIN.finishTime = 0
+
+    function PLUGIN:ShouldRenderMapScene()
+    end
+
+    local function ShouldRenderMapScene()
+        if ( !IsValid(ix.gui.characterMenu) ) then
+            return false
+        end
+
+        if ( IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsClosing() ) then
+            return false
+        end
+
+        if ( table.IsEmpty(PLUGIN.scenes) ) then
+            return false
+        end
+
+        local can = hook.Run("ShouldRenderMapScene")
+        if (can == false) then
+            return false
+        end
+
+        return true
+    end
 
     function PLUGIN:CalcView(client, origin, angles, fov)
         local scenes = self.scenes
 
-        if (IsValid(ix.gui.characterMenu) and !IsValid(ix.gui.menu) and !ix.gui.characterMenu:IsClosing() and
-            !table.IsEmpty(scenes)) then
+        if (ShouldRenderMapScene()) then
             local key = self.index
             local value = scenes[self.index]
 
@@ -41,19 +102,22 @@ if (CLIENT) then
 
                 if (!self.startTime) then
                     self.startTime = curTime
-                    self.finishTime = curTime + 30
+                    self.finishTime = curTime + ix.config.Get("mapSceneTime", 30)
                 end
 
                 local fraction = math.min(math.TimeFraction(self.startTime, self.finishTime, CurTime()), 1)
 
                 if (value) then
-                    realOrigin = LerpVector(fraction, key, value[1])
-                    realAngles = LerpAngle(fraction, value[2], value[3])
+                    realOrigin = ApproachVector(fraction, key, value[1])
+                    realAngles = ApproachAngle(fraction, value[2], value[3])
                 end
 
                 if (fraction >= 1) then
                     self.startTime = curTime
-                    self.finishTime = curTime + 30
+                    self.finishTime = curTime + ix.config.Get("mapSceneTime", 30)
+
+                    // Reset PVS, we're moving to a new scene.
+                    client.ixMapSceneSentPVS = false
 
                     if (ordered) then
                         self.orderedIndex = self.orderedIndex + 1
@@ -61,9 +125,6 @@ if (CLIENT) then
                         if (self.orderedIndex > #self.ordered) then
                             self.orderedIndex = 1
                         end
-
-                        // Reset PVS, we're moving to a new scene.
-                        client.ixMapSceneSentPVS = false
                     else
                         local keys = {}
 
@@ -85,8 +146,12 @@ if (CLIENT) then
             local x2, y2 = surface.ScreenWidth() * 0.5, surface.ScreenHeight() * 0.5
             local frameTime = FrameTime() * 0.5
 
-            y3 = Lerp(frameTime, y3, math.Clamp((y - y2) / y2, -1, 1) * -6)
-            x3 = Lerp(frameTime, x3, math.Clamp((x - x2) / x2, -1, 1) * 6)
+            if (!ix.config.Get("mapSceneMouseInput", true)) then
+                x, y = 0, 0
+            end
+
+            y3 = Approach(frameTime, y3, math.Clamp((y - y2) / y2, -1, 1) * -6)
+            x3 = Approach(frameTime, x3, math.Clamp((x - x2) / x2, -1, 1) * 6)
 
             view.origin = realOrigin + realAngles:Up()*y3 + realAngles:Right()*x3
             view.angles = realAngles + Angle(y3 * -0.5, x3 * -0.5, 0)
