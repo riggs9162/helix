@@ -150,9 +150,6 @@ end
 // @internal
 function ix.config.Load()
     if (SERVER) then
-        // clear stored config, incase we decided to delete some previously
-        ix.config.stored = {}
-
         local globals = ix.data.Get("config", nil, true, true)
         local data = ix.data.Get("config", nil, false, true)
 
