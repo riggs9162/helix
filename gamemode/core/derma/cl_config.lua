@@ -45,8 +45,9 @@ function PANEL:Populate()
             local type = v.type
             local value = ix.util.SanitizeType(type, ix.config.Get(k))
 
-            local row = self:AddRow(type, categoryPhrase)
-            row:SetText(ix.util.ExpandCamelCase(k))
+			local row = self:AddRow(type, categoryPhrase)
+			row:SetText(ix.util.ExpandCamelCase(k))
+			row:Populate(k, v.data)
 
             // type-specific properties
             if (type == ix.type.number) then
