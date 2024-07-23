@@ -11,6 +11,11 @@ local realOrigin = Vector(0, 0, 0)
 local realAngles = Angle(0, 0, 0)
 local view = {}
 
+ix.config.Add("mapSceneFOV", 90, "The field of view for the map scene.", nil, {
+    data = {decimals = 0, min = 0, max = 180},
+    category = "Map Scenes"
+})
+
 ix.config.Add("mapSceneSmooth", 100, "How smooth the camera should move between scenes.", nil, {
     data = {decimals = 0, min = 0, max = 100},
     category = "Map Scenes"
@@ -157,23 +162,22 @@ if (CLIENT) then
             view.angles = realAngles + Angle(y3 * -0.5, x3 * -0.5, 0)
 
             // Send the PVS to the server if it's not already sent.
-            if (!client.ixMapSceneSentPVS) then
-                local pvs = {}
-
-                table.insert(pvs, value[1])
-                table.insert(pvs, value[3])
+            if (client.ixMapSceneSentPVS != true) then
+                local center = ( key + value[1] ) / 2
 
                 net.Start("ixMapScenePVS")
-                    net.WriteTable(pvs)
+                    net.WriteVector(center)
                 net.SendToServer()
 
                 client.ixMapSceneSentPVS = true
             end
 
+            view.fov = ix.config.Get("mapSceneFOV", 90)
+
             return view
         else
             // Reset PVS, we're not in the character menu.
-            if (client.ixMapSceneSentPVS) then
+            if (client.ixMapSceneSentPVS != false) then
                 net.Start("ixMapScenePVS")
                 net.SendToServer()
 
@@ -253,12 +257,21 @@ else
     util.AddNetworkString("ixMapScenePVS")
 
     net.Receive("ixMapScenePVS", function(_, client)
-        local origin = net.ReadTable()
-        client.ixMapSceneOrigins = origin
+        local origin = net.ReadVector()
+        client.ixMapSceneOrigin = origin
     end)
 
     function PLUGIN:SaveScenes()
         self:SetData(self.scenes)
+
+        local json = util.TableToJSON(self.scenes)
+        local compressed = util.Compress(json)
+        local length = compressed:len()
+
+        net.Start("ixMapSceneSync")
+            net.WriteUInt(length, 32)
+            net.WriteData(compressed, length)
+        net.Broadcast()
     end
 
     function PLUGIN:LoadData()
@@ -300,18 +313,10 @@ else
     end
 
     function PLUGIN:SetupPlayerVisibility(client, viewEntity)
-        if (IsValid(viewEntity) and !viewEntity:TestPVS(client)) then
-            return
-        end
+        local origin = client.ixMapSceneOrigin
 
-        if (!client.ixMapSceneOrigins) then
-            return
-        end
-
-        for _, v in ipairs(client.ixMapSceneOrigins) do
-            if (isvector(v)) then
-                AddOriginToPVS(v)
-            end
+        if (origin) then
+            AddOriginToPVS(origin)
         end
     end
 end
@@ -388,3 +393,5 @@ ix.command.Add("MapSceneRemove", {
         return "@mapDel", i
     end
 })
+
+MAPSCENE = PLUGIN
