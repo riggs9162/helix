@@ -163,10 +163,8 @@ if (CLIENT) then
 
             // Send the PVS to the server if it's not already sent.
             if (client.ixMapSceneSentPVS != true) then
-                local center = ( key + value[1] ) / 2
-
                 net.Start("ixMapScenePVS")
-                    net.WriteVector(center)
+                    net.WriteVector(realOrigin)
                 net.SendToServer()
 
                 client.ixMapSceneSentPVS = true
