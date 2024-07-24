@@ -246,7 +246,7 @@ end
 
 function ix.plugin.Initialize()
     if SERVER then
-        ix.plugin.unloaded = ix.data.Get("unloaded", {}, false, true)
+        ix.plugin.unloaded = ix.data.Get("unloaded", {}, true, true)
     end
 
     ix.plugin.LoadFromDir("helix/plugins")
@@ -296,9 +296,9 @@ function ix.plugin.SetUnloaded(uniqueID, state, bNoSave)
             status = true
         end
 
-        local unloaded = ix.data.Get("unloaded", {}, false, true)
+        local unloaded = ix.data.Get("unloaded", {}, true, true)
             unloaded[uniqueID] = status
-        ix.data.Set("unloaded", unloaded, false, true)
+        ix.data.Set("unloaded", unloaded, true, true)
     end
 
     if (state) then
