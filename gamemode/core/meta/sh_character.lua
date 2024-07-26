@@ -266,7 +266,12 @@ function ix.char.RegisterVar(key, data)
     ix.char.vars[key] = data
     data.index = data.index or table.Count(ix.char.vars)
 
-    local upperName = key:sub(1, 1):upper() .. key:sub(2)
+    local upperName = ix.util.ExpandCamelCase(key)
+    upperName = key:sub(1, 1):upper() .. key:sub(2)
+    upperName = upperName:gsub("(%s)(%a)", function(space, letter)
+        return space .. letter:upper()
+    end)
+    upperName = upperName:gsub("%s", "")
 
     if (SERVER) then
         if (data.field) then
