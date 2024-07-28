@@ -5,7 +5,7 @@ PLUGIN.name = "Third Person"
 PLUGIN.author = "Black Tea"
 PLUGIN.description = "Enables third person camera usage."
 
-ix.config.Add("thirdperson", false, "Allow Thirdperson in the server.", nil, {
+ix.config.Add("thirdperson", true, "Allow Thirdperson in the server.", nil, {
     category = "server"
 })
 
