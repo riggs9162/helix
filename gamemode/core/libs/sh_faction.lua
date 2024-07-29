@@ -102,6 +102,25 @@ function ix.faction.GetIndex(uniqueID)
     end
 end
 
+/// Retrieves the players in a faction
+// @realm shared
+// @number faction Index of the faction
+// @treturn table Table of players in the faction
+function ix.faction.GetPlayers(faction)
+    local players = {}
+
+    for _, v in player.Iterator() do
+        if ( !IsValid(v) ) then continue end
+
+        local char = v:GetCharacter()
+        if (char and char:GetFaction() == faction) then
+            table.insert(players, v)
+        end
+    end
+
+    return players
+end
+
 if (CLIENT) then
     /// Returns true if a faction requires a whitelist.
     // @realm client
