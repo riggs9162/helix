@@ -710,6 +710,18 @@ function GM:PlayerDeathThink(client)
     return false
 end
 
+gameevent.Listen("player_disconnect")
+hook.Add("player_disconnect", "PlayerDisconnectMessage", function(data)
+    local client = Player(data.userid)
+
+    if (IsValid(client)) then
+        local data = {name = client:SteamName(), reason = data.reason:utf8lower()}
+        data = util.TableToJSON(data)
+
+        ix.chat.Send(nil, "disconnect", data)
+    end
+end)
+
 function GM:PlayerDisconnected(client)
     client:SaveData()
 
@@ -725,8 +737,8 @@ function GM:PlayerDisconnected(client)
         end
 
         hook.Run("OnCharacterDisconnect", client, character)
-            character:Save()
-        ix.chat.Send(nil, "disconnect", client:SteamName())
+
+        character:Save()
     end
 
     if (IsValid(client.ixRagdoll)) then
