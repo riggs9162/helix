@@ -712,7 +712,8 @@ end
 
 local disconnectTranslator = {
     ["timed"] = "has timed out from the server",
-    ["disconnect by user"] = "has disconnected from the server"
+    ["disconnect by user"] = "has disconnected from the server",
+    ["the server is full and you do not have access to a reserved slot."] = "has attempted to connect, but the server is full."
 }
 
 gameevent.Listen("player_disconnect")
