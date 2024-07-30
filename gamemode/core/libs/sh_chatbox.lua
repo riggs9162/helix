@@ -611,15 +611,10 @@ ix.chat.Register("disconnect", {
     CanSay = function(self, speaker, text)
         return !IsValid(speaker)
     end,
-    OnChatAdd = function(self, speaker, data)
+    OnChatAdd = function(self, speaker, reason)
         local icon = ix.util.GetMaterial("icon16/user_delete.png")
 
-        data = util.JSONToTable(data)
-
-        local name = data.name or "unknown"
-        local reason = data.reason or "disconnected"
-
-        chat.AddText(icon, Color(200, 150, 200), L("playerDisconnected", name, reason))
+        chat.AddText(icon, Color(200, 150, 200), L("playerDisconnected", reason))
     end,
     noSpaceAfter = true
 })

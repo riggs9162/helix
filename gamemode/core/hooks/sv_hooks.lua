@@ -715,10 +715,7 @@ hook.Add("player_disconnect", "PlayerDisconnectMessage", function(data)
     local client = Player(data.userid)
 
     if (IsValid(client)) then
-        local data = {name = client:SteamName(), reason = data.reason:utf8lower()}
-        data = util.TableToJSON(data)
-
-        ix.chat.Send(nil, "disconnect", data)
+        ix.chat.Send(nil, "disconnect", ix.chat.Format(data.reason))
     end
 end)
 
