@@ -712,11 +712,7 @@ end
 
 gameevent.Listen("player_disconnect")
 hook.Add("player_disconnect", "PlayerDisconnectMessage", function(data)
-    local client = Player(data.userid)
-
-    if (IsValid(client)) then
-        ix.chat.Send(nil, "disconnect", ix.chat.Format(data.reason))
-    end
+    ix.chat.Send(nil, "disconnect", ix.chat.Format(data.name .. " " .. data.reason:utf8lower()))
 end)
 
 function GM:PlayerDisconnected(client)
