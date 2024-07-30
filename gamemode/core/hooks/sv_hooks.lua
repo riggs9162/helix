@@ -712,6 +712,7 @@ end
 
 local disconnectTranslator = {
     ["timed"] = "has timed out from the server",
+    ["connection closing"] = "has disconnected because their internet connection is closing",
     ["disconnect by user"] = "has disconnected from the server",
     ["the server is full and you do not have access to a reserved slot."] = "has attempted to connect, but the server is full.",
     ["a player with a reserved slot connected to the server and you got kicked to free up space."] = "got kicked to free up space for a reserved slot."
