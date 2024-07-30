@@ -710,9 +710,22 @@ function GM:PlayerDeathThink(client)
     return false
 end
 
+local disconnectTranslator = {
+    ["timed"] = "has timed out from the server",
+    ["disconnect by user"] = "has disconnected from the server"
+}
+
 gameevent.Listen("player_disconnect")
 hook.Add("player_disconnect", "PlayerDisconnectMessage", function(data)
-    ix.chat.Send(nil, "disconnect", ix.chat.Format(data.name .. " " .. data.reason:utf8lower()))
+    local reason = data.reason:utf8lower()
+    for k, v in pairs(disconnectTranslator) do
+        if (ix.util.StringMatches(reason, k)) then
+            reason = v
+            break
+        end
+    end
+
+    ix.chat.Send(nil, "disconnect", ix.chat.Format(data.name .. " " .. reason:utf8lower()))
 end)
 
 function GM:PlayerDisconnected(client)
