@@ -625,7 +625,7 @@ do
                 item.player = client
             end
 
-            if (item.entity) then
+            if (item.entity and IsValid(item.entity)) then
                 if (item.entity:GetPos():Distance(client:GetPos()) > 96) then
                     return
                 end
