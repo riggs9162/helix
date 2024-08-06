@@ -483,7 +483,7 @@ function GM:CanPlayerUseCharacter(client, character)
         return false, "@charBanned"
     end
 
-	::charBanBypass::
+    ::charBanBypass::
 
     local bHasWhitelist = client:HasWhitelist(character:GetFaction())
 
