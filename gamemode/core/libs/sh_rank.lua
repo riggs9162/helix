@@ -115,7 +115,7 @@ end
 // @treturn table Rank table
 function ix.rank.Get(identifier)
     for _, v in ipairs(ix.rank.list) do
-        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or v.index == identifier) then
+        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier)) or v.index == identifier ) then
             return v
         end
     end
