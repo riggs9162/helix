@@ -194,6 +194,13 @@ if (SERVER) then
         end
 
         local character = ix.char.loaded[inventory.owner]
+        if (!character) then
+            return
+        end
+
+        if (!item) then
+            return
+        end
 
         ix.log.Add(character:GetPlayer(), "inventoryAdd", character:GetName(), item:GetName(), item:GetID())
 
@@ -216,6 +223,13 @@ if (SERVER) then
         end
 
         local character = ix.char.loaded[inventory.owner]
+        if (!character) then
+            return
+        end
+
+        if (!item) then
+            return
+        end
 
         ix.log.Add(character:GetPlayer(), "inventoryRemove", character:GetName(), item:GetName(), item:GetID())
 
