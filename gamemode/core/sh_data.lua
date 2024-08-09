@@ -15,8 +15,9 @@ file.CreateDir("helix")
 // @bool[opt=false] bGlobal Whether or not to write directly to the `data/helix` folder, or the `data/helix/schema` folder,
 // where `schema` is the name of the current schema.
 // @bool[opt=false] bIgnoreMap Whether or not to ignore the map and save in the schema folder, rather than
+// @bool[opt=false] bFancy Whether or not to save the data in a fancy way, which is useful for debugging.
 // `data/helix/schema/map`, where `map` is the name of the current map.
-function ix.data.Set(key, value, bGlobal, bIgnoreMap)
+function ix.data.Set(key, value, bGlobal, bIgnoreMap, bFancy)
     // Get the base path to write to.
     local path = "helix/" .. (bGlobal and "" or Schema.folder .. "/") .. (bIgnoreMap and "" or game.GetMap() .. "/")
 
@@ -28,7 +29,7 @@ function ix.data.Set(key, value, bGlobal, bIgnoreMap)
     // If we're not ignoring the map, create a folder for the map.
     file.CreateDir(path)
     // Write the data using JSON encoding.
-    file.Write(path .. key .. ".txt", util.TableToJSON({value}))
+    file.Write(path .. key .. ".txt", util.TableToJSON({value}, bFancy and true or false))
 
     // Cache the data value here.
     ix.data.stored[key] = value
