@@ -413,6 +413,10 @@ if (SERVER) then
         entity:SetCollisionGroup(COLLISION_GROUP_WEAPON)
         entity:Activate()
 
+        if ( self:IsOnFire() ) then
+            entity:Ignite(60)
+        end
+
         local velocity = self:GetVelocity()
 
         for i = 0, entity:GetPhysicsObjectCount() - 1 do
