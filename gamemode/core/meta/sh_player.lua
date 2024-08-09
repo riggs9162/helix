@@ -414,6 +414,7 @@ if (SERVER) then
         entity:Activate()
 
         if ( self:IsOnFire() ) then
+            self:Extinguish()
             entity:Ignite(60)
         end
 
