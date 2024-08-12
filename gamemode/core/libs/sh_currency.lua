@@ -33,6 +33,24 @@ function ix.currency.Get(amount)
     end
 end
 
+/// Seperates the currency amount with commas.
+// @realm shared
+// @number amount The amount of cash being formatted.
+// @treturn string The formatted string.
+function ix.currency.Format(amount)
+    local formatted = amount
+
+    while true do
+        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+
+        if (k == 0) then
+            break
+        end
+    end
+
+    return formatted
+end
+
 /// Spawns an amount of cash at a specific location on the map.
 // @realm shared
 // @vector pos The position of the money to be spawned.
