@@ -123,27 +123,17 @@ function GM:TranslateActivity(client, act)
     end
 end
 
-function GM:UpdateAnimation(client, velocity, maxSeqGroundSpeed)
+function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
     if (client:GetNetVar("forcedSequence")) then
         client:SetPlaybackRate(client:GetNetVar("sequenceSpeed", 1))
     else
         local len = velocity:Length()
-        local movement = 1.0
-
-        if (len > 0.2) then
-            movement = (len / maxSeqGroundSpeed)
+        local rate = 1.0
+        if ( len > 0.5 ) then
+            rate = ( len / maxGroundSpeed )
         end
-
-        local rate = math.min(movement, 2)
-
-        // if we're under water we want to constantly be swimming..
-        if (client:WaterLevel() >= 2) then
-            rate = math.max(rate, 0.5)
-        elseif (!client:IsOnGround() && len >= 1000) then
-            rate = 0.1
-        end
-
-        client:SetPlaybackRate(rate)
+    
+        client:SetPlaybackRate( math.Clamp( rate, 0, 1.5 ) )
     end
 
     // We only need to do this clientside..
@@ -382,6 +372,18 @@ do
     local vectorAngle = FindMetaTable("Vector").Angle
     local normalizeAngle = math.NormalizeAngle
 
+    local function get_holdtype_table(client, class)
+        local weapon = client:GetActiveWeapon()
+        if (!IsValid(weapon)) then
+            return ix.anim[class]["normal"]
+        end
+    
+        local holdType = (weapon.HoldType or weapon:GetHoldType()) or "normal"
+        holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
+    
+        return ix.anim[class][holdType]
+    end
+
     function GM:CalcMainActivity(client, velocity)
         local clientInfo = client:GetTable()
         local forcedSequence = client:GetNetVar("forcedSequence")
@@ -396,9 +398,17 @@ do
 
         client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
 
+        local model = client:GetModel()
+        local class = ix.anim.GetModelClass(model)
+    
+        local anims = get_holdtype_table(client, class)
+        if (!anims) then return end
+
+        local isRaised = client:IsWepRaised()
         local sequenceOverride = clientInfo.CalcSeqOverride
+
         clientInfo.CalcSeqOverride = -1
-        clientInfo.CalcIdeal = ACT_MP_STAND_IDLE
+        clientInfo.CalcIdeal = anims[ ACT_MP_STAND_IDLE ][ isRaised and 2 or 1 ]
 
         // we could call the baseclass function, but it's faster to do it this way
         local BaseClass = self.BaseClass
@@ -413,16 +423,24 @@ do
             local length = velocity:Length2DSqr()
 
             if (length > 22500) then
-                clientInfo.CalcIdeal = ACT_MP_RUN
+                clientInfo.CalcIdeal = anims[ACT_MP_RUN][isRaised and 2 or 1]
             elseif (length > 0.25) then
-                clientInfo.CalcIdeal = ACT_MP_WALK
+                clientInfo.CalcIdeal = anims[ACT_MP_WALK][isRaised and 2 or 1]
             end
         end
 
         clientInfo.m_bWasOnGround = client:OnGround()
         clientInfo.m_bWasNoclipping = (client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle())
 
-        return clientInfo.CalcIdeal, sequenceOverride or clientInfo.CalcSeqOverride or -1
+        if (isstring(clientInfo.CalcSeqOverride)) then
+            clientInfo.CalcSeqOverride = client:LookupSequence(clientInfo.CalcSeqOverride)
+        end
+    
+        if (isstring(clientInfo.CalcIdeal)) then
+            clientInfo.CalcSeqOverride = client:LookupSequence(clientInfo.CalcIdeal)
+        end
+    
+        return clientInfo.CalcIdeal, clientInfo.CalcSeqOverride
     end
 end
 
