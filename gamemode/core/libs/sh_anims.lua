@@ -375,7 +375,7 @@ ix.anim.player = {
         [ACT_LAND] = {ACT_RESET, ACT_RESET},
         attack = ACT_HL2MP_GESTURE_RANGE_ATTACK_MELEE
     },
-    glide = ACT_GLIDE,
+    glide = ACT_HL2MP_JUMP,
 }
 ix.anim.zombie = {
     [ACT_MP_STAND_IDLE] = ACT_HL2MP_IDLE_ZOMBIE,
