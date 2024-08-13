@@ -21,7 +21,6 @@ HOLDTYPE_TRANSLATOR["camera"] = "smg"
 HOLDTYPE_TRANSLATOR["magic"] = "normal"
 HOLDTYPE_TRANSLATOR["revolver"] = "pistol"
 
-local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
 local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
 function GM:TranslateActivity(client, act)
