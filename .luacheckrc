@@ -44,7 +44,6 @@ stds.helix.read_globals = {
     "ixSoundDuration",
 
     "HOLDTYPE_TRANSLATOR",
-    "PLAYER_HOLDTYPE_TRANSLATOR",
 
     "ACT_VM_FISTS_DRAW",
     "ACT_VM_FISTS_HOLSTER",
