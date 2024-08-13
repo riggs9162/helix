@@ -503,7 +503,7 @@ function GM:PlayerLoadout(client)
     if (character) then
         client:SetupHands()
         // Set their player model to the character's model.
-        client:SetModel(character:GetModel())
+        client:SetModel(client:GetModel())
         client:Give("ix_hands")
         client:SetWalkSpeed(ix.config.Get("walkSpeed"))
         client:SetRunSpeed(ix.config.Get("runSpeed"))
@@ -860,7 +860,7 @@ end
 
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if (!IsValid(physObj)) then return false end
-    
+
     // Object is already frozen (!?)
     if (!physObj:IsMoveable()) then return false end
     if (entity:GetUnFreezable()) then return false end
