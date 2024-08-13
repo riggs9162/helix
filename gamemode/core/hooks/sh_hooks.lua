@@ -41,50 +41,7 @@ local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
 function GM:TranslateActivity(client, act)
     local clientInfo = client:GetTable()
-    local modelClass = clientInfo.ixAnimModelClass or "player"
     local bRaised = client:IsWepRaised()
-
-    if (modelClass == "player") then
-        local weapon = client:GetActiveWeapon()
-        local bAlwaysRaised = ix.config.Get("weaponAlwaysRaised")
-        weapon = IsValid(weapon) and weapon or nil
-
-        if (!bAlwaysRaised and weapon and !bRaised and client:OnGround()) then
-            local model = string.lower(client:GetModel())
-
-            if (string.find(model, "zombie")) then
-                local tree = ix.anim.zombie
-
-                if (string.find(model, "fast")) then
-                    tree = ix.anim.fastZombie
-                end
-
-                if (tree[act]) then
-                    return tree[act]
-                end
-            end
-
-            local holdType = weapon and (weapon.HoldType or weapon:GetHoldType()) or "normal"
-
-            if (!bAlwaysRaised and weapon and !bRaised and client:OnGround()) then
-                holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
-            end
-
-            local tree = ix.anim.player[holdType]
-
-            if (tree and tree[act]) then
-                if (isstring(tree[act])) then
-                    clientInfo.CalcSeqOverride = client:LookupSequence(tree[act])
-
-                    return
-                else
-                    return tree[act]
-                end
-            end
-        end
-
-        return self.BaseClass:TranslateActivity(client, act)
-    end
 
     if (clientInfo.ixAnimTable) then
         local glide = clientInfo.ixAnimGlide
@@ -224,36 +181,31 @@ end
 
 function GM:DoAnimationEvent(client, event, data)
     local class = client.ixAnimModelClass
+    local weapon = client:GetActiveWeapon()
 
-    if (class == "player") then
-        return self.BaseClass:DoAnimationEvent(client, event, data)
-    else
-        local weapon = client:GetActiveWeapon()
+    if (IsValid(weapon)) then
+        local animation = client.ixAnimTable
 
-        if (IsValid(weapon)) then
-            local animation = client.ixAnimTable
+        if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
 
-            if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
-                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+            return ACT_VM_PRIMARYATTACK
+        elseif (event == PLAYERANIMEVENT_ATTACK_SECONDARY) then
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
 
-                return ACT_VM_PRIMARYATTACK
-            elseif (event == PLAYERANIMEVENT_ATTACK_SECONDARY) then
-                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1, true)
+            return ACT_VM_SECONDARYATTACK
+        elseif (event == PLAYERANIMEVENT_RELOAD) then
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
 
-                return ACT_VM_SECONDARYATTACK
-            elseif (event == PLAYERANIMEVENT_RELOAD) then
-                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, animation.reload or ACT_GESTURE_RELOAD_SMG1, true)
+            return ACT_INVALID
+        elseif (event == PLAYERANIMEVENT_JUMP) then
+            client:AnimRestartMainSequence()
 
-                return ACT_INVALID
-            elseif (event == PLAYERANIMEVENT_JUMP) then
-                client:AnimRestartMainSequence()
+            return ACT_INVALID
+        elseif (event == PLAYERANIMEVENT_CANCEL_RELOAD) then
+            client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
 
-                return ACT_INVALID
-            elseif (event == PLAYERANIMEVENT_CANCEL_RELOAD) then
-                client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
-
-                return ACT_INVALID
-            end
+            return ACT_INVALID
         end
     end
 
@@ -408,7 +360,7 @@ do
         local sequenceOverride = clientInfo.CalcSeqOverride
 
         clientInfo.CalcSeqOverride = -1
-        clientInfo.CalcIdeal = anims[ ACT_MP_STAND_IDLE ][ isRaised and 2 or 1 ]
+        clientInfo.CalcIdeal = anims[ACT_MP_STAND_IDLE][isRaised and 2 or 1]
 
         // we could call the baseclass function, but it's faster to do it this way
         local BaseClass = self.BaseClass
