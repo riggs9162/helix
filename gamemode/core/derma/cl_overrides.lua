@@ -69,8 +69,13 @@ OverridePanel("DMenu", function()
 
     function PANEL:SetFont(font)
         for _, v in pairs(self:GetCanvas():GetChildren()) do
-            v:SetFont(font)
-            v:SizeToContents()
+            if (v.SetFont) then
+                v:SetFont(font)
+            end
+
+            if (v.SizeToContents) then
+                v:SizeToContents()
+            end
         end
 
         // reposition for the new font
