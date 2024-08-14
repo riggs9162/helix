@@ -169,7 +169,7 @@ function GM:DoAnimationEvent(client, event, data)
 
     if (IsValid(weapon)) then
         local animation = client.ixAnimTable
-        if (!animation) then return end
+        if (!animation) then return ACT_INVALID end
 
         local attack = isstring(animation.attack) and client:LookupSequence(animation.attack) or animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1
         local reload = isstring(animation.reload) and client:LookupSequence(animation.reload) or animation.reload or ACT_GESTURE_RELOAD_SMG1
