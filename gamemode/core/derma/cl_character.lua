@@ -408,6 +408,16 @@ function PANEL:PlayMusic()
                 end
             end
         })
+
+        local length = channel:GetLength()
+        timer.Create("ixCharacterMusic", length, 1, function()
+            if (IsValid(self) and IsValid(self.channel)) then
+                self.channel:Stop()
+                self.channel = nil
+
+                self:PlayMusic()
+            end
+        end)
     end)
 end
 
@@ -535,6 +545,10 @@ function PANEL:OnRemove()
     if (IsValid(self.channel)) then
         self.channel:Stop()
         self.channel = nil
+    end
+
+    if (timer.Exists("ixCharacterMusic")) then
+        timer.Remove("ixCharacterMusic")
     end
 end
 
