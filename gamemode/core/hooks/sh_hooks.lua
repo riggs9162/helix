@@ -338,7 +338,7 @@ do
         local class = ix.anim.GetModelClass(model)
     
         local anims = get_holdtype_table(client, class)
-        if (!anims) then return end
+        if (!anims or !anims[ACT_MP_STAND_IDLE]) then return end
 
         local isRaised = client:IsWepRaised()
         local sequenceOverride = clientInfo.CalcSeqOverride
