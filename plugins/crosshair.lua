@@ -93,6 +93,7 @@ if (CLIENT) then
             data.start = client:GetShootPos()
             data.endpos = data.start + (aimVector + punchAngle):Forward() * 65535
             data.filter = filter
+            data.mask = MASK_SHOT
         local trace = util.TraceLine(data)
 
         local drawTarget = self
