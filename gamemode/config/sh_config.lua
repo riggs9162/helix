@@ -215,3 +215,7 @@ end, {
     data = {min = 0.01, max = 120},
     category = "date"
 })
+ix.config.Add("animMaxRate", 1.5, "The maximum rate that animations can be played.", nil, {
+    data = {min = 0.1, max = 4, decimals = 1},
+    category = "characters"
+})

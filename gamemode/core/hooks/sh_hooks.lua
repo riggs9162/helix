@@ -74,7 +74,7 @@ function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
             rate = (len / maxGroundSpeed)
         end
 
-        local playbackRate = math.Clamp(rate, 0, ANIM_MAX_RATE or 1.5)
+        local playbackRate = math.Clamp(rate, 0, ix.config.Get("animMaxRate", 1.5))
         client:SetPlaybackRate(playbackRate)
     end
 
