@@ -73,8 +73,9 @@ function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
         if (len > 0.5) then
             rate = (len / maxGroundSpeed)
         end
-    
-        client:SetPlaybackRate(math.Clamp(rate, 0, 1.5))
+
+        local playbackRate = math.Clamp(rate, 0, ANIM_MAX_RATE or 1.5)
+        client:SetPlaybackRate(playbackRate)
     end
 
     // We only need to do this clientside..
