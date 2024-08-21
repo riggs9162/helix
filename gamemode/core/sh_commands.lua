@@ -542,6 +542,26 @@ ix.command.Add("PlyWhitelist", {
     end
 })
 
+ix.command.Add("PlyWhitelistAll", {
+    description = "@cmdPlyWhitelistAll",
+    privilege = "Manage Character Whitelist",
+    superAdminOnly = true,
+    arguments = ix.type.player,
+    OnRun = function(self, client, target)
+        for _, v in ipairs(ix.faction.indices) do
+            if (!target:HasWhitelist(v.index)) then
+                target:SetWhitelisted(v.index, true)
+            end
+        end
+
+        for _, v in player.Iterator() do
+            if (self:OnCheckAccess(v) or v == target) then
+                v:NotifyLocalized("whitelistAll", client:GetName(), target:GetName())
+            end
+        end
+    end
+})
+
 ix.command.Add("CharGetUp", {
     description = "@cmdCharGetUp",
     OnRun = function(self, client, arguments)
@@ -629,6 +649,60 @@ ix.command.Add("PlyUnwhitelist", {
             end
         else
             return "@invalidFaction"
+        end
+    end
+})
+
+ix.command.Add("PlyUnwhitelistAll", {
+    description = "@cmdPlyUnwhitelistAll",
+    privilege = "Manage Character Whitelist",
+    superAdminOnly = true,
+    arguments = ix.type.text,
+    OnRun = function(self, client, target)
+        local targetPlayer = ix.util.FindPlayer(target)
+
+        if (IsValid(targetPlayer)) then
+            for _, v in ipairs(ix.faction.indices) do
+                targetPlayer:SetWhitelisted(v.index, false)
+            end
+
+            for _, v in player.Iterator() do
+                if (self:OnCheckAccess(v)) then
+                    v:NotifyLocalized("unwhitelistAll", client:GetName(), targetPlayer:GetName())
+                end
+            end
+        else
+            local steamID64 = util.SteamIDTo64(target)
+            local query = mysql:Select("ix_players")
+                query:Select("data")
+                query:Where("steamid", steamID64)
+                query:Limit(1)
+                query:Callback(function(result)
+                    if (istable(result) and #result > 0) then
+                        local data = util.JSONToTable(result[1].data or "[]")
+                        local whitelists = data.whitelists and data.whitelists[Schema.folder]
+
+                        if (!whitelists) then
+                            return
+                        end
+
+                        for k, v in pairs(whitelists) do
+                            whitelists[k] = nil
+                        end
+
+                        local updateQuery = mysql:Update("ix_players")
+                            updateQuery:Update("data", util.TableToJSON(data))
+                            updateQuery:Where("steamid", steamID64)
+                        updateQuery:Execute()
+
+                        for _, v in player.Iterator() do
+                            if (self:OnCheckAccess(v)) then
+                                v:NotifyLocalized("unwhitelistAll", client:GetName(), target)
+                            end
+                        end
+                    end
+                end)
+            query:Execute()
         end
     end
 })
