@@ -376,7 +376,12 @@ function PANEL:Init()
     ix.gui.characterMenu = self
 
     if (!IsValid(ix.gui.intro)) then
-        self:PlayMusic()
+        local delay = ix.config.Get("musicDelay", 0)
+        timer.Create("ixCharacterMusicDelay", delay, 1, function()
+            if (IsValid(self)) then
+                self:PlayMusic()
+            end
+        end)
     end
 
     hook.Run("OnCharacterMenuCreated", self)
@@ -400,17 +405,21 @@ function PANEL:PlayMusic()
 
         self:CreateAnimation(audioFadeInTime, {
             index = 10,
-            target = {volume = 1},
+            target = {volume = ix.config.Get("musicVolume", 0.5)},
 
             Think = function(animation, panel)
                 if (IsValid(panel.channel)) then
-                    panel.channel:SetVolume(self.volume * 0.5)
+                    panel.channel:SetVolume(self.volume)
                 end
             end
         })
 
         local length = channel:GetLength()
         timer.Create("ixCharacterMusic", length, 1, function()
+            if (!ix.config.Get("musicLoop", false)) then
+                return
+            end
+
             if (IsValid(self) and IsValid(self.channel)) then
                 self.channel:Stop()
                 self.channel = nil
@@ -479,7 +488,7 @@ function PANEL:Close(bFromMenu)
 
         Think = function(animation, panel)
             if (IsValid(panel.channel)) then
-                panel.channel:SetVolume(self.volume * 0.5)
+                panel.channel:SetVolume(self.volume)
             end
         end,
 
@@ -549,6 +558,10 @@ function PANEL:OnRemove()
 
     if (timer.Exists("ixCharacterMusic")) then
         timer.Remove("ixCharacterMusic")
+    end
+
+    if (timer.Exists("ixCharacterMusicDelay")) then
+        timer.Remove("ixCharacterMusicDelay")
     end
 end
 
