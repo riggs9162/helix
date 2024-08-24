@@ -545,6 +545,21 @@ function GM:PlayerLoadout(client)
             end
         end
 
+        // Ditto, but for ranks.
+        local rank = ix.rank.list[client:GetCharacter():GetRank()]
+
+        if (rank) then
+            if (rank.OnSpawn) then
+                rank:OnSpawn(client)
+            end
+
+            if (rank.weapons) then
+                for _, v in ipairs(rank.weapons) do
+                    client:Give(v)
+                end
+            end
+        end
+
         // Apply any flags as needed.
         ix.flag.OnSpawn(client)
         ix.attributes.Setup(client)
@@ -573,6 +588,27 @@ function GM:PostPlayerLoadout(client)
                 end
             end
         end
+    end
+
+    // If their faction wants to do something when the player's loadout is set, let it.
+    local faction = ix.faction.indices[client:Team()]
+
+    if (faction and faction.OnLoadout) then
+        faction:OnLoadout(client)
+    end
+
+    // Ditto, but for classes.
+    local class = ix.class.list[character:GetClass()]
+
+    if (class and class.OnLoadout) then
+        class:OnLoadout(client)
+    end
+
+    // Ditto, but for ranks.
+    local rank = ix.rank.list[character:GetRank()]
+
+    if (rank and rank.OnLoadout) then
+        rank:OnLoadout(client)
     end
 
     if (ix.config.Get("allowVoice")) then
