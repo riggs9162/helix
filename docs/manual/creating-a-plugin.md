@@ -131,7 +131,7 @@ end
 Once your plugin files are ready, simply place the folder in the `plugins` directory of your Helix schema. Helix automatically detects and loads plugins from this directory.
 
 ```
-garrysmod/gamemodes/yourschema/plugins/myplugin
+garrysmod/gamemodes/myschema/plugins/myplugin
 ```
 
 After placing your plugin in the correct directory, restart your server, and Helix will load your plugin.

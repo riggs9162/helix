@@ -62,6 +62,7 @@ tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("ixtype", "ix.type")
+tparam_alias("ixchat", "ix.chat")
 tparam_alias("date", "date")
 
 -- standard types
