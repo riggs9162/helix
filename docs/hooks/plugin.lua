@@ -372,37 +372,93 @@ end
 function CanSaveContainer(entity, inventory)
 end
 
---- @realm shared
+--- Whether or not and item can be transferred from one inventory to another.
+-- @realm shared
+-- @tab item Item being transferred
+-- @tab currentInv Current inventory
+-- @tab oldInv Old inventory
+-- @treturn bool Whether or not to allow the item to be transferred
+-- @usage function PLUGIN:CanTransferItem(item, currentInv, oldInv)
+-- 	if (IsValid(item:GetOwner() and !item:GetOwner():IsAdmin()) then
+-- 		return false -- Admins can transfer items.
+-- 	end
+-- end
 function CanTransferItem(item, currentInv, oldInv)
 end
 
---- @realm shared
+--- Called character's attributes are being boosted.
+-- @realm shared
+-- @player client Player that is boosting the character
+-- @char character Character that is being boosted
+-- @number attribID ID of the attribute being boosted
+-- @number boostID ID of the boost
+-- @number boostAmount Amount of the boost
+-- @usage function PLUGIN:CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
+-- 	client:Notify("Your character's "..ix.attributes.list[attribID].name.." has been boosted by "..boostAmount..".")
+-- end
 function CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
 end
 
---- @realm shared
-function CharacterAttributeUpdated(client, self, key, value)
+--- Called when a character's attribute is being updated.
+-- @realm shared
+-- @player client Player that is updating the character
+-- @char character Character that is being updated
+-- @string key Key of the attribute being updated
+-- @number value Value of the attribute
+-- @usage function PLUGIN:CharacterAttributeUpdated(client, character, key, value)
+-- 	client:Notify("Your character's "..key.." has been updated to "..value..".")
+-- end
+function CharacterAttributeUpdated(client, character, key, value)
 end
 
---- @realm shared
+--- Called when a character is being deleted.
+-- @realm shared
+-- @player client Player that is deleting the character
+-- @number id ID of the character being deleted
+-- @bool isCurrentChar Whether or not the character is the current character
+-- @usage function PLUGIN:CharacterDeleted(client, id, isCurrentChar)
+-- 	if (CLIENT and isCurrentChar) then
+-- 		client:Notify("You have deleted your current character.")
+-- 	end
+-- end
 function CharacterDeleted(client, id, isCurrentChar)
 end
 
---- @realm shared
-function CharacterHasFlags(self, flags)
+--- Returns if the character has the given flags.
+-- @realm shared
+-- @char character Character to check
+-- @number flags Flags to check
+-- @treturn bool Whether or not the character has the flags
+-- @usage function PLUGIN:CharacterHasFlags(character, flags)
+-- 	return {"p", "e", "t"} -- Character has the spawning, physgun and toolgun flags.
+-- end
+function CharacterHasFlags(character, flags)
 end
 
---- @realm shared
+--- Called when a character is loaded.
+-- @realm shared
+-- @char character Character that is being loaded
+-- @usage function PLUGIN:CharacterLoaded(character)
+-- 	print("Character "..character:GetName().." has been loaded.")
+-- end
 function CharacterLoaded(character)
 end
 
 --- Called when a character was saved.
--- @realm server
+-- @realm shared
 -- @char character that was saved
+-- @usage function PLUGIN:CharacterPostSave(character)
+-- 	print("Character "..character:GetName().." has been saved.")
+-- end
 function CharacterPostSave(character)
 end
 
---- @realm shared
+--- Called before a character is saved.
+-- @realm shared
+-- @char character Character that is being saved
+-- @usage function PLUGIN:CharacterPreSave(character)
+-- 	print("Character "..character:GetName().." is about to be saved.")
+-- end
 function CharacterPreSave(character)
 end
 
@@ -542,7 +598,13 @@ end
 function GetPlayerEntityMenu(client, options)
 end
 
---- @realm client
+--- Returns the player's icon to be displayed in the chat box.
+-- @realm shared
+-- @player speaker Player that is speaking
+-- @treturn string Icon to display
+-- @usage function PLUGIN:GetPlayerIcon(speaker)
+-- 	return "icon16/user.png" -- Use the default user icon.
+-- end
 function GetPlayerIcon(speaker)
 end
 
@@ -650,6 +712,9 @@ end
 
 --- Called when server is loading data.
 -- @realm server
+-- @usage function PLUGIN:LoadData()
+-- 	print("Loading data...")
+-- end
 function LoadData()
 end
 
@@ -803,7 +868,18 @@ end
 function OnWipeTables()
 end
 
---- @realm shared
+-- Called when a player has entered a sequence.
+-- @realm shared
+-- @player client Player that has entered a sequence
+-- @string sequence Sequence that player has entered
+-- @param callback Callback function
+-- @param time Time of the sequence
+-- @param bNoFreeze Whether or not to freeze the player
+-- @usage function PLUGIN:PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
+-- 	if (CLIENT) then
+-- 		client:Notify("You have entered a sequence.")
+-- 	end
+-- end
 function PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
 end
 
@@ -832,8 +908,10 @@ end
 function PlayerJoinedClass(client, class, oldClass)
 end
 
---- @realm shared
-function PlayerLeaveSequence(entity)
+--- Called when a player leaves a certain sequence.
+-- @realm server
+-- @player client Player that has left a sequence
+function PlayerLeaveSequence(client)
 end
 
 --- Called when a player has loaded a character.
