@@ -597,15 +597,27 @@ end
 function InitializedChatClasses()
 end
 
---- @realm shared
+--- Called after the config has been initialized.
+-- @realm shared
+-- @usage function PLUGIN:InitializedConfig()
+-- 	ix.config.Add("myConfig", true, "Whether or not my config is enabled.")
+-- end
 function InitializedConfig()
 end
 
---- @realm shared
+--- Called after all the plugins have been initialized.
+-- @realm shared
+-- @usage function PLUGIN:InitializedPlugins()
+-- 	print("All plugins have been initialized!")
+-- end
 function InitializedPlugins()
 end
 
---- @realm shared
+--- Called after the schema has been initialized.
+-- @realm shared
+-- @usage function PLUGIN:InitializedSchema()
+-- 	print("The schema has been initialized!")
+-- end
 function InitializedSchema()
 end
 
@@ -641,11 +653,26 @@ end
 function LoadData()
 end
 
---- @realm client
+--- Called when the client is loading fonts.
+-- @realm client
+-- @string font Font to load from the config
+-- @string genericFont Generic font to load from the config
+-- @usage function PLUGIN:LoadFonts(font, genericFont)
+-- 	surface.CreateFont("ixBigFont", {
+-- 		font = font,
+-- 		extended = true,
+-- 		size = 32,
+-- 		weight = 700
+-- 	})
+-- end
 function LoadFonts(font, genericFont)
 end
 
---- @realm client
+--- Called when the client is loading the intro for the first time.
+-- @realm client
+-- @usage function PLUGIN:LoadIntro()
+-- 	print("Loading the intro for the first time!")
+-- end
 function LoadIntro()
 end
 
