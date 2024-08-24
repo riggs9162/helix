@@ -14,7 +14,7 @@ regular gamemode hooks.
 /// Called when the default name for a character needs to be retrieved (i.e upon initial creation).
 // @realm shared
 // @player client Client to get the default name for
-// @treturn string Default name for the newly created character
+// @treturn string Default name for the newly created character, second return value is optional and if set to true, the name will be forced
 // @usage function FACTION:GetDefaultName(client)
 //     return "MPF-RCT." .. tostring(math.random(1, 99999))
 // end
@@ -35,7 +35,19 @@ end
 /// Called when a character in this faction has spawned in the world.
 // @realm server
 // @player client Player that has just spawned
+// @usage function FACTION:OnSpawn(client)
+//     client:Notify("Welcome to the server, "..client:Name().."!")
+// end
 function OnSpawn(client)
+end
+
+/// Called when a character in this faction has been given their loadouts.
+// @realm server
+// @player client Player that has been given their loadouts
+// @usage function FACTION:OnLoadoutGiven(client)
+//     client:Give("weapon_pistol")
+// end
+function OnLoadout(client)
 end
 
 /// Called when a player's character has been transferred to this faction.

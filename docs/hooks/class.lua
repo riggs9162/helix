@@ -40,3 +40,9 @@ end
 // @player client Player that has just spawned
 function OnSpawn(client)
 end
+
+/// Called when a character in this class has been given their loadouts.
+// @realm server
+// @player client Player that has been given their loadouts
+function OnLoadout(client)
+end
