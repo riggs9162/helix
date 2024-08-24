@@ -60,10 +60,10 @@ You will notice throughout the framework, the character object is used a lot. Th
 In Clockwork, there is no use of an object. Instead, the character information is intertwined with the player object. For example:
 
 ```
-// in Clockwork
+-- in Clockwork
 player:SetCharacterData("foo", "bar")
 
-// in Helix
+-- in Helix
 client:GetCharacter():SetData("foo", "bar")
 ```
 
@@ -75,10 +75,10 @@ The use of the character object allows you to access other characters a player m
 Clockwork features many functions to set up animations for a specific model. Helix too has this functionality. Helix has one function instead that pairs a model to a specific "animation class" (grouping of animation types). So, all one needs to do is find the appropriate animation class to match the model with. Looking at the Clockwork function name should tell you.
 
 ```
-// before
+-- before
 Clockwork.animation:AddCivilProtectionModel("models/mymodel.mdl")
 
-// after
+-- after
 ix.anim.SetModelClass("models/mymodel.mdl", "metrocop")
 ```
 
@@ -116,10 +116,10 @@ In Helix, the method of adding configurations that can be changed by server owne
 Adding a configuration is as follows:
 
 ```
-// before
+-- before
 Clockwork.config:Add("run_speed", 225)
 
-// after
+-- after
 ix.config.Add("runSpeed", 235, ...)
 ```
 You'll notice that ellipses (...) were added at the end. This is because there are more arguments since adding configuration information has been placed into one function. Additionally:
@@ -133,11 +133,11 @@ You'll notice that ellipses (...) were added at the end. This is because there a
 Updating your currency code is simple:
 
 ```
-// before
+-- before
 Clockwork.config:SetKey("name_cash", "Tokens")
-Clockwork.config:SetKey("name_cash", "Dollars") // another example
+Clockwork.config:SetKey("name_cash", "Dollars") -- another example
 
-// after
+-- after
 ix.currency.Set("", "token", "tokens")
 ix.currency.Set("$", "dollar", "dollars")
 ```
@@ -152,28 +152,28 @@ If you're unfamiliar with the net library, you can include the netstream library
 Starting a datastream:
 
 ```
-// before
+-- before
 Clockwork.datastream:Start(receiver, "MessageName", {1, 2, 3});
 
-// after
+-- after
 netstream.Start(receiver, "MessageName", 1, 2, 3)
 ```
 
 Receiving a datastream:
 
 ```
-// before
+-- before
 Clockwork.datastream:Hook("MessageName", function(player, data)
-    local a = data[1];
-    local b = data[2];
-    local c = data[3];
+	local a = data[1];
+	local b = data[2];
+	local c = data[3];
 
-    print(a, b, c);
+	print(a, b, c);
 end);
 
-// after
+-- after
 netstream.Hook("MessageName", function(client, a, b, c)
-    print(a, b, c)
+	print(a, b, c)
 end)
 ```
 
@@ -193,22 +193,22 @@ For instance:
 Flags are functionally equivalent in Helix. To add a new flag:
 
 ```
-// before
+-- before
 Clockwork.flag:Add("x", "Name", "Description")
 
-// after
+-- after
 ix.flag.Add("x", "Description")
 ```
 
 To check or manipulate a character's flag(s):
 
 ```
-// before
+-- before
 Clockwork.player:GiveFlags(player, flags)
 Clockwork.player:TakeFlags(player, flags)
 Clockwork.player:HasFlags(player, flags)
 
-// after
+-- after
 client:GetCharacter():GiveFlags(flags)
 client:GetCharacter():TakeFlags(flags)
 client:GetCharacter():HasFlags(flags)
@@ -239,16 +239,16 @@ Helix's inventory uses a grid and utilizes width and height instead of weight as
 Item functions are defined very differently than they are in Clockwork. For example:
 
 ```
-// before
+-- before
 function ITEM:OnUse(player, entity)
-    print("My name is: " .. player:Name(), entity)
+	print("My name is: " .. player:Name(), entity)
 end
 
-// after
+-- after
 ITEM.functions.Use = {
-    OnRun = function(item)
-        print("My name is: " .. item.player, item.entity)
-    end
+	OnRun = function(item)
+		print("My name is: " .. item.player, item.entity)
+	end
 }
 ```
 
@@ -287,20 +287,20 @@ Keep in mind that Helix will simplify the item system for you when it can. Norma
 So you might be wondering, how do I spawn an item in the map, and how do I give a player an item? In Clockwork, you would do the following:
 
 ```
-// spawning an item in the map
+-- spawning an item in the map
 Clockwork.entity:CreateItem(player, Clockwork.item:CreateInstance("item"), Vector(1, 2, 3));
 
-// giving a player an item
+-- giving a player an item
 player:GiveItem(Clockwork.item:CreateInstance("item"));
 ```
 
 The equivalent in Helix would be:
 
 ```
-// spawning an item in the map
+-- spawning an item in the map
 ix.item.Spawn("item", Vector(1, 2, 3))
 
-// giving a player an item
+-- giving a player an item
 client:GetCharacter():GetInventory():Add("test")
 ```
 
@@ -310,14 +310,14 @@ So in these two examples, the whole deal of instancing items is done for you in 
 You will need to modify the function name and arguments for your schema or plugin hooks.
 
 ```
-// before
+-- before
 function Schema:PlayerPlayPainSound(player, gender, damageInfo, hitGroup)
-    // ...
+	-- ...
 end
 
-// after
+-- after
 function Schema:GetPlayerPainSound(client)
-    // ...
+	-- ...
 end
 ```
 
