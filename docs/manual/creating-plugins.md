@@ -17,7 +17,7 @@ myplugin/
 |-- cl_hooks.lua
 |-- cl_plugin.lua
 |-- meta/
-|   `-- sh_player.lua
+|   |-- sh_player.lua
 |-- sh_plugin.lua
 |-- sv_hooks.lua
 |-- sv_plugin.lua

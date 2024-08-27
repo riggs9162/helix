@@ -36,6 +36,9 @@ ix.blurRenderQueue = {}
 -- @string[opt] realm Realm that this file should be included in. You should usually ignore this since it
 -- will be automatically be chosen based on the `SERVER` and `CLIENT` globals. This value should either be `"server"` or
 -- `"client"` if it is filled in manually
+-- @usage ix.util.Include("sh_config.lua")
+-- @usage ix.util.Include("cl_init.lua", "client")
+-- @usage ix.util.Include("sv_hooks.lua", "server")
 function ix.util.Include(fileName, realm)
     if (!fileName) then
         error("[Helix] No file name specified for including.")
@@ -68,6 +71,7 @@ end
 -- @bool[opt] bFromLua Whether or not to search from the base `lua/` folder, instead of contextually basing from `schema/`
 -- or `gamemode/`
 -- @see ix.util.Include
+-- @usage ix.util.IncludeDir("libs/thirdparty")
 function ix.util.IncludeDir(directory, bFromLua)
     -- By default, we include relatively to Helix.
     local baseDir = "helix"
@@ -736,42 +740,6 @@ if (CLIENT) then
     end)
 end
 
--- Vector extension, courtesy of code_gs
-do
-    local VECTOR = FindMetaTable("Vector")
-    local CrossProduct = VECTOR.Cross
-    local right = Vector(0, -1, 0)
-
-    function VECTOR:Right(vUp)
-        if (self[1] == 0 and self[2] == 0) then
-            return right
-        end
-
-        if (vUp == nil) then
-            vUp = vector_up
-        end
-
-        local vRet = CrossProduct(self, vUp)
-        vRet:Normalize()
-
-        return vRet
-    end
-
-    function VECTOR:Up(vUp)
-        if (self[1] == 0 and self[2] == 0) then return Vector(-self[3], 0, 0) end
-
-        if (vUp == nil) then
-            vUp = vector_up
-        end
-
-        local vRet = CrossProduct(self, vUp)
-        vRet = CrossProduct(vRet, self)
-        vRet:Normalize()
-
-        return vRet
-    end
-end
-
 -- luacheck: globals FCAP_IMPULSE_USE FCAP_CONTINUOUS_USE FCAP_ONOFF_USE
 -- luacheck: globals FCAP_DIRECTIONAL_USE FCAP_USE_ONGROUND FCAP_USE_IN_RADIUS
 FCAP_IMPULSE_USE = 0x00000010
@@ -1155,6 +1123,8 @@ local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or ".
 -- @number volume[opt=75] The sound level of each sound
 -- @number pitch[opt=100] Pitch percentage of each sound
 -- @treturn number How long the entire sequence of sounds will take to play
+-- @usage -- Play a sequence of sounds with a delay between each sound
+-- ix.util.EmitQueuedSounds(entity, {"sound1.wav", "sound2.wav", "sound3.wav"}, 0.5)
 function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
     -- Let there be a delay before any sound is played.
     delay = delay or 0
@@ -1208,6 +1178,282 @@ function ix.util.MetatableSafeTableMerge(destination, source)
         end
     end
     return destination;
+end
+
+--- Returns a string that has the first letter capitalized.
+-- @realm shared
+-- @string str String to capitalize
+-- @treturn string Capitalized string
+-- @usage print(ix.util.CapitalizeFirst("hello"))
+-- > Hello
+function ix.util.CapitalizeFirst(str)
+    return str:sub(1, 1):upper() .. str:sub(2)
+end
+
+--- Returns a formatted time string from a given amount of seconds. Useful for displaying 24-hour time.
+-- @realm shared
+-- @number time Amount of seconds
+-- @treturn string Formatted time string
+-- @usage print(ix.util.GetFormattedTime(3600))
+-- > 01:00
+function ix.util.GetTimeText(time)
+    local minutes = math.floor(time / 60)
+    local seconds = time % 60
+
+    return string.format("%02d:%02d", minutes, seconds)
+end
+
+--- Returns a number with a certain amount of digits.
+-- @realm shared
+-- @number number Number to pad
+-- @number digits Amount of digits to pad to
+-- @treturn string Padded number
+-- @usage print(ix.util.ZeroNumber(5, 3))
+-- > 005
+function ix.util.ZeroNumber(number, digits)
+    local str = tostring(number)
+
+    return string.rep("0", digits - #str) .. str
+end
+
+--- Trims a text to a certain length, adding an ending if it's too long.
+-- @realm shared
+-- @string text Text to trim
+-- @number length Maximum length of the text
+-- @string[opt="..."] ending Ending to add if the text is too long
+-- @treturn string Trimmed text
+-- @usage print(ix.util.TrimText("Hello, world!", 5))
+-- > Hello...
+function ix.util.TrimText(text, length, ending)
+    if ( string.len(text) > length ) then
+        return text:sub(1, length) .. ( ending or "..." )
+    end
+
+    return text
+end
+
+--- Converts a color table to a vector.
+-- @realm shared
+-- @color color Color table to convert
+-- @treturn Vector Converted color table
+-- @usage print(ix.util.ColorToVector(Color(255, 255, 255)))
+-- > 1, 1, 1
+function ix.util.ColorToVector(color)
+    return Vector(color.r / 255, color.g / 255, color.b / 255)
+end
+
+--- Converts a color table to a hex color.
+-- @realm shared
+-- @color color Color table to convert
+-- @treturn string Hex color
+-- @usage print(ix.util.ColorToHex(Color(255, 255, 255)))
+-- > #FFFFFF
+function ix.util.ColorToHex(color)
+    return string.format("#%02X%02X%02X", color.r, color.g, color.b)
+end
+
+--- Converts a color table to a vector.
+-- @realm shared
+-- @vector vector Vector table to convert
+-- @treturn Color Converted vector table
+-- @usage print(ix.util.VectorToColor(Vector(1, 1, 1)))
+-- > 255, 255, 255
+function ix.util.VectorToColor(vector)
+    return Color(vector.x * 255, vector.y * 255, vector.z * 255)
+end
+
+--- Converts a hex color to a color table.
+-- @realm shared
+-- @string hex Hex color to convert
+-- @treturn Color Converted hex color
+-- @usage print(ix.util.HexToColor("#FFFFFF"))
+-- > 255, 255, 255
+function ix.util.HexToColor(hex)
+    hex = hex:gsub("#", "")
+
+    return Color(tonumber("0x" .. hex:sub(1, 2)), tonumber("0x" .. hex:sub(3, 4)), tonumber("0x" .. hex:sub(5, 6)))
+end
+
+--- Finds a target in the player's crosshair, with an optional range.
+-- @realm shared
+-- @player ply Player to find the target for
+-- @entity target Target entity to check
+-- @number[opt=0.9] range Range to check for the target
+-- @treturn bool Whether or not the target is in the player's crosshair
+-- @usage -- returns true if Entity(2) is in Entity(1)'s crosshair
+-- print(ix.util.FindInCrosshair(Entity(1), Entity(2)))
+-- > true
+-- @usage -- returns true if Entity(2) is in Entity(1)'s crosshair within 0.5 range
+-- print(ix.util.FindInCrosshair(Entity(1), Entity(2), 0.5))
+-- > true
+-- @usage -- returns false if Entity(2) is not in Entity(1)'s crosshair within 0.1 range
+-- print(ix.util.FindInCrosshair(Entity(1), Entity(2), 0.1))
+-- > false
+function ix.util.FindInCrosshair(ply, target, range)
+    if ( !IsValid(ply) and !IsValid(target) ) then
+        return
+    end
+
+    if ( !IsValid(target) ) then
+        return
+    end
+
+    if ( !range ) then
+        range = 0.9
+    end
+
+    range = math.Clamp(range, 0, 1)
+
+    local origin, originVector = ply:EyePos(), ply:GetAimVector()
+    
+    local targetOrigin = target.EyePos and target:EyePos() or target:WorldSpaceCenter()
+    local direction = targetOrigin - origin
+    
+    if ( originVector:Dot(direction:GetNormalized()) > range ) then
+        return true
+    end
+
+    return false
+end
+
+--- Checks if a number is below 1 and above 0.
+-- @realm shared
+-- @number number Number to check
+-- @treturn bool Whether or not the number is a decimal
+-- @usage print(ix.util.IsDecimal(0.5))
+-- > true
+-- @usage print(ix.util.IsDecimal(5))
+-- > false
+function ix.util.IsDecimal(number)
+    return number < 1 and number > 0
+end
+
+--- Converts a unit to meters.
+-- @realm shared
+-- @number unit Unit to convert
+-- @treturn number Converted unit
+-- @usage print(ix.util.UnitToMeters(256))
+-- > 6.5024
+function ix.util.UnitToMeters(unit)
+    return unit * 0.0254
+end
+
+--- Converts meters to a unit.
+-- @realm shared
+-- @number meters Meters to convert
+-- @treturn number Converted meters
+-- @usage print(ix.util.MetersToUnit(20))
+-- > 787.40157480315
+function ix.util.MetersToUnit(meters)
+    return meters / 0.0254
+end
+
+--- Returns the bearing of an angle.
+-- @realm shared
+-- @Angle ang Angle to get the bearing of
+-- @treturn number Bearing of the angle
+-- @usage print(ix.util.AngleToBearing(Angle(0, 90, 0)))
+-- > 270
+function ix.util.AngleToBearing(ang)
+    return math.Round(360 - ( ang.y % 360 ))
+end
+
+--- @realm shared
+function ix.util.GetClosestEntity(pos, distance, entities, bEntitiesIsIgnored)
+    local closestEntity
+    local closestDistance = distance
+
+    if not ( entities ) then
+        entities = {}
+
+        for _, entity in ipairs(ents.FindInSphere(pos, distance)) do
+            table.insert(entities, entity)
+        end
+    elseif ( !bEntitiesIsIgnored ) then
+        for _, entity in ipairs(ents.FindInSphere(pos, distance)) do
+            if ( table.HasValue(entities, entity) ) then
+                continue
+            end
+
+            table.insert(entities, entity)
+        end
+    end
+
+    local closestEntities = {}
+    for _, entity in ipairs(entities) do
+        table.insert(closestEntities, {entity, entity:GetPos():Distance(pos)})
+    end
+
+    table.sort(closestEntities, function(a, b)
+        return a[2] < b[2]
+    end)
+
+    for _, entity in ipairs(closestEntities) do
+        if ( entity[2] < closestDistance ) then
+            closestEntity = entity[1]
+            closestDistance = entity[2]
+        end
+    end
+
+    return closestEntity, closestDistance, closestEntities
+end
+
+if ( CLIENT ) then
+    --- Returns the size of a text string.
+    -- @realm client
+    -- @string text Text to get the size of
+    -- @string font[opt="ixGenericFont"] Font to use
+    -- @treturn number Width of the text
+    -- @treturn number Height of the text
+    -- @usage print(ix.util.GetTextSize("Hello, world!"))
+    function ix.util.GetTextSize(text, font)
+        surface.SetFont(font or "ixGenericFont")
+        return surface.GetTextSize(text)
+    end
+
+    --- Returns the width of a text string.
+    -- @realm client
+    -- @string text Text to get the width of
+    -- @string font[opt="ixGenericFont"] Font to use
+    -- @treturn number Width of the text
+    -- @usage print(ix.util.GetTextWidth("Hello, world!"))
+    function ix.util.GetTextWidth(text, font)
+        surface.SetFont(font or "ixGenericFont")
+        return select(1, surface.GetTextSize(text))
+    end
+
+    --- Returns the height of a text string.
+    -- @realm client
+    -- @string text Text to get the height of
+    -- @string font[opt="ixGenericFont"] Font to use
+    -- @treturn number Height of the text
+    -- @usage print(ix.util.GetTextHeight("Hello, world!"))
+    function ix.util.GetTextHeight(text, font)
+        surface.SetFont(font or "ixGenericFont")
+        return select(2, surface.GetTextSize(text))
+    end
+
+    --- Returns a boolean indicating whether or not the specified server is down. If no address is provided, the current server is checked.
+    -- @realm client
+    -- @string address Address of the server
+    -- @treturn bool Whether or not the server is down
+    -- @usage -- returns true if the server is down
+    -- print(ix.util.IsServerDown())
+    -- > false
+    function ix.util.IsServerDown(address)
+        address = address or game.GetIPAddress()
+
+        local bIsDown = false
+
+        http.Fetch("http://api.steampowered.com/ISteamApps/GetServersAtAddress/v0001?addr=" .. address, function(json)
+            local data = util.JSONToTable(json)
+            if ( !data or !data.response or !data.response.servers or !data.response.servers[0] ) then
+                bIsDown = true
+            end
+        end)
+
+        return bIsDown
+    end
 end
 
 ix.util.Include("helix/gamemode/core/meta/sh_entity.lua")

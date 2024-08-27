@@ -1,6 +1,6 @@
-# Creating a Class
+# Creating Classes
 
-Classes in Helix define specific roles or categories for players within a faction. For example, you might have classes like "Citizen" or "Combine Soldier" within a faction. This guide will walk you through the process of creating a new class for your Helix schema.
+Classes in Helix define specific roles or categories for players within a faction. For example, you might have classes like "Citizen" or "Overwatch Soldier" within a faction. This guide will walk you through the process of creating a new class for your Helix schema.
 
 ## Understanding Classes in Helix
 
@@ -11,8 +11,8 @@ A class determines attributes such as a player’s model, abilities, and initial
 A class is defined within a Lua file inside your schema’s `classes` directory. The typical structure of a class file looks like this:
 
 ```
-CLASS.name = "Combine Soldier"
-CLASS.faction = FACTION_TF
+CLASS.name = "Overwatch Soldier"
+CLASS.faction = FACTION_OTA
 CLASS.isDefault = true
 
 function CLASS:OnSet(ply)
@@ -22,7 +22,7 @@ function CLASS:OnSet(ply)
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
 
-    -- Set the character's model to a Combine Soldier.
+    -- Set the character's model to a Overwatch Soldier.
     char:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
@@ -32,7 +32,7 @@ function CLASS:OnSet(ply)
     ply:SetSkin(0)
 end
 
-CLASS_TF_SOLDIER = CLASS.index
+CLASS_OWS = CLASS.index
 ```
 
 # Breaking Down the Example
@@ -44,15 +44,15 @@ Let’s break down each part of the example:
 This specifies the name of the class as it appears in-game.
 
 ```
-CLASS.name = "Combine Soldier"
+CLASS.name = "Overwatch Soldier"
 ```
 
 **CLASS.faction**
 
-This associates the class with a specific faction. In this example, the class is linked to the `FACTION_TF` faction.
+This associates the class with a specific faction. In this example, the class is linked to the `FACTION_OTA` faction.
 
 ```
-CLASS.faction = FACTION_TF
+CLASS.faction = FACTION_OTA
 ```
 
 **CLASS.isDefault**
@@ -77,7 +77,7 @@ function CLASS:OnSet(ply)
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
 
-    -- Set the character's model to a Combine Soldier.
+    -- Set the character's model to a Overwatch Soldier.
     char:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
@@ -88,7 +88,7 @@ function CLASS:OnSet(ply)
 end
 ```
 
-- `char:SetModel("models/combine_soldier.mdl")` Sets the player’s character model to a Combine Soldier.
+- `char:SetModel("models/combine_soldier.mdl")` Sets the player’s character model to a Overwatch Soldier.
 - `ply:SetSkin(0)` Sets the player’s skin to the default (skin 0).
 
 **Registering the Class**
@@ -96,10 +96,10 @@ end
 Finally, the class is registered by storing its index in a variable. This can be useful if you need to reference the class elsewhere in your code.
 
 ```
-CLASS_TF_SOLDIER = CLASS.index
+CLASS_OWS = CLASS.index
 ```
 
-This line assigns the class index (which Helix generates when loading the class) to the `CLASS_TF_SOLDIER` variable.
+This line assigns the class index (which Helix generates when loading the class) to the `CLASS_OWS` variable.
 
 # Creating Your Class File
 
@@ -126,8 +126,8 @@ Name your file something descriptive like `sh_combine_soldier.lua`. The `sh_` pr
 Paste the class code into the file and modify it to fit your needs. Here’s an example of what your file might look like:
 
 ```
-CLASS.name = "Combine Soldier"
-CLASS.faction = FACTION_TF
+CLASS.name = "Overwatch Soldier"
+CLASS.faction = FACTION_OTA
 CLASS.isDefault = true
 
 function CLASS:OnSet(ply)
@@ -137,7 +137,7 @@ function CLASS:OnSet(ply)
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
 
-    -- Set the character's model to a Combine Soldier.
+    -- Set the character's model to a Overwatch Soldier.
     char:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
@@ -147,7 +147,7 @@ function CLASS:OnSet(ply)
     ply:SetSkin(0)
 end
 
-CLASS_TF_SOLDIER = CLASS.index
+CLASS_OWS = CLASS.index
 ```
 
 **Save the File and Restart the Server:**
@@ -182,7 +182,7 @@ function CLASS:OnSet(ply)
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
 
-    -- Set the character's model to a Combine Soldier.
+    -- Set the character's model to a Overwatch Soldier.
     char:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.

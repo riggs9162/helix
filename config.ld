@@ -11,7 +11,8 @@ module_file = {
 	Entity = "gamemode/core/meta/sh_entity.lua",
 	Inventory = "gamemode/core/meta/sh_inventory.lua",
 	Item = "gamemode/core/meta/sh_item.lua",
-	Player = "gamemode/core/meta/sh_player.lua"
+	Player = "gamemode/core/meta/sh_player.lua",
+	Vector = "gamemode/core/meta/sh_vector.lua"
 }
 
 dir = "docs/html"
@@ -75,3 +76,5 @@ tparam_alias("tab", "table")
 tparam_alias("material", "material")
 tparam_alias("vector", "vector")
 tparam_alias("angle", "angle")
+tparam_alias("Vector", "Vector")
+tparam_alias("Angle", "Angle")
