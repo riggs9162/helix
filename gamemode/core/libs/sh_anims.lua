@@ -395,6 +395,44 @@ ix.anim.fastZombie = {
     [ACT_LAND] = {ACT_RESET, ACT_RESET}
 }
 
+--- Creates a new animation class.
+-- @realm shared
+-- @string name Name of the animation class
+-- @tab data Table of animation sequences
+-- @usage ix.anim.CreateClass("My New Class", {
+--     normal = {
+--         [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY},
+--         [ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_COVER_LOW},
+--         [ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE},
+--         [ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH},
+--         [ACT_MP_RUN] = {ACT_RUN, ACT_RUN},
+--         [ACT_LAND] = {ACT_RESET, ACT_RESET}
+--     },
+--     pistol = {
+--         [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY},
+--         [ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_COVER_LOW},
+--         [ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE},
+--         [ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH},
+--         [ACT_MP_RUN] = {ACT_RUN, ACT_RUN},
+--         [ACT_LAND] = {ACT_RESET, ACT_RESET},
+--         attack = ACT_GESTURE_RANGE_ATTACK_PISTOL,
+--         reload = ACT_RELOAD_PISTOL
+--     }
+-- })
+-- @see ix.anim.GetModelClass
+-- @see ix.anim.SetModelClass
+function ix.anim.CreateClass(name, data)
+    if (!name) then
+        error("No name provided for animation class!")
+    end
+
+    if (!data) then
+        error("No data provided for animation class '" .. name .. "'!")
+    end
+
+    ix.anim[name] = data
+end
+
 local translations = {}
 
 --- Sets a model's animation class.
