@@ -39,7 +39,7 @@ ix.type = ix.type or {}
 -- Define gamemode information.
 GM.Name = "Helix"
 GM.Author = "nebulous.cloud"
-GM.Website = "https:--nebulous.cloud"
+GM.Website = "https://nebulous.cloud"
 GM.Version = "β"
 
 do

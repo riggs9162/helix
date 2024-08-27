@@ -91,7 +91,9 @@ if (SERVER) then
         end
     end
 
-    --- Networks this character's information to make the given player aware of this character's existence. If the receiver is not the owner of this character, it will only be sent a limited amount of data (as it does not need anything else). This is done automatically by the framework.
+    --- Networks this character's information to make the given player aware of this character's existence. If the receiver is
+    -- not the owner of this character, it will only be sent a limited amount of data (as it does not need anything else).
+    -- This is done automatically by the framework.
     -- @internal
     -- @realm server
     -- @player[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
@@ -133,6 +135,7 @@ if (SERVER) then
         end
     end
 
+    -- Sets up the "appearance" related inforomation for the character.
     --- Applies the character's appearance and synchronizes information to the owning player.
     -- @realm server
     -- @internal
@@ -263,12 +266,7 @@ function ix.char.RegisterVar(key, data)
     ix.char.vars[key] = data
     data.index = data.index or table.Count(ix.char.vars)
 
-    local upperName = ix.util.ExpandCamelCase(key)
-    upperName = key:sub(1, 1):upper() .. key:sub(2)
-    upperName = upperName:gsub("(%s)(%a)", function(space, letter)
-        return space .. letter:upper()
-    end)
-    upperName = upperName:gsub("%s", "")
+    local upperName = key:sub(1, 1):upper() .. key:sub(2)
 
     if (SERVER) then
         if (data.field) then

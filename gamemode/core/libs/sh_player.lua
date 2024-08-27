@@ -112,7 +112,7 @@ do
             if (!model or model == "") then
                 return
             end
-            
+
             local oldModel = self:GetModel()
 
             if (self:IsPlayer()) then

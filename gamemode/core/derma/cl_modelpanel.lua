@@ -4,12 +4,8 @@ DEFINE_BASECLASS("DModelPanel")
 local PANEL = {}
 local MODEL_ANGLE = Angle(0, 45, 0)
 
-AccessorFunc(PANEL, "brightness", "Brightness", FORCE_NUMBER)
-AccessorFunc(PANEL, "color", "Color")
-
 function PANEL:Init()
     self.brightness = 1
-    self.color = color_white
     self:SetCursor("none")
 end
 
@@ -95,7 +91,7 @@ function PANEL:DrawModel()
 
     render.SetStencilEnable(false)
     render.SetColorMaterial()
-    render.SetColorModulation(self.color.r / 255, self.color.g / 255, self.color.b / 255)
+    render.SetColorModulation(1, 1, 1)
     render.SetModelLighting(0, brightness2, brightness2, brightness2)
 
     for i = 1, 4 do

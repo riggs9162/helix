@@ -21,7 +21,7 @@ local MISC = {
     {"NutScript", "Providing the base framework to build upon"}
 }
 
-local url = "https:--gethelix.co/"
+local url = "https://gethelix.co/"
 local padding = 32
 
 -- logo

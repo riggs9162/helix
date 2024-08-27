@@ -389,7 +389,7 @@ end
 
 function PANEL:PlayMusic()
     local path = "sound/" .. ix.config.Get("music")
-    local url = path:match("http[s]?:--.+")
+    local url = path:match("http[s]?://.+")
     local play = url and sound.PlayURL or sound.PlayFile
     path = url and url or path
 
@@ -413,20 +413,27 @@ function PANEL:PlayMusic()
                 end
             end
         })
+    end)
 
-        local length = channel:GetLength()
-        timer.Create("ixCharacterMusic", length, 1, function()
-            if (!ix.config.Get("musicLoop", false)) then
-                return
-            end
+    -- if the timer exists, then we're already looping the music, so don't create another timer
+    if (timer.Exists("ixCharacterMusic")) then
+        return
+    end
 
-            if (IsValid(self) and IsValid(self.channel)) then
-                self.channel:Stop()
-                self.channel = nil
+    -- don't loop the music if the config is false
+    if (!ix.config.Get("musicLoop", false)) then
+        return
+    end
 
-                self:PlayMusic()
-            end
-        end)
+    -- loop the music
+    local length = channel:GetLength()
+    timer.Create("ixCharacterMusic", length, 1, function()
+        if (IsValid(self) and IsValid(self.channel)) then
+            self.channel:Stop()
+            self.channel = nil
+
+            self:PlayMusic()
+        end
     end)
 end
 

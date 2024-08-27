@@ -14,10 +14,6 @@ ix.item.inventoryTypes = ix.item.inventoryTypes or {}
 
 ix.util.Include("helix/gamemode/core/meta/sh_item.lua")
 
-if (!ix.item.inventories[0]) then
-    ix.item.inventories[0] = {}
-end
-
 -- Declare some supports for logic inventory
 local zeroInv = ix.item.inventories[0]
 
@@ -141,12 +137,14 @@ function ix.item.Register(uniqueID, baseID, isBaseItem, path, luaGenerated)
                 tip = "dropTip",
                 icon = "icon16/world.png",
                 OnRun = function(item)
-                    local bSuccess, error = item:Transfer(nil, nil, nil, item.player)
+                    local client = item.player
+                    local bSuccess, error = item:Transfer(nil, nil, nil, client)
 
                     if (!bSuccess and isstring(error)) then
-                        item.player:NotifyLocalized(error)
+                        client:NotifyLocalized(error)
                     else
-                        item.player:EmitSound("npc/zombie/foot_slide" .. math.random(1, 3) .. ".wav", 75, math.random(90, 120), 1)
+                        local path, level, pitch, volume = hook.Run("GetItemDropSound", item) or "npc/zombie/foot_slide" .. math.random(1, 3) .. ".wav", 75, math.random(90, 120), 1
+                        client:EmitSound(path, level, pitch, volume)
                     end
 
                     return false
@@ -263,20 +261,20 @@ end
 function ix.item.LoadFromDir(directory)
     local files, folders
 
-    files = file.Find(directory.."/base--[[--.lua", "LUA")
+    files = file.Find(directory.."/base/*.lua", "LUA")
 
     for _, v in ipairs(files) do
         ix.item.Load(directory.."/base/"..v, nil, true)
     end
 
-    files, folders = file.Find(directory.."--[[--", "LUA")
+    files, folders = file.Find(directory.."/*", "LUA")
 
     for _, v in ipairs(folders) do
         if (v == "base") then
             continue
         end
 
-        for _, v2 in ipairs(file.Find(directory.."/"..v.."--[[--.lua", "LUA")) do
+        for _, v2 in ipairs(file.Find(directory.."/"..v.."/*.lua", "LUA")) do
             ix.item.Load(directory.."/"..v .. "/".. v2, "base_"..v)
         end
     end
@@ -625,7 +623,7 @@ do
                 item.player = client
             end
 
-            if (item.entity and IsValid(item.entity)) then
+            if (IsValid(item.entity)) then
                 if (item.entity:GetPos():Distance(client:GetPos()) > 96) then
                     return
                 end

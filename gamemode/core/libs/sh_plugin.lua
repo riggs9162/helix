@@ -129,7 +129,7 @@ function ix.plugin.LoadEntities(path)
     end
 
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly, create, complete)
-        files, folders = file.Find(path.."/"..folder.."--[[--", "LUA")
+        files, folders = file.Find(path.."/"..folder.."/*", "LUA")
         default = default or {}
 
         for _, v in ipairs(folders) do
@@ -263,7 +263,7 @@ function ix.plugin.Get(identifier)
 end
 
 function ix.plugin.LoadFromDir(directory)
-    local files, folders = file.Find(directory.."--[[--", "LUA")
+    local files, folders = file.Find(directory.."/*", "LUA")
 
     for _, v in ipairs(folders) do
         ix.plugin.Load(v, directory.."/"..v)

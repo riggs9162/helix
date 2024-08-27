@@ -35,7 +35,7 @@ local CITIZEN_MODELS = {
 -- @realm shared
 -- @string directory The path to the factions files.
 function ix.faction.LoadFromDir(directory)
-    for _, v in ipairs(file.Find(directory.."--[[--.lua", "LUA")) do
+    for _, v in ipairs(file.Find(directory.."/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
 
         FACTION = ix.faction.teams[niceName] or {index = table.Count(ix.faction.teams) + 1, isDefault = false}

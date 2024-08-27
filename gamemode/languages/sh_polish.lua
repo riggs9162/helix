@@ -1,4 +1,4 @@
--- Autorzy: zgredinzyyy (Poprawki + Brakujące rzeczy) || Veran120, Michał, Lechu2375 https:--github.com/lechu2375/helix-polishlocalization/blob/master/sh_polish.lua
+-- Autorzy: zgredinzyyy (Poprawki + Brakujące rzeczy) || Veran120, Michał, Lechu2375 https://github.com/lechu2375/helix-polishlocalization/blob/master/sh_polish.lua
 
 NAME = "Polski"
 
@@ -228,7 +228,7 @@ LANGUAGE = {
     charBanned = "Ta postać jest zablokowana.",
     charBannedTemp = "Ta postać jest tymczasowo zablokowana.",
     playerConnected = "%s połączył się z serwerem.",
-    playerDisconnected = "%s",
+    playerDisconnected = "%s wyszedł z serwera.",
     setMoney = "Ustawiłeś ilość pieniędzy %s na %s.",
     itemPriceInfo = "Możesz kupić ten przedmiot za %s.\nMożesz sprzedać ten przedmiot za %s",
     free = "Darmowe",

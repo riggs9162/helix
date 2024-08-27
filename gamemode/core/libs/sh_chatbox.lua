@@ -40,12 +40,12 @@ Name = "Helix - Bypass OOC Timer",
 -- @see ix.chat.Register
 -- @field[type=string] prefix What the player must type before their message in order to use this chat class. For example,
 -- having a prefix of `/Y` will require to type `/Y I am yelling` in order to send a message with this chat class. This can also
--- be a table of strings if you want to allow multiple prefixes, such as `{"--", "/OOC"}`.
+-- be a table of strings if you want to allow multiple prefixes, such as `{"//", "/OOC"}`.
 --
 -- **NOTE:** the prefix should usually start with a `/` to be consistent with the rest of the framework. However, you are able
--- to use something different like the `LOOC` chat class where the prefixes are `.--`, `[[`, and `/LOOC`.
+-- to use something different like the `LOOC` chat class where the prefixes are `.//`, `[[`, and `/LOOC`.
 -- @field[type=bool,opt=false] noSpaceAfter Whether or not the `prefix` can be used without a space after it. For example, the
--- `OOC` chat class allows you to type `--my message` instead of `-- my message`. **NOTE:** this only works if the last
+-- `OOC` chat class allows you to type `//my message` instead of `// my message`. **NOTE:** this only works if the last
 -- character in the prefix is non-alphanumeric (i.e `noSpaceAfter` with `/Y` will not work, but `/!` will).
 -- @field[type=string,opt] description Description to show to the user in the chatbox when they're using this chat class
 -- @field[type=string,opt="%s: \"%s\""] format How to format a message with this chat class. The first `%s` will be the speaking
@@ -516,7 +516,7 @@ do
 
                 chat.AddText(icon, Color(255, 50, 50), "[OOC] ", speaker, color_white, ": "..text)
             end,
-            prefix = {"--", "/OOC"},
+            prefix = {"//", "/OOC"},
             description = "@cmdOOC",
             noSpaceAfter = true
         })
@@ -545,7 +545,7 @@ do
                 chat.AddText(Color(255, 50, 50), "[LOOC] ", ix.config.Get("chatColor"), speaker:Name()..": "..text)
             end,
             CanHear = ix.config.Get("chatRange", 280),
-            prefix = {".--", "[[", "/LOOC"},
+            prefix = {".//", "[[", "/LOOC"},
             description = "@cmdLOOC",
             noSpaceAfter = true
         })
@@ -611,10 +611,10 @@ ix.chat.Register("disconnect", {
     CanSay = function(self, speaker, text)
         return !IsValid(speaker)
     end,
-    OnChatAdd = function(self, speaker, reason)
+    OnChatAdd = function(self, speaker, text)
         local icon = ix.util.GetMaterial("icon16/user_delete.png")
 
-        chat.AddText(icon, Color(200, 150, 200), L("playerDisconnected", reason))
+        chat.AddText(icon, Color(200, 150, 200), L("playerDisconnected", text))
     end,
     noSpaceAfter = true
 })

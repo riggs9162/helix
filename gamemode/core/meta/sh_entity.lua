@@ -5,7 +5,7 @@ Physical object in the game world.
 Entities are physical representations of objects in the game world. Helix extends the functionality of entities to interface
 between Helix's own classes, and to reduce boilerplate code.
 
-See the [Garry's Mod Wiki](https:--wiki.garrysmod.com/page/Category:Entity) for all other methods that the `Player` class has.
+See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Entity) for all other methods that the `Player` class has.
 ]]
 -- @classmod Entity
 

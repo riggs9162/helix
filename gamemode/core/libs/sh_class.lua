@@ -1,3 +1,4 @@
+
 --[[--
 Helper library for loading/getting class information.
 
@@ -21,7 +22,7 @@ local charMeta = ix.meta.character
 -- @internal
 -- @string directory The path to the class files.
 function ix.class.LoadFromDir(directory)
-    for _, v in ipairs(file.Find(directory.."--[[--.lua", "LUA")) do
+    for _, v in ipairs(file.Find(directory.."/*.lua", "LUA")) do
         -- Get the name without the "sh_" prefix and ".lua" suffix.
         local niceName = v:sub(4, -5)
         -- Determine a numeric identifier for this class.
@@ -90,6 +91,10 @@ function ix.class.CanSwitchTo(client, class)
         return false, "not correct team"
     end
 
+    if (client:GetCharacter():GetClass() == class) then
+        return false, "same class request"
+    end
+
     if (info.limit > 0) then
         if (#ix.class.GetPlayers(info.index) >= info.limit) then
             return false, "class is full"
@@ -127,11 +132,8 @@ function ix.class.GetPlayers(class)
     local players = {}
 
     for _, v in player.Iterator() do
-        if not ( IsValid(v) ) then
-            continue
-        end
-
         local char = v:GetCharacter()
+
         if (char and char:GetClass() == class) then
             table.insert(players, v)
         end

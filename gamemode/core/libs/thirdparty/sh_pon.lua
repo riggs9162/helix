@@ -1,4 +1,4 @@
---[[--
+--[[
 DEVELOPMENTAL VERSION;
 VERSION 1.2.2
 Copyright thelastpenguin™
@@ -137,7 +137,7 @@ do
     --    ENCODE STRING
     local gsub = string.gsub ;
     encode['string'] = function( self, str, output )
-        -- if tryCache( str, output ) then return end
+        --if tryCache( str, output ) then return end
         local estr, count = gsub( str, ";", "\\;");
         if( count == 0 )then
             output[ #output + 1 ] = '\''..str..';';

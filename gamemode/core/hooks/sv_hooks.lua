@@ -503,7 +503,7 @@ function GM:PlayerLoadout(client)
     if (character) then
         client:SetupHands()
         -- Set their player model to the character's model.
-        client:SetModel(client:GetModel())
+        client:SetModel(character:GetModel())
         client:Give("ix_hands")
         client:SetWalkSpeed(ix.config.Get("walkSpeed"))
         client:SetRunSpeed(ix.config.Get("runSpeed"))
@@ -704,18 +704,6 @@ function GM:GetPlayerPainSound(client)
     end
 end
 
-local limbTranslator = {
-    [HITGROUP_LEFTLEG] = "left leg",
-    [HITGROUP_RIGHTLEG] = "right leg",
-    [HITGROUP_LEFTARM] = "left arm",
-    [HITGROUP_RIGHTARM] = "right arm",
-    [HITGROUP_HEAD] = "head",
-    [HITGROUP_CHEST] = "chest",
-    [HITGROUP_STOMACH] = "stomach",
-    [HITGROUP_GEAR] = "gear",
-    [HITGROUP_GENERIC] = "generic"
-}
-
 function GM:PlayerHurt(client, attacker, health, damage)
     if ((client.ixNextPain or 0) < CurTime() and health > 0) then
         local painSound = hook.Run("GetPlayerPainSound", client) or painSounds[math.random(1, #painSounds)]
@@ -728,10 +716,7 @@ function GM:PlayerHurt(client, attacker, health, damage)
         client.ixNextPain = CurTime() + 0.33
     end
 
-    local hitGroup = client:LastHitGroup() or HITGROUP_GENERIC
-    local limb = limbTranslator[hitGroup] or "unknown"
-
-    ix.log.Add(client, "playerHurt", damage, attacker:GetName() ~= "" and attacker:GetName() or attacker:GetClass(), limb, health)
+    ix.log.Add(client, "playerHurt", damage, attacker:GetName() ~= "" and attacker:GetName() or attacker:GetClass())
 end
 
 function GM:PlayerDeathThink(client)
@@ -745,27 +730,6 @@ function GM:PlayerDeathThink(client)
 
     return false
 end
-
-local disconnectTranslator = {
-    ["timed"] = "has timed out from the server",
-    ["connection closing"] = "has disconnected because their internet connection is closing",
-    ["disconnect by user"] = "has disconnected from the server",
-    ["the server is full and you do not have access to a reserved slot."] = "has attempted to connect, but the server is full.",
-    ["a player with a reserved slot connected to the server and you got kicked to free up space."] = "got kicked to free up space for a reserved slot."
-}
-
-gameevent.Listen("player_disconnect")
-hook.Add("player_disconnect", "PlayerDisconnectMessage", function(data)
-    local reason = data.reason:utf8lower()
-    for k, v in pairs(disconnectTranslator) do
-        if (ix.util.StringMatches(reason, k)) then
-            reason = v
-            break
-        end
-    end
-
-    ix.chat.Send(nil, "disconnect", ix.chat.Format(data.name .. " " .. reason:utf8lower()))
-end)
 
 function GM:PlayerDisconnected(client)
     client:SaveData()
@@ -782,8 +746,8 @@ function GM:PlayerDisconnected(client)
         end
 
         hook.Run("OnCharacterDisconnect", client, character)
-
-        character:Save()
+            character:Save()
+        ix.chat.Send(nil, "disconnect", client:SteamName())
     end
 
     if (IsValid(client.ixRagdoll)) then
@@ -895,8 +859,6 @@ function GM:PlayerCanPickupWeapon(client, weapon)
 end
 
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
-    if (!IsValid(physObj)) then return false end
-
     -- Object is already frozen (!?)
     if (!physObj:IsMoveable()) then return false end
     if (entity:GetUnFreezable()) then return false end

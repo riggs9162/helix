@@ -1,7 +1,7 @@
 
 -- FRENCH TRANSLATION
--- http:--steamcommunity.com/id/sadness81
--- https:--steamcommunity.com/id/Azphal
+-- http://steamcommunity.com/id/sadness81
+-- https://steamcommunity.com/id/Azphal
 
 NAME = "Français"
 
@@ -223,7 +223,7 @@ LANGUAGE = {
     charBan = "%s a banni le personnage %s.",
     charBanned = "Ce personnage est banni.",
     playerConnected = "%s s'est connecté au serveur.",
-    playerDisconnected = "%s",
+    playerDisconnected = "%s s'est déconnecté du serveur.",
     setMoney = "Vous avez défini l'argent de %s à %s..",
     itemPriceInfo = "Vous pouvez acheter cet article pour %s.\nVous pouvez vendre cet article pour %s",
     free = "Gratuit",

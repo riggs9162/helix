@@ -1,14 +1,15 @@
+
 -- You can change the default language by setting this in your schema.
 ix.config.language = "english"
 
---[[--
+--[[
     DO NOT CHANGE ANYTHING BELOW THIS.
 
     This is the Helix main configuration file.
     This file DOES NOT set any configurations, instead it just prepares them.
     To set the configuration, there is a "Config" tab in the F1 menu for super admins and above.
     Use the menu to change the variables, not this file.
-]]
+--]]
 
 ix.config.Add("maxCharacters", 5, "The maximum number of characters a player can have.", nil, {
     data = {min = 1, max = 50},
@@ -29,11 +30,13 @@ ix.config.Add("font", "Roboto Th", "The font used to display titles.", function(
         hook.Run("LoadFonts", newValue, ix.config.Get("genericFont"))
     end
 end, {category = "appearance"})
+
 ix.config.Add("genericFont", "Roboto", "The font used to display generic texts.", function(oldValue, newValue)
     if (CLIENT) then
         hook.Run("LoadFonts", ix.config.Get("font"), newValue)
     end
 end, {category = "appearance"})
+
 ix.config.Add("maxAttributes", 100, "The maximum amount each attribute can be.", nil, {
     data = {min = 0, max = 100},
     category = "characters"
@@ -93,7 +96,7 @@ ix.config.Add("saveInterval", 300, "How often characters save in seconds.", nil,
     category = "characters"
 })
 ix.config.Add("walkSpeed", 100, "How fast a player normally walks.", function(oldValue, newValue)
-    for _, v in player.Iterator()    do
+    for _, v in player.Iterator() do
         v:SetWalkSpeed(newValue)
     end
 end, {
@@ -101,7 +104,7 @@ end, {
     category = "characters"
 })
 ix.config.Add("runSpeed", 200, "How fast a player normally runs.", function(oldValue, newValue)
-    for _, v in player.Iterator()    do
+    for _, v in player.Iterator() do
         v:SetRunSpeed(newValue)
     end
 end, {
@@ -129,7 +132,7 @@ ix.config.Add("musicDelay", 0, "The delay before the music starts playing in the
 ix.config.Add("musicLoop", true, "Whether or not the music loops in the character menu.", nil, {
     category = "appearance"
 })
-ix.config.Add("communityURL", "https:--nebulous.cloud/", "The URL to navigate to when the community button is clicked.", nil, {
+ix.config.Add("communityURL", "https://nebulous.cloud/", "The URL to navigate to when the community button is clicked.", nil, {
     category = "appearance"
 })
 ix.config.Add("communityText", "@community",

@@ -13,7 +13,7 @@
 -- All functions behave as their non UTF-8 aware counterparts with the exception
 -- that UTF-8 characters are used instead of bytes for all units.
 
---[[--
+--[[
 Copyright (c) 2006-2007, Kyle Smith
 All rights reserved.
 
@@ -39,7 +39,7 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-]]
+--]]
 
 -- ABNF from RFC 3629
 --

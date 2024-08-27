@@ -80,7 +80,7 @@ function ix.util.IncludeDir(directory, bFromLua)
     end
 
     -- Find all of the files within the directory.
-    for _, v in ipairs(file.Find((bFromLua and "" or baseDir)..directory.."--[[--.lua", "LUA")) do
+    for _, v in ipairs(file.Find((bFromLua and "" or baseDir)..directory.."/*.lua", "LUA")) do
         -- Include the file from the prefix.
         ix.util.Include(directory.."/"..v)
     end
@@ -290,13 +290,13 @@ function ix.util.StringMatches(a, b)
     return false
 end
 
---- A more extreme version of `ix.util.StringMatches` that will check all the words in both strings to see if they match. This
--- function is useful for checking if a string is similar to another string, but not necessarily the same.
+--- A more advanced version of `ix.util.StringMatches` that will check if two strings are equivalent by breaking them down into
+-- tables of words and checking if any of the words match.
 -- @realm shared
 -- @string a First string to check
 -- @string b Second string to check
 -- @treturn bool Whether or not the strings are equivalent
-function ix.util.StringMatchesExtreme(a, b)
+function ix.util.StringMatchesTable(a, b)
     if (a and b) then
         a = tostring(a)
         b = tostring(b)
@@ -437,16 +437,16 @@ if (CLIENT) then
     local surface = surface
     local render = render
 
-	--- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
-	-- blurring disabled.
-	-- @realm client
-	-- @tparam panel panel Panel to draw the blur for
-	-- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
-	-- @number[opt=0.2] passes Quality of the blur. This should be kept as default
-	-- @number[opt=255] alpha Opacity of the blur
-	-- @usage function PANEL:Paint(width, height)
-	-- 	ix.util.DrawBlur(self)
-	-- end
+    --- Blurs the content underneath the given panel. This will fall back to a simple darkened rectangle if the player has
+    -- blurring disabled.
+    -- @realm client
+    -- @tparam panel panel Panel to draw the blur for
+    -- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+    -- @number[opt=0.2] passes Quality of the blur. This should be kept as default
+    -- @number[opt=255] alpha Opacity of the blur
+    -- @usage function PANEL:Paint(width, height)
+    --     ix.util.DrawBlur(self)
+    -- end
     function ix.util.DrawBlur(panel, amount, passes, alpha)
         amount = amount or 5
 
@@ -612,7 +612,7 @@ if (CLIENT) then
 
     -- arc drawing functions
     -- by bobbleheadbob
-    -- https:--facepunch.com/showthread.php?t=1558060
+    -- https://facepunch.com/showthread.php?t=1558060
     function ix.util.DrawArc(cx, cy, radius, thickness, startang, endang, roughness, color)
         surface.SetDrawColor(color)
         ix.util.DrawPrecachedArc(ix.util.PrecacheArc(cx, cy, radius, thickness, startang, endang, roughness))
@@ -1054,7 +1054,7 @@ end
 
 --[[
     Credit to TFA for figuring this mess out.
-    Original: https:--steamcommunity.com/sharedfiles/filedetails/?id=903541818
+    Original: https://steamcommunity.com/sharedfiles/filedetails/?id=903541818
 ]]
 
 if (system.IsLinux()) then
