@@ -183,7 +183,7 @@ if (SERVER) then
             end
         end
 
-        if ( !goClass ) then return end
+        if (!goClass) then return end
 
         self:JoinClass(goClass)
 
