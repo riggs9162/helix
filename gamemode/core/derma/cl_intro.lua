@@ -21,7 +21,7 @@ function PANEL:Init()
     self:SetZPos(99999)
     self:MakePopup()
 
-    // animation parameters
+    -- animation parameters
     self.bBackground = true
     self.volume = 1
     self.sunbeamOffset = 0
@@ -41,7 +41,7 @@ function PANEL:Init()
     }
 end
 
-// @todo h a c k
+-- @todo h a c k
 function PANEL:Think()
     if (IsValid(LocalPlayer())) then
         self:BeginIntro()
@@ -50,8 +50,8 @@ function PANEL:Think()
 end
 
 function PANEL:BeginIntro()
-    // something could have errored on startup and invalidated all options, so we'll be extra careful with setting the option
-    // because if it errors here, the sound will play each tick and proceed to hurt ears
+    -- something could have errored on startup and invalidated all options, so we'll be extra careful with setting the option
+    -- because if it errors here, the sound will play each tick and proceed to hurt ears
     local bLoaded = false
 
     if (ix and ix.option and ix.option.Set) then
@@ -111,7 +111,7 @@ function PANEL:AnimateWaves(target, bReverse)
             end
         end)
 
-        // return last animation that plays
+        -- return last animation that plays
         if ((bReverse and i == 1) or (!bReverse and i == #self.waves)) then
             return animation
         end
@@ -201,7 +201,7 @@ function PANEL:Paint(width, height)
     local textWidth, textHeight
     local fft
 
-    // background
+    -- background
     if (self.bBackground) then
         surface.SetDrawColor(0, 0, 0, 255)
         surface.DrawRect(0, 0, width, height)
@@ -218,7 +218,7 @@ function PANEL:Paint(width, height)
         end
     end
 
-    // waves
+    -- waves
     for i = 1, #self.waves do
         local wave = self.waves[i]
         local ratio = i / #self.waves
@@ -233,20 +233,20 @@ function PANEL:Paint(width, height)
         self:PaintCurve(height * wave[1], width, wave[2])
     end
 
-    // helix
+    -- helix
     if (self.helix > 0) then
         local alpha = self.helixAlpha * 255
 
         derma.SkinFunc("DrawHelixCurved",
             width * 0.5, centerY,
-            math.min(ScreenScale(72), 128) * 2, // font sizes are clamped to 128
+            math.min(ScreenScale(72), 128) * 2, -- font sizes are clamped to 128
             helixSegments * self.helix, helixHeight, self.helix,
             ColorAlpha(color_white, alpha),
             ColorAlpha(dimColor, alpha)
         )
     end
 
-    // title text glow
+    -- title text glow
     surface.SetTextColor(255, 255, 255,
         self.sunbeamOffset == 1 and self.kickTarget or sunbeamOffsetEasing * 255
     )
@@ -256,7 +256,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - logoTextWidth * 0.5, centerY - logoTextHeight * 0.5)
     surface.DrawText(text)
 
-    // title text
+    -- title text
     surface.SetTextColor(255, 255, 255, self.sunbeamOffset * 255)
     surface.SetFont("ixIntroTitleFont")
 
@@ -264,7 +264,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - logoTextWidth * 0.5, centerY - logoTextHeight * 0.5)
     surface.DrawText(text)
 
-    // text one
+    -- text one
     surface.SetFont("ixIntroSubtitleFont")
     text = L("introTextOne"):lower()
     textWidth = surface.GetTextSize(text)
@@ -273,7 +273,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - textWidth * 0.5, height * 0.66)
     surface.DrawText(text)
 
-    // text two
+    -- text two
     text = L("introTextTwo", Schema.author or "nebulous"):lower()
     textWidth = surface.GetTextSize(text)
 
@@ -281,7 +281,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - textWidth * 0.5, height * 0.66)
     surface.DrawText(text)
 
-    // continue text
+    -- continue text
     surface.SetFont("ixIntroSmallFont")
     text = L("introContinue"):lower()
     textWidth, textHeight = surface.GetTextSize(text)
@@ -298,7 +298,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - textWidth * 0.5, centerY * 2 - textHeight * 2)
     surface.DrawText(text)
 
-    // sunbeams
+    -- sunbeams
     if (self.sunbeamOffset > 0 and self.sunbeamOffset != 1) then
         DrawSunbeams(0.25, sunbeamOffsetEasing * 0.1, 0.02,
             (((width * 0.5 - logoTextWidth * 0.5) - 32) / width) + ((logoTextWidth + 64) / width) * self.sunbeamOffset,
@@ -338,7 +338,7 @@ function PANEL:Remove(bForce)
     self.bClosing = true
     self.bBackground = nil
 
-    // waves
+    -- waves
     local animation = self:AnimateWaves(1.1, true)
 
     animation.OnComplete = function(anim, panel)
@@ -346,7 +346,7 @@ function PANEL:Remove(bForce)
         panel:SetKeyboardInputEnabled(false)
     end
 
-    // audio
+    -- audio
     self:CreateAnimation(4.5, {
         index = 1,
         target = {volume = 0},

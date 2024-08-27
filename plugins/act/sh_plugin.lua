@@ -1,9 +1,9 @@
 
-/*
+--[[--
 Provides players the ability to perform animations.
 
-*/
-// @module ix.act
+]]
+-- @module ix.act
 
 local PLUGIN = PLUGIN
 
@@ -19,13 +19,13 @@ CAMI.RegisterPrivilege({
     MinAccess = "user"
 })
 
-/// Registers a sequence as a performable animation.
-// @realm shared
-// @string name Name of the animation (in CamelCase)
-// @string modelClass Model class to add this animation to
-// @tab data An `ActInfoStructure` table describing the animation
+--- Registers a sequence as a performable animation.
+-- @realm shared
+-- @string name Name of the animation (in CamelCase)
+-- @string modelClass Model class to add this animation to
+-- @tab data An `ActInfoStructure` table describing the animation
 function ix.act.Register(name, modelClass, data)
-    ix.act.stored[name] = ix.act.stored[name] or {} // might be adding onto an existing act
+    ix.act.stored[name] = ix.act.stored[name] or {} -- might be adding onto an existing act
 
     if (!data.sequence) then
         return ErrorNoHalt(string.format(
@@ -58,9 +58,9 @@ function ix.act.Register(name, modelClass, data)
     end
 end
 
-/// Removes a sequence from being performable if it has been previously registered.
-// @realm shared
-// @string name Name of the animation
+--- Removes a sequence from being performable if it has been previously registered.
+-- @realm shared
+-- @string name Name of the animation
 function ix.act.Remove(name)
     ix.act.stored[name] = nil
     ix.command.list["Act" .. name] = nil
@@ -84,21 +84,21 @@ function PLUGIN:ExitAct(client)
 end
 
 function PLUGIN:PostSetupActs()
-    // create chat commands for all stored acts
+    -- create chat commands for all stored acts
     for act, classes in pairs(ix.act.stored) do
         local variants = 1
         local COMMAND = {
             privilege = "Player Acts"
         }
 
-        // check if this act has any variants (i.e /ActSit 2)
+        -- check if this act has any variants (i.e /ActSit 2)
         for _, v in pairs(classes) do
             if (#v.sequence > 1) then
                 variants = math.max(variants, #v.sequence)
             end
         end
 
-        // setup command arguments if there are variants for this act
+        -- setup command arguments if there are variants for this act
         if (variants > 1) then
             COMMAND.arguments = bit.bor(ix.type.number, ix.type.optional)
             COMMAND.argumentNames = {"variant (1-" .. variants .. ")"}
@@ -110,7 +110,7 @@ function PLUGIN:PostSetupActs()
 
         local privilege = "Helix - " .. COMMAND.privilege
 
-        // we'll perform a model class check in OnCheckAccess to prevent the command from showing up on the client at all
+        -- we'll perform a model class check in OnCheckAccess to prevent the command from showing up on the client at all
         COMMAND.OnCheckAccess = function(command, client)
             local bHasAccess, _ = CAMI.PlayerHasAccess(client, privilege, nil)
 
@@ -145,9 +145,9 @@ function PLUGIN:PostSetupActs()
             local mainSequence = data.sequence[variant]
             local mainDuration
 
-            // check if the main sequence has any extra info
+            -- check if the main sequence has any extra info
             if (istable(mainSequence)) then
-                // any validity checks to perform (i.e facing a wall)
+                -- any validity checks to perform (i.e facing a wall)
                 if (mainSequence.check) then
                     local result = mainSequence.check(client)
 
@@ -156,7 +156,7 @@ function PLUGIN:PostSetupActs()
                     end
                 end
 
-                // position offset
+                -- position offset
                 if (mainSequence.offset) then
                     client.ixOldPosition = client:GetPos()
                     client:SetPos(client:GetPos() + mainSequence.offset(client))
@@ -177,11 +177,11 @@ function PLUGIN:PostSetupActs()
             client:SetNetVar("actEnterAngle", client:GetAngles())
 
             client:ForceSequence(startSequence, function()
-                // we've finished the start sequence
-                client.ixUntimedSequence = data.untimed // client can exit after the start sequence finishes playing
+                -- we've finished the start sequence
+                client.ixUntimedSequence = data.untimed -- client can exit after the start sequence finishes playing
 
                 local duration = client:ForceSequence(mainSequence, function()
-                    // we've stopped playing the main sequence (either duration expired or user cancelled the act)
+                    -- we've stopped playing the main sequence (either duration expired or user cancelled the act)
                     if (data.finish) then
                         local finishSequence = data.finish[variant]
                         local finishDuration
@@ -192,17 +192,17 @@ function PLUGIN:PostSetupActs()
                         end
 
                         client:ForceSequence(finishSequence, function()
-                            // client has finished the end sequence and is no longer playing any animations
+                            -- client has finished the end sequence and is no longer playing any animations
                             self:ExitAct(client)
                         end, finishDuration)
                     else
-                        // there's no end sequence so we can exit right away
+                        -- there's no end sequence so we can exit right away
                         self:ExitAct(client)
                     end
                 end, data.untimed and 0 or (mainDuration or nil))
 
                 if (!duration) then
-                    // the model doesn't support this variant
+                    -- the model doesn't support this variant
                     self:ExitAct(client)
                     client:NotifyLocalized("modelNoSeq")
 
@@ -220,7 +220,7 @@ function PLUGIN:PostSetupActs()
         ix.command.Add("Act" .. act, COMMAND)
     end
 
-    // setup exit act command
+    -- setup exit act command
     local COMMAND = {
         privilege = "Player Acts",
         OnRun = function(command, client)
@@ -231,7 +231,7 @@ function PLUGIN:PostSetupActs()
     }
 
     if (CLIENT) then
-        // hide this command from the command list
+        -- hide this command from the command list
         COMMAND.OnCheckAccess = function(client)
             return false
         end

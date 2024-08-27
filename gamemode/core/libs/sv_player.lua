@@ -1,6 +1,6 @@
 local playerMeta = FindMetaTable("Player")
 
-// Player data (outside of characters) handling.
+-- Player data (outside of characters) handling.
 do
     util.AddNetworkString("ixData")
     util.AddNetworkString("ixDataSync")
@@ -82,7 +82,7 @@ do
     end
 end
 
-// Whitelisting information for the player.
+-- Whitelisting information for the player.
 do
     function playerMeta:SetWhitelisted(faction, whitelisted)
         if (!whitelisted) then

@@ -40,7 +40,7 @@ if (SERVER) then
             container:Spawn()
 
             ix.inventory.New(0, "container:" .. model:lower(), function(inventory)
-                // we'll technically call this a bag since we don't want other bags to go inside
+                -- we'll technically call this a bag since we don't want other bags to go inside
                 inventory.vars.isBag = true
                 inventory.vars.isContainer = true
 
@@ -246,7 +246,7 @@ function PLUGIN:InitializedPlugins()
     end
 end
 
-// properties
+-- properties
 properties.Add("container_setpassword", {
     MenuLabel = "Set Password",
     Order = 400,

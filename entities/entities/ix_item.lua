@@ -45,7 +45,7 @@ if (SERVER) then
             if (itemTable.functions.take.OnCanRun(itemTable)) then
                 caller:PerformInteraction(ix.config.Get("itemPickupTime", 0.5), self, function(client)
                     if (!ix.item.PerformInventoryAction(client, "take", self)) then
-                        return false // do not mark dirty if interaction fails
+                        return false -- do not mark dirty if interaction fails
                     end
                 end)
             end
@@ -200,7 +200,7 @@ else
         local name = tooltip:GetRow("name")
         local color = name and name:GetBackgroundColor() or ix.config.Get("color")
 
-        // set the arrow to be the same colour as the title/name row
+        -- set the arrow to be the same colour as the title/name row
         tooltip:SetArrowColor(color)
 
         if ((item.width > 1 or item.height > 1) and
@@ -286,7 +286,7 @@ function ENT:GetEntityMenu(client)
             continue
         end
 
-        // we keep the localized phrase since we aren't using the callbacks - the name won't matter in this case
+        -- we keep the localized phrase since we aren't using the callbacks - the name won't matter in this case
         options[L(v.name or k)] = function()
             local send = true
 
@@ -305,7 +305,7 @@ function ENT:GetEntityMenu(client)
                 net.SendToServer()
             end
 
-            // don't run callbacks since we're handling it manually
+            -- don't run callbacks since we're handling it manually
             return false
         end
     end

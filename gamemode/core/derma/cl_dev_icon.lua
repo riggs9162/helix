@@ -1,4 +1,4 @@
---Icon Editor Base and Math Scale Functions from: https://github.com/TeslaCloud/flux-ce/tree/master
+--Icon Editor Base and Math Scale Functions from: https:--github.com/TeslaCloud/flux-ce/tree/master
 
 local scaleFactorX = 1 / 1920
 local scaleFactorY = 1 / 1080

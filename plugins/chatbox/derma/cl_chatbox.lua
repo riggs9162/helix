@@ -6,15 +6,15 @@ local chatBorder = 32
 local sizingBorder = 20
 local maxChatEntries = 100
 
-// called when a markup object should paint its text
+-- called when a markup object should paint its text
 local function PaintMarkupOverride(text, font, x, y, color, alignX, alignY, alpha)
     alpha = alpha or 255
 
     if (ix.option.Get("chatOutline", false)) then
-        // outlined background for even more visibility
+        -- outlined background for even more visibility
         draw.SimpleTextOutlined(text, font, x, y, ColorAlpha(color, alpha), alignX, alignY, 1, Color(0, 0, 0, alpha))
     else
-        // background for easier reading
+        -- background for easier reading
         surface.SetTextPos(x + 1, y + 1)
         surface.SetTextColor(0, 0, 0, alpha)
         surface.SetFont(font)
@@ -27,7 +27,7 @@ local function PaintMarkupOverride(text, font, x, y, color, alignX, alignY, alph
     end
 end
 
-// chat message
+-- chat message
 local PANEL = {}
 
 AccessorFunc(PANEL, "fadeDelay", "FadeDelay", FORCE_NUMBER)
@@ -74,7 +74,7 @@ end
 function PANEL:Paint(width, height)
     local newAlpha
 
-    // we'll want to hide the chat while some important menus are open
+    -- we'll want to hide the chat while some important menus are open
     if (IsValid(ix.gui.characterMenu)) then
         newAlpha = math.min(255 - ix.gui.characterMenu.currentAlpha, self.alpha)
     elseif (IsValid(ix.gui.menu)) then
@@ -94,7 +94,7 @@ end
 
 vgui.Register("ixChatMessage", PANEL, "Panel")
 
-// chatbox tab button
+-- chatbox tab button
 PANEL = {}
 
 AccessorFunc(PANEL, "bActive", "Active", FORCE_BOOL)
@@ -128,16 +128,16 @@ end
 
 vgui.Register("ixChatboxTabButton", PANEL, "DButton")
 
-// chatbox tab panel
-// holds all tab buttons and corresponding history panels
+-- chatbox tab panel
+-- holds all tab buttons and corresponding history panels
 PANEL = {}
 
 function PANEL:Init()
-    // holds all tab buttons
+    -- holds all tab buttons
     self.buttons = self:Add("Panel")
     self.buttons:Dock(TOP)
     self.buttons:DockPadding(1, 1, 0, 0)
-    self.buttons.OnMousePressed = ix.util.Bind(ix.gui.chat, ix.gui.chat.OnMousePressed) // we want mouse events to fall through
+    self.buttons.OnMousePressed = ix.util.Bind(ix.gui.chat, ix.gui.chat.OnMousePressed) -- we want mouse events to fall through
     self.buttons.OnMouseReleased = ix.util.Bind(ix.gui.chat, ix.gui.chat.OnMouseReleased)
     self.buttons.Paint = function(_, width, height)
         derma.SkinFunc("PaintChatboxTabs", self, width, height)
@@ -153,7 +153,7 @@ end
 function PANEL:AddTab(id, filter)
     local button = self.buttons:Add("ixChatboxTabButton")
     button:Dock(LEFT)
-    button:SetText(id) // display name is also the ID
+    button:SetText(id) -- display name is also the ID
     button:SetActive(false)
     button:SetMouseInputEnabled(true)
     button:SizeToContents()
@@ -189,12 +189,12 @@ function PANEL:RemoveTab(id)
 
     self.tabs[id] = nil
 
-    // add default tab if we don't have any tabs left
+    -- add default tab if we don't have any tabs left
     if (table.IsEmpty(self.tabs)) then
         self:AddTab(L("chat"), {})
         self:SetActiveTab(L("chat"))
     elseif (id == self:GetActiveTabID()) then
-        // set a different active tab if we've removed a tab that is currently active
+        -- set a different active tab if we've removed a tab that is currently active
         self:SetActiveTab(next(self.tabs))
     end
 end
@@ -242,23 +242,23 @@ function PANEL:GetActiveTab()
     return self.tabs[self.activeTab]
 end
 
-// called when the active tab is changed
-// `panel` is the corresponding history panel
+-- called when the active tab is changed
+-- `panel` is the corresponding history panel
 function PANEL:OnTabChanged(panel)
 end
 
 vgui.Register("ixChatboxTabs", PANEL, "EditablePanel")
 
-// chatbox history panel
-// holds individual messages in a scrollable panel
+-- chatbox history panel
+-- holds individual messages in a scrollable panel
 PANEL = {}
 
-AccessorFunc(PANEL, "filter", "Filter") // blacklist of message classes
+AccessorFunc(PANEL, "filter", "Filter") -- blacklist of message classes
 AccessorFunc(PANEL, "id", "ID", FORCE_STRING)
-AccessorFunc(PANEL, "button", "Button") // button panel that this panel corresponds to
+AccessorFunc(PANEL, "button", "Button") -- button panel that this panel corresponds to
 
 function PANEL:Init()
-    self:DockMargin(4, 2, 4, 4) // smaller top margin to help blend tab button/history panel transition
+    self:DockMargin(4, 2, 4, 4) -- smaller top margin to help blend tab button/history panel transition
     self:SetPaintedManually(true)
 
     local bar = self:GetVBar()
@@ -268,7 +268,7 @@ function PANEL:Init()
     self.filter = {}
 end
 
-DEFINE_BASECLASS("Panel") // DScrollPanel doesn't have SetVisible member
+DEFINE_BASECLASS("Panel") -- DScrollPanel doesn't have SetVisible member
 function PANEL:SetVisible(bState)
     self:GetCanvas():SetVisible(bState)
     BaseClass.SetVisible(self, bState)
@@ -277,7 +277,7 @@ end
 DEFINE_BASECLASS("DScrollPanel")
 function PANEL:PerformLayoutInternal()
     local bar = self:GetVBar()
-    local bScroll = !ix.gui.chat:GetActive() or bar.Scroll == bar.CanvasSize // only scroll when we're not at the bottom/inactive
+    local bScroll = !ix.gui.chat:GetActive() or bar.Scroll == bar.CanvasSize -- only scroll when we're not at the bottom/inactive
 
     BaseClass.PerformLayoutInternal(self)
 
@@ -291,9 +291,9 @@ function PANEL:ScrollToBottom()
     bar:SetScroll(bar.CanvasSize)
 end
 
-// adds a line of text as described by its elements
+-- adds a line of text as described by its elements
 function PANEL:AddLine(elements, bShouldScroll)
-    // table.concat is faster than regular string concatenation where there are lots of strings to concatenate
+    -- table.concat is faster than regular string concatenation where there are lots of strings to concatenate
     local buffer = {
         "<font=ixChatFont>"
     }
@@ -385,7 +385,7 @@ function PANEL:AllowInput(newCharacter)
     local text = self:GetText()
     local maxLength = ix.config.Get("chatMax")
 
-    // we can't check for the proper length using utf-8 since AllowInput is called for single bytes instead of full characters
+    -- we can't check for the proper length using utf-8 since AllowInput is called for single bytes instead of full characters
     if (string.len(text .. newCharacter) > maxLength) then
         surface.PlaySound("common/talk.wav")
         return true
@@ -410,7 +410,7 @@ end
 
 vgui.Register("ixChatboxEntry", PANEL, "DTextEntry")
 
-// chatbox additional command info panel
+-- chatbox additional command info panel
 PANEL = {}
 
 AccessorFunc(PANEL, "text", "Text", FORCE_STRING)
@@ -489,7 +489,7 @@ end
 
 vgui.Register("ixChatboxPrefix", PANEL, "Panel")
 
-// chatbox command preview panel
+-- chatbox command preview panel
 PANEL = {}
 DEFINE_BASECLASS("Panel")
 
@@ -508,8 +508,8 @@ function PANEL:Init()
 end
 
 function PANEL:SetCommand(command)
-    // if we're setting it to an empty command, then we'll hold the reference to the old command table to render it for the
-    // fade out animation
+    -- if we're setting it to an empty command, then we'll hold the reference to the old command table to render it for the
+    -- fade out animation
     if (command == "") then
         self.command = ""
         ix.chat.currentCommand = ""
@@ -536,13 +536,13 @@ function PANEL:UpdateArguments(text)
         return
     end
 
-    local commandName = text:match("(/(%w+)%s)") or self.command // we could be using a chat class prefix and not a proper command
+    local commandName = text:match("(/(%w+)%s)") or self.command -- we could be using a chat class prefix and not a proper command
     local givenArguments = ix.command.ExtractArgs(text:utf8sub(commandName:utf8len()))
     local commandArguments = self.commandTable.arguments or {}
     local arguments = {}
 
-    // we want to concat any text types so they show up as one argument at the end of the list, this is so the argument
-    // highlighting is accurate since ExtractArgs will not account because it has no type context
+    -- we want to concat any text types so they show up as one argument at the end of the list, this is so the argument
+    -- highlighting is accurate since ExtractArgs will not account because it has no type context
     for k, v in ipairs(givenArguments) do
         if (k == #commandArguments) then
             arguments[#arguments + 1] = table.concat(givenArguments, " ", k)
@@ -556,7 +556,7 @@ function PANEL:UpdateArguments(text)
     ix.chat.currentArguments = table.Copy(arguments)
 end
 
-// returns the target SetVisible value
+-- returns the target SetVisible value
 function PANEL:IsOpen()
     return self.bOpen
 end
@@ -567,7 +567,7 @@ function PANEL:SetVisible(bValue, bForce)
         return
     end
 
-    BaseClass.SetVisible(self, true) // make sure this panel is visible during animation
+    BaseClass.SetVisible(self, true) -- make sure this panel is visible during animation
     self.bOpen = bValue
 
     self:CreateAnimation(animationTime * 0.5, {
@@ -599,10 +599,10 @@ function PANEL:Paint(width, height)
     local color = ix.config.Get("color")
     surface.SetFont("ixChatFont")
 
-    // command name
+    -- command name
     local x = derma.SkinFunc("DrawChatboxPreviewBox", 0, 0, "/" .. command.name) + 6
 
-    // command arguments
+    -- command arguments
     if (istable(command.arguments)) then
         for k, v in ipairs(command.arguments) do
             local bOptional = bit.band(v, ix.type.optional) > 0
@@ -610,10 +610,10 @@ function PANEL:Paint(width, height)
 
             x = x + derma.SkinFunc(
                 "DrawChatboxPreviewBox", x, 0,
-                // draw text in format of <name: type> or [name: type] if it's optional
+                -- draw text in format of <name: type> or [name: type] if it's optional
                 string.format(bOptional and "[%s: %s]" or "<%s: %s>", command.argumentNames[k], ix.type[type]),
-                // fill in the color for arguments that are before the one the user is currently typing, otherwise draw a faded
-                // color instead (optional arguments will not have any background color unless it's been filled out by user)
+                -- fill in the color for arguments that are before the one the user is currently typing, otherwise draw a faded
+                -- color instead (optional arguments will not have any background color unless it's been filled out by user)
                 (k <= #self.arguments) and color or (bOptional and Color(0, 0, 0, 66) or ColorAlpha(color, 100))
             ) + 6
         end
@@ -622,8 +622,8 @@ end
 
 vgui.Register("ixChatboxPreview", PANEL, "Panel")
 
-// chatbox autocomplete panel
-// holds and displays similar commands based on the textentry
+-- chatbox autocomplete panel
+-- holds and displays similar commands based on the textentry
 PANEL = {}
 DEFINE_BASECLASS("Panel")
 
@@ -636,7 +636,7 @@ function PANEL:Init()
     self.maxEntries = 20
     self.currentAlpha = 0
 
-    self.commandIndex = 0 // currently selected entry in command list
+    self.commandIndex = 0 -- currently selected entry in command list
     self.commands = {}
     self.commandPanels = {}
 end
@@ -655,7 +655,7 @@ function PANEL:SetVisible(bValue, bForce)
         return
     end
 
-    BaseClass.SetVisible(self, true) // make sure this panel is visible during animation
+    BaseClass.SetVisible(self, true) -- make sure this panel is visible during animation
     self.bOpen = bValue
 
     self:CreateAnimation(animationTime, {
@@ -682,7 +682,7 @@ end
 function PANEL:Update(text)
     local commands = ix.command.FindAll(text, true, true, true)
 
-    self.commandIndex = 0 // reset the command index because the command list could be different
+    self.commandIndex = 0 -- reset the command index because the command list could be different
     self.commands = {}
 
     for _, v in ipairs(self.commandPanels) do
@@ -691,12 +691,12 @@ function PANEL:Update(text)
 
     self.commandPanels = {}
 
-    // manually loop over the found commands so we can ignore commands the user doesn't have access to
+    -- manually loop over the found commands so we can ignore commands the user doesn't have access to
     local i = 1
-    local bSelected // just to make sure we don't reset it during the loop for whatever reason
+    local bSelected -- just to make sure we don't reset it during the loop for whatever reason
 
     for _, v in ipairs(commands) do
-        // @todo chat classes aren't checked since they're done through the class's OnCanSay callback
+        -- @todo chat classes aren't checked since they're done through the class's OnCanSay callback
         if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then
             continue
         end
@@ -722,9 +722,9 @@ function PANEL:Update(text)
     end
 end
 
-// selects the next entry in the autocomplete if possible and returns the text that should replace the textentry
+-- selects the next entry in the autocomplete if possible and returns the text that should replace the textentry
 function PANEL:SelectNext()
-    // wrap back to beginning if we're past the end
+    -- wrap back to beginning if we're past the end
     if (self.commandIndex == #self.commands) then
         self.commandIndex = 1
     else
@@ -752,7 +752,7 @@ end
 
 vgui.Register("ixChatboxAutocomplete", PANEL, "DScrollPanel")
 
-// autocomplete entry
+-- autocomplete entry
 PANEL = {}
 
 AccessorFunc(PANEL, "bSelected", "Highlighted", FORCE_BOOL)
@@ -826,8 +826,8 @@ end
 
 vgui.Register("ixChatboxAutocompleteEntry", PANEL, "Panel")
 
-// main chatbox panel
-// this contains the text entry, tab sheets, and callbacks for other panel events
+-- main chatbox panel
+-- this contains the text entry, tab sheets, and callbacks for other panel events
 PANEL = {}
 
 AccessorFunc(PANEL, "bActive", "Active", FORCE_BOOL)
@@ -853,7 +853,7 @@ function PANEL:Init()
     self.prefix:Dock(LEFT)
 
     self.preview = self:Add("ixChatboxPreview")
-    self.preview:SetZPos(2) // ensure the preview is docked above the text entry
+    self.preview:SetZPos(2) -- ensure the preview is docked above the text entry
     self.preview:Dock(BOTTOM)
     self.preview:SetTargetHeight(self.entry:GetTall())
 
@@ -863,13 +863,13 @@ function PANEL:Init()
 
     self.autocomplete = self.tabs:Add("ixChatboxAutocomplete")
     self.autocomplete:Dock(FILL)
-    self.autocomplete:DockMargin(4, 3, 4, 4) // top margin is 3 to account for tab 1px border
+    self.autocomplete:DockMargin(4, 3, 4, 4) -- top margin is 3 to account for tab 1px border
     self.autocomplete:SetZPos(3)
 
     self.alpha = 0
     self:SetActive(false)
 
-    // luacheck: globals chat
+    -- luacheck: globals chat
     chat.GetChatBoxPos = function()
         return self:GetPos()
     end
@@ -925,7 +925,7 @@ function PANEL:SetActive(bActive)
         hook.Run("StartChat")
         self.prefix:SetText(hook.Run("GetChatPrefixInfo", ""))
     else
-        // make sure we aren't still sizing/dragging anything
+        -- make sure we aren't still sizing/dragging anything
         if (self.bSizing or self.DragOffset) then
             self:OnMouseReleased(MOUSE_LEFT)
         end
@@ -949,7 +949,7 @@ function PANEL:SetActive(bActive)
     local tab = self.tabs:GetActiveTab()
 
     if (tab) then
-        // we'll scroll to bottom even if we're opening since the SetVisible for the textentry will shift things a bit
+        -- we'll scroll to bottom even if we're opening since the SetVisible for the textentry will shift things a bit
         tab:ScrollToBottom()
     end
 
@@ -978,7 +978,7 @@ function PANEL:SetupPosition(info)
         x, y = self:GetDefaultPosition()
         width, height = self:GetDefaultSize()
     else
-        // screen size may have changed so we'll need to clamp the values
+        -- screen size may have changed so we'll need to clamp the values
         width = math.Clamp(info[3], 32, ScrW() - chatBorder * 2)
         height = math.Clamp(info[4], 32, ScrH() - chatBorder * 2)
         x = math.Clamp(info[1], 0, ScrW() - width)
@@ -1039,14 +1039,14 @@ function PANEL:OnMousePressed(key)
         return
     end
 
-    // capture the mouse if we're in bounds for sizing this panel
+    -- capture the mouse if we're in bounds for sizing this panel
     if (self:SizingInBounds()) then
         self.bSizing = true
         self:MouseCapture(true)
     elseif (self:DraggingInBounds()) then
         local mouseX, mouseY = self:ScreenToLocal(gui.MousePos())
 
-        // mouse offset relative to the panel
+        -- mouse offset relative to the panel
         self.DragOffset = {mouseX, mouseY}
         self:MouseCapture(true)
     end
@@ -1056,14 +1056,14 @@ function PANEL:OnMouseReleased()
     self:MouseCapture(false)
     self:SetCursor("arrow")
 
-    // save new position/size if we were dragging/resizing
+    -- save new position/size if we were dragging/resizing
     if (self.bSizing or self.DragOffset) then
         PLUGIN:SavePosition()
 
         self.bSizing = nil
         self.DragOffset = nil
 
-        // resize chat messages to fit new width
+        -- resize chat messages to fit new width
         self:InvalidateChildren(true)
 
         local x, y = self:GetPos()
@@ -1103,7 +1103,7 @@ function PANEL:Think()
     elseif (self:SizingInBounds()) then
         self:SetCursor("sizenwse")
     elseif (self:DraggingInBounds()) then
-        // we have to set the cursor on the list panel since that's the actual hovered panel
+        -- we have to set the cursor on the list panel since that's the actual hovered panel
         self.tabs.buttons:SetCursor("sizeall")
     else
         self:SetCursor("arrow")
@@ -1117,7 +1117,7 @@ function PANEL:Paint(width, height)
     derma.SkinFunc("PaintChatboxBackground", self, width, height)
 
     if (tab) then
-        // manually paint active tab since messages handle their own alpha lifetime
+        -- manually paint active tab since messages handle their own alpha lifetime
         surface.SetAlphaMultiplier(1)
             tab:PaintManual()
         surface.SetAlphaMultiplier(alpha / 255)
@@ -1128,14 +1128,14 @@ function PANEL:Paint(width, height)
     end
 end
 
-// get the command of the current chat class in the textentry if possible
+-- get the command of the current chat class in the textentry if possible
 function PANEL:GetTextEntryChatClass(text)
     text = text or self.entry:GetText()
 
     local chatType = ix.chat.Parse(LocalPlayer(), text, true)
 
     if (chatType and chatType != "ic") then
-        // OOC is the only one with two slashes as its prefix, so we'll make a special case for it here
+        -- OOC is the only one with two slashes as its prefix, so we'll make a special case for it here
         if (chatType == "ooc") then
             return "ooc"
         end
@@ -1154,8 +1154,8 @@ function PANEL:GetTextEntryChatClass(text)
     end
 end
 
-// chatbox panel hooks
-// called when the textentry value changes
+-- chatbox panel hooks
+-- called when the textentry value changes
 function PANEL:OnTextChanged(text)
     hook.Run("ChatTextChanged", text)
 
@@ -1177,20 +1177,20 @@ function PANEL:OnTextChanged(text)
     local start, _, command = text:find("(/(%w+)%s)")
     command = ix.command.list[tostring(command):utf8sub(2, tostring(command):utf8len() - 1):utf8lower()]
 
-    // update preview if we've found a command
+    -- update preview if we've found a command
     if (start == 1 and command) then
         preview:SetCommand(command.uniqueID)
         preview:SetVisible(true)
         preview:UpdateArguments(text)
 
-        // we don't need the autocomplete because we have a command already typed out
+        -- we don't need the autocomplete because we have a command already typed out
         autocomplete:SetVisible(false)
         return
-    // if there's a slash then we're probably going to be (or are currently) typing out a command
+    -- if there's a slash then we're probably going to be (or are currently) typing out a command
     elseif (text:utf8sub(1, 1) == "/") then
         command = text:match("(/(%w+))") or "/"
 
-        preview:SetVisible(false) // we don't have a valid command yet
+        preview:SetVisible(false) -- we don't have a valid command yet
         autocomplete:Update(command:utf8sub(2))
         autocomplete:SetVisible(true)
 
@@ -1223,14 +1223,14 @@ function PANEL:OnKeyCodeTyped(key)
     return BaseClass.OnKeyCodeTyped(self.entry, key)
 end
 
-// called when player types something and presses enter in the textentry
+-- called when player types something and presses enter in the textentry
 function PANEL:OnMessageSent()
     local text = self.entry:GetText()
 
     if (text:find("%S")) then
         local lastEntry = ix.chat.history[#ix.chat.history]
 
-        // only add line to textentry history if it isn't the same message
+        -- only add line to textentry history if it isn't the same message
         if (lastEntry != text) then
             if (#ix.chat.history >= 20) then
                 table.remove(ix.chat.history, 1)
@@ -1244,22 +1244,22 @@ function PANEL:OnMessageSent()
         net.SendToServer()
     end
 
-    self:SetActive(false) // textentry is set to "" in SetActive
+    self:SetActive(false) -- textentry is set to "" in SetActive
 end
 
-// called when the player changes the currently active tab
+-- called when the player changes the currently active tab
 function PANEL:OnTabChanged(panel)
     panel:InvalidateLayout(true)
     panel:ScrollToBottom()
 end
 
-// called when the player creates a new tab
+-- called when the player creates a new tab
 function PANEL:OnTabCreated(id, filter)
     self.tabs:AddTab(id, filter)
     PLUGIN:SaveTabs()
 end
 
-// called when the player updates a tab's filter
+-- called when the player updates a tab's filter
 function PANEL:OnTabUpdated(id, filter, newID)
     local tab = self.tabs:GetTabs()[id]
 
@@ -1273,7 +1273,7 @@ function PANEL:OnTabUpdated(id, filter, newID)
     PLUGIN:SaveTabs()
 end
 
-// called when a tab's button was right-clicked
+-- called when a tab's button was right-clicked
 function PANEL:OnTabRightClick(button, tab, id)
     local menu = DermaMenu()
         menu:AddOption(L("chatCustomize"), function()
@@ -1293,15 +1293,15 @@ function PANEL:OnTabRightClick(button, tab, id)
             PLUGIN:SaveTabs()
         end)
     menu:Open()
-    menu:MakePopup() // HACK: mouse input doesn't work when created immediately after opening chatbox
+    menu:MakePopup() -- HACK: mouse input doesn't work when created immediately after opening chatbox
 end
 
-// called when a message needs to be added to applicable tabs
+-- called when a message needs to be added to applicable tabs
 function PANEL:AddMessage(...)
     local class = CHAT_CLASS and CHAT_CLASS.uniqueID or "notice"
     local activeTab = self.tabs:GetActiveTab()
 
-    // track whether or not the message was filtered out in the active tab
+    -- track whether or not the message was filtered out in the active tab
     local bShown = false
 
     if (activeTab and !activeTab:GetFilter()[class]) then
@@ -1311,13 +1311,13 @@ function PANEL:AddMessage(...)
 
     for _, v in pairs(self.tabs:GetTabs()) do
         if (v:GetID() == activeTab:GetID()) then
-            continue // we already added it to the active tab
+            continue -- we already added it to the active tab
         end
 
         if (!v:GetFilter()[class]) then
             v:AddLine({...}, true)
 
-            // mark other tabs as unread if we didn't show the message in the active tab
+            -- mark other tabs as unread if we didn't show the message in the active tab
             if (!bShown) then
                 v:GetButton():SetUnread(true)
             end

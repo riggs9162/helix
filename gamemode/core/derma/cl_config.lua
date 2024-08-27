@@ -1,5 +1,5 @@
 
-// config manager
+-- config manager
 local PANEL = {}
 
 function PANEL:Init()
@@ -10,7 +10,7 @@ function PANEL:Init()
 end
 
 function PANEL:Populate()
-    // gather categories
+    -- gather categories
     local categories = {}
     local categoryIndices = {}
 
@@ -21,7 +21,7 @@ function PANEL:Populate()
         categories[index][k] = v
     end
 
-    // sort by category phrase
+    -- sort by category phrase
     for k, _ in pairs(categories) do
         categoryIndices[#categoryIndices + 1] = k
     end
@@ -30,12 +30,12 @@ function PANEL:Populate()
         return L(a) < L(b)
     end)
 
-    // add panels
+    -- add panels
     for _, category in ipairs(categoryIndices) do
         local categoryPhrase = L(category)
         self:AddCategory(categoryPhrase)
 
-        // we can use sortedpairs since configs don't have phrases to account for
+        -- we can use sortedpairs since configs don't have phrases to account for
         for k, v in SortedPairs(categories[category]) do
             if (isfunction(v.hidden) and v.hidden()) then
                 continue
@@ -49,7 +49,7 @@ function PANEL:Populate()
             row:SetText(ix.util.ExpandCamelCase(k))
             row:Populate(k, v.data)
 
-            // type-specific properties
+            -- type-specific properties
             if (type == ix.type.number) then
                 row:SetMin(data and data.min or 0)
                 row:SetMax(data and data.max or 1)
@@ -99,7 +99,7 @@ end
 
 vgui.Register("ixConfigManager", PANEL, "ixSettings")
 
-// plugin manager
+-- plugin manager
 PANEL = {}
 
 function PANEL:Init()
@@ -128,7 +128,7 @@ function PANEL:Populate()
     self:AddCategory(self.loadedCategory)
     self:AddCategory(self.unloadedCategory)
 
-    // add loaded plugins
+    -- add loaded plugins
     for k, v in SortedPairsByMemberValue(ix.plugin.list, "name") do
         local row = self:AddRow(ix.type.bool, self.loadedCategory)
         row.id = k
@@ -137,7 +137,7 @@ function PANEL:Populate()
         row.setting:SetDisabledText(L("off"):utf8upper())
         row.setting:SizeToContents()
 
-        // if this plugin is not in the unloaded list currently, then it's queued for an unload
+        -- if this plugin is not in the unloaded list currently, then it's queued for an unload
         row:SetValue(!ix.plugin.unloaded[k], true)
         row:SetText(v.name)
 
@@ -170,7 +170,7 @@ function PANEL:UpdatePlugin(uniqueID, bEnabled)
     end
 end
 
-// called from Populate and from the ixConfigUnloadedList net message
+-- called from Populate and from the ixConfigUnloadedList net message
 function PANEL:UpdateUnloaded(bNoSizeToContents)
     for _, v in pairs(self:GetRows()) do
         if (ix.plugin.unloaded[v.id]) then
@@ -180,7 +180,7 @@ function PANEL:UpdateUnloaded(bNoSizeToContents)
 
     for k, v in SortedPairs(ix.plugin.unloaded) do
         if (ix.plugin.list[k]) then
-            // if this plugin is in the loaded plugins list then it's queued for an unload - don't display it in this category
+            -- if this plugin is in the loaded plugins list then it's queued for an unload - don't display it in this category
             continue
         end
 

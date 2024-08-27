@@ -1,12 +1,11 @@
-/*
+--[[--
 Helper library for loading/getting rank information.
 
 Ranks are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
 in your schema, and have "police recruit" and "police chief" as different ranks in your faction. Anyone can join a rank in
 their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
-*/
-
-// @module ix.rank
+]]
+-- @module ix.rank
 
 ix.rank = ix.rank or {}
 ix.rank.list = {}
@@ -17,16 +16,16 @@ ix.char.RegisterVar("rank", {
     bNoDisplay = true,
 })
 
-/// Loads ranks from a directory.
-// @realm shared
-// @internal
-// @string directory The path to the rank files.
+--- Loads ranks from a directory.
+-- @realm shared
+-- @internal
+-- @string directory The path to the rank files.
 function ix.rank.LoadFromDir(directory)
-    for i = 1, #file.Find(directory.."/*.lua", "LUA") do
-        local v = file.Find(directory.."/*.lua", "LUA")[i]
+    for i = 1, #file.Find(directory.."--[[--.lua", "LUA") do
+        local v = file.Find(directory.."--[[--.lua", "LUA")[i]
 
         local niceName = v:sub(4, -5)
-        // Determine a numeric identifier for this rank.
+        -- Determine a numeric identifier for this rank.
         local index = #ix.rank.list + 1
         local halt
 
@@ -42,20 +41,20 @@ function ix.rank.LoadFromDir(directory)
             continue
         end
 
-        // Set up a global table so the file has access to the rank table.
+        -- Set up a global table so the file has access to the rank table.
         RANK = {index = index, uniqueID = niceName}
             RANK.name = "Unknown"
             RANK.description = "No description available."
             RANK.limit = 0
 
-            // For future use with plugins.
+            -- For future use with plugins.
             if (PLUGIN) then
                 RANK.plugin = PLUGIN.uniqueID
             end
 
             ix.util.Include(directory.."/"..v, "shared")
 
-            // Why have a rank without a faction?
+            -- Why have a rank without a faction?
             if (!RANK.faction or !team.Valid(RANK.faction)) then
                 ErrorNoHalt("Rank '"..niceName.."' does not have a valid faction!\n")
                 RANK = nil
@@ -63,7 +62,7 @@ function ix.rank.LoadFromDir(directory)
                 continue
             end
 
-            // Allow rank to be joinable by default.
+            -- Allow rank to be joinable by default.
             if (!RANK.CanSwitchTo) then
                 RANK.CanSwitchTo = function(client)
                     return true
@@ -75,21 +74,21 @@ function ix.rank.LoadFromDir(directory)
     end
 end
 
-/// Determines if a player is allowed to join a specific rank.
-// @realm shared
-// @player client Player to check
-// @number rank Index of the rank
-// @treturn bool Whether or not the player can switch to the rank
+--- Determines if a player is allowed to join a specific rank.
+-- @realm shared
+-- @player client Player to check
+-- @number rank Index of the rank
+-- @treturn bool Whether or not the player can switch to the rank
 function ix.rank.CanSwitchTo(client, rank)
-    // Get the rank table by its numeric identifier.
+    -- Get the rank table by its numeric identifier.
     local info = ix.rank.list[rank]
 
-    // See if the rank exists.
+    -- See if the rank exists.
     if (!info) then
         return false, "no info"
     end
 
-    // If the player's faction matches the rank's faction.
+    -- If the player's faction matches the rank's faction.
     if (client:Team() != info.faction) then
         return false, "not correct team"
     end
@@ -105,14 +104,14 @@ function ix.rank.CanSwitchTo(client, rank)
         return false, reason
     end
 
-    // See if the rank allows the player to join it.
+    -- See if the rank allows the player to join it.
     return info:CanSwitchTo(client)
 end
 
-/// Retrieves a rank table.
-// @realm shared
-// @number identifier Index of the rank
-// @treturn table Rank table
+--- Retrieves a rank table.
+-- @realm shared
+-- @number identifier Index of the rank
+-- @treturn table Rank table
 function ix.rank.Get(identifier)
     for _, v in ipairs(ix.rank.list) do
         if ( ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier)) or v.index == identifier ) then
@@ -123,10 +122,10 @@ function ix.rank.Get(identifier)
     return nil
 end
 
-/// Retrieves the players in a rank
-// @realm shared
-// @number rank Index of the rank
-// @treturn table Table of players in the rank
+--- Retrieves the players in a rank
+-- @realm shared
+-- @number rank Index of the rank
+-- @treturn table Table of players in the rank
 function ix.rank.GetPlayers(rank)
     local players = {}
 
@@ -145,13 +144,13 @@ function ix.rank.GetPlayers(rank)
 end
 
 if (SERVER) then
-    /// Character rank methods
-    // @rankmod Character
+    --- Character rank methods
+    -- @classmod Character
 
-    /// Makes this character join a rank. This automatically calls `KickRank` for you.
-    // @realm server
-    // @number rank Index of the rank to join
-    // @treturn bool Whether or not the character has successfully joined the rank
+    --- Makes this character join a rank. This automatically calls `KickRank` for you.
+    -- @realm server
+    -- @number rank Index of the rank to join
+    -- @treturn bool Whether or not the character has successfully joined the rank
     function charMeta:JoinRank(rank)
         if (!rank) then
             self:KickRank()
@@ -171,8 +170,8 @@ if (SERVER) then
         return false
     end
 
-    /// Kicks this character out of the rank they are currently in.
-    // @realm server
+    --- Kicks this character out of the rank they are currently in.
+    -- @realm server
     function charMeta:KickRank()
         local client = self:GetPlayer()
         if (!client) then return end
@@ -243,7 +242,7 @@ ix.command.Add("CharSetRank", {
 
                 targetPlayer:NotifyLocalized("becomeRank", L(rankTable.name, targetPlayer))
 
-                // only send second notification if the character isn't setting their own rank
+                -- only send second notification if the character isn't setting their own rank
                 if (client != targetPlayer) then
                     return "@setRank", target:GetName(), L(rankTable.name, client)
                 end

@@ -91,7 +91,7 @@ if (CLIENT) then
     end
 end
 
-// Called when a new instance of this item has been made.
+-- Called when a new instance of this item has been made.
 function ITEM:OnInstanced(invID, x, y)
     local inventory = ix.item.inventories[invID]
 
@@ -117,7 +117,7 @@ end
 
 ITEM.GetInv = ITEM.GetInventory
 
-// Called when the item first appears for a client.
+-- Called when the item first appears for a client.
 function ITEM:OnSendData()
     local index = self:GetData("id")
 
@@ -178,7 +178,7 @@ if (CLIENT) then
     end)
 end
 
-// Called before the item is permanently deleted.
+-- Called before the item is permanently deleted.
 function ITEM:OnRemoved()
     local index = self:GetData("id")
 
@@ -193,7 +193,7 @@ function ITEM:OnRemoved()
     end
 end
 
-// Called when the item should tell whether or not it can be transfered between inventories.
+-- Called when the item should tell whether or not it can be transfered between inventories.
 function ITEM:CanTransfer(oldInventory, newInventory)
     local index = self:GetData("id")
 
@@ -237,12 +237,12 @@ function ITEM:OnTransferred(curInv, inventory)
             bagInventory:SetOwner(owner)
         end
     else
-        // it's not in a valid inventory so nobody owns this bag
+        -- it's not in a valid inventory so nobody owns this bag
         bagInventory:SetOwner(nil)
     end
 end
 
-// Called after the item is registered into the item tables.
+-- Called after the item is registered into the item tables.
 function ITEM:OnRegistered()
     ix.inventory.Register(self.uniqueID, self.invWidth, self.invHeight, true)
 end

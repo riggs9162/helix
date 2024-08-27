@@ -154,33 +154,33 @@ function PANEL:Init()
         local uniqueID = line.item
 
         menu = DermaMenu()
-            // Modes of the item.
+            -- Modes of the item.
             local mode, panel = menu:AddSubMenu(L"mode")
             panel:SetImage("icon16/key.png")
 
-            // Disable buying/selling of the item.
+            -- Disable buying/selling of the item.
             mode:AddOption(L"none", function()
                 self:updateVendor("mode", {uniqueID, nil})
             end):SetImage("icon16/cog_error.png")
 
-            // Allow the vendor to sell and buy this item.
+            -- Allow the vendor to sell and buy this item.
             mode:AddOption(L"vendorBoth", function()
                 self:updateVendor("mode", {uniqueID, VENDOR_SELLANDBUY})
             end):SetImage("icon16/cog.png")
 
-            // Only allow the vendor to buy this item from players.
+            -- Only allow the vendor to buy this item from players.
             mode:AddOption(L"vendorBuy", function()
                 self:updateVendor("mode", {uniqueID, VENDOR_BUYONLY})
             end):SetImage("icon16/cog_delete.png")
 
-            // Only allow the vendor to sell this item to players.
+            -- Only allow the vendor to sell this item to players.
             mode:AddOption(L"vendorSell", function()
                 self:updateVendor("mode", {uniqueID, VENDOR_SELLONLY})
             end):SetImage("icon16/cog_add.png")
 
             local itemTable = ix.item.list[uniqueID]
 
-            // Set the price of the item.
+            -- Set the price of the item.
             menu:AddOption(L"price", function()
                 Derma_StringRequest(
                     itemTable.GetName and itemTable:GetName() or L(itemTable.name),
@@ -198,16 +198,16 @@ function PANEL:Init()
                 )
             end):SetImage("icon16/coins.png")
 
-            // Set the stock of the item or disable it.
+            -- Set the stock of the item or disable it.
             local stock, menuPanel = menu:AddSubMenu(L"stock")
             menuPanel:SetImage("icon16/table.png")
 
-            // Disable the use of stocks for this item.
+            -- Disable the use of stocks for this item.
             stock:AddOption(L"disable", function()
                 self:updateVendor("stockDisable", uniqueID)
             end):SetImage("icon16/table_delete.png")
 
-            // Edit the maximum stock for this item.
+            -- Edit the maximum stock for this item.
             stock:AddOption(L"edit", function()
                 local _, max = entity:GetStock(uniqueID)
 
@@ -221,7 +221,7 @@ function PANEL:Init()
                 )
             end):SetImage("icon16/table_edit.png")
 
-            // Edit the current stock of this item.
+            -- Edit the current stock of this item.
             stock:AddOption(L"vendorEditCurStock", function()
                 Derma_StringRequest(
                     itemTable.GetName and itemTable:GetName() or L(itemTable.name),

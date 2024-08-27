@@ -3,8 +3,8 @@ ix.db = ix.db or {
     schema = {},
     schemaQueue = {},
     type = {
-        // TODO: more specific types, lengths, and defaults
-        // i.e INT(11) UNSIGNED, SMALLINT(4), LONGTEXT, VARCHAR(350), NOT NULL, DEFAULT NULL, etc
+        -- TODO: more specific types, lengths, and defaults
+        -- i.e INT(11) UNSIGNED, SMALLINT(4), LONGTEXT, VARCHAR(350), NOT NULL, DEFAULT NULL, etc
         [ix.type.string] = "VARCHAR(255)",
         [ix.type.text] = "TEXT",
         [ix.type.number] = "INT(11)",
@@ -43,7 +43,7 @@ function ix.db.AddToSchema(schemaType, field, fieldType)
     ix.db.InsertSchema(schemaType, field, fieldType)
 end
 
-// this is only ever used internally
+-- this is only ever used internally
 function ix.db.InsertSchema(schemaType, field, fieldType)
     local schema = ix.db.schema[schemaType]
 
@@ -75,8 +75,8 @@ function ix.db.LoadTables()
         query:PrimaryKey("table")
     query:Execute()
 
-    // table structure will be populated with more fields when vars
-    // are registered using ix.char.RegisterVar
+    -- table structure will be populated with more fields when vars
+    -- are registered using ix.char.RegisterVar
     query = mysql:Create("ix_characters")
         query:Create("id", "INT(11) UNSIGNED NOT NULL AUTO_INCREMENT")
         query:PrimaryKey("id")
@@ -111,13 +111,13 @@ function ix.db.LoadTables()
         query:PrimaryKey("steamid")
     query:Execute()
 
-    // populate schema table if rows don't exist
+    -- populate schema table if rows don't exist
     query = mysql:InsertIgnore("ix_schema")
         query:Insert("table", "ix_characters")
         query:Insert("columns", util.TableToJSON({}))
     query:Execute()
 
-    // load schema from database
+    -- load schema from database
     query = mysql:Select("ix_schema")
         query:Callback(function(result)
             if (!istable(result)) then
@@ -128,7 +128,7 @@ function ix.db.LoadTables()
                 ix.db.schema[v.table] = util.JSONToTable(v.columns)
             end
 
-            // update schema if needed
+            -- update schema if needed
             for i = 1, #ix.db.schemaQueue do
                 local entry = ix.db.schemaQueue[i]
                 ix.db.InsertSchema(entry[1], entry[2], entry[3])
@@ -158,14 +158,14 @@ function ix.db.WipeTables(callback)
 end
 
 hook.Add("InitPostEntity", "ixDatabaseConnect", function()
-    // Connect to the database using SQLite, mysqoo, or tmysql4.
+    -- Connect to the database using SQLite, mysqoo, or tmysql4.
     ix.db.Connect()
 end)
 
 local resetCalled = 0
 
 concommand.Add("ix_wipedb", function(client, cmd, arguments)
-    // can only be ran through the server's console
+    -- can only be ran through the server's console
     if (!IsValid(client) or client:IsListenServerHost()) then
         if (resetCalled < RealTime()) then
             resetCalled = RealTime() + 3

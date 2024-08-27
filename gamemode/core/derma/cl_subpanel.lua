@@ -3,7 +3,7 @@ local DEFAULT_PADDING = ScreenScale(32)
 local DEFAULT_ANIMATION_TIME = 1
 local DEFAULT_SUBPANEL_ANIMATION_TIME = 0.5
 
-// parent subpanel
+-- parent subpanel
 local PANEL = {}
 
 function PANEL:Init()
@@ -57,7 +57,7 @@ end
 
 vgui.Register("ixSubpanel", PANEL, "EditablePanel")
 
-// subpanel parent
+-- subpanel parent
 DEFINE_BASECLASS("EditablePanel")
 PANEL = {}
 
@@ -143,7 +143,7 @@ function PANEL:SetSubpanelPos(id, x)
     local _, oldY = currentPanel:GetPos()
     currentPanel:SetPos(x, oldY)
 
-    // traverse left
+    -- traverse left
     while (IsValid(currentPanel)) do
         local left = currentPanel:GetLeftPanel()
 
@@ -156,7 +156,7 @@ function PANEL:SetSubpanelPos(id, x)
 
     currentPanel = self.subpanels[id]
 
-    // traverse right
+    -- traverse right
     while (IsValid(currentPanel)) do
         local right = currentPanel:GetRightPanel()
 
@@ -304,7 +304,7 @@ function PANEL:PaintSubpanels(width, height)
     end
 end
 
-// ????
+-- ????
 PANEL.Remove = BaseClass.Remove
 
 vgui.Register("ixSubpanelParent", PANEL, "EditablePanel")

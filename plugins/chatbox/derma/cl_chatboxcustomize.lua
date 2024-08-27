@@ -15,7 +15,7 @@ function PANEL:Init()
     self.settings:SetSearchEnabled(true)
     self.settings:AddCategory(L("chatAllowedClasses"))
 
-    // controls
+    -- controls
     local controlsPanel = self:Add("Panel")
     controlsPanel:Dock(BOTTOM)
     controlsPanel:DockMargin(0, 4, 0, 0)
@@ -45,7 +45,7 @@ function PANEL:Init()
         self:SetAllValues(true)
     end
 
-    // chat class settings
+    -- chat class settings
     self.name = self.settings:AddRow(ix.type.string)
     self.name:SetText(L("chatTabName"))
     self.name:SetValue(L("chatNewTabTitle"))
@@ -97,7 +97,7 @@ function PANEL:CreateClicked()
     local filter = {}
 
     for _, v in ipairs(self.settings:GetRows()) do
-        // we only want to add entries for classes we don't want shown
+        -- we only want to add entries for classes we don't want shown
         if (!v:GetValue()) then
             filter[v:GetText()] = true
         end

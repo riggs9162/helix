@@ -5,7 +5,7 @@ ix.plugin.unloaded = ix.plugin.unloaded or {}
 
 ix.util.Include("helix/gamemode/core/meta/sh_tool.lua")
 
-// luacheck: globals HOOKS_CACHE
+-- luacheck: globals HOOKS_CACHE
 HOOKS_CACHE = {}
 
 function ix.plugin.Load(uniqueID, path, isSingleFile, variable)
@@ -13,7 +13,7 @@ function ix.plugin.Load(uniqueID, path, isSingleFile, variable)
 
     variable = variable or "PLUGIN"
 
-    // Plugins within plugins situation?
+    -- Plugins within plugins situation?
     local oldPlugin = PLUGIN
     local PLUGIN = {
         folder = path,
@@ -129,7 +129,7 @@ function ix.plugin.LoadEntities(path)
     end
 
     local function HandleEntityInclusion(folder, variable, register, default, clientOnly, create, complete)
-        files, folders = file.Find(path.."/"..folder.."/*", "LUA")
+        files, folders = file.Find(path.."/"..folder.."--[[--", "LUA")
         default = default or {}
 
         for _, v in ipairs(folders) do
@@ -200,14 +200,14 @@ function ix.plugin.LoadEntities(path)
         if (gmodTool) then
             gmodTool.Tool[className] = tool
         else
-            // this should never happen
+            -- this should never happen
             ErrorNoHalt(string.format("attempted to register tool '%s' with invalid gmod_tool weapon", className))
         end
 
         bLoadedTools = true
     end
 
-    // Include entities.
+    -- Include entities.
     HandleEntityInclusion("entities", "ENT", scripted_ents.Register, {
         Type = "anim",
         Base = "base_gmodentity",
@@ -218,7 +218,7 @@ function ix.plugin.LoadEntities(path)
         end
     end)
 
-    // Include weapons.
+    -- Include weapons.
     HandleEntityInclusion("weapons", "SWEP", weapons.Register, {
         Primary = {},
         Secondary = {},
@@ -235,10 +235,10 @@ function ix.plugin.LoadEntities(path)
         TOOL:CreateConVars()
     end)
 
-    // Include effects.
+    -- Include effects.
     HandleEntityInclusion("effects", "EFFECT", effects and effects.Register, nil, true)
 
-    // only reload spawn menu if any new tools were registered
+    -- only reload spawn menu if any new tools were registered
     if (CLIENT and bLoadedTools) then
         RunConsoleCommand("spawnmenu_reload")
     end
@@ -263,7 +263,7 @@ function ix.plugin.Get(identifier)
 end
 
 function ix.plugin.LoadFromDir(directory)
-    local files, folders = file.Find(directory.."/*", "LUA")
+    local files, folders = file.Find(directory.."--[[--", "LUA")
 
     for _, v in ipairs(folders) do
         ix.plugin.Load(v, directory.."/"..v)
@@ -309,15 +309,15 @@ function ix.plugin.SetUnloaded(uniqueID, state, bNoSave)
 end
 
 if (SERVER) then
-    /// Runs the `LoadData` and `PostLoadData` hooks for the gamemode, schema, and plugins. Any plugins that error during the
-    // hook will have their `SaveData` and `PostLoadData` hooks removed to prevent them from saving junk data.
-    // @internal
-    // @realm server
+    --- Runs the `LoadData` and `PostLoadData` hooks for the gamemode, schema, and plugins. Any plugins that error during the
+    -- hook will have their `SaveData` and `PostLoadData` hooks removed to prevent them from saving junk data.
+    -- @internal
+    -- @realm server
     function ix.plugin.RunLoadData()
         local errors = hook.SafeRun("LoadData")
 
-        // remove the SaveData and PostLoadData hooks for any plugins that error during LoadData since they would probably be
-        // saving bad data. this doesn't prevent plugins from saving data via other means, but there's only so much we can do
+        -- remove the SaveData and PostLoadData hooks for any plugins that error during LoadData since they would probably be
+        -- saving bad data. this doesn't prevent plugins from saving data via other means, but there's only so much we can do
         for _, v in pairs(errors or {}) do
             if (v.plugin) then
                 local plugin = ix.plugin.Get(v.plugin)
@@ -337,7 +337,7 @@ if (SERVER) then
 end
 
 do
-    // luacheck: globals hook
+    -- luacheck: globals hook
     hook.ixCall = hook.ixCall or hook.Call
 
     function hook.Call(name, gm, ...)
@@ -364,21 +364,21 @@ do
         return hook.ixCall(name, gm, ...)
     end
 
-    /// Runs the given hook in a protected call so that the calling function will continue executing even if any errors occur
-    // while running the hook. This function is much more expensive to call than `hook.Run`, so you should avoid using it unless
-    // you absolutely need to avoid errors from stopping the execution of your function.
-    // @internal
-    // @realm shared
-    // @string name Name of the hook to run
-    // @param ... Arguments to pass to the hook functions
-    // @treturn[1] table Table of error data if an error occurred while running
-    // @treturn[1] ... Any arguments returned by the hook functions
-    // @usage local errors, bCanSpray = hook.SafeRun("PlayerSpray", Entity(1))
-    // if (!errors) then
-    //     // do stuff with bCanSpray
-    // else
-    //     PrintTable(errors)
-    // end
+    --- Runs the given hook in a protected call so that the calling function will continue executing even if any errors occur
+    -- while running the hook. This function is much more expensive to call than `hook.Run`, so you should avoid using it unless
+    -- you absolutely need to avoid errors from stopping the execution of your function.
+    -- @internal
+    -- @realm shared
+    -- @string name Name of the hook to run
+    -- @param ... Arguments to pass to the hook functions
+    -- @treturn[1] table Table of error data if an error occurred while running
+    -- @treturn[1] ... Any arguments returned by the hook functions
+    -- @usage local errors, bCanSpray = hook.SafeRun("PlayerSpray", Entity(1))
+    -- if (!errors) then
+    --     -- do stuff with bCanSpray
+    -- else
+    --     PrintTable(errors)
+    -- end
     function hook.SafeRun(name, ...)
         local errors = {}
         local gm = gmod and gmod.GetGamemode() or nil

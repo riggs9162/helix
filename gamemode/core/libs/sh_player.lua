@@ -1,6 +1,6 @@
 local playerMeta = FindMetaTable("Player")
 
-// ixData information for the player.
+-- ixData information for the player.
 do
     if (SERVER) then
         function playerMeta:GetData(key, default)
@@ -39,7 +39,7 @@ do
     end
 end
 
-// Whitelist networking information here.
+-- Whitelist networking information here.
 do
     function playerMeta:HasWhitelist(faction)
         local data = ix.faction.indices[faction]

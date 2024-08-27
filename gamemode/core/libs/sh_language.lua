@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Multi-language phrase support.
 
 Helix has support for multiple languages, and you can easily leverage this system for use in your own schema, plugins, etc.
@@ -10,7 +10,7 @@ as its phrase ID and the value as its translation for that language. For example
         area = "Area",
         areas = "Areas",
         areaEditMode = "Area Edit Mode",
-        // etc.
+        -- etc.
     }
 
 The phrases defined in these language files can be used with the `L` global function:
@@ -25,18 +25,18 @@ formatting arguments:
 Phrases are also usable on the server, but only when trying to localize a phrase based on a client's preferences. The server
 does not have a set language. An example:
     Entity(1):ChatPrint(L("areaEditMode"))
-    > // "Area Edit Mode" will print in the player's chatbox
-*/
-// @module ix.lang
+    > -- "Area Edit Mode" will print in the player's chatbox
+]]
+-- @module ix.lang
 
 ix.lang = ix.lang or {}
 ix.lang.stored = ix.lang.stored or {}
 ix.lang.names = ix.lang.names or {}
 
-/// Loads language files from a directory.
-// @realm shared
-// @internal
-// @string directory Directory to load language files from
+--- Loads language files from a directory.
+-- @realm shared
+-- @internal
+-- @string directory Directory to load language files from
 function ix.lang.LoadFromDir(directory)
     for _, v in ipairs(file.Find(directory.."/sh_*.lua", "LUA")) do
         local niceName = v:sub(4, -5):lower()
@@ -55,21 +55,21 @@ function ix.lang.LoadFromDir(directory)
     end
 end
 
-/// Adds phrases to a language. This is used when you aren't adding entries through the files in the `languages/` folder. A
-// common use case is adding language phrases in a single-file plugin.
-// @realm shared
-// @string language The ID of the language
-// @tab data Language data to add to the given language
-// @usage ix.lang.AddTable("english", {
-//     myPhrase = "My Phrase"
-// })
+--- Adds phrases to a language. This is used when you aren't adding entries through the files in the `languages/` folder. A
+-- common use case is adding language phrases in a single-file plugin.
+-- @realm shared
+-- @string language The ID of the language
+-- @tab data Language data to add to the given language
+-- @usage ix.lang.AddTable("english", {
+--     myPhrase = "My Phrase"
+-- })
 function ix.lang.AddTable(language, data)
     language = tostring(language):lower()
     ix.lang.stored[language] = table.Merge(ix.lang.stored[language] or {}, data)
 end
 
 if (SERVER) then
-    // luacheck: globals L
+    -- luacheck: globals L
     function L(key, client, ...)
         local languages = ix.lang.stored
         local langKey = ix.option.Get(client, "language", "english")
@@ -78,7 +78,7 @@ if (SERVER) then
         return string.format(info and info[key] or languages.english[key] or key, ...)
     end
 
-    // luacheck: globals L2
+    -- luacheck: globals L2
     function L2(key, client, ...)
         local languages = ix.lang.stored
         local langKey = ix.option.Get(client, "language", "english")

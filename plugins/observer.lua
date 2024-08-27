@@ -63,7 +63,7 @@ if (CLIENT) then
 
                 surface.DrawRect(x - size / 2, y - size / 2, size, size)
 
-                // we can assume that if we're using cheap blur, we'd want to save some fps here
+                -- we can assume that if we're using cheap blur, we'd want to save some fps here
                 if (!ix.option.Get("cheapBlur", false)) then
                     local data = {}
                     data.start = client:EyePos()
@@ -140,7 +140,7 @@ else
             if (state) then
                 client.ixObsData = {client:GetPos(), client:EyeAngles()}
 
-                // Hide them so they are not visible.
+                -- Hide them so they are not visible.
                 client:SetNoDraw(true)
                 client:SetNotSolid(true)
                 client:DrawWorldModel(false)
@@ -151,11 +151,11 @@ else
                 hook.Run("OnPlayerObserve", client, state)
             else
                 if (client.ixObsData) then
-                    // Move they player back if they want.
+                    -- Move they player back if they want.
                     if (ix.option.Get(client, "observerTeleportBack", true)) then
                         local position, angles = client.ixObsData[1], client.ixObsData[2]
 
-                        // Do it the next frame since the player can not be moved right now.
+                        -- Do it the next frame since the player can not be moved right now.
                         timer.Simple(0, function()
                             client:SetPos(position)
                             client:SetEyeAngles(angles)
@@ -166,7 +166,7 @@ else
                     client.ixObsData = nil
                 end
 
-                // Make the player visible again.
+                -- Make the player visible again.
                 client:SetNoDraw(false)
                 client:SetNotSolid(false)
                 client:DrawWorldModel(true)

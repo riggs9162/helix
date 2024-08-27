@@ -7,7 +7,7 @@ ix.bar.actionStart = 0
 ix.bar.actionEnd = 0
 ix.bar.totalHeight = 0
 
-// luacheck: globals BAR_HEIGHT
+-- luacheck: globals BAR_HEIGHT
 BAR_HEIGHT = 10
 
 function ix.bar.Get(identifier)

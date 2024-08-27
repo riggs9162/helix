@@ -6,7 +6,7 @@ PLUGIN.author = "`impulse"
 PLUGIN.description = "Replaces the chatbox to enable customization, autocomplete, and useful info."
 
 if (CLIENT) then
-    ix.chat.history = ix.chat.history or {} // array of strings the player has entered into the chatbox
+    ix.chat.history = ix.chat.history or {} -- array of strings the player has entered into the chatbox
     ix.chat.currentCommand = ""
     ix.chat.currentArguments = {}
 
@@ -30,7 +30,7 @@ if (CLIENT) then
         category = "chat"
     })
 
-    // tabs and their respective filters
+    -- tabs and their respective filters
     ix.option.Add("chatTabs", ix.type.string, "", {
         category = "chat",
         hidden = function()
@@ -38,7 +38,7 @@ if (CLIENT) then
         end
     })
 
-    // chatbox size and position
+    -- chatbox size and position
     ix.option.Add("chatPosition", ix.type.string, "", {
         category = "chat",
         hidden = function()
@@ -113,7 +113,7 @@ if (CLIENT) then
         end
     end
 
-    // luacheck: globals chat
+    -- luacheck: globals chat
     chat.ixAddText = chat.ixAddText or chat.AddText
 
     function chat.AddText(...)
@@ -121,7 +121,7 @@ if (CLIENT) then
             PLUGIN.panel:AddMessage(...)
         end
 
-        // log chat message to console
+        -- log chat message to console
         local text = {}
 
         for _, v in ipairs({...}) do

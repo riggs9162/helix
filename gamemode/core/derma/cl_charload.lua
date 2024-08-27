@@ -80,7 +80,7 @@ function PANEL:ResetSequence(model, lastModel)
 
     model:SetIK(false)
 
-    // copy cycle if we can to avoid a jarring transition from resetting the sequence
+    -- copy cycle if we can to avoid a jarring transition from resetting the sequence
     if (lastModel) then
         model:SetCycle(lastModel:GetCycle())
     end
@@ -100,7 +100,7 @@ function PANEL:SetActiveCharacter(character)
     self.shadeY = self:GetTall()
     self.shadeHeight = self:GetTall()
 
-    // set character immediately if we're an error (something isn't selected yet)
+    -- set character immediately if we're an error (something isn't selected yet)
     if (self.activeCharacter:GetModel() == errorModel) then
         self.activeCharacter:SetCharacter(character)
         self:ResetSequence(self.activeCharacter)
@@ -108,7 +108,7 @@ function PANEL:SetActiveCharacter(character)
         return
     end
 
-    // if the animation is already playing, we update its parameters so we can avoid restarting
+    -- if the animation is already playing, we update its parameters so we can avoid restarting
     local shade = self:GetTweenAnimation(1)
     local shadeHide = self:GetTweenAnimation(2)
 
@@ -163,7 +163,7 @@ function PANEL:Paint(width, height)
         render.SuppressEngineLighting(true)
         render.SetLightingOrigin(self.activeCharacter:GetPos())
 
-        // setup lighting
+        -- setup lighting
         render.SetModelLighting(0, 1.5, 1.5, 1.5)
 
         for i = 1, 4 do
@@ -172,7 +172,7 @@ function PANEL:Paint(width, height)
 
         render.SetModelLighting(5, 0.04, 0.04, 0.04)
 
-        // clip anything out of bounds
+        -- clip anything out of bounds
         local curparent = self
         local rightx = self:GetWide()
         local leftx = 0
@@ -206,7 +206,7 @@ function PANEL:Paint(width, height)
             self:LayoutEntity(self.activeCharacter)
 
             if (bTransition) then
-                // only need to layout while it's used
+                -- only need to layout while it's used
                 self:LayoutEntity(self.lastCharacter)
 
                 render.SetScissorRect(leftx, topy, rightx, bottomy - (self:GetTall() - self.shadeHeight), true)
@@ -242,7 +242,7 @@ end
 
 vgui.Register("ixCharMenuCarousel", PANEL, "Panel")
 
-// character load panel
+-- character load panel
 PANEL = {}
 
 AccessorFunc(PANEL, "animationTime", "AnimationTime", FORCE_NUMBER)
@@ -258,7 +258,7 @@ function PANEL:Init()
     self.animationTime = 1
     self.backgroundFraction = 1
 
-    // main panel
+    -- main panel
     self.panel = self:AddSubpanel("main")
     self.panel:SetTitle("loadTitle")
     self.panel.OnSetActive = function()
@@ -269,7 +269,7 @@ function PANEL:Init()
         })
     end
 
-    // character button list
+    -- character button list
     local controlList = self.panel:Add("Panel")
     controlList:Dock(LEFT)
     controlList:SetSize(halfWidth, halfHeight)
@@ -287,13 +287,13 @@ function PANEL:Init()
     self.characterList.buttons = {}
     self.characterList:Dock(FILL)
 
-    // right-hand side with carousel and buttons
+    -- right-hand side with carousel and buttons
     local infoPanel = self.panel:Add("Panel")
     infoPanel:Dock(FILL)
 
     local infoButtons = infoPanel:Add("Panel")
     infoButtons:Dock(BOTTOM)
-    infoButtons:SetTall(back:GetTall()) // hmm...
+    infoButtons:SetTall(back:GetTall()) -- hmm...
 
     local continueButton = infoButtons:Add("ixMenuButton")
     continueButton:Dock(FILL)
@@ -322,7 +322,7 @@ function PANEL:Init()
     self.carousel = infoPanel:Add("ixCharMenuCarousel")
     self.carousel:Dock(FILL)
 
-    // character deletion panel
+    -- character deletion panel
     self.delete = self:AddSubpanel("delete")
     self.delete:SetTitle(nil)
     self.delete.OnSetActive = function()
@@ -388,7 +388,7 @@ function PANEL:Init()
     deleteText:SetContentAlignment(7)
     deleteText:Dock(FILL)
 
-    // finalize setup
+    -- finalize setup
     self:SetActiveSubpanel("main", 0)
 end
 
@@ -404,7 +404,7 @@ function PANEL:Populate(ignoreID)
 
     local bSelected
 
-    // loop backwards to preserve order since we're docking to the bottom
+    -- loop backwards to preserve order since we're docking to the bottom
     for i = 1, #ix.characters do
         local id = ix.characters[i]
         local character = ix.char.loaded[id]
@@ -427,7 +427,7 @@ function PANEL:Populate(ignoreID)
             self:OnCharacterButtonSelected(panel)
         end
 
-        // select currently loaded character if available
+        -- select currently loaded character if available
         local localCharacter = LocalPlayer().GetCharacter and LocalPlayer():GetCharacter()
 
         if (localCharacter and character:GetID() == localCharacter:GetID()) then

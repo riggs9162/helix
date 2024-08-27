@@ -1,8 +1,8 @@
 
 local animationTime = 0.75
 
-// notice manager
-// this manages positions/animations for notice panels
+-- notice manager
+-- this manages positions/animations for notice panels
 local PANEL = {}
 
 AccessorFunc(PANEL, "padding", "Padding", FORCE_NUMBER)
@@ -42,7 +42,7 @@ function PANEL:AddNotice(text, bError)
     panel.currentY = -panel:GetTall()
     panel:SetPos(self.padding, panel.currentY)
 
-    // setup duration timer
+    -- setup duration timer
     panel:CreateAnimation(ix.option.Get("noticeDuration", 8), {
         index = 2,
         target = {duration = 1},
@@ -56,7 +56,7 @@ function PANEL:AddNotice(text, bError)
     table.insert(self.notices, 1, panel)
     self:Organize()
 
-    // remove old notice if we've hit the limit of notices
+    -- remove old notice if we've hit the limit of notices
     if (#self.notices > ix.option.Get("noticeMax", 4)) then
         for i = #self.notices, 1, -1 do
             local notice = self.notices[i]
@@ -92,13 +92,13 @@ function PANEL:RemoveNotice(panel)
                 table.remove(self.notices, toRemove)
             end
 
-            this:SetText("") // (hack) text remains for a frame after remove is called, so let's make sure we don't draw it
+            this:SetText("") -- (hack) text remains for a frame after remove is called, so let's make sure we don't draw it
             this:Remove()
         end
     })
 end
 
-// update target Y positions and animations
+-- update target Y positions and animations
 function PANEL:Organize()
     local currentTarget = self.padding
 
@@ -111,7 +111,7 @@ function PANEL:Organize()
             Think = function(animation, panel)
                 panel:SetPos(
                     self:GetWide() - panel:GetWide() - self.padding,
-                    math.min(panel.currentY + 1, currentTarget) // easing eventually hits subpixel movement so we level it off
+                    math.min(panel.currentY + 1, currentTarget) -- easing eventually hits subpixel movement so we level it off
                 )
             end
         })
@@ -122,8 +122,8 @@ end
 
 vgui.Register("ixNoticeManager", PANEL, "Panel")
 
-// notice panel
-// these do not manage their own enter/exit animations or lifetime
+-- notice panel
+-- these do not manage their own enter/exit animations or lifetime
 DEFINE_BASECLASS("DLabel")
 PANEL = {}
 

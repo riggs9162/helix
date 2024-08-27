@@ -1,26 +1,26 @@
 
-// luacheck: ignore
+-- luacheck: ignore
 ix.markup = ix.markup or {}
 
-// Temporary information used when building text frames.
+-- Temporary information used when building text frames.
 local colour_stack = { {r=255,g=255,b=255,a=255} }
 local font_stack = { "DermaDefault" }
 local curtag = nil
 local blocks = {}
 
 local colourmap = {
-// it's all black and white
+-- it's all black and white
     ["black"] =        {    r=0,    g=0,    b=0,    a=255    },
     ["white"] =        {    r=255,    g=255,    b=255,    a=255    },
-// it's greys
+-- it's greys
     ["dkgrey"] =    {    r=64,    g=64,    b=64,    a=255    },
     ["grey"] =        {    r=128,    g=128,    b=128,    a=255    },
     ["ltgrey"] =    {    r=192,    g=192,    b=192,    a=255    },
-// account for speeling mistakes
+-- account for speeling mistakes
     ["dkgray"] =    {    r=64,    g=64,    b=64,    a=255    },
     ["gray"] =        {    r=128,    g=128,    b=128,    a=255    },
     ["ltgray"] =    {    r=192,    g=192,    b=192,    a=255    },
-// normal colours
+-- normal colours
     ["red"] =        {    r=255,    g=0,    b=0,    a=255    },
     ["green"] =        {    r=0,    g=255,    b=0,    a=255    },
     ["blue"] =        {    r=0,    g=0,    b=255,    a=255    },
@@ -28,7 +28,7 @@ local colourmap = {
     ["purple"] =    {    r=255,    g=0,    b=255,    a=255    },
     ["cyan"] =        {    r=0,    g=255,    b=255,    a=255    },
     ["turq"] =        {    r=0,    g=255,    b=255,    a=255    },
-// dark variations
+-- dark variations
     ["dkred"] =        {    r=128,    g=0,    b=0,    a=255    },
     ["dkgreen"] =    {    r=0,    g=128,    b=0,    a=255    },
     ["dkblue"] =    {    r=0,    g=0,    b=128,    a=255    },
@@ -36,7 +36,7 @@ local colourmap = {
     ["dkpurple"] =    {    r=128,    g=0,    b=128,    a=255    },
     ["dkcyan"] =    {    r=0,    g=128,    b=128,    a=255    },
     ["dkturq"] =    {    r=0,    g=128,    b=128,    a=255    },
-// light variations
+-- light variations
     ["ltred"] =        {    r=255,    g=128,    b=128,    a=255    },
     ["ltgreen"] =    {    r=128,    g=255,    b=128,    a=255    },
     ["ltblue"] =    {    r=128,    g=128,    b=255,    a=255    },
@@ -46,22 +46,22 @@ local colourmap = {
     ["ltturq"] =    {    r=128,    g=255,    b=255,    a=255    },
 }
 
-/*
+--[[--
     Name: colourMatch(c)
     Desc: Match a colour name to an rgb value.
    Usage: ** INTERNAL ** Do not use!
-*/
+]]
 local function colourMatch(c)
     c = string.lower(c)
 
     return colourmap[c]
 end
 
-/*
+--[[--
     Name: ExtractParams(p1,p2,p3)
     Desc: This function is used to extract the tag information.
    Usage: ** INTERNAL ** Do not use!
-*/
+]]
 local function ExtractParams(p1,p2,p3)
 
     if (string.utf8sub(p1, 1, 1) == "/") then
@@ -123,12 +123,12 @@ local function ExtractParams(p1,p2,p3)
     end
 end
 
-/*
+--[[--
     Name: CheckTextOrTag(p)
     Desc: This function places data in the "blocks" table
           depending of if p is a tag, or some text
    Usage: ** INTERNAL ** Do not use!
-*/
+]]
 local function CheckTextOrTag(p)
     if (p == "") then return end
     if (p == nil) then return end
@@ -146,11 +146,11 @@ local function CheckTextOrTag(p)
     end
 end
 
-/*
+--[[--
     Name: ProcessMatches(p1,p2,p3)
     Desc: CheckTextOrTag for 3 parameters. Called by string.gsub
    Usage: ** INTERNAL ** Do not use!
-*/
+]]
 local function ProcessMatches(p1,p2,p3)
     if (p1) then CheckTextOrTag(p1) end
     if (p2) then CheckTextOrTag(p2) end
@@ -159,12 +159,12 @@ end
 
 local MarkupObject = {}
 
-/*
+--[[--
     Name: MarkupObject:Create()
     Desc: Called by Parse. Creates a new table, and setups the
           metatable.
    Usage: ** INTERNAL ** Do not use!
-*/
+]]
 function MarkupObject:create()
     local o = {}
     setmetatable(o, self)
@@ -173,20 +173,20 @@ function MarkupObject:create()
     return o
 end
 
-/*
+--[[--
     Name: MarkupObject:GetWidth()
     Desc: Returns the width of a markup block
    Usage: ml:GetWidth()
-*/
+]]
 function MarkupObject:GetWidth()
     return self.totalWidth
 end
 
-/*
+--[[--
     Name: MarkupObject:GetHeight()
     Desc: Returns the height of a markup block
    Usage: ml:GetHeight()
-*/
+]]
 function MarkupObject:GetHeight()
     return self.totalHeight
 end
@@ -195,14 +195,14 @@ function MarkupObject:size()
     return self.totalWidth, self.totalHeight
 end
 
-/*
+--[[--
     Name: MarkupObject:Draw(xOffset, yOffset, halign, valign, alphaoverride)
     Desc: Draw the markup text to the screen as position
           xOffset, yOffset. Halign and Valign can be used
           to align the text. Alphaoverride can be used to override
           the alpha value of the text-colour.
    Usage: MarkupObject:Draw(100, 100)
-*/
+]]
 function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     for i = 1, #self.blocks do
         local blk = self.blocks[i]
@@ -249,7 +249,7 @@ function MarkupObject:draw(xOffset, yOffset, halign, valign, alphaoverride)
     end
 end
 
-/*
+--[[--
     Name: Parse(ml, maxwidth)
     Desc: Parses the pseudo-html markup language, and creates a
           MarkupObject, which can be used to the draw the
@@ -259,7 +259,7 @@ end
           Maxwidth can be used to make the text wrap to a specific
           width.
    Usage: markup.Parse("<font=Default>changed font</font>\n<colour=255,0,255,255>changed colour</colour>")
-*/
+]]
 function ix.markup.Parse(ml, maxwidth)
 
     ml = utf8.force(ml)
@@ -368,10 +368,10 @@ function ix.markup.Parse(ml, maxwidth)
                     if (maxwidth and maxwidth > x) then
                         if (xOffset + xSize + x >= maxwidth) then
 
-                            // need to: find the previous space in the curString
-                            //          if we can't find one, take off the last character
-                            //          and add a -. add the character to ch
-                            //          and insert as a new block, incrementing the y etc
+                            -- need to: find the previous space in the curString
+                            --          if we can't find one, take off the last character
+                            --          and add a -. add the character to ch
+                            --          and insert as a new block, incrementing the y etc
 
                             local lastSpacePos = string.utf8len(curString)
                             for k=1,string.utf8len(curString) do

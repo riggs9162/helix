@@ -5,7 +5,7 @@ PLUGIN.name = "3D Text"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "Adds text that can be placed on the map."
 
-// List of available text panels
+-- List of available text panels
 PLUGIN.list = PLUGIN.list or {}
 
 if (SERVER) then
@@ -17,7 +17,7 @@ if (SERVER) then
         return string.format("%s has removed their last 3D text.", client:GetName())
     end)
 
-    // Called when the player is sending client info.
+    -- Called when the player is sending client info.
     function PLUGIN:PlayerInitialSpawn(client)
         timer.Simple(1, function()
             if (IsValid(client)) then
@@ -33,7 +33,7 @@ if (SERVER) then
         end)
     end
 
-    // Adds a text to the list, sends it to the players, and saves data.
+    -- Adds a text to the list, sends it to the players, and saves data.
     function PLUGIN:AddText(position, angles, text, scale)
         local index = #self.list + 1
         scale = math.Clamp((scale or 1) * 0.1, 0.001, 5)
@@ -52,7 +52,7 @@ if (SERVER) then
         return index
     end
 
-    // Removes a text that are within the radius of a position.
+    -- Removes a text that are within the radius of a position.
     function PLUGIN:RemoveText(position, radius)
         radius = radius or 100
 
@@ -69,7 +69,7 @@ if (SERVER) then
         end
 
         if (#textDeleted > 0) then
-            // Invert index table to delete from highest -> lowest
+            -- Invert index table to delete from highest -> lowest
             textDeleted = table.Reverse(textDeleted)
 
             for _, v in ipairs(textDeleted) do
@@ -101,20 +101,20 @@ if (SERVER) then
         return true
     end
 
-    // Called after entities have been loaded on the map.
+    -- Called after entities have been loaded on the map.
     function PLUGIN:LoadData()
         self.list = self:GetData() or {}
 
-        // Formats table to sequential to support legacy panels.
+        -- Formats table to sequential to support legacy panels.
         self.list = table.ClearKeys(self.list)
     end
 
-    // Called when the plugin needs to save information.
+    -- Called when the plugin needs to save information.
     function PLUGIN:SaveText()
         self:SetData(self.list)
     end
 else
-    // Pre-define the zero index in client before the net receives
+    -- Pre-define the zero index in client before the net receives
     PLUGIN.list[0] = PLUGIN.list[0] or 0
 
     language.Add("Undone_ix3dText", "Removed 3D Text")
@@ -123,7 +123,7 @@ else
         local object = ix.markup.Parse("<font=ix3D2DFont>"..text:gsub("\\n", "\n"))
 
         object.onDrawText = function(surfaceText, font, x, y, color, alignX, alignY, alpha)
-            // shadow
+            -- shadow
             surface.SetTextPos(x + 1, y + 1)
             surface.SetTextColor(0, 0, 0, alpha)
             surface.SetFont(font)
@@ -138,7 +138,7 @@ else
         return object
     end
 
-    // Receives new text objects that need to be drawn.
+    -- Receives new text objects that need to be drawn.
     net.Receive("ixTextAdd", function()
         local index = net.ReadUInt(32)
         local position = net.ReadVector()
@@ -166,7 +166,7 @@ else
         PLUGIN.list[0] = #PLUGIN.list
     end)
 
-    // Receives a full update on ALL texts.
+    -- Receives a full update on ALL texts.
     net.Receive("ixTextList", function()
         local length = net.ReadUInt(32)
         local data = net.ReadData(length)
@@ -179,7 +179,7 @@ else
 
         PLUGIN.list = util.JSONToTable(uncompressed)
 
-        // Will be saved, but refresh just to make sure.
+        -- Will be saved, but refresh just to make sure.
         PLUGIN.list[0] = #PLUGIN.list
 
         for k, v in pairs(PLUGIN.list) do
@@ -255,7 +255,7 @@ else
             return
         end
 
-        // preview for textadd command
+        -- preview for textadd command
         if (ix.chat.currentCommand == "textadd") then
             local arguments = ix.chat.currentArguments
             local text = tostring(arguments[1] or "")
@@ -268,7 +268,7 @@ else
             angles:RotateAroundAxis(angles:Up(), 90)
             angles:RotateAroundAxis(angles:Forward(), 90)
 
-            // markup will error with invalid fonts
+            -- markup will error with invalid fonts
             pcall(function()
                 markup = PLUGIN:GenerateMarkup(text)
             end)

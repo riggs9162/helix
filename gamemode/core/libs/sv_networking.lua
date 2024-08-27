@@ -1,5 +1,5 @@
 
-// @module ix.net
+-- @module ix.net
 
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
@@ -14,7 +14,7 @@ util.AddNetworkString("ixLocalVarSet")
 util.AddNetworkString("ixNetVarSet")
 util.AddNetworkString("ixNetVarDelete")
 
-// Check if there is an attempt to send a function. Can't send those.
+-- Check if there is an attempt to send a function. Can't send those.
 local function CheckBadType(name, object)
     if (isfunction(object)) then
         ErrorNoHalt("Net var '" .. name .. "' contains a bad object type!")
@@ -22,7 +22,7 @@ local function CheckBadType(name, object)
         return true
     elseif (istable(object)) then
         for k, v in pairs(object) do
-            // Check both the key and the value for tables, and has recursion.
+            -- Check both the key and the value for tables, and has recursion.
             if (CheckBadType(name, k) or CheckBadType(name, v)) then
                 return true
             end
@@ -30,13 +30,13 @@ local function CheckBadType(name, object)
     end
 end
 
-function GetNetVar(key, default) // luacheck: globals GetNetVar
+function GetNetVar(key, default) -- luacheck: globals GetNetVar
     local value = ix.net.globals[key]
 
     return value != nil and value or default
 end
 
-function SetNetVar(key, value, receiver) // luacheck: globals SetNetVar
+function SetNetVar(key, value, receiver) -- luacheck: globals SetNetVar
     if (CheckBadType(key, value)) then return end
     if (GetNetVar(key) == value) then return end
 
@@ -53,12 +53,12 @@ function SetNetVar(key, value, receiver) // luacheck: globals SetNetVar
     end
 end
 
-/// Player networked variable functions
-// @classmod Player
+--- Player networked variable functions
+-- @classmod Player
 
-/// Synchronizes networked variables to the client.
-// @realm server
-// @internal
+--- Synchronizes networked variables to the client.
+-- @realm server
+-- @internal
 function playerMeta:SyncVars()
     for k, v in pairs(ix.net.globals) do
         net.Start("ixGlobalVarSet")
@@ -89,15 +89,15 @@ function playerMeta:SyncVars()
     end
 end
 
-/// Retrieves a local networked variable. If it is not set, it'll return the default that you've specified.
-// Locally networked variables can only be retrieved from the owning player when used from the client.
-// @realm shared
-// @string key Identifier of the local variable
-// @param default Default value to return if the local variable is not set
-// @return Value associated with the key, or the default that was given if it doesn't exist
-// @usage print(client:GetLocalVar("secret"))
-// > 12345678
-// @see SetLocalVar
+--- Retrieves a local networked variable. If it is not set, it'll return the default that you've specified.
+-- Locally networked variables can only be retrieved from the owning player when used from the client.
+-- @realm shared
+-- @string key Identifier of the local variable
+-- @param default Default value to return if the local variable is not set
+-- @return Value associated with the key, or the default that was given if it doesn't exist
+-- @usage print(client:GetLocalVar("secret"))
+-- > 12345678
+-- @see SetLocalVar
 function playerMeta:GetLocalVar(key, default)
     if (ix.net.locals[self] and ix.net.locals[self][key] != nil) then
         return ix.net.locals[self][key]
@@ -106,12 +106,12 @@ function playerMeta:GetLocalVar(key, default)
     return default
 end
 
-/// Sets the value of a local networked variable.
-// @realm server
-// @string key Identifier of the local variable
-// @param value New value to assign to the local variable
-// @usage client:SetLocalVar("secret", 12345678)
-// @see GetLocalVar
+--- Sets the value of a local networked variable.
+-- @realm server
+-- @string key Identifier of the local variable
+-- @param value New value to assign to the local variable
+-- @usage client:SetLocalVar("secret", 12345678)
+-- @see GetLocalVar
 function playerMeta:SetLocalVar(key, value)
     if (CheckBadType(key, value)) then return end
 
@@ -124,17 +124,17 @@ function playerMeta:SetLocalVar(key, value)
     net.Send(self)
 end
 
-/// Entity networked variable functions
-// @classmod Entity
+--- Entity networked variable functions
+-- @classmod Entity
 
-/// Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
-// @realm shared
-// @string key Identifier of the networked variable
-// @param default Default value to return if the networked variable is not set
-// @return Value associated with the key, or the default that was given if it doesn't exist
-// @usage print(client:GetNetVar("example"))
-// > Hello World!
-// @see SetNetVar
+--- Retrieves a networked variable. If it is not set, it'll return the default that you've specified.
+-- @realm shared
+-- @string key Identifier of the networked variable
+-- @param default Default value to return if the networked variable is not set
+-- @return Value associated with the key, or the default that was given if it doesn't exist
+-- @usage print(client:GetNetVar("example"))
+-- > Hello World!
+-- @see SetNetVar
 function entityMeta:GetNetVar(key, default)
     if (ix.net.list[self] and ix.net.list[self][key] != nil) then
         return ix.net.list[self][key]
@@ -143,13 +143,13 @@ function entityMeta:GetNetVar(key, default)
     return default
 end
 
-/// Sets the value of a networked variable.
-// @realm server
-// @string key Identifier of the networked variable
-// @param value New value to assign to the networked variable
-// @tab[opt=nil] receiver The players to send the networked variable to
-// @usage client:SetNetVar("example", "Hello World!")
-// @see GetNetVar
+--- Sets the value of a networked variable.
+-- @realm server
+-- @string key Identifier of the networked variable
+-- @param value New value to assign to the networked variable
+-- @tab[opt=nil] receiver The players to send the networked variable to
+-- @usage client:SetNetVar("example", "Hello World!")
+-- @see GetNetVar
 function entityMeta:SetNetVar(key, value, receiver)
     if (CheckBadType(key, value)) then return end
 
@@ -162,11 +162,11 @@ function entityMeta:SetNetVar(key, value, receiver)
     self:SendNetVar(key, receiver)
 end
 
-/// Sends a networked variable.
-// @realm server
-// @internal
-// @string key Identifier of the networked variable
-// @tab[opt=nil] receiver The players to send the networked variable to
+--- Sends a networked variable.
+-- @realm server
+-- @internal
+-- @string key Identifier of the networked variable
+-- @tab[opt=nil] receiver The players to send the networked variable to
 function entityMeta:SendNetVar(key, receiver)
     net.Start("ixNetVarSet")
     net.WriteUInt(self:EntIndex(), 16)
@@ -180,10 +180,10 @@ function entityMeta:SendNetVar(key, receiver)
     end
 end
 
-/// Clears all of the networked variables.
-// @realm server
-// @internal
-// @tab[opt=nil] receiver The players to clear the networked variable for
+--- Clears all of the networked variables.
+-- @realm server
+-- @internal
+-- @tab[opt=nil] receiver The players to clear the networked variable for
 function entityMeta:ClearNetVars(receiver)
     ix.net.list[self] = nil
     ix.net.locals[self] = nil

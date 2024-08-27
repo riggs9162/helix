@@ -5,7 +5,7 @@ PLUGIN.name = "Doors"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "A simple door system."
 
-// luacheck: globals DOOR_OWNER DOOR_TENANT DOOR_GUEST DOOR_NONE
+-- luacheck: globals DOOR_OWNER DOOR_TENANT DOOR_GUEST DOOR_NONE
 DOOR_OWNER = 3
 DOOR_TENANT = 2
 DOOR_GUEST = 1
@@ -58,7 +58,7 @@ do
             self.ixAccess = {}
             self:SetDTEntity(0, nil)
 
-            // Remove door information on child doors
+            -- Remove door information on child doors
             PLUGIN:CallOnDoorChildren(self, function(child)
                 child:SetDTEntity(0, nil)
             end)
@@ -66,7 +66,7 @@ do
     end
 end
 
-// Configurations for door prices.
+-- Configurations for door prices.
 ix.config.Add("doorCost", 10, "The price to purchase a door.", nil, {
     data = {min = 0, max = 500},
     category = "dConfigName"

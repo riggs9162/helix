@@ -10,7 +10,7 @@ function PANEL:Init()
 
     self.VBar:SetWide(0)
 
-    // entry setup
+    -- entry setup
     local suppress = {}
     hook.Run("CanCreateCharacterInfo", suppress)
 
@@ -72,7 +72,7 @@ function PANEL:Init()
 
         self.description.SizeToContents = function(this)
             if (this.bWrap) then
-                // sizing contents after initial wrapping does weird things so we'll just ignore (lol)
+                -- sizing contents after initial wrapping does weird things so we'll just ignore (lol)
                 return
             end
 
@@ -83,9 +83,9 @@ function PANEL:Init()
                 this:SetTextInset(16, 8)
                 this:SetWrap(true)
                 this:SizeToContentsY()
-                this:SetTall(this:GetTall() + 16) // eh
+                this:SetTall(this:GetTall() + 16) -- eh
 
-                // wrapping doesn't like middle alignment so we'll do top-center
+                -- wrapping doesn't like middle alignment so we'll do top-center
                 self.description:SetContentAlignment(8)
                 this.bWrap = true
             else
@@ -97,7 +97,7 @@ function PANEL:Init()
     if (!suppress.characterInfo) then
         self.characterInfo = self:Add("Panel")
         self.characterInfo.list = {}
-        self.characterInfo:Dock(TOP) // no dock margin because this is handled by ixListRow
+        self.characterInfo:Dock(TOP) -- no dock margin because this is handled by ixListRow
         self.characterInfo.SizeToContents = function(this)
             local height = 0
 
@@ -134,7 +134,7 @@ function PANEL:Init()
         self.characterInfo:SizeToContents()
     end
 
-    // no need to update since we aren't showing the attributes panel
+    -- no need to update since we aren't showing the attributes panel
     if (!suppress.attributes) then
         local character = LocalPlayer().GetCharacter and LocalPlayer():GetCharacter()
 
@@ -220,7 +220,7 @@ function PANEL:Update(character)
     end
 
     if (self.class) then
-        // don't show class label if the class is the same name as the faction
+        -- don't show class label if the class is the same name as the faction
         if (class and class.name != faction.name) then
             self.class:SetLabelText(L("class"))
             self.class:SetText(L(class.name))

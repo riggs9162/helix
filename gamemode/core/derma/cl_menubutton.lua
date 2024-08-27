@@ -2,7 +2,7 @@
 local buttonPadding = ScreenScale(14) * 0.5
 local animationTime = 0.5
 
-// base menu button
+-- base menu button
 DEFINE_BASECLASS("DButton")
 local PANEL = {}
 
@@ -16,7 +16,7 @@ function PANEL:Init()
     self:SetContentAlignment(4)
     self:SetTextInset(buttonPadding, 0)
 
-    self.padding = {32, 12, 32, 12} // left, top, right, bottom
+    self.padding = {32, 12, 32, 12} -- left, top, right, bottom
     self.backgroundColor = Color(0, 0, 0)
     self.backgroundAlpha = 128
     self.currentBackgroundAlpha = 0
@@ -143,7 +143,7 @@ end
 
 vgui.Register("ixMenuButton", PANEL, "DButton")
 
-// selection menu button
+-- selection menu button
 DEFINE_BASECLASS("ixMenuButton")
 PANEL = {}
 
@@ -155,7 +155,7 @@ function PANEL:Init()
     self.backgroundColor = color_white
     self.selected = false
     self.buttonList = {}
-    self.sectionPanel = nil // sub-sections this button has; created only if it has any sections
+    self.sectionPanel = nil -- sub-sections this button has; created only if it has any sections
 end
 
 function PANEL:PaintBackground(width, height)
@@ -194,7 +194,7 @@ end
 
 function PANEL:AddSection(name)
     if (!IsValid(self.sectionPanel)) then
-        // add section panel to regular button list
+        -- add section panel to regular button list
         self.sectionPanel = vgui.Create("ixMenuSelectionList", self:GetParent())
         self.sectionPanel:Dock(self:GetDock())
         self.sectionPanel:SetParentButton(self)
@@ -219,12 +219,12 @@ end
 
 vgui.Register("ixMenuSelectionButton", PANEL, "ixMenuButton")
 
-// collapsable list for menu button sections
+-- collapsable list for menu button sections
 PANEL = {}
 AccessorFunc(PANEL, "parent", "ParentButton")
 
 function PANEL:Init()
-    self.parent = nil // button that is responsible for controlling this list
+    self.parent = nil -- button that is responsible for controlling this list
     self.height = 0
     self.targetHeight = 0
 
@@ -258,7 +258,7 @@ function PANEL:Show()
     self:CreateAnimation(animationTime, {
         index = 1,
         target = {
-            height = self.targetHeight + 2 // +2 for padding
+            height = self.targetHeight + 2 -- +2 for padding
         },
         easing = "outQuart",
 

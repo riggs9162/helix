@@ -8,27 +8,27 @@ ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 
-/*
-// This will change a player's skin after changing the model. Keep in mind it starts at 0.
+--[[--
+-- This will change a player's skin after changing the model. Keep in mind it starts at 0.
 ITEM.newSkin = 1
-// This will change a certain part of the model.
+-- This will change a certain part of the model.
 ITEM.replacements = {"group01", "group02"}
-// This will change the player's model completely.
+-- This will change the player's model completely.
 ITEM.replacements = "models/manhack.mdl"
-// This will have multiple replacements.
+-- This will have multiple replacements.
 ITEM.replacements = {
     {"male", "female"},
     {"group01", "group02"}
 }
 
-// This will apply body groups.
+-- This will apply body groups.
 ITEM.bodyGroups = {
     ["blade"] = 1,
     ["bladeblur"] = 1
 }
-*/
+]]
 
-// Inventory drawing
+-- Inventory drawing
 if (CLIENT) then
     function ITEM:PaintOver(item, w, h)
         if (item:GetData("equip")) then
@@ -45,7 +45,7 @@ function ITEM:AddOutfit(client)
 
     local groups = character:GetData("groups", {})
 
-    // remove original bodygroups
+    -- remove original bodygroups
     if (!table.IsEmpty(groups)) then
         character:SetData("oldGroups" .. self.outfitCategory, groups)
         character:SetData("groups", {})
@@ -79,15 +79,15 @@ function ITEM:AddOutfit(client)
         self.player:SetSkin(self.newSkin)
     end
 
-    // get outfit saved bodygroups
+    -- get outfit saved bodygroups
     groups = self:GetData("groups", {})
 
-    // restore bodygroups saved to the item
+    -- restore bodygroups saved to the item
     if (!table.IsEmpty(groups) and self:ShouldRestoreBodygroups()) then
         for k, v in pairs(groups) do
             client:SetBodygroup(k, v)
         end
-    // apply default item bodygroups if none are saved
+    -- apply default item bodygroups if none are saved
     elseif (istable(self.bodyGroups)) then
         for k, v in pairs(self.bodyGroups) do
             local index = client:FindBodygroupByName(k)
@@ -140,12 +140,12 @@ function ITEM:RemoveOutfit(client)
         end
     end
 
-    // save outfit submaterials
+    -- save outfit submaterials
     if (!table.IsEmpty(materials)) then
         self:SetData("submaterial", materials)
     end
 
-    // remove outfit submaterials
+    -- remove outfit submaterials
     ResetSubMaterials(client)
 
     local groups = {}
@@ -158,21 +158,21 @@ function ITEM:RemoveOutfit(client)
         end
     end
 
-    // save outfit bodygroups
+    -- save outfit bodygroups
     if (!table.IsEmpty(groups)) then
         self:SetData("groups", groups)
     end
 
-    // remove outfit bodygroups
+    -- remove outfit bodygroups
     client:ResetBodygroups()
 
-    // restore the original player model
+    -- restore the original player model
     if (character:GetData("oldModel" .. self.outfitCategory)) then
         character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
         character:SetData("oldModel" .. self.outfitCategory, nil)
     end
 
-    // restore the original player model skin
+    -- restore the original player model skin
     if (self.newSkin) then
         if (character:GetData("oldSkin" .. self.outfitCategory)) then
             client:SetSkin(character:GetData("oldSkin" .. self.outfitCategory))
@@ -182,10 +182,10 @@ function ITEM:RemoveOutfit(client)
         end
     end
 
-    // get character original bodygroups
+    -- get character original bodygroups
     groups = character:GetData("oldGroups" .. self.outfitCategory, {})
 
-    // restore original bodygroups
+    -- restore original bodygroups
     if (!table.IsEmpty(groups)) then
         for k, v in pairs(groups) do
             client:SetBodygroup(k, v)
@@ -208,8 +208,8 @@ function ITEM:RemoveOutfit(client)
     self:OnUnequipped()
 end
 
-// makes another outfit depend on this outfit in terms of requiring this item to be equipped in order to equip the attachment
-// also unequips the attachment if this item is dropped
+-- makes another outfit depend on this outfit in terms of requiring this item to be equipped in order to equip the attachment
+-- also unequips the attachment if this item is dropped
 function ITEM:AddAttachment(id)
     local attachments = self:GetData("outfitAttachments", {})
     attachments[id] = true
@@ -239,7 +239,7 @@ ITEM:Hook("drop", function(item)
     end
 end)
 
-ITEM.functions.EquipUn = { // sorry, for name order.
+ITEM.functions.EquipUn = { -- sorry, for name order.
     name = "Unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",

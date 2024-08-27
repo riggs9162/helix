@@ -5,7 +5,7 @@ PLUGIN.name = "3D Panels"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "Adds web panels that can be placed on the map."
 
-// List of available panel dislays.
+-- List of available panel dislays.
 PLUGIN.list = PLUGIN.list or {}
 
 if (SERVER) then
@@ -13,9 +13,9 @@ if (SERVER) then
     util.AddNetworkString("ixPanelAdd")
     util.AddNetworkString("ixPanelRemove")
 
-    // Called when the player is sending client info.
+    -- Called when the player is sending client info.
     function PLUGIN:PlayerInitialSpawn(client)
-        // Send the list of panel displays.
+        -- Send the list of panel displays.
         timer.Simple(1, function()
             if (IsValid(client)) then
                 local json = util.TableToJSON(self.list)
@@ -30,18 +30,18 @@ if (SERVER) then
         end)
     end
 
-    // Adds a panel to the list, sends it to the players, and saves data.
+    -- Adds a panel to the list, sends it to the players, and saves data.
     function PLUGIN:AddPanel(position, angles, url, scale, brightness)
         scale = math.Clamp((scale or 1) * 0.1, 0.001, 5)
         brightness = math.Clamp(math.Round((brightness or 100) * 2.55), 1, 255)
 
-        // Find an ID for this panel within the list.
+        -- Find an ID for this panel within the list.
         local index = #self.list + 1
 
-        // Add the panel to the list so it can be sent and saved.
+        -- Add the panel to the list so it can be sent and saved.
         self.list[index] = {position, angles, nil, nil, scale, url, nil, brightness}
 
-        // Send the panel information to the players.
+        -- Send the panel information to the players.
         net.Start("ixPanelAdd")
             net.WriteUInt(index, 32)
             net.WriteVector(position)
@@ -51,39 +51,39 @@ if (SERVER) then
             net.WriteUInt(brightness, 8)
         net.Broadcast()
 
-        // Save the plugin data.
+        -- Save the plugin data.
         self:SavePanels()
     end
 
-    // Removes a panel that are within the radius of a position.
+    -- Removes a panel that are within the radius of a position.
     function PLUGIN:RemovePanel(position, radius)
-        // Default the radius to 100.
+        -- Default the radius to 100.
         radius = radius or 100
 
         local panelsDeleted = {}
 
-        // Loop through all of the panels.
+        -- Loop through all of the panels.
         for k, v in pairs(self.list) do
             if (k == 0) then
                 continue
             end
 
-            // Check if the distance from our specified position to the panel is less than the radius.
+            -- Check if the distance from our specified position to the panel is less than the radius.
             if (v[1]:Distance(position) <= radius) then
                 panelsDeleted[#panelsDeleted + 1] = k
             end
         end
 
-        // Save the plugin data if we actually changed anything.
+        -- Save the plugin data if we actually changed anything.
         if (#panelsDeleted > 0) then
-            // Invert index table to delete from highest -> lowest
+            -- Invert index table to delete from highest -> lowest
             panelsDeleted = table.Reverse(panelsDeleted)
 
             for _, v in ipairs(panelsDeleted) do
-                // Remove the panel from the list of panels.
+                -- Remove the panel from the list of panels.
                 table.remove(self.list, v)
 
-                // Tell the players to stop showing the panel.
+                -- Tell the players to stop showing the panel.
                 net.Start("ixPanelRemove")
                     net.WriteUInt(v, 32)
                 net.Broadcast()
@@ -92,27 +92,27 @@ if (SERVER) then
             self:SavePanels()
         end
 
-        // Return the number of deleted panels.
+        -- Return the number of deleted panels.
         return #panelsDeleted
     end
 
-    // Called after entities have been loaded on the map.
+    -- Called after entities have been loaded on the map.
     function PLUGIN:LoadData()
         self.list = self:GetData() or {}
 
-        // Formats table to sequential to support legacy panels.
+        -- Formats table to sequential to support legacy panels.
         self.list = table.ClearKeys(self.list)
     end
 
-    // Called when the plugin needs to save information.
+    -- Called when the plugin needs to save information.
     function PLUGIN:SavePanels()
         self:SetData(self.list)
     end
 else
-    // Pre-define the zero index in client before the net receives
+    -- Pre-define the zero index in client before the net receives
     PLUGIN.list[0] = PLUGIN.list[0] or 0
 
-    // Holds the current cached material and filename.
+    -- Holds the current cached material and filename.
     local cachedPreview = {}
 
     local function CacheMaterial(index)
@@ -131,7 +131,7 @@ else
             if (!material:IsError()) then
                 info[7] = material
 
-                // Set width and height
+                -- Set width and height
                 info[3] = material:GetInt("$realwidth")
                 info[4] = material:GetInt("$realheight")
             end
@@ -146,7 +146,7 @@ else
                 if (!material:IsError()) then
                     info[7] = material
 
-                    // Set width and height
+                    -- Set width and height
                     info[3] = material:GetInt("$realwidth")
                     info[4] = material:GetInt("$realheight")
                 end
@@ -157,14 +157,14 @@ else
     local function UpdateCachedPreview(url)
         local path = "helix/"..Schema.folder.."/"..PLUGIN.uniqueID.."/"
 
-        // Gets the file name
+        -- Gets the file name
         local exploded = string.Explode("/", url)
         local filename = exploded[#exploded]
 
         if (file.Exists(path..filename, "DATA")) then
             local preview = Material("../data/"..path..filename, "noclamp smooth")
 
-            // Update the cached preview if success
+            -- Update the cached preview if success
             if (!preview:IsError()) then
                 cachedPreview = {url, preview}
             else
@@ -178,7 +178,7 @@ else
 
                 local preview = Material("../data/"..path..filename, "noclamp smooth")
 
-                // Update the cached preview if success
+                -- Update the cached preview if success
                 if (!preview:IsError()) then
                     cachedPreview = {url, preview}
                 else
@@ -188,7 +188,7 @@ else
         end
     end
 
-    // Receives new panel objects that need to be drawn.
+    -- Receives new panel objects that need to be drawn.
     net.Receive("ixPanelAdd", function()
         local index = net.ReadUInt(32)
         local position = net.ReadVector()
@@ -214,7 +214,7 @@ else
         PLUGIN.list[0] = #PLUGIN.list
     end)
 
-    // Receives a full update on ALL panels.
+    -- Receives a full update on ALL panels.
     net.Receive("ixPanelList", function()
         local length = net.ReadUInt(32)
         local data = net.ReadData(length)
@@ -225,15 +225,15 @@ else
             return
         end
 
-        // Set the list of panels to the ones provided by the server.
+        -- Set the list of panels to the ones provided by the server.
         PLUGIN.list = util.JSONToTable(uncompressed)
 
-        // Will be saved, but refresh just to make sure.
+        -- Will be saved, but refresh just to make sure.
         PLUGIN.list[0] = #PLUGIN.list
 
         local CacheQueue  = {}
 
-        // Loop through the list of panels.
+        -- Loop through the list of panels.
         for k, _ in pairs(PLUGIN.list) do
             if (k == 0) then
                 continue
@@ -257,18 +257,18 @@ else
         end)
     end)
 
-    // Called after all translucent objects are drawn.
+    -- Called after all translucent objects are drawn.
     function PLUGIN:PostDrawTranslucentRenderables(bDrawingDepth, bDrawingSkybox)
         if (bDrawingDepth or bDrawingSkybox) then
             return
         end
 
-        // Panel preview
+        -- Panel preview
         if (ix.chat.currentCommand == "paneladd") then
             self:PreviewPanel()
         end
 
-        // Store the position of the player to be more optimized.
+        -- Store the position of the player to be more optimized.
         local ourPosition = LocalPlayer():GetPos()
 
         local panel = self.list
@@ -277,7 +277,7 @@ else
             local position = panel[i][1]
             local image = panel[i][7]
 
-            // Older panels do not have a brightness index
+            -- Older panels do not have a brightness index
             local brightness = panel[i][8] or 255
 
             if (panel[i][7] and ourPosition:DistToSqr(position) <= 4194304) then
@@ -296,7 +296,7 @@ else
 
     function PLUGIN:ChatTextChanged(text)
         if (ix.chat.currentCommand == "paneladd") then
-            // Allow time for ix.chat.currentArguments to update
+            -- Allow time for ix.chat.currentArguments to update
             timer.Simple(0, function()
                 local arguments = ix.chat.currentArguments
 
@@ -312,12 +312,12 @@ else
     function PLUGIN:PreviewPanel()
         local arguments = ix.chat.currentArguments
 
-        // if there's no URL, then no preview.
+        -- if there's no URL, then no preview.
         if (!arguments[1]) then
             return
         end
 
-        // If the material is valid, preview the panel
+        -- If the material is valid, preview the panel
         if (cachedPreview[2] and !cachedPreview[2]:IsError()) then
             local trace = LocalPlayer():GetEyeTrace()
             local angles = trace.HitNormal:Angle()
@@ -326,11 +326,11 @@ else
             local position = (trace.HitPos + angles:Up() * 0.1)
             local ourPosition = LocalPlayer():GetPos()
 
-            // validate argument types
+            -- validate argument types
             local scale = math.Clamp((tonumber(arguments[2]) or 1) * 0.1, 0.001, 5)
             local brightness = math.Clamp(math.Round((tonumber(arguments[3]) or 100) * 2.55), 1, 255)
 
-            // Attempt to collect the dimensions from the Material
+            -- Attempt to collect the dimensions from the Material
             local width, height = cachedPreview[2]:GetInt("$realwidth"), cachedPreview[2]:GetInt("$realheight")
 
             if (ourPosition:DistToSqr(position) <= 4194304) then
@@ -358,14 +358,14 @@ ix.command.Add("PanelAdd", {
         bit.bor(ix.type.number, ix.type.optional)
     },
     OnRun = function(self, client, url, scale, brightness)
-        // Get the position and angles of the panel.
+        -- Get the position and angles of the panel.
         local trace = client:GetEyeTrace()
         local position = trace.HitPos
         local angles = trace.HitNormal:Angle()
         angles:RotateAroundAxis(angles:Up(), 90)
         angles:RotateAroundAxis(angles:Forward(), 90)
 
-        // Add the panel.
+        -- Add the panel.
         PLUGIN:AddPanel(position + angles:Up() * 0.1, angles, url, scale, brightness)
         return "@panelAdded"
     end
@@ -377,10 +377,10 @@ ix.command.Add("PanelRemove", {
     adminOnly = true,
     arguments = bit.bor(ix.type.number, ix.type.optional),
     OnRun = function(self, client, radius)
-        // Get the origin to remove panel.
+        -- Get the origin to remove panel.
         local trace = client:GetEyeTrace()
         local position = trace.HitPos
-        // Remove the panel(s) and get the amount removed.
+        -- Remove the panel(s) and get the amount removed.
         local amount = PLUGIN:RemovePanel(position, radius)
 
         return "@panelRemoved", amount

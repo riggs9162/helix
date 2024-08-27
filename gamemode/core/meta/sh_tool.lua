@@ -1,7 +1,7 @@
 
 local TOOL = ix.meta.tool or {}
 
-// code replicated from gamemodes/sandbox/entities/weapons/gmod_tool/stool.lua
+-- code replicated from gamemodes/sandbox/entities/weapons/gmod_tool/stool.lua
 function TOOL:Create()
     local object = {}
 
@@ -33,7 +33,7 @@ function TOOL:CreateConVars()
         return
     end
 
-    // Note: I changed this from replicated because replicated convars don't work when they're created via Lua.
+    -- Note: I changed this from replicated because replicated convars don't work when they're created via Lua.
     if (SERVER) then
         self.AllowedCVar = CreateConVar("toolmode_allow_" .. mode, 1, FCVAR_NOTIFY)
     end
@@ -71,7 +71,7 @@ function TOOL:Allowed()
     return self.AllowedCVar:GetBool()
 end
 
-// Now for all the TOOL redirects
+-- Now for all the TOOL redirects
 function TOOL:Init()
 end
 
@@ -117,8 +117,8 @@ function TOOL:Think()
     self:ReleaseGhostEntity()
 end
 
-// Checks the objects before any action is taken
-// This is to make sure that the entities haven't been removed
+-- Checks the objects before any action is taken
+-- This is to make sure that the entities haven't been removed
 function TOOL:CheckObjects()
     for _, v in pairs(self.Objects) do
         if (!v.Ent:IsWorld() and !v.Ent:IsValid()) then

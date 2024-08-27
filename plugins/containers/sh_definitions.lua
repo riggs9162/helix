@@ -1,4 +1,4 @@
-/*
+--[[
     ix.container.Register(model, {
         name = "Crate",
         description = "A simple wooden create.",
@@ -7,7 +7,7 @@
         locksound = "",
         opensound = ""
     })
-*/
+]]
 
 ix.container.Register("models/props_junk/wood_crate001a.mdl", {
     name = "Crate",

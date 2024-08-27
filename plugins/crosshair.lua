@@ -53,7 +53,7 @@ if (CLIENT) then
         end
     end
 
-    // luacheck: globals g_ContextMenu
+    -- luacheck: globals g_ContextMenu
     function PLUGIN:PostDrawHUD()
         local client = LocalPlayer()
         if (!client:GetCharacter() or !client:Alive()) then
@@ -99,7 +99,7 @@ if (CLIENT) then
         local drawTarget = self
         local drawFunction = self.DrawCrosshair
 
-        // we'll manually call this since CHudCrosshair is never drawn; checks are already performed
+        -- we'll manually call this since CHudCrosshair is never drawn; checks are already performed
         if (wep.DoDrawCrosshair) then
             drawTarget = wep
             drawFunction = wep.DoDrawCrosshair

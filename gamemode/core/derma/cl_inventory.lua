@@ -1,14 +1,14 @@
 
 local RECEIVER_NAME = "ixInventoryItem"
 
-// The queue for the rendered icons.
+-- The queue for the rendered icons.
 ICON_RENDER_QUEUE = ICON_RENDER_QUEUE or {}
 
-// To make making inventory variant, This must be followed up.
+-- To make making inventory variant, This must be followed up.
 local function RenderNewIcon(panel, itemTable)
     local model = itemTable:GetModel()
 
-    // re-render icons
+    -- re-render icons
     if ((itemTable.iconCam and !ICON_RENDER_QUEUE[string.lower(model)]) or itemTable.forceRender) then
         local iconCam = itemTable.iconCam
         iconCam = {
@@ -54,7 +54,7 @@ function PANEL:OnMousePressed(code)
 end
 
 function PANEL:OnMouseReleased(code)
-    // move the item into the world if we're dropping on something that doesn't handle inventory item drops
+    -- move the item into the world if we're dropping on something that doesn't handle inventory item drops
     if (!dragndrop.m_ReceiverSlot or dragndrop.m_ReceiverSlot.Name != RECEIVER_NAME) then
         self:OnDrop(dragndrop.IsDragging())
     end
@@ -87,7 +87,7 @@ function PANEL:DoRightClick()
                 continue
             end
 
-            // is Multi-Option Function
+            -- is Multi-Option Function
             if (v.isMulti) then
                 local subMenu, subMenuOption = menu:AddSubMenu(L(v.name or k), function()
                     itemTable.player = LocalPlayer()
@@ -152,7 +152,7 @@ function PANEL:DoRightClick()
             end
         end
 
-        // we want drop to show up as the last option
+        -- we want drop to show up as the last option
         local info = itemTable.functions.drop
 
         if (info and info.OnCanRun and info.OnCanRun(itemTable) != false) then
@@ -333,7 +333,7 @@ function PANEL:FitParent(invWidth, invHeight)
     elseif (invHeight > invWidth) then
         iconSize = (height - padding * 2) / invHeight
     else
-        // we use height because the titlebar will make it more tall than it is wide
+        -- we use height because the titlebar will make it more tall than it is wide
         iconSize = (height - padding * 2) / invHeight - 4
     end
 
@@ -516,7 +516,7 @@ function PANEL:PaintDragPreview(width, height, mouseX, mouseY, itemPanel)
 
         self.combineItem = nil
 
-        // don't draw grid if we're dragging it out of bounds
+        -- don't draw grid if we're dragging it out of bounds
         if (inventory) then
             local invWidth, invHeight = inventory:GetSize()
 
@@ -537,7 +537,7 @@ function PANEL:PaintDragPreview(width, height, mouseX, mouseY, itemPanel)
                 bEmpty = self:IsEmpty(x2, y2, itemPanel)
 
                 if (!bEmpty) then
-                    // no need to iterate further since we know something is blocking the hovered grid cells, break through both loops
+                    -- no need to iterate further since we know something is blocking the hovered grid cells, break through both loops
                     goto finish
                 end
             end
@@ -682,7 +682,7 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
                 end
             end
         else
-            // yeah..
+            -- yeah..
             RenderNewIcon(panel, itemTable)
         end
 
@@ -749,7 +749,7 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
         Create = function(info, container)
             local canvas = container:Add("DTileLayout")
             local canvasLayout = canvas.PerformLayout
-            canvas.PerformLayout = nil // we'll layout after we add the panels instead of each time one is added
+            canvas.PerformLayout = nil -- we'll layout after we add the panels instead of each time one is added
             canvas:SetBorder(0)
             canvas:SetSpaceX(2)
             canvas:SetSpaceY(2)

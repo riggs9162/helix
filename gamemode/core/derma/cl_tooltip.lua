@@ -1,13 +1,13 @@
 
-/// Text container for `ixTooltip`.
-// Rows are the main way of interacting with `ixTooltip`s. These derive from
-// [DLabel](https://wiki.garrysmod.com/page/Category:DLabel) panels, which means that making use of this panel
-// will be largely the same as any DLabel panel.
-// @panel ixTooltipRow
+--- Text container for `ixTooltip`.
+-- Rows are the main way of interacting with `ixTooltip`s. These derive from
+-- [DLabel](https:--wiki.garrysmod.com/page/Category:DLabel) panels, which means that making use of this panel
+-- will be largely the same as any DLabel panel.
+-- @panel ixTooltipRow
 
 local animationTime = 1
 
-// panel meta
+-- panel meta
 do
     local PANEL = FindMetaTable("Panel")
     local ixChangeTooltip = ChangeTooltip
@@ -20,7 +20,7 @@ do
         self.ixTooltip = callback
     end
 
-    function ChangeTooltip(panel, ...) // luacheck: globals ChangeTooltip
+    function ChangeTooltip(panel, ...) -- luacheck: globals ChangeTooltip
         if (!panel.ixTooltip) then
             return ixChangeTooltip(panel, ...)
         end
@@ -40,7 +40,7 @@ do
         lastHover = panel
     end
 
-    function RemoveTooltip() // luacheck: globals RemoveTooltip
+    function RemoveTooltip() -- luacheck: globals RemoveTooltip
         if (IsValid(tooltip)) then
             tooltip:Remove()
             tooltip = nil
@@ -73,30 +73,30 @@ function PANEL:Init()
     self.bMinimal = false
 end
 
-/// Whether or not this tooltip row should be displayed in a minimal format. This usually means no background and/or
-// smaller font. You probably won't need this if you're using regular `ixTooltipRow` panels, but you should take into
-// account if you're creating your own panels that derive from `ixTooltipRow`.
-// @realm client
-// @treturn bool True if this tooltip row should be displayed in a minimal format
+--- Whether or not this tooltip row should be displayed in a minimal format. This usually means no background and/or
+-- smaller font. You probably won't need this if you're using regular `ixTooltipRow` panels, but you should take into
+-- account if you're creating your own panels that derive from `ixTooltipRow`.
+-- @realm client
+-- @treturn bool True if this tooltip row should be displayed in a minimal format
 function PANEL:IsMinimal()
     return self.bMinimal
 end
 
-/// Sets this row to be more prominent with a larger font and more noticable background color. This should usually
-// be used once per tooltip as a title row. For example, item tooltips have one "important" row consisting of the
-// item's name. Note that this function is a fire-and-forget function; you cannot revert a row back to it's regular state
-// unless you set the font/colors manually.
-// @realm client
+--- Sets this row to be more prominent with a larger font and more noticable background color. This should usually
+-- be used once per tooltip as a title row. For example, item tooltips have one "important" row consisting of the
+-- item's name. Note that this function is a fire-and-forget function; you cannot revert a row back to it's regular state
+-- unless you set the font/colors manually.
+-- @realm client
 function PANEL:SetImportant()
     self:SetFont("ixSmallTitleFont")
     self:SetExpensiveShadow(1, color_black)
     self:SetBackgroundColor(ix.config.Get("color"))
 end
 
-/// Sets the background color of this row. This should be used sparingly to avoid overwhelming players with a
-// bunch of different colors that could convey different meanings.
-// @realm client
-// @color color New color of the background. The alpha is clamped to 100-255 to ensure visibility
+--- Sets the background color of this row. This should be used sparingly to avoid overwhelming players with a
+-- bunch of different colors that could convey different meanings.
+-- @realm client
+-- @color color New color of the background. The alpha is clamped to 100-255 to ensure visibility
 function PANEL:SetBackgroundColor(color)
     color = table.Copy(color)
     color.a = math.min(color.a or 255, 100)
@@ -104,15 +104,15 @@ function PANEL:SetBackgroundColor(color)
     self.backgroundColor = color
 end
 
-/// Resizes this panel to fit its contents. This should be called after setting the text.
-// @realm client
+--- Resizes this panel to fit its contents. This should be called after setting the text.
+-- @realm client
 function PANEL:SizeToContents()
     local contentWidth, contentHeight = self:GetContentSize()
     contentWidth = contentWidth + 4
     contentHeight = contentHeight + 4
 
     if (contentWidth > self.maxWidth) then
-        self:SetWide(self.maxWidth - 4) // to account for text inset
+        self:SetWide(self.maxWidth - 4) -- to account for text inset
         self:SetTextInset(4, 0)
         self:SetWrap(true)
 
@@ -122,54 +122,54 @@ function PANEL:SizeToContents()
     end
 end
 
-/// Resizes the height of this panel to fit its contents.
-// @internal
-// @realm client
+--- Resizes the height of this panel to fit its contents.
+-- @internal
+-- @realm client
 function PANEL:SizeToContentsY()
     BaseClass.SizeToContentsY(self)
     self:SetTall(self:GetTall() + 4)
 end
 
-/// Called when the background of this row should be painted. This will paint the background with the
-// `DrawImportantBackground` function set in the skin by default.
-// @realm client
-// @number width Width of the panel
-// @number height Height of the panel
+--- Called when the background of this row should be painted. This will paint the background with the
+-- `DrawImportantBackground` function set in the skin by default.
+-- @realm client
+-- @number width Width of the panel
+-- @number height Height of the panel
 function PANEL:PaintBackground(width, height)
     if (self.backgroundColor) then
         derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, self.backgroundColor)
     end
 end
 
-/// Called when the foreground of this row should be painted. If you are overriding this in a subclassed panel,
-// make sure you call `ixTooltipRow:PaintBackground` at the *beginning* of your function to make its style
-// consistent with the rest of the framework.
-// @realm client
-// @number width Width of the panel
-// @number height Height of the panel
+--- Called when the foreground of this row should be painted. If you are overriding this in a subclassed panel,
+-- make sure you call `ixTooltipRow:PaintBackground` at the *beginning* of your function to make its style
+-- consistent with the rest of the framework.
+-- @realm client
+-- @number width Width of the panel
+-- @number height Height of the panel
 function PANEL:Paint(width, height)
     self:PaintBackground(width, height)
 end
 
 vgui.Register("ixTooltipRow", PANEL, "DLabel")
 
-/// Generic information panel.
-// Tooltips are used extensively throughout Helix: for item information, character displays, entity status, etc.
-// The tooltip system can be used on any panel or entity you would like to show standardized information for. Tooltips
-// consist of the parent container panel (`ixTooltip`), which is filled with rows of information (usually
-// `ixTooltipRow`, but can be any docked panel if non-text information needs to be shown, like an item's size).
+--- Generic information panel.
+-- Tooltips are used extensively throughout Helix: for item information, character displays, entity status, etc.
+-- The tooltip system can be used on any panel or entity you would like to show standardized information for. Tooltips
+-- consist of the parent container panel (`ixTooltip`), which is filled with rows of information (usually
+-- `ixTooltipRow`, but can be any docked panel if non-text information needs to be shown, like an item's size).
 --
-// Tooltips can be added to panel with `panel:SetHelixTooltip()`. An example taken from the scoreboard:
-//     panel:SetHelixTooltip(function(tooltip)
-//         local name = tooltip:AddRow("name")
-//         name:SetImportant()
-//         name:SetText(client:SteamName())
-//         name:SetBackgroundColor(team.GetColor(client:Team()))
-//         name:SizeToContents()
+-- Tooltips can be added to panel with `panel:SetHelixTooltip()`. An example taken from the scoreboard:
+--     panel:SetHelixTooltip(function(tooltip)
+--         local name = tooltip:AddRow("name")
+--         name:SetImportant()
+--         name:SetText(client:SteamName())
+--         name:SetBackgroundColor(team.GetColor(client:Team()))
+--         name:SizeToContents()
 --
-//         tooltip:SizeToContents()
-//     end)
-// @panel ixTooltip
+--         tooltip:SizeToContents()
+--     end)
+-- @panel ixTooltip
 DEFINE_BASECLASS("Panel")
 PANEL = {}
 
@@ -207,15 +207,15 @@ function PANEL:Init()
     })
 end
 
-/// Whether or not this tooltip should be displayed in a minimal format.
-// @realm client
-// @treturn bool True if this tooltip should be displayed in a minimal format
-// @see ixTooltipRow:IsMinimal
+--- Whether or not this tooltip should be displayed in a minimal format.
+-- @realm client
+-- @treturn bool True if this tooltip should be displayed in a minimal format
+-- @see ixTooltipRow:IsMinimal
 function PANEL:IsMinimal()
     return self.bMinimal
 end
 
-// ensure all children are painted manually
+-- ensure all children are painted manually
 function PANEL:Add(...)
     local panel = BaseClass.Add(self, ...)
     panel:SetPaintedManually(true)
@@ -223,10 +223,10 @@ function PANEL:Add(...)
     return panel
 end
 
-/// Creates a new `ixTooltipRow` panel and adds it to the bottom of this tooltip.
-// @realm client
-// @string id Name of the new row. This is used to reorder rows if needed
-// @treturn panel Created row
+--- Creates a new `ixTooltipRow` panel and adds it to the bottom of this tooltip.
+-- @realm client
+-- @string id Name of the new row. This is used to reorder rows if needed
+-- @treturn panel Created row
 function PANEL:AddRow(id)
     local panel = self:Add("ixTooltipRow")
     panel.id = id
@@ -235,12 +235,12 @@ function PANEL:AddRow(id)
     return panel
 end
 
-/// Creates a new `ixTooltipRow` and adds it after the row with the given `id`. The order of the rows is set via
-// setting the Z position of the panels, as this is how VGUI handles ordering with docked panels.
-// @realm client
-// @string after Name of the row to insert after
-// @string id Name of the newly created row
-// @treturn panel Created row
+--- Creates a new `ixTooltipRow` and adds it after the row with the given `id`. The order of the rows is set via
+-- setting the Z position of the panels, as this is how VGUI handles ordering with docked panels.
+-- @realm client
+-- @string after Name of the row to insert after
+-- @string id Name of the newly created row
+-- @treturn panel Created row
 function PANEL:AddRowAfter(after, id)
     local panel = self:AddRow(id)
     after = self:GetRow(after)
@@ -254,17 +254,17 @@ function PANEL:AddRowAfter(after, id)
     return panel
 end
 
-/// Sets the entity associated with this tooltip. Note that this function is not how you get entities to show tooltips.
-// @internal
-// @realm client
-// @entity entity Entity to associate with this tooltip
+--- Sets the entity associated with this tooltip. Note that this function is not how you get entities to show tooltips.
+-- @internal
+-- @realm client
+-- @entity entity Entity to associate with this tooltip
 function PANEL:SetEntity(entity)
     if (!IsValid(entity)) then
         self.bEntity = false
         return
     end
 
-    // don't show entity tooltips if we have an entity menu open
+    -- don't show entity tooltips if we have an entity menu open
     if (IsValid(ix.menu.panel)) then
         self:Remove()
         return
@@ -274,7 +274,7 @@ function PANEL:SetEntity(entity)
         local character = entity:GetCharacter()
 
         if (character) then
-            // we want to group things that will most likely have backgrounds (e.g name/health status)
+            -- we want to group things that will most likely have backgrounds (e.g name/health status)
             hook.Run("PopulateImportantCharacterInfo", entity, character, self)
             hook.Run("PopulateCharacterInfo", entity, character, self)
         end
@@ -298,7 +298,7 @@ end
 function PANEL:Paint(width, height)
     self:PaintUnder()
 
-    // directional arrow
+    -- directional arrow
     self.bRaised = LocalPlayer():IsWepRaised()
 
     if (!self.bClosing) then
@@ -313,7 +313,7 @@ function PANEL:Paint(width, height)
         end
     end
 
-    // arrow
+    -- arrow
     if (self.bDrawArrow or (self.bDrawArrow and self.bRaised and !self.bHideArrowWhenRaised)) then
         local x, y = self:ScreenToLocal(self.arrowX, self.arrowY)
 
@@ -324,7 +324,7 @@ function PANEL:Paint(width, height)
         DisableClipping(false)
     end
 
-    // contents
+    -- contents
     local x, y = self:GetPos()
 
     render.SetScissorRect(x, y, x + width * self.fraction, y + height, true)
@@ -338,10 +338,10 @@ function PANEL:Paint(width, height)
     render.SetScissorRect(0, 0, 0, 0, false)
 end
 
-/// Returns the current position of the mouse cursor on the screen.
-// @realm client
-// @treturn number X position of cursor
-// @treturn number Y position of cursor
+--- Returns the current position of the mouse cursor on the screen.
+-- @realm client
+-- @treturn number X position of cursor
+-- @treturn number Y position of cursor
 function PANEL:GetCursorPosition()
     local width, height = self:GetSize()
     local mouseX, mouseY = gui.MousePos()
@@ -354,7 +354,7 @@ function PANEL:Think()
         if (!vgui.CursorVisible()) then
             self:SetPos(self.lastX, self.lastY)
 
-            // if the cursor isn't visible then we don't really need the tooltip to be shown
+            -- if the cursor isn't visible then we don't really need the tooltip to be shown
             if (!self.bClosing) then
                 self:Remove()
             end
@@ -365,7 +365,7 @@ function PANEL:Think()
             self.lastX, self.lastY = newX, newY
         end
 
-        self:MoveToFront() // dragging a panel w/ tooltip will push the tooltip beneath even the menu panel(???)
+        self:MoveToFront() -- dragging a panel w/ tooltip will push the tooltip beneath even the menu panel(???)
     elseif (IsValid(self.entity) and !self.bClosing) then
         if (self.bRaised) then
             self:SetPos(
@@ -386,11 +386,11 @@ function PANEL:Think()
     end
 end
 
-/// Returns an `ixTooltipRow` corresponding to the given name.
-// @realm client
-// @string id Name of the row
-// @treturn[1] panel Corresponding row
-// @treturn[2] nil If the row doesn't exist
+--- Returns an `ixTooltipRow` corresponding to the given name.
+-- @realm client
+-- @string id Name of the row
+-- @treturn[1] panel Corresponding row
+-- @treturn[2] nil If the row doesn't exist
 function PANEL:GetRow(id)
     for _, v in ipairs(self:GetChildren()) do
         if (IsValid(v) and v.id == id) then
@@ -399,9 +399,9 @@ function PANEL:GetRow(id)
     end
 end
 
-/// Resizes the tooltip to fit all of the child panels. You should always call this after you are done
-// adding all of your rows.
-// @realm client
+--- Resizes the tooltip to fit all of the child panels. You should always call this after you are done
+-- adding all of your rows.
+-- @realm client
 function PANEL:SizeToContents()
     local height = 0
     local width = 0
@@ -439,13 +439,13 @@ end
 
 vgui.Register("ixTooltip", PANEL, "Panel")
 
-// legacy tooltip row
+-- legacy tooltip row
 
 PANEL = {}
 
 function PANEL:Init()
     self.bMinimal = true
-    self.ixAlpha = 0 // to avoid conflicts if we're animating a non-tooltip panel
+    self.ixAlpha = 0 -- to avoid conflicts if we're animating a non-tooltip panel
 
     self:SetExpensiveShadow(1, color_black)
     self:SetContentAlignment(5)
@@ -456,7 +456,7 @@ function PANEL:SetImportant()
     self:SetBackgroundColor(ix.config.Get("color"))
 end
 
-// background color will affect text instead in minimal tooltips
+-- background color will affect text instead in minimal tooltips
 function PANEL:SetBackgroundColor(color)
     color = table.Copy(color)
     color.a = math.min(color.a or 255, 100)
@@ -470,15 +470,15 @@ end
 
 vgui.Register("ixTooltipMinimalRow", PANEL, "ixTooltipRow")
 
-// legacy tooltip
+-- legacy tooltip
 DEFINE_BASECLASS("ixTooltip")
 PANEL = {}
 
 function PANEL:Init()
     self.bMinimal = true
 
-    // we don't want to animate the alpha since children will handle their own animation, but we want to keep the fraction
-    // for the background to animate
+    -- we don't want to animate the alpha since children will handle their own animation, but we want to keep the fraction
+    -- for the background to animate
     self:CreateAnimation(animationTime, {
         index = 1,
         target = {fraction = 1},
@@ -488,7 +488,7 @@ function PANEL:Init()
     self:SetAlpha(255)
 end
 
-// we don't need the children to be painted manually
+-- we don't need the children to be painted manually
 function PANEL:Add(...)
     local panel = BaseClass.Add(self, ...)
     panel:SetPaintedManually(false)
@@ -514,7 +514,7 @@ function PANEL:Think()
 end
 
 function PANEL:SizeToContents()
-    // remove any panels that shouldn't be shown in a minimal tooltip
+    -- remove any panels that shouldn't be shown in a minimal tooltip
     for _, v in ipairs(self:GetChildren()) do
         if (v.bNoMinimal) then
             v:Remove()
@@ -524,10 +524,10 @@ function PANEL:SizeToContents()
     BaseClass.SizeToContents(self)
     self:SetPos(ScrW() * 0.5 - self:GetWide() * 0.5, ScrH() * 0.5 + self.mousePadding)
 
-    // we create animation here since this is the only function that usually gets called after all the rows are populated
+    -- we create animation here since this is the only function that usually gets called after all the rows are populated
     local children = self:GetChildren()
 
-    // sort by z index so we can animate them in order
+    -- sort by z index so we can animate them in order
     table.sort(children, function(a, b)
         return a:GetZPos() < b:GetZPos()
     end)
@@ -558,10 +558,10 @@ function PANEL:Remove()
 
     self.bClosing = true
 
-    // we create animation here since this is the only function that usually gets called after all the rows are populated
+    -- we create animation here since this is the only function that usually gets called after all the rows are populated
     local children = self:GetChildren()
 
-    // sort by z index so we can animate them in order
+    -- sort by z index so we can animate them in order
     table.sort(children, function(a, b)
         return a:GetZPos() > b:GetZPos()
     end)

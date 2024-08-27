@@ -16,7 +16,7 @@ function ix.ammo.Register(name)
     end
 end
 
-// Register Default HL2 Ammunition.
+-- Register Default HL2 Ammunition.
 ix.ammo.Register("ar2")
 ix.ammo.Register("pistol")
 ix.ammo.Register("357")
@@ -29,7 +29,7 @@ ix.ammo.Register("grenade")
 ix.ammo.Register("ar2altfire")
 ix.ammo.Register("slam")
 
-// Register Cut HL2 Ammunition.
+-- Register Cut HL2 Ammunition.
 ix.ammo.Register("alyxgun")
 ix.ammo.Register("sniperround")
 ix.ammo.Register("sniperpenetratedround")
@@ -42,12 +42,12 @@ ix.ammo.Register("airboatgun")
 ix.ammo.Register("striderminigun")
 ix.ammo.Register("helicoptergun")
 
-// Called right before the character has its information save.
+-- Called right before the character has its information save.
 function PLUGIN:CharacterPreSave(character)
-    // Get the player from the character.
+    -- Get the player from the character.
     local client = character:GetPlayer()
 
-    // Check to see if we can get the player's ammo.
+    -- Check to see if we can get the player's ammo.
     if (IsValid(client)) then
         local ammoTable = {}
 
@@ -63,14 +63,14 @@ function PLUGIN:CharacterPreSave(character)
     end
 end
 
-// Called after the player's loadout has been set.
+-- Called after the player's loadout has been set.
 function PLUGIN:PlayerLoadedCharacter(client)
     timer.Simple(0.25, function()
         if (!IsValid(client)) then
             return
         end
 
-        // Get the saved ammo table from the character data.
+        -- Get the saved ammo table from the character data.
         local character = client:GetCharacter()
 
         if (!character) then
@@ -79,7 +79,7 @@ function PLUGIN:PlayerLoadedCharacter(client)
 
         local ammoTable = character:GetData("ammo")
 
-        // Check if the ammotable is exists.
+        -- Check if the ammotable is exists.
         if (ammoTable) then
             for k, v in pairs(ammoTable) do
                 client:SetAmmo(v, tostring(k))

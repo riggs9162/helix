@@ -106,7 +106,7 @@ function PANEL:DrawModel()
 
     render.SetModelLighting(5, fraction, fraction, fraction)
 
-    // Excecute Some stuffs
+    -- Excecute Some stuffs
     if (self.enableHook) then
         hook.Run("DrawHelixModelView", self, self.Entity)
     end

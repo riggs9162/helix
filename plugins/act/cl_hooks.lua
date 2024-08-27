@@ -76,7 +76,7 @@ function PLUGIN:CalcView(client, origin)
     if (ix.option.Get("thirdpersonEnabled", false)) then
         local originPosition = head and client:GetBonePosition(head) or client:GetPos()
 
-        // check if the camera will hit something
+        -- check if the camera will hit something
         local data = util.TraceHull({
             start = originPosition,
             endpos = originPosition - client:EyeAngles():Forward() * 48,

@@ -1,5 +1,5 @@
 
-// area entry
+-- area entry
 DEFINE_BASECLASS("Panel")
 local PANEL = {}
 
@@ -132,7 +132,7 @@ end
 
 vgui.Register("ixAreaEntry", PANEL, "Panel")
 
-// main panel
+-- main panel
 PANEL = {}
 
 function PANEL:Init()

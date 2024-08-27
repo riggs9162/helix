@@ -1,10 +1,10 @@
 
-// overrides standard derma panels to add/change functionality
+-- overrides standard derma panels to add/change functionality
 
 local PANEL = {}
 local OVERRIDES = {}
 
-// @todo remove me when autorefresh support is no longer needed
+-- @todo remove me when autorefresh support is no longer needed
 local function OverridePanel(name, func)
     PANEL = vgui.GetControlTable(name)
 
@@ -78,7 +78,7 @@ OverridePanel("DMenu", function()
             end
         end
 
-        // reposition for the new font
+        -- reposition for the new font
         self:InvalidateLayout(true)
         self:Open(self.ixX, self.ixY, false, self.ixOwnerPanel)
     end
@@ -94,7 +94,7 @@ OverridePanel("DMenu", function()
         self:ixPerformLayout(...)
 
         if (self.ixAnimating) then
-            self.VBar:SetAlpha(0) // setvisible doesn't seem to work here
+            self.VBar:SetAlpha(0) -- setvisible doesn't seem to work here
             self:SetTall(self.ixAnimation * self.ixTargetHeight)
         else
             self.VBar:SetAlpha(255)
@@ -105,7 +105,7 @@ OverridePanel("DMenu", function()
     function PANEL:OnMouseWheeled(delta)
         self:ixOnMouseWheeled(delta)
 
-        // don't allow the input event to fall through
+        -- don't allow the input event to fall through
         return true
     end
 
@@ -114,7 +114,7 @@ OverridePanel("DMenu", function()
         local panel = self:ixAddOption(...)
 
         panel:SetTextColor(derma.GetColor("MenuLabel", self, color_black))
-        panel:SetTextInset(6, 0) // there is no icon functionality in DComboBoxes
+        panel:SetTextInset(6, 0) -- there is no icon functionality in DComboBoxes
 
         return panel
     end
@@ -124,7 +124,7 @@ OverridePanel("DMenu", function()
         local menu, panel = self:ixAddSubMenu(...)
 
         panel:SetTextColor(derma.GetColor("MenuLabel", self, color_black))
-        panel:SetTextInset(6, 0) // there is no icon functionality in DComboBoxes
+        panel:SetTextInset(6, 0) -- there is no icon functionality in DComboBoxes
 
         return menu, panel
     end
@@ -138,7 +138,7 @@ OverridePanel("DMenu", function()
             return
         end
 
-        // remove pac3 derma menu hooks since animations don't play nicely
+        -- remove pac3 derma menu hooks since animations don't play nicely
         hook.Remove("CloseDermaMenus", self)
         hook.Remove("Think", self)
 
@@ -231,7 +231,7 @@ end)
 OverridePanel("DScrollPanel", function()
     Override("ScrollToChild")
     function PANEL:ScrollToChild(panel)
-        // docked panels required InvalidateParent in order to retrieve their position correctly
+        -- docked panels required InvalidateParent in order to retrieve their position correctly
         if (panel:GetDock() != NODOCK) then
             panel:InvalidateParent(true)
         else

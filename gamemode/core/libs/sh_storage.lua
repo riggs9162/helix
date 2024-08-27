@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Player manipulation of inventories.
 
 This library provides an easy way for players to manipulate other inventories. The only functions that you should need are
@@ -14,24 +14,24 @@ Example usage:
         searchText = "Rummaging...",
         searchTime = 4
     })
-*/
-// @module ix.storage
+]]
+-- @module ix.storage
 
-/// There are some parameters you can customize when opening an inventory as a storage object with `ix.storage.Open`.
-// @realm server
-// @table StorageInfoStructure
-// @field[type=entity] entity Entity to "attach" the inventory to. This is used to provide a location for the inventory for
-// things like making sure the player doesn't move too far away from the inventory, etc. This can also be a `player` object.
-// @field[type=number,opt=inventory id] id The ID of the nventory. This defaults to the inventory passed into `ix.Storage.Open`.
-// @field[type=string,opt="Storage"] name Title to display in the UI when the inventory is open.
-// @field[type=boolean,opt=false] bMultipleUsers Whether or not multiple players are allowed to view this inventory at the
-// same time.
-// @field[type=number,opt=0] searchTime How long the player has to wait before the inventory is opened.
-// @field[type=string,opt="@storageSearching"] text Text to display to the user while opening the inventory. If prefixed with
-// `"@"`, it will display a language phrase.
-// @field[type=function,opt] OnPlayerClose Called when a player who was accessing the inventory has closed it. The
-// argument passed to the callback is the player who closed it.
-// @field[type=table,opt={}] data Table of arbitrary data to send to the client when the inventory has been opened.
+--- There are some parameters you can customize when opening an inventory as a storage object with `ix.storage.Open`.
+-- @realm server
+-- @table StorageInfoStructure
+-- @field[type=entity] entity Entity to "attach" the inventory to. This is used to provide a location for the inventory for
+-- things like making sure the player doesn't move too far away from the inventory, etc. This can also be a `player` object.
+-- @field[type=number,opt=inventory id] id The ID of the nventory. This defaults to the inventory passed into `ix.Storage.Open`.
+-- @field[type=string,opt="Storage"] name Title to display in the UI when the inventory is open.
+-- @field[type=boolean,opt=false] bMultipleUsers Whether or not multiple players are allowed to view this inventory at the
+-- same time.
+-- @field[type=number,opt=0] searchTime How long the player has to wait before the inventory is opened.
+-- @field[type=string,opt="@storageSearching"] text Text to display to the user while opening the inventory. If prefixed with
+-- `"@"`, it will display a language phrase.
+-- @field[type=function,opt] OnPlayerClose Called when a player who was accessing the inventory has closed it. The
+-- argument passed to the callback is the player who closed it.
+-- @field[type=table,opt={}] data Table of arbitrary data to send to the client when the inventory has been opened.
 
 ix.storage = ix.storage or {}
 
@@ -43,10 +43,10 @@ if (SERVER) then
     util.AddNetworkString("ixStorageMoneyGive")
     util.AddNetworkString("ixStorageMoneyUpdate")
 
-    /// Returns whether or not the given inventory has a storage context and is being looked at by other players.
-    // @realm server
-    // @inventory inventory Inventory to check
-    // @treturn bool Whether or not `inventory` is in use
+    --- Returns whether or not the given inventory has a storage context and is being looked at by other players.
+    -- @realm server
+    -- @inventory inventory Inventory to check
+    -- @treturn bool Whether or not `inventory` is in use
     function ix.storage.InUse(inventory)
         if (inventory.storageInfo) then
             for _, v in pairs(inventory:GetReceivers()) do
@@ -59,11 +59,11 @@ if (SERVER) then
         return false
     end
 
-    /// Returns whether or not an inventory is in use by a specific player.
-    // @realm server
-    // @inventory inventory Inventory to check
-    // @player client Player to check
-    // @treturn bool Whether or not the player is using the given `inventory`
+    --- Returns whether or not an inventory is in use by a specific player.
+    -- @realm server
+    -- @inventory inventory Inventory to check
+    -- @player client Player to check
+    -- @treturn bool Whether or not the player is using the given `inventory`
     function ix.storage.InUseBy(inventory, client)
         if (inventory.storageInfo) then
             for _, v in pairs(inventory:GetReceivers()) do
@@ -76,11 +76,11 @@ if (SERVER) then
         return false
     end
 
-    /// Creates a storage context on the given inventory.
-    // @realm server
-    // @internal
-    // @inventory inventory Inventory to create a storage context for
-    // @tab info Information to store on the context
+    --- Creates a storage context on the given inventory.
+    -- @realm server
+    -- @internal
+    -- @inventory inventory Inventory to create a storage context for
+    -- @tab info Information to store on the context
     function ix.storage.CreateContext(inventory, info)
         info = info or {}
 
@@ -94,7 +94,7 @@ if (SERVER) then
 
         inventory.storageInfo = info
 
-        // remove context from any bags this inventory might have
+        -- remove context from any bags this inventory might have
         for _, v in pairs(inventory:GetItems()) do
             if (v.isBag and v:GetInventory()) then
                 ix.storage.CreateContext(v:GetInventory(), table.Copy(info))
@@ -102,14 +102,14 @@ if (SERVER) then
         end
     end
 
-    /// Removes a storage context from an inventory if it exists.
-    // @realm server
-    // @internal
-    // @inventory inventory Inventory to remove a storage context from
+    --- Removes a storage context from an inventory if it exists.
+    -- @realm server
+    -- @internal
+    -- @inventory inventory Inventory to remove a storage context from
     function ix.storage.RemoveContext(inventory)
         inventory.storageInfo = nil
 
-        // remove context from any bags this inventory might have
+        -- remove context from any bags this inventory might have
         for _, v in pairs(inventory:GetItems()) do
             if (v.isBag and v:GetInventory()) then
                 ix.storage.RemoveContext(v:GetInventory())
@@ -117,23 +117,23 @@ if (SERVER) then
         end
     end
 
-    /// Synchronizes an inventory with a storage context to the given client.
-    // @realm server
-    // @internal
-    // @player client Player to sync storage for
-    // @inventory inventory Inventory to sync storage for
+    --- Synchronizes an inventory with a storage context to the given client.
+    -- @realm server
+    -- @internal
+    -- @player client Player to sync storage for
+    -- @inventory inventory Inventory to sync storage for
     function ix.storage.Sync(client, inventory)
         local info = inventory.storageInfo
 
-        // we'll retrieve the money value as we're syncing because it may have changed while
-        // we were waiting for the timer to finish
+        -- we'll retrieve the money value as we're syncing because it may have changed while
+        -- we were waiting for the timer to finish
         if (info.entity.GetMoney) then
             info.data.money = info.entity:GetMoney()
         elseif (info.entity:IsPlayer() and info.entity:GetCharacter()) then
             info.data.money = info.entity:GetCharacter():GetMoney()
         end
 
-        // bags are automatically sync'd when the owning inventory is sync'd
+        -- bags are automatically sync'd when the owning inventory is sync'd
         inventory:Sync(client)
 
         net.Start("ixStorageOpen")
@@ -144,13 +144,13 @@ if (SERVER) then
         net.Send(client)
     end
 
-    /// Adds a receiver to a given inventory with a storage context.
-    // @realm server
-    // @internal
-    // @player client Player to sync storage for
-    // @inventory inventory Inventory to sync storage for
-    // @bool bDontSync Whether or not to skip syncing the storage to the client. If this is `true`, the storage panel will not
-    // show up for the player
+    --- Adds a receiver to a given inventory with a storage context.
+    -- @realm server
+    -- @internal
+    -- @player client Player to sync storage for
+    -- @inventory inventory Inventory to sync storage for
+    -- @bool bDontSync Whether or not to skip syncing the storage to the client. If this is `true`, the storage panel will not
+    -- show up for the player
     function ix.storage.AddReceiver(client, inventory, bDontSync)
         local info = inventory.storageInfo
 
@@ -158,7 +158,7 @@ if (SERVER) then
             inventory:AddReceiver(client)
             client.ixOpenStorage = inventory
 
-            // update receivers for any bags this inventory might have
+            -- update receivers for any bags this inventory might have
             for _, v in pairs(inventory:GetItems()) do
                 if (v.isBag and v:GetInventory()) then
                     v:GetInventory():AddReceiver(client)
@@ -179,19 +179,19 @@ if (SERVER) then
         return false
     end
 
-    /// Removes a storage receiver and removes the context if there are no more receivers.
-    // @realm server
-    // @internal
-    // @player client Player to remove from receivers
-    // @inventory inventory Inventory with storage context to remove receiver from
-    // @bool bDontRemove Whether or not to skip removing the storage context if there are no more receivers
+    --- Removes a storage receiver and removes the context if there are no more receivers.
+    -- @realm server
+    -- @internal
+    -- @player client Player to remove from receivers
+    -- @inventory inventory Inventory with storage context to remove receiver from
+    -- @bool bDontRemove Whether or not to skip removing the storage context if there are no more receivers
     function ix.storage.RemoveReceiver(client, inventory, bDontRemove)
         local info = inventory.storageInfo
 
         if (info) then
             inventory:RemoveReceiver(client)
 
-            // update receivers for any bags this inventory might have
+            -- update receivers for any bags this inventory might have
             for _, v in pairs(inventory:GetItems()) do
                 if (v.isBag and v:GetInventory()) then
                     v:GetInventory():RemoveReceiver(client)
@@ -213,17 +213,17 @@ if (SERVER) then
         return false
     end
 
-    /// Makes a player open an inventory that they can interact with. This can be called multiple times on the same inventory,
-    // if the info passed allows for multiple users.
-    // @realm server
-    // @player client Player to open the inventory for
-    // @inventory inventory Inventory to open
-    // @tab info `StorageInfoStructure` describing the storage properties
+    --- Makes a player open an inventory that they can interact with. This can be called multiple times on the same inventory,
+    -- if the info passed allows for multiple users.
+    -- @realm server
+    -- @player client Player to open the inventory for
+    -- @inventory inventory Inventory to open
+    -- @tab info `StorageInfoStructure` describing the storage properties
     function ix.storage.Open(client, inventory, info)
         assert(IsValid(client) and client:IsPlayer(), "expected valid player")
         assert(type(inventory) == "table" and inventory:IsInstanceOf(ix.meta.inventory), "expected valid inventory")
 
-        // create storage context if one isn't already created
+        -- create storage context if one isn't already created
         if (!inventory.storageInfo) then
             info = info or {}
             ix.storage.CreateContext(inventory, info)
@@ -231,8 +231,8 @@ if (SERVER) then
 
         local storageInfo = inventory.storageInfo
 
-        // add the client to the list of receivers if we're allowed to have multiple users
-        // or if nobody else is occupying this inventory, otherwise nag the player
+        -- add the client to the list of receivers if we're allowed to have multiple users
+        -- or if nobody else is occupying this inventory, otherwise nag the player
         if (storageInfo.bMultipleUsers or !ix.storage.InUse(inventory)) then
             ix.storage.AddReceiver(client, inventory, true)
         else
@@ -257,9 +257,9 @@ if (SERVER) then
         end
     end
 
-    /// Forcefully makes clients close this inventory if they have it open.
-    // @realm server
-    // @inventory inventory Inventory to close
+    --- Forcefully makes clients close this inventory if they have it open.
+    -- @realm server
+    -- @inventory inventory Inventory to close
     function ix.storage.Close(inventory)
         local receivers = inventory:GetReceivers()
 

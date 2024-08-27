@@ -1,8 +1,8 @@
 
-// luacheck: globals pac pace
+-- luacheck: globals pac pace
 
-// This Library is just for PAC3 Integration.
-// You must install PAC3 to make this library work.
+-- This Library is just for PAC3 Integration.
+-- You must install PAC3 to make this library work.
 
 PLUGIN.name = "PAC3 Integration"
 PLUGIN.author = "Black Tea"
@@ -18,27 +18,27 @@ CAMI.RegisterPrivilege({
     MinAccess = "superadmin"
 })
 
-// this stores pac3 part information to plugin's table'
+-- this stores pac3 part information to plugin's table'
 function ix.pac.RegisterPart(id, outfit)
     ix.pac.list[id] = outfit
 end
 
-// Fixing the PAC3's default stuffs to fit on Helix.
+-- Fixing the PAC3's default stuffs to fit on Helix.
 if (CLIENT) then
-    // Disable the "in editor" HUD element.
+    -- Disable the "in editor" HUD element.
     hook.Add("InitializedPlugins", "PAC3Fixer", function()
         hook.Remove("HUDPaint", "pac_in_editor")
     end)
 
-    // Remove PAC3 LoadParts
+    -- Remove PAC3 LoadParts
     function pace.LoadParts(name, clear, override_part) end
 
-    // Prohibits players from deleting their own PAC3 outfit.
+    -- Prohibits players from deleting their own PAC3 outfit.
     concommand.Add("pac_clear_parts", function()
         RunConsoleCommand("pac_restart")
     end)
 
-    // you need the proper permission to open the editor
+    -- you need the proper permission to open the editor
     function PLUGIN:PrePACEditorOpen()
         if (!CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage PAC", nil)) then
             return false
@@ -54,7 +54,7 @@ end
 
 local meta = FindMetaTable("Player")
 
-// Get Player's PAC3 Parts.
+-- Get Player's PAC3 Parts.
 function meta:GetParts()
     if (!pac) then return end
 
@@ -71,7 +71,7 @@ if (SERVER) then
 
         local curParts = self:GetParts()
 
-        // wear the parts.
+        -- wear the parts.
         net.Start("ixPartWear")
             net.WriteEntity(self)
             net.WriteString(uniqueID)
@@ -87,7 +87,7 @@ if (SERVER) then
 
         local curParts = self:GetParts()
 
-        // remove the parts.
+        -- remove the parts.
         net.Start("ixPartRemove")
             net.WriteEntity(self)
             net.WriteString(uniqueID)
@@ -110,14 +110,14 @@ if (SERVER) then
     end
 
     function PLUGIN:PlayerLoadedCharacter(client, curChar, prevChar)
-        // Reset the characters parts.
+        -- Reset the characters parts.
         local curParts = client:GetParts()
 
         if (curParts) then
             client:ResetParts()
         end
 
-        // After resetting all PAC3 outfits, wear all equipped PAC3 outfits.
+        -- After resetting all PAC3 outfits, wear all equipped PAC3 outfits.
         if (curChar) then
             local inv = curChar:GetInventory()
 
@@ -142,16 +142,16 @@ if (SERVER) then
         end
     end
 
-    // Hides PAC parts when a player enters observer.
+    -- Hides PAC parts when a player enters observer.
     function PLUGIN:OnPlayerObserve(client, state)
         local curParts = client:GetParts()
 
-        // Remove all the parts
+        -- Remove all the parts
         if (curParts) then
             client:ResetParts()
         end
 
-        // If exiting of observer, re-add all parts.
+        -- If exiting of observer, re-add all parts.
         if (!state) then
             local character = client:GetCharacter()
             local inventory = character:GetInventory()
@@ -278,7 +278,7 @@ else
                         end
                     end
                 end
-                ply.pac_playerspawn = pac.RealTime // used for events
+                ply.pac_playerspawn = pac.RealTime -- used for events
 
                 entity.overridePAC3 = true
             end
@@ -288,7 +288,7 @@ else
     function PLUGIN:OnEntityCreated(entity)
         local class = entity:GetClass()
 
-        // For safe progress, I skip one frame.
+        -- For safe progress, I skip one frame.
         timer.Simple(0.01, function()
             if (class == "prop_ragdoll") then
                 if (entity:GetNetVar("player")) then

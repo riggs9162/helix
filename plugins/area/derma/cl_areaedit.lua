@@ -15,11 +15,11 @@ function PANEL:Init()
     self:SetSizable(true)
     self:SetTitle(L("areaNew"))
 
-    // scroll panel
+    -- scroll panel
     self.canvas = self:Add("DScrollPanel")
     self.canvas:Dock(FILL)
 
-    // name entry
+    -- name entry
     self.nameEntry = vgui.Create("ixTextEntry")
     self.nameEntry:SetFont("ixMenuButtonFont")
     self.nameEntry:SetText(L("areaNew"))
@@ -31,14 +31,14 @@ function PANEL:Init()
     listRow:Dock(TOP)
     listRow:SizeToContents()
 
-    // type entry
+    -- type entry
     self.typeEntry = self.canvas:Add("DComboBox")
     self.typeEntry:Dock(RIGHT)
     self.typeEntry:SetFont("ixMenuButtonFont")
     self.typeEntry:SetTextColor(color_white)
     self.typeEntry.OnSelect = function(panel)
         panel:SizeToContents()
-        panel:SetWide(panel:GetWide() + 12) // padding for arrow (nice)
+        panel:SetWide(panel:GetWide() + 12) -- padding for arrow (nice)
     end
 
     for id, name in pairs(ix.area.types) do
@@ -52,7 +52,7 @@ function PANEL:Init()
     listRow:Dock(TOP)
     listRow:SizeToContents()
 
-    // properties
+    -- properties
     for k, v in pairs(ix.area.properties) do
         local panel
 
@@ -127,7 +127,7 @@ function PANEL:Init()
         end
     end
 
-    // save button
+    -- save button
     self.saveButton = self:Add("DButton")
     self.saveButton:SetText(L("save"))
     self.saveButton:SizeToContents()

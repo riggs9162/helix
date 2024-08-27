@@ -142,7 +142,7 @@ else
         local iconText = bLocked and "P" or "Q"
         local iconWidth, iconHeight = surface.GetTextSize(iconText)
 
-        // minimal tooltips have centered text so we'll draw the icon above the name instead
+        -- minimal tooltips have centered text so we'll draw the icon above the name instead
         if (tooltip:IsMinimal()) then
             local icon = tooltip:AddRow("icon")
             icon:SetFont("ixIconsSmall")

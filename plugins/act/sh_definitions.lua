@@ -22,7 +22,7 @@ local function FacingWallBack(client)
 end
 
 function PLUGIN:SetupActs()
-    // sit
+    -- sit
     ix.act.Register("Sit", {"citizen_male", "citizen_female"}, {
         start = {"idle_to_sit_ground", "idle_to_sit_chair"},
         sequence = {"sit_ground", "sit_chair"},
@@ -51,7 +51,7 @@ function PLUGIN:SetupActs()
         idle = true
     })
 
-    // stand
+    -- stand
     ix.act.Register("Stand", "citizen_male", {
         sequence = {"lineidle01", "lineidle02", "lineidle03", "lineidle04"},
         untimed = true,
@@ -68,7 +68,7 @@ function PLUGIN:SetupActs()
         sequence = "plazathreat2"
     })
 
-    // cheer
+    -- cheer
     ix.act.Register("Cheer", "citizen_male", {
         sequence = {{"cheer1", duration = 1.6}, "cheer2", "wave_smg1"}
     })
@@ -77,7 +77,7 @@ function PLUGIN:SetupActs()
         sequence = {"cheer1", "wave_smg1"}
     })
 
-    // lean
+    -- lean
     ix.act.Register("Lean", {"citizen_male", "citizen_female"}, {
         start = {"idle_to_lean_back", "", ""},
         sequence = {
@@ -95,7 +95,7 @@ function PLUGIN:SetupActs()
         idle = true
     })
 
-    // injured
+    -- injured
     ix.act.Register("Injured", "citizen_male", {
         sequence = {"d1_town05_wounded_idle_1", "d1_town05_wounded_idle_2", "d1_town05_winston_down"},
         untimed = true,
@@ -108,7 +108,7 @@ function PLUGIN:SetupActs()
         idle = true
     })
 
-    // arrest
+    -- arrest
     ix.act.Register("ArrestWall", "citizen_male", {
         sequence = {
             {"apcarrestidle",
@@ -126,34 +126,34 @@ function PLUGIN:SetupActs()
         untimed = true
     })
 
-    // threat
+    -- threat
     ix.act.Register("Threat", "metrocop", {
         sequence = "plazathreat1",
     })
 
-    // deny
+    -- deny
     ix.act.Register("Deny", "metrocop", {
         sequence = "harassfront2",
     })
 
-    // motion
+    -- motion
     ix.act.Register("Motion", "metrocop", {
         sequence = {"motionleft", "motionright", "luggagewarn"}
     })
 
-    // wave
+    -- wave
     ix.act.Register("Wave", {"citizen_male", "citizen_female"}, {
         sequence = {{"wave", duration = 2.75}, {"wave_close", duration = 1.75}}
     })
 
-    // pant
+    -- pant
     ix.act.Register("Pant", {"citizen_male", "citizen_female"}, {
         start = {"d2_coast03_postbattle_idle02_entry", "d2_coast03_postbattle_idle01_entry"},
         sequence = {"d2_coast03_postbattle_idle02", {"d2_coast03_postbattle_idle01", check = FacingWall}},
         untimed = true
     })
 
-    // window
+    -- window
     ix.act.Register("Window", "citizen_male", {
         sequence = "d1_t03_tenements_look_out_window_idle",
         untimed = true

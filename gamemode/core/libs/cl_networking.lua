@@ -30,7 +30,7 @@ net.Receive("ixLocalVarSet", function()
     hook.Run("OnLocalVarSet", key, var)
 end)
 
-function GetNetVar(key, default) // luacheck: globals GetNetVar
+function GetNetVar(key, default) -- luacheck: globals GetNetVar
     local value = ix.net.globals[key]
 
     return value != nil and value or default

@@ -11,7 +11,7 @@ ITEM.isGrenade = false
 ITEM.weaponCategory = "sidearm"
 ITEM.useSound = "items/ammo_pickup.wav"
 
-// Inventory drawing
+-- Inventory drawing
 if (CLIENT) then
     function ITEM:PaintOver(item, w, h)
         if (item:GetData("equip")) then
@@ -28,7 +28,7 @@ if (CLIENT) then
     end
 end
 
-// On item is dropped, Remove a weapon from the player and keep the ammo in the item.
+-- On item is dropped, Remove a weapon from the player and keep the ammo in the item.
 ITEM:Hook("drop", function(item)
     local inventory = ix.item.inventories[item.invID]
 
@@ -36,7 +36,7 @@ ITEM:Hook("drop", function(item)
         return
     end
 
-    // the item could have been dropped by someone else (i.e someone searching this player), so we find the real owner
+    -- the item could have been dropped by someone else (i.e someone searching this player), so we find the real owner
     local owner
 
     for client, character in ix.util.GetCharacters() do
@@ -73,8 +73,8 @@ ITEM:Hook("drop", function(item)
     end
 end)
 
-// On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
-ITEM.functions.EquipUn = { // sorry, for name order.
+-- On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
+ITEM.functions.EquipUn = { -- sorry, for name order.
     name = "Unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",
@@ -90,7 +90,7 @@ ITEM.functions.EquipUn = { // sorry, for name order.
     end
 }
 
-// On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
+-- On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
 ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",
@@ -161,13 +161,13 @@ function ITEM:Equip(client, bNoSelect, bNoSound)
             client:EmitSound(self.useSound, 80)
         end
 
-        // Remove default given ammo.
+        -- Remove default given ammo.
         if (client:GetAmmoCount(ammoType) == weapon:Clip1() and self:GetData("ammo", 0) == 0) then
             client:RemoveAmmo(weapon:Clip1(), ammoType)
         end
 
-        // assume that a weapon with -1 clip1 and clip2 would be a throwable (i.e hl2 grenade)
-        // TODO: figure out if this interferes with any other weapons
+        -- assume that a weapon with -1 clip1 and clip2 would be a throwable (i.e hl2 grenade)
+        -- TODO: figure out if this interferes with any other weapons
         if (weapon:GetMaxClip1() == -1 and weapon:GetMaxClip2() == -1 and client:GetAmmoCount(ammoType) == 0) then
             client:SetAmmo(1, ammoType)
         end
@@ -302,7 +302,7 @@ hook.Add("PlayerDeath", "ixStripClip", function(client)
 end)
 
 hook.Add("EntityRemoved", "ixRemoveGrenade", function(entity)
-    // hack to remove hl2 grenades after they've all been thrown
+    -- hack to remove hl2 grenades after they've all been thrown
     if (entity:GetClass() == "weapon_frag") then
         local client = entity:GetOwner()
 

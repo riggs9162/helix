@@ -1,6 +1,6 @@
 
-// luacheck: globals VENDOR_BUY VENDOR_SELL VENDOR_BOTH VENDOR_WELCOME VENDOR_LEAVE VENDOR_NOTRADE VENDOR_PRICE
-// luacheck: globals VENDOR_STOCK VENDOR_MODE VENDOR_MAXSTOCK VENDOR_SELLANDBUY VENDOR_SELLONLY VENDOR_BUYONLY VENDOR_TEXT
+-- luacheck: globals VENDOR_BUY VENDOR_SELL VENDOR_BOTH VENDOR_WELCOME VENDOR_LEAVE VENDOR_NOTRADE VENDOR_PRICE
+-- luacheck: globals VENDOR_STOCK VENDOR_MODE VENDOR_MAXSTOCK VENDOR_SELLANDBUY VENDOR_SELLONLY VENDOR_BUYONLY VENDOR_TEXT
 
 local PLUGIN = PLUGIN
 
@@ -17,22 +17,22 @@ VENDOR_BUY = 1
 VENDOR_SELL = 2
 VENDOR_BOTH = 3
 
-// Keys for vendor messages.
+-- Keys for vendor messages.
 VENDOR_WELCOME = 1
 VENDOR_LEAVE = 2
 VENDOR_NOTRADE = 3
 
-// Keys for item information.
+-- Keys for item information.
 VENDOR_PRICE = 1
 VENDOR_STOCK = 2
 VENDOR_MODE = 3
 VENDOR_MAXSTOCK = 4
 
-// Sell and buy the item.
+-- Sell and buy the item.
 VENDOR_SELLANDBUY = 1
-// Only sell the item to the player.
+-- Only sell the item to the player.
 VENDOR_SELLONLY = 2
-// Only buy the item from the player.
+-- Only buy the item from the player.
 VENDOR_BUYONLY = 3
 
 if (SERVER) then

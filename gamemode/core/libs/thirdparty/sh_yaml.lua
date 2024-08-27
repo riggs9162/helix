@@ -1,4 +1,4 @@
-/*
+--[[--
   (The MIT License)
 
   Copyright (c) 2017 Dominic Letz dominicletz@exosite.com
@@ -8,7 +8,7 @@
   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
   THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
+]]
 
 local table_print_value
 table_print_value = function(value, indent, done)
@@ -47,7 +47,7 @@ table_print_value = function(value, indent, done)
       )
     end
 
-    rep = rep .. string.rep(" ", indent) // indent it
+    rep = rep .. string.rep(" ", indent) -- indent it
     rep = rep .. "}"
 
     done[value] = false
@@ -179,17 +179,17 @@ exports.tokenize = function (str)
         if token[1] == "{" or token[1] == "[" then
           inline = true
         elseif token.const then
-          // Since word pattern contains last char we're re-adding it
+          -- Since word pattern contains last char we're re-adding it
           str = token[2][2] .. str
           token.raw = token.raw:sub(1, #token.raw - #token[2][2])
         elseif token[1] == "id" then
-          // Since id pattern contains last semi-colon we're re-adding it
+          -- Since id pattern contains last semi-colon we're re-adding it
           str = token[2][2] .. str
           token.raw = token.raw:sub(1, #token.raw - #token[2][2])
-          // Trim
+          -- Trim
           token[2][1] = string_trim(token[2][1])
         elseif token[1] == "string" then
-          // Finding numbers
+          -- Finding numbers
           local snip = token[2][1]
           if not token.force_text then
             if snip:match("^(%d+%.%d+)$") or snip:match("^(%d+)$") then
@@ -229,10 +229,10 @@ exports.tokenize = function (str)
               push(stack, token)
             end
           end
-        end // if token[1] == XXX
+        end -- if token[1] == XXX
         token.row = row
         break
-      end // if #captures > 0
+      end -- if #captures > 0
     end
 
     if not ignore then
@@ -404,11 +404,11 @@ Parser.parseString = function (self)
   if self:isInline() then
     local result = self:advanceValue()
 
-    /*
+    --[[--
       - a: this looks
         flowing: but is
         no: string
-    */
+    ]]
     local types = self:inline()
     if types["id"] and types["-"] then
       if not self:peekType("indent") or not self:peekType("indent", 2) then
@@ -416,13 +416,13 @@ Parser.parseString = function (self)
       end
     end
 
-    /*
+    --[[--
       a: 1
       b: this is
         a flowing string
         example
       c: 3
-    */
+    ]]
     if self:peekType("indent") then
       self:expect("indent", "text block needs to start with indent")
       local addtl = self:accept("indent")
@@ -436,14 +436,14 @@ Parser.parseString = function (self)
     end
     return result
   else
-    /*
+    --[[--
       a: 1
       b:
         this is also
         a flowing string
         example
       c: 3
-    */
+    ]]
     return self:parseTextBlock("\n")
   end
 end

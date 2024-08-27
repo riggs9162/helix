@@ -21,10 +21,10 @@ local MISC = {
     {"NutScript", "Providing the base framework to build upon"}
 }
 
-local url = "https://gethelix.co/"
+local url = "https:--gethelix.co/"
 local padding = 32
 
-// logo
+-- logo
 local PANEL = {}
 
 function PANEL:Init()
@@ -35,7 +35,7 @@ end
 function PANEL:Paint(width, height)
     derma.SkinFunc("DrawHelixCurved", width * 0.5, height * 0.5, width * 0.25)
 
-    // title
+    -- title
     surface.SetFont("ixIntroSubtitleFont")
     local text = L("helix"):lower()
     local textWidth, textHeight = surface.GetTextSize(text)
@@ -44,7 +44,7 @@ function PANEL:Paint(width, height)
     surface.SetTextPos(width * 0.5 - textWidth * 0.5, height * 0.5 - textHeight * 0.5)
     surface.DrawText(text)
 
-    // version
+    -- version
     surface.SetFont("ixMenuMiniFont")
     surface.SetTextColor(200, 200, 200, 255)
     surface.SetTextPos(width * 0.5 + textWidth * 0.5, height * 0.5 - textHeight * 0.5)
@@ -53,7 +53,7 @@ end
 
 vgui.Register("ixCreditsLogo", PANEL, "Panel")
 
-// nametag
+-- nametag
 PANEL = {}
 
 function PANEL:Init()
@@ -86,7 +86,7 @@ end
 
 vgui.Register("ixCreditsNametag", PANEL, "Panel")
 
-// name row
+-- name row
 PANEL = {}
 
 function PANEL:Init()
@@ -262,7 +262,7 @@ function PANEL:Init()
 
     specialList:SizeToContents()
 
-    // less more padding if there's a center column nametag
+    -- less more padding if there's a center column nametag
     if (IsValid(specialList.center)) then
         specialList:DockMargin(0, padding, 0, padding)
     end

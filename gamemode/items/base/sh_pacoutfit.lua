@@ -8,7 +8,7 @@ ITEM.height = 1
 ITEM.outfitCategory = "hat"
 ITEM.pacData = {}
 
-/*
+--[[--
 ITEM.pacData = {
     [1] = {
         ["children"] = {
@@ -34,29 +34,29 @@ ITEM.pacData = {
     },
 }
 
-// This will change a player's skin after changing the model. Keep in mind it starts at 0.
+-- This will change a player's skin after changing the model. Keep in mind it starts at 0.
 ITEM.newSkin = 1
-// This will change a certain part of the model.
+-- This will change a certain part of the model.
 ITEM.replacements = {"group01", "group02"}
-// This will change the player's model completely.
+-- This will change the player's model completely.
 ITEM.replacements = "models/manhack.mdl"
-// This will have multiple replacements.
+-- This will have multiple replacements.
 ITEM.replacements = {
     {"male", "female"},
     {"group01", "group02"}
 }
 
-// This will apply body groups.
+-- This will apply body groups.
 ITEM.bodyGroups = {
     ["blade"] = 1,
     ["bladeblur"] = 1
 }
 
-*/
+]]
 
-// Inventory drawing
+-- Inventory drawing
 if (CLIENT) then
-    // Draw camo if it is available.
+    -- Draw camo if it is available.
     function ITEM:PaintOver(item, w, h)
         if (item:GetData("equip")) then
             surface.SetDrawColor(110, 255, 110, 100)
@@ -80,15 +80,15 @@ function ITEM:RemovePart(client)
     self:OnUnequipped()
 end
 
-// On item is dropped, Remove a weapon from the player and keep the ammo in the item.
+-- On item is dropped, Remove a weapon from the player and keep the ammo in the item.
 ITEM:Hook("drop", function(item)
     if (item:GetData("equip")) then
         item:RemovePart(item:GetOwner())
     end
 end)
 
-// On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
-ITEM.functions.EquipUn = { // sorry, for name order.
+-- On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
+ITEM.functions.EquipUn = { -- sorry, for name order.
     name = "Unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",
@@ -105,7 +105,7 @@ ITEM.functions.EquipUn = { // sorry, for name order.
     end
 }
 
-// On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
+-- On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
 ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",

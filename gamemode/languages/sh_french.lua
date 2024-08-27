@@ -1,7 +1,7 @@
 
-// FRENCH TRANSLATION
-// http://steamcommunity.com/id/sadness81
-// https://steamcommunity.com/id/Azphal
+-- FRENCH TRANSLATION
+-- http:--steamcommunity.com/id/sadness81
+-- https:--steamcommunity.com/id/Azphal
 
 NAME = "Français"
 
@@ -339,8 +339,8 @@ LANGUAGE = {
     optdChatTimestamps = "Prépose l'heure à chaque message dans la chatbox.",
     optAlwaysShowBars = "Toujours afficher les barres d'informations",
     optdAlwaysShowBars = "Affiche les barres d’information en haut à gauche, qu’elles soient masquées ou non.",
-    optAltLower = "Masquer les mains une fois abaissé", // @todo remove me
-    optdAltLower = "Cacher les mains quand elles sont sur les côtés.", // @todo remove me
+    optAltLower = "Masquer les mains une fois abaissé", -- @todo remove me
+    optdAltLower = "Cacher les mains quand elles sont sur les côtés.", -- @todo remove me
     optThirdpersonEnabled = "Activer la troisième personne",
     optdThirdpersonEnabled = "Déplace la caméra derrière toi. Ceci peut également être activé dans la console avec la commande \"ix_togglethirdperson\"",
     optThirdpersonClassic = "Activer la caméra classique à la troisième personne",

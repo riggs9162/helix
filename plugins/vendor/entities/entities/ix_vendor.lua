@@ -129,7 +129,7 @@ function ENT:CanBuyFromPlayer(client, uniqueID)
 end
 
 function ENT:HasMoney(amount)
-    // Vendor not using money system so they can always afford it.
+    -- Vendor not using money system so they can always afford it.
     if (!self.money) then
         return true
     end
@@ -189,7 +189,7 @@ if (SERVER) then
 
         local items = {}
 
-        // Only send what is needed.
+        -- Only send what is needed.
         for k, v in pairs(self.items) do
             if (!table.IsEmpty(v) and (CAMI.PlayerHasAccess(activator, "Helix - Manage Vendors", nil) or v[VENDOR_MODE])) then
                 items[k] = v
@@ -200,7 +200,7 @@ if (SERVER) then
 
         activator.ixVendor = self
 
-        // force sync to prevent outdated inventories while buying/selling
+        -- force sync to prevent outdated inventories while buying/selling
         if (character) then
             character:GetInventory():Sync(activator, true)
         end

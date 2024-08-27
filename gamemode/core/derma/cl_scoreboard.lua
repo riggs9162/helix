@@ -8,8 +8,8 @@ local rowPaintFunctions = {
     end
 }
 
-// character icon
-// we can't customize the rendering of ModelImage so we have to do it ourselves
+-- character icon
+-- we can't customize the rendering of ModelImage so we have to do it ourselves
 local PANEL = {}
 local BODYGROUPS_EMPTY = "000000000"
 
@@ -37,14 +37,14 @@ function PANEL:SetModel(model, skin, bodygroups)
     self.model = model
     self.skin = skin
     self.path = "materials/spawnicons/" ..
-        model:sub(1, #model - 4) .. // remove extension
-        ((isnumber(skin) and skin > 0) and ("_skin" .. tostring(skin)) or "") .. // skin number
-        (self.bodygroups != BODYGROUPS_EMPTY and ("_" .. self.bodygroups) or "") .. // bodygroups
+        model:sub(1, #model - 4) .. -- remove extension
+        ((isnumber(skin) and skin > 0) and ("_skin" .. tostring(skin)) or "") .. -- skin number
+        (self.bodygroups != BODYGROUPS_EMPTY and ("_" .. self.bodygroups) or "") .. -- bodygroups
         ".png"
 
     local material = Material(self.path, "smooth")
 
-    // we don't have a cached spawnicon texture, so we need to forcefully generate one
+    -- we don't have a cached spawnicon texture, so we need to forcefully generate one
     if (material:IsError()) then
         self.id = "ixScoreboardIcon" .. self.path
         self.renderer = self:Add("ModelImage")
@@ -52,7 +52,7 @@ function PANEL:SetModel(model, skin, bodygroups)
         self.renderer:SetModel(model, skin, self.bodygroups)
         self.renderer:RebuildSpawnIcon()
 
-        // this is the only way to get a callback for generated spawn icons, it's bad but it's only done once
+        -- this is the only way to get a callback for generated spawn icons, it's bad but it's only done once
         hook.Add("SpawniconGenerated", self.id, function(lastModel, filePath, modelsLeft)
             filePath = filePath:gsub("\\", "/"):lower()
 
@@ -116,7 +116,7 @@ end
 
 vgui.Register("ixScoreboardIcon", PANEL, "Panel")
 
-// player row
+-- player row
 PANEL = {}
 
 AccessorFunc(PANEL, "paintFunction", "BackgroundPaintFunction")
@@ -191,7 +191,7 @@ function PANEL:Update()
     self.icon:SetHidden(!bRecognize)
     self:SetZPos(bRecognize and 1 or 2)
 
-    // no easy way to check bodygroups so we'll just set them anyway
+    -- no easy way to check bodygroups so we'll just set them anyway
     for _, v in pairs(client:GetBodyGroups()) do
         self.icon:SetBodygroup(v.id, client:GetBodygroup(v.id))
     end
@@ -239,7 +239,7 @@ end
 
 vgui.Register("ixScoreboardRow", PANEL, "EditablePanel")
 
-// faction grouping
+-- faction grouping
 PANEL = {}
 
 AccessorFunc(PANEL, "faction", "Faction")
@@ -302,7 +302,7 @@ end
 
 vgui.Register("ixScoreboardFaction", PANEL, "ixCategoryPanel")
 
-// main scoreboard panel
+-- main scoreboard panel
 PANEL = {}
 
 function PANEL:Init()

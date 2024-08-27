@@ -1,5 +1,5 @@
 
-// GERMAN TRANSLATION
+-- GERMAN TRANSLATION
 
 NAME = "Deutsch"
 
@@ -357,8 +357,8 @@ LANGUAGE = {
     optdChatTimestamps = "Zeigt bei jeder Nachricht im Chat die Zeit an.",
     optAlwaysShowBars = "Zeige Statusbalken dauerhaft.",
     optdAlwaysShowBars = "Zeige Statusbalken Links-Oben dauerhaft.",
-    optAltLower = "Verstecke Hände wenn runtergenommen.", // @todo remove me
-    optdAltLower = "Versteckt Händer wenn sie an deinem Körper herunterhängen.", // @todo remove me
+    optAltLower = "Verstecke Hände wenn runtergenommen.", -- @todo remove me
+    optdAltLower = "Versteckt Händer wenn sie an deinem Körper herunterhängen.", -- @todo remove me
     optThirdpersonEnabled = "Aktiviere Third-Person",
     optdThirdpersonEnabled = "Bewegt die Kamera hinter dich. Kann auch mit dem \"ix_togglethirdperson\" Console-Command umgeschaltet werden.",
     optThirdpersonClassic = "Aktiviere die klassische Third-Person Kamera",

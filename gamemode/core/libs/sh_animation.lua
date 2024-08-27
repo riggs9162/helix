@@ -29,7 +29,7 @@ function ix.util.InstallAnimationMethods(meta)
     end
 
     function meta:GetTweenAnimation(index, bNoPlay)
-        // if we don't need to check if the animation is playing we can just return the animation
+        -- if we don't need to check if the animation is playing we can just return the animation
         if (bNoPlay) then
             return self.tweenAnimations[index]
         else
@@ -99,7 +99,7 @@ function ix.util.InstallAnimationMethods(meta)
             anim:set(anim.duration)
         end
 
-        // @todo don't use ridiculous method chaining
+        -- @todo don't use ridiculous method chaining
         animation.CreateAnimation = function(currentAnimation, newLength, newData)
             newData.bAutoFire = false
             newData.index = currentAnimation.index + 1
@@ -130,11 +130,11 @@ function ix.util.InstallAnimationMethods(meta)
             end
         end
 
-        // we can assume if we're using this library, we're not going to use the built-in
-        // AnimationTo functions, so override AnimationThink with our own
+        -- we can assume if we're using this library, we're not going to use the built-in
+        -- AnimationTo functions, so override AnimationThink with our own
         self.AnimationThink = TweenAnimationThink
 
-        // fire right away if autofire is enabled
+        -- fire right away if autofire is enabled
         if (animation.bAutoFire) then
             animation:Fire()
         end

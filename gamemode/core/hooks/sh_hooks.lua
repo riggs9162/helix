@@ -3,7 +3,7 @@ function GM:PlayerNoClip(client)
     return client:IsAdmin()
 end
 
-// luacheck: globals HOLDTYPE_TRANSLATOR
+-- luacheck: globals HOLDTYPE_TRANSLATOR
 HOLDTYPE_TRANSLATOR = {}
 HOLDTYPE_TRANSLATOR[""] = "normal"
 HOLDTYPE_TRANSLATOR["physgun"] = "smg"
@@ -78,11 +78,11 @@ function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
         client:SetPlaybackRate(playbackRate)
     end
 
-    // We only need to do this clientside..
+    -- We only need to do this clientside..
     if (CLIENT) then
         if (client:InVehicle()) then
             --
-            // This is used for the 'rollercoaster' arms
+            -- This is used for the 'rollercoaster' arms
             --
             local Vehicle = client:GetVehicle()
             local Velocity = Vehicle:GetVelocity()
@@ -91,9 +91,9 @@ function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
 
             client:SetPoseParameter("vertical_velocity", (dp < 0 && dp || 0) + fwd:Dot(Velocity) * 0.005)
 
-            // Pass the vehicles steer param down to the player
+            -- Pass the vehicles steer param down to the player
             local steer = Vehicle:GetPoseParameter("vehicle_steer")
-            steer = steer * 2 - 1 // convert from 0..1 to -1..1
+            steer = steer * 2 - 1 -- convert from 0..1 to -1..1
             if (Vehicle:GetClass() == "prop_vehicle_prisoner_pod") then steer = 0 client:SetPoseParameter("aim_yaw", math.NormalizeAngle(client:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
             client:SetPoseParameter("vehicle_steer", steer)
 
@@ -209,8 +209,8 @@ function GM:EntityRemoved(entity)
     elseif (entity:IsWeapon()) then
         local owner = entity:GetOwner()
 
-        // GetActiveWeapon is the player's new weapon at this point so we'll assume
-        // that the player switched away from this weapon
+        -- GetActiveWeapon is the player's new weapon at this point so we'll assume
+        -- that the player switched away from this weapon
         if (IsValid(owner) and owner:IsPlayer()) then
             hook.Run("PlayerWeaponChanged", owner, owner:GetActiveWeapon())
         end
@@ -255,7 +255,7 @@ function GM:PlayerWeaponChanged(client, weapon)
         return
     end
 
-    // update weapon raise state
+    -- update weapon raise state
     if (weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()]) then
         client:SetWepRaised(true, weapon)
         return
@@ -264,13 +264,13 @@ function GM:PlayerWeaponChanged(client, weapon)
         return
     end
 
-    // If the player has been forced to have their weapon lowered.
+    -- If the player has been forced to have their weapon lowered.
     if (client:IsRestricted()) then
         client:SetWepRaised(false, weapon)
         return
     end
 
-    // Let the config decide before actual results.
+    -- Let the config decide before actual results.
     if (ix.config.Get("weaponAlwaysRaised")) then
         client:SetWepRaised(true, weapon)
         return
@@ -284,7 +284,7 @@ function GM:PlayerSwitchWeapon(client, oldWeapon, weapon)
         return
     end
 
-    // the player switched weapon themself (i.e not through SelectWeapon), so we have to network it here
+    -- the player switched weapon themself (i.e not through SelectWeapon), so we have to network it here
     if (SERVER) then
         net.Start("PlayerSelectWeapon")
             net.WriteEntity(client)
@@ -347,7 +347,7 @@ do
         clientInfo.CalcSeqOverride = -1
         clientInfo.CalcIdeal = anims[ACT_MP_STAND_IDLE][isRaised and 2 or 1]
 
-        // we could call the baseclass function, but it's faster to do it this way
+        -- we could call the baseclass function, but it's faster to do it this way
         local BaseClass = self.BaseClass
 
         if (BaseClass:HandlePlayerNoClipping(client, velocity) or
@@ -355,7 +355,7 @@ do
             BaseClass:HandlePlayerVaulting(client, velocity) or
             BaseClass:HandlePlayerJumping(client, velocity) or
             BaseClass:HandlePlayerSwimming(client, velocity) or
-            BaseClass:HandlePlayerDucking(client, velocity)) then // luacheck: ignore 542
+            BaseClass:HandlePlayerDucking(client, velocity)) then -- luacheck: ignore 542
         else
             local length = velocity:Length2DSqr()
 
@@ -558,12 +558,12 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
         end
     end
 
-    // we can transfer anything that isn't a bag
+    -- we can transfer anything that isn't a bag
     if (!itemObject or !itemObject.isBag) then
         return
     end
 
-    // don't allow bags to be put inside bags
+    -- don't allow bags to be put inside bags
     if (inventory.id != 0 and curInv.id != inventory.id) then
         if (inventory.vars and inventory.vars.isBag) then
             local owner = itemObject:GetOwner()
@@ -575,13 +575,13 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
             return false
         end
     elseif (inventory.id != 0 and curInv.id == inventory.id) then
-        // we are simply moving items around if we're transferring to the same inventory
+        -- we are simply moving items around if we're transferring to the same inventory
         return
     end
 
     inventory = ix.item.inventories[itemObject:GetData("id")]
 
-    // don't allow transferring items that are in use
+    -- don't allow transferring items that are in use
     if (inventory) then
         for _, v in pairs(inventory:GetItems()) do
             if (v:GetData("equip") == true) then
@@ -612,7 +612,7 @@ function GM:OnItemTransferred(item, curInv, inventory)
         return
     end
 
-    // we need to retain the receiver if the owner changed while viewing as storage
+    -- we need to retain the receiver if the owner changed while viewing as storage
     if (inventory.storageInfo and isfunction(curInv.GetOwner)) then
         bagInventory:AddReceiver(curInv:GetOwner())
     end

@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Contains information about a player's current game state.
 
 Characters are a fundamental object type in Helix. They are distinct from players, where players are the representation of a
@@ -11,66 +11,66 @@ They contain all information that is not persistent with the player; names, desc
 part, you'll want to keep all information stored on the character since it will probably be different or change if the
 player switches to another character. An easy way to do this is to use `ix.char.RegisterVar` to easily create accessor functions
 for variables that automatically save to the character object.
-*/
-// @classmod Character
+]]
+-- @classmod Character
 
 local CHAR = ix.meta.character or {}
 CHAR.__index = CHAR
 CHAR.id = CHAR.id or 0
 CHAR.vars = CHAR.vars or {}
 
-// @todo not this
+-- @todo not this
 if (!ix.db) then
     ix.util.Include("../libs/sv_database.lua")
 end
 
-/// Returns a string representation of this character
-// @realm shared
-// @treturn string String representation
-// @usage print(ix.char.loaded[1])
-// > "character[1]"
+--- Returns a string representation of this character
+-- @realm shared
+-- @treturn string String representation
+-- @usage print(ix.char.loaded[1])
+-- > "character[1]"
 function CHAR:__tostring()
     return "character["..(self.id or 0).."]"
 end
 
-/// Returns true if this character is equal to another character. Internally, this checks character IDs.
-// @realm shared
-// @char other Character to compare to
-// @treturn bool Whether or not this character is equal to the given character
-// @usage print(ix.char.loaded[1] == ix.char.loaded[2])
-// > false
+--- Returns true if this character is equal to another character. Internally, this checks character IDs.
+-- @realm shared
+-- @char other Character to compare to
+-- @treturn bool Whether or not this character is equal to the given character
+-- @usage print(ix.char.loaded[1] == ix.char.loaded[2])
+-- > false
 function CHAR:__eq(other)
     return self:GetID() == other:GetID()
 end
 
-/// Returns this character's database ID. This is guaranteed to be unique.
-// @realm shared
-// @treturn number Unique ID of character
+--- Returns this character's database ID. This is guaranteed to be unique.
+-- @realm shared
+-- @treturn number Unique ID of character
 function CHAR:GetID()
     return self.id
 end
 
 if (SERVER) then
-    /// Saves this character's info to the database.
-    // @realm server
-    // @func[opt=nil] callback Function to call when the save has completed.
-    // @usage ix.char.loaded[1]:Save(function()
-    //     print("done!")
-    // end)
-    // > done! // after a moment
+    --- Saves this character's info to the database.
+    -- @realm server
+    -- @func[opt=nil] callback Function to call when the save has completed.
+    -- @usage ix.char.loaded[1]:Save(function()
+    --     print("done!")
+    -- end)
+    -- > done! -- after a moment
     function CHAR:Save(callback)
-        // Do not save if the character is for a bot.
+        -- Do not save if the character is for a bot.
         if (self.isBot) then
             return
         end
 
-        // Let plugins/schema determine if the character should be saved.
+        -- Let plugins/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)
 
         if (shouldSave != false) then
-            // Run a query to save the character to the database.
+            -- Run a query to save the character to the database.
             local query = mysql:Update("ix_characters")
-                // update all character vars
+                -- update all character vars
                 for k, v in pairs(ix.char.vars) do
                     if (v.field and self.vars[k] != nil and !v.bSaveLoadInitialOnly) then
                         local value = self.vars[k]
@@ -91,19 +91,17 @@ if (SERVER) then
         end
     end
 
-    /// Networks this character's information to make the given player aware of this character's existence. If the receiver is
-    // not the owner of this character, it will only be sent a limited amount of data (as it does not need anything else).
-    // This is done automatically by the framework.
-    // @internal
-    // @realm server
-    // @player[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
+    --- Networks this character's information to make the given player aware of this character's existence. If the receiver is not the owner of this character, it will only be sent a limited amount of data (as it does not need anything else). This is done automatically by the framework.
+    -- @internal
+    -- @realm server
+    -- @player[opt=nil] receiver Player to send the information to. This will sync to all connected players if set to `nil`.
     function CHAR:Sync(receiver)
-        // Broadcast the character information if receiver is not set.
+        -- Broadcast the character information if receiver is not set.
         if (receiver == nil) then
             for _, v in player.Iterator() do
                 self:Sync(v)
             end
-        // Send all character information if the receiver is the character's owner.
+        -- Send all character information if the receiver is the character's owner.
         elseif (receiver == self.player) then
             local data = {}
 
@@ -135,31 +133,30 @@ if (SERVER) then
         end
     end
 
-    // Sets up the "appearance" related inforomation for the character.
-    /// Applies the character's appearance and synchronizes information to the owning player.
-    // @realm server
-    // @internal
-    // @bool[opt] bNoNetworking Whether or not to sync the character info to other players
+    --- Applies the character's appearance and synchronizes information to the owning player.
+    -- @realm server
+    -- @internal
+    -- @bool[opt] bNoNetworking Whether or not to sync the character info to other players
     function CHAR:Setup(bNoNetworking)
         local client = self:GetPlayer()
 
         if (IsValid(client)) then
-            // Set the faction, model, and character index for the player.
+            -- Set the faction, model, and character index for the player.
             local model = self:GetModel()
 
             client:SetNetVar("char", self:GetID())
             client:SetTeam(self:GetFaction())
             client:SetModel(istable(model) and model[1] or model)
 
-            // Apply saved body groups.
+            -- Apply saved body groups.
             for k, v in pairs(self:GetData("groups", {})) do
                 client:SetBodygroup(k, v)
             end
 
-            // Apply a saved skin.
+            -- Apply a saved skin.
             client:SetSkin(self:GetData("skin", 0))
 
-            // Synchronize the character if we should.
+            -- Synchronize the character if we should.
             if (!bNoNetworking) then
                 if (client:IsBot()) then
                     timer.Simple(0.33, function()
@@ -189,10 +186,10 @@ if (SERVER) then
         end
     end
 
-    /// Forces a player off their current character, and sends them to the character menu to select a character.
-    // @realm server
+    --- Forces a player off their current character, and sends them to the character menu to select a character.
+    -- @realm server
     function CHAR:Kick()
-        // Kill the player so they are not standing anywhere.
+        -- Kill the player so they are not standing anywhere.
         local client = self:GetPlayer()
         client:KillSilent()
 
@@ -200,7 +197,7 @@ if (SERVER) then
         local id = self:GetID()
         local isCurrentChar = self and self:GetID() == id
 
-        // Return the player to the character menu.
+        -- Return the player to the character menu.
         if (self and self.steamID == steamID) then
             net.Start("ixCharacterKick")
                 net.WriteBool(isCurrentChar)
@@ -213,28 +210,28 @@ if (SERVER) then
         end
     end
 
-    /// Forces a player off their current character, and prevents them from using the character for the specified amount of time.
-    // @realm server
-    // @number[opt] time Amount of seconds to ban the character for. If left as `nil`, the character will be banned permanently
+    --- Forces a player off their current character, and prevents them from using the character for the specified amount of time.
+    -- @realm server
+    -- @number[opt] time Amount of seconds to ban the character for. If left as `nil`, the character will be banned permanently
     function CHAR:Ban(time)
         time = tonumber(time)
 
         if (time) then
-            // If time is provided, adjust it so it becomes the un-ban time.
+            -- If time is provided, adjust it so it becomes the un-ban time.
             time = os.time() + math.max(math.ceil(time), 60)
         end
 
-        // Mark the character as banned and kick the character back to menu.
+        -- Mark the character as banned and kick the character back to menu.
         self:SetData("banned", time or true)
         self:Kick()
     end
 end
 
-/// Returns the player that owns this character.
-// @realm shared
-// @treturn player Player that owns this character
+--- Returns the player that owns this character.
+-- @realm shared
+-- @treturn player Player that owns this character
 function CHAR:GetPlayer()
-    // Set the player from entity index.
+    -- Set the player from entity index.
     if (isnumber(self.player)) then
         local client = Entity(self.player)
 
@@ -243,10 +240,10 @@ function CHAR:GetPlayer()
 
             return client
         end
-    // Return the player from cache.
+    -- Return the player from cache.
     elseif (IsValid(self.player)) then
         return self.player
-    // Search for which player owns this character.
+    -- Search for which player owns this character.
     elseif (self.steamID) then
         local steamID = self.steamID
 
@@ -260,9 +257,9 @@ function CHAR:GetPlayer()
     end
 end
 
-// Sets up a new character variable.
+-- Sets up a new character variable.
 function ix.char.RegisterVar(key, data)
-    // Store information for the variable.
+    -- Store information for the variable.
     ix.char.vars[key] = data
     data.index = data.index or table.Count(ix.char.vars)
 
@@ -278,17 +275,17 @@ function ix.char.RegisterVar(key, data)
             ix.db.AddToSchema("ix_characters", data.field, data.fieldType or ix.type.string)
         end
 
-        // Provide functions to change the variable if allowed.
+        -- Provide functions to change the variable if allowed.
         if (!data.bNotModifiable) then
-            // Overwrite the set function if desired.
+            -- Overwrite the set function if desired.
             if (data.OnSet) then
                 CHAR["Set"..upperName] = data.OnSet
-            // Have the set function only set on the server if no networking.
+            -- Have the set function only set on the server if no networking.
             elseif (data.bNoNetworking) then
                 CHAR["Set"..upperName] = function(self, value)
                     self.vars[key] = value
                 end
-            // If the variable is a local one, only send the variable to the local player.
+            -- If the variable is a local one, only send the variable to the local player.
             elseif (data.isLocal) then
                 CHAR["Set"..upperName] = function(self, value)
                     local oldVar = self.vars[key]
@@ -302,7 +299,7 @@ function ix.char.RegisterVar(key, data)
 
                     hook.Run("CharacterVarChanged", self, key, oldVar, value)
                 end
-            // Otherwise network the variable to everyone.
+            -- Otherwise network the variable to everyone.
             else
                 CHAR["Set"..upperName] = function(self, value)
                     local oldVar = self.vars[key]
@@ -320,11 +317,11 @@ function ix.char.RegisterVar(key, data)
         end
     end
 
-    // The get functions are shared.
-    // Overwrite the get function if desired.
+    -- The get functions are shared.
+    -- Overwrite the get function if desired.
     if (data.OnGet) then
         CHAR["Get"..upperName] = data.OnGet
-    // Otherwise return the character variable or default if it does not exist.
+    -- Otherwise return the character variable or default if it does not exist.
     else
         CHAR["Get"..upperName] = function(self, default)
             local value = self.vars[key]
@@ -360,9 +357,9 @@ function ix.char.RegisterVar(key, data)
         end
     end
 
-    // Add the variable default to the character object.
+    -- Add the variable default to the character object.
     CHAR.vars[key] = data.default
 end
 
-// Allows access to the character metatable using ix.meta.character
+-- Allows access to the character metatable using ix.meta.character
 ix.meta.character = CHAR

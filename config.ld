@@ -15,8 +15,8 @@ module_file = {
 }
 
 dir = "docs/html"
-project = "Minerva Servers - Helix Framework"
-title = "Minerva Servers - Helix Documentation"
+project = "Helix"
+title = "Helix Documentation"
 
 no_space_before_args = true
 style = "docs/css"
@@ -62,7 +62,6 @@ tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
 tparam_alias("ixtype", "ix.type")
-tparam_alias("ixchat", "ix.chat")
 tparam_alias("date", "date")
 
 -- standard types

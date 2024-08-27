@@ -39,7 +39,7 @@ function PANEL:Init()
     self.vendorSell:SetWide(self.vendorName:GetWide())
     self.vendorSell:Dock(LEFT)
     self.vendorSell:SetContentAlignment(5)
-    // The text says purchase but the vendor is selling it to us.
+    -- The text says purchase but the vendor is selling it to us.
     self.vendorSell:SetText(L"purchase")
     self.vendorSell:SetTextColor(color_white)
 

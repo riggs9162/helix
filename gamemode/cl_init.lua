@@ -1,5 +1,5 @@
 
-// unix systems are case-sensitive, are missing fonts, or use different naming conventions
+-- unix systems are case-sensitive, are missing fonts, or use different naming conventions
 if (!system.IsWindows()) then
     local fontOverrides = {
         ["Roboto"] = "Roboto Regular",
@@ -21,7 +21,7 @@ if (!system.IsWindows()) then
 
     local ixCreateFont = surface.CreateFont
 
-    function surface.CreateFont(name, info) // luacheck: globals surface
+    function surface.CreateFont(name, info) -- luacheck: globals surface
         local font = info.font
 
         if (font and fontOverrides[font]) then
@@ -35,12 +35,12 @@ end
 DeriveGamemode("sandbox")
 ix = ix or {util = {}, gui = {}, meta = {}}
 
-// Include core files.
+-- Include core files.
 include("core/sh_util.lua")
 include("core/sh_data.lua")
 include("shared.lua")
 
-// Sandbox stuff
+-- Sandbox stuff
 CreateConVar("cl_weaponcolor", "0.30 1.80 2.10", {
     FCVAR_ARCHIVE, FCVAR_USERINFO, FCVAR_DONTRECORD
 }, "The value is a Vector - so between 0-1 - not between 0-255")

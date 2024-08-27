@@ -1,9 +1,9 @@
-/*
+--[[--
     mysql - 1.0.3
     A simple MySQL wrapper for Garry's Mod.
 
     Alexander Grist-Hucker
-    http://www.alexgrist.com
+    http:--www.alexgrist.com
 
 
     The MIT License (MIT)
@@ -27,7 +27,7 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-*/
+]]
 
 mysql = mysql or {
     module = "sqlite"
@@ -37,15 +37,15 @@ local QueueTable = {}
 local tostring = tostring
 local table = table
 
-/*
+--[[--
     Replacement tables
-*/
+]]
 
 local Replacements = {
     sqlite = {
         Create = {
             {"UNSIGNED ", ""},
-            {"NOT NULL AUTO_INCREMENT", ""}, // assuming primary key
+            {"NOT NULL AUTO_INCREMENT", ""}, -- assuming primary key
             {"AUTO_INCREMENT", ""},
             {"INT%(%d*%)", "INTEGER"},
             {"INT ", "INTEGER"}
@@ -53,15 +53,15 @@ local Replacements = {
     }
 }
 
-/*
+--[[--
     Phrases
-*/
+]]
 
 local MODULE_NOT_EXIST = "[mysql] The %s module does not exist!\n"
 
-/*
+--[[--
     Begin Query Class.
-*/
+]]
 
 local QUERY_CLASS = {}
 QUERY_CLASS.__index = QUERY_CLASS
@@ -441,9 +441,9 @@ function QUERY_CLASS:Execute(bQueueQuery)
     end
 end
 
-/*
+--[[--
     End Query Class.
-*/
+]]
 
 function mysql:Select(tableName)
     return QUERY_CLASS:New(tableName, "SELECT")
@@ -483,7 +483,7 @@ end
 
 local UTF8MB4 = "ALTER DATABASE %s CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci"
 
-// A function to connect to the MySQL database.
+-- A function to connect to the MySQL database.
 function mysql:Connect(host, username, password, database, port, socket, flags)
     port = port or 3306
 
@@ -537,7 +537,7 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
     end
 end
 
-// A function to query the MySQL database.
+-- A function to query the MySQL database.
 function mysql:RawQuery(query, callback, flags, ...)
     if (self.module == "mysqloo") then
         local queryObj = self.connection:query(query)
@@ -578,14 +578,14 @@ function mysql:RawQuery(query, callback, flags, ...)
     end
 end
 
-// A function to add a query to the queue.
+-- A function to add a query to the queue.
 function mysql:Queue(queryString, callback)
     if (isstring(queryString)) then
         QueueTable[#QueueTable + 1] = {queryString, callback}
     end
 end
 
-// A function to escape a string for MySQL.
+-- A function to escape a string for MySQL.
 function mysql:Escape(text)
     if (self.connection) then
         if (self.module == "mysqloo") then
@@ -596,7 +596,7 @@ function mysql:Escape(text)
     end
 end
 
-// A function to disconnect from the MySQL database.
+-- A function to disconnect from the MySQL database.
 function mysql:Disconnect()
     if (self.connection) then
         if (self.module == "mysqloo") then
@@ -621,26 +621,26 @@ function mysql:Think()
     end
 end
 
-// A function to set the module that should be used.
+-- A function to set the module that should be used.
 function mysql:SetModule(moduleName)
     self.module = moduleName
 end
 
-// Called when the database connects sucessfully.
+-- Called when the database connects sucessfully.
 function mysql:OnConnected()
     MsgC(Color(25, 235, 25), "[mysql] Connected to the database!\n")
 
     hook.Run("DatabaseConnected")
 end
 
-// Called when the database connection fails.
+-- Called when the database connection fails.
 function mysql:OnConnectionFailed(errorText)
     ErrorNoHalt(string.format("[mysql] Unable to connect to the database!\n%s\n", errorText))
 
     hook.Run("DatabaseConnectionFailed", errorText)
 end
 
-// A function to check whether or not the module is connected to a database.
+-- A function to check whether or not the module is connected to a database.
 function mysql:IsConnected()
     return self.module == "mysqloo" and (self.connection and self.connection:ping()) or self.module == "sqlite"
 end

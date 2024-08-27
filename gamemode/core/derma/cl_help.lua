@@ -29,7 +29,7 @@ end
 
 vgui.Register("ixHelpMenuCategories", PANEL, "EditablePanel")
 
-// help menu
+-- help menu
 PANEL = {}
 
 function PANEL:Init()
@@ -95,7 +95,7 @@ function PANEL:AddCategory(name)
     local button = self.categoryPanel:Add("ixMenuButton")
     button:SetText(L(name))
     button:SizeToContents()
-    // @todo don't hardcode this but it's the only panel that needs docking at the bottom so it'll do for now
+    -- @todo don't hardcode this but it's the only panel that needs docking at the bottom so it'll do for now
     button:Dock(name == "credits" and BOTTOM or TOP)
     button.DoClick = function()
         self:OnCategorySelected(name)
@@ -112,7 +112,7 @@ function PANEL:AddCategory(name)
         surface.DrawRect(0, 0, width, height)
     end
 
-    // reverts functionality back to a standard panel in the case that a category will manage its own scrolling
+    -- reverts functionality back to a standard panel in the case that a category will manage its own scrolling
     panel.DisableScrolling = function()
         panel:GetCanvas():SetVisible(false)
         panel:GetVBar():SetVisible(false)
@@ -147,7 +147,7 @@ end
 
 vgui.Register("ixHelpMenu", PANEL, "EditablePanel")
 
-local function DrawHelix(width, height, color) // luacheck: ignore 211
+local function DrawHelix(width, height, color) -- luacheck: ignore 211
     local segments = 76
     local radius = math.min(width, height) * 0.375
 
@@ -178,7 +178,7 @@ end)
 
 hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
     tabs["commands"] = function(container)
-        // info text
+        -- info text
         local info = container:Add("DLabel")
         info:SetFont("ixSmallFont")
         info:SetText(L("helpCommands"))
@@ -195,7 +195,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             surface.DrawRect(0, 0, width, height)
         end
 
-        // commands
+        -- commands
         for uniqueID, command in SortedPairs(ix.command.list) do
             if (command.OnCheckAccess and !command:OnCheckAccess(LocalPlayer())) then
                 continue
@@ -204,7 +204,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             local bIsAlias = false
             local aliasText = ""
 
-            // we want to show aliases in the same entry for better readability
+            -- we want to show aliases in the same entry for better readability
             if (command.alias) then
                 local alias = istable(command.alias) and command.alias or {command.alias}
 
@@ -222,7 +222,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
                 end
             end
 
-            // command name
+            -- command name
             local title = container:Add("DLabel")
             title:SetFont("ixMediumLightFont")
             title:SetText("/" .. command.name .. aliasText)
@@ -231,7 +231,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             title:SetExpensiveShadow(1, color_black)
             title:SizeToContents()
 
-            // syntax
+            -- syntax
             local syntaxText = command.syntax
             local syntax
 
@@ -247,7 +247,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
                 syntax:SizeToContents()
             end
 
-            // description
+            -- description
             local descriptionText = command:GetDescription()
 
             if (descriptionText != "") then
@@ -270,7 +270,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
     end
 
     tabs["flags"] = function(container)
-        // info text
+        -- info text
         local info = container:Add("DLabel")
         info:SetFont("ixSmallFont")
         info:SetText(L("helpFlags"))
@@ -287,7 +287,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             surface.DrawRect(0, 0, width, height)
         end
 
-        // flags
+        -- flags
         for k, v in SortedPairs(ix.flag.list) do
             local background = ColorAlpha(
                 LocalPlayer():GetCharacter():HasFlags(k) and derma.GetColor("Success", info) or derma.GetColor("Error", info), 88
@@ -327,7 +327,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
 
     tabs["plugins"] = function(container)
         for _, v in SortedPairsByMemberValue(ix.plugin.list, "name") do
-            // name
+            -- name
             local title = container:Add("DLabel")
             title:SetFont("ixMediumLightFont")
             title:SetText(v.name or "Unknown")
@@ -336,7 +336,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             title:SetExpensiveShadow(1, color_black)
             title:SizeToContents()
 
-            // author
+            -- author
             local author = container:Add("DLabel")
             author:SetFont("ixSmallFont")
             author:SetText(string.format("%s: %s", L("author"), v.author))
@@ -347,7 +347,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
             author:SetAutoStretchVertical(true)
             author:SizeToContents()
 
-            // description
+            -- description
             local descriptionText = v.description
 
             if (descriptionText != "") then

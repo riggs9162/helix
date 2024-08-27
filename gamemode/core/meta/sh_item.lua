@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Interactable entities that can be held in inventories.
 
 Items are objects that are contained inside of an `Inventory`, or as standalone entities if they are dropped in the world. They
@@ -52,21 +52,21 @@ in your item class file with the same name. See the `bags` base for example usag
 ## Item icons (`ItemIconStructure`)
 Icons for items sometimes don't line up quite right, in which case you can modify an item's `iconCam` value and line up the
 rendered model as needed. See `ItemIconStructure` for more details.
-*/
-// @classmod Item
+]]
+-- @classmod Item
 
-/*
+--[[--
 All item functions live inside of an item's `functions` table. An item function entry includes a few methods and fields you can
 use to customize the functionality and appearance of the item function. An example item function is below:
 
-    // this item function's unique ID is "MyFunction"
+    -- this item function's unique ID is "MyFunction"
     ITEM.functions.MyFunction = {
-        name = "myFunctionPhrase", // uses the "myFunctionPhrase" language phrase when displaying in the UI
-        tip = "myFunctionDescription", // uses the "myFunctionDescription" language phrase when displaying in the UI
-        icon = "icon16/add.png", // path to the icon material
+        name = "myFunctionPhrase", -- uses the "myFunctionPhrase" language phrase when displaying in the UI
+        tip = "myFunctionDescription", -- uses the "myFunctionDescription" language phrase when displaying in the UI
+        icon = "icon16/add.png", -- path to the icon material
         OnRun = function(item)
             local client = item.player
-            local entity = item.entity // only set if this is function is being ran while the item is in the world
+            local entity = item.entity -- only set if this is function is being ran while the item is in the world
 
             if (IsValid(client)) then
                 client:ChatPrint("This is a test.")
@@ -76,42 +76,42 @@ use to customize the functionality and appearance of the item function. An examp
                 end
             end
 
-            // do not remove this item from the owning player's inventory
+            -- do not remove this item from the owning player's inventory
             return false
         end,
         OnCanRun = function(item)
-            // only allow admins to run this item function
+            -- only allow admins to run this item function
             local client = item.player
             return IsValid(client) and client:IsAdmin()
         end
     }
-*/
-// @table ItemFunctionStructure
-// @realm shared
-// @field[type=string,opt] name Language phrase to use when displaying this item function's name in the UI. If not specified,
-// then it will use the unique ID of the item function
-// @field[type=string,opt] tip Language phrase to use when displaying this item function's detailed description in the UI
-// @field[type=string,opt] icon Path to the material to use when displaying this item function's icon
-// @field[type=function] OnRun Function to call when the item function is ran. This function is **ONLY** ran on the server.
+]]
+-- @table ItemFunctionStructure
+-- @realm shared
+-- @field[type=string,opt] name Language phrase to use when displaying this item function's name in the UI. If not specified,
+-- then it will use the unique ID of the item function
+-- @field[type=string,opt] tip Language phrase to use when displaying this item function's detailed description in the UI
+-- @field[type=string,opt] icon Path to the material to use when displaying this item function's icon
+-- @field[type=function] OnRun Function to call when the item function is ran. This function is **ONLY** ran on the server.
 --
-// The only argument passed into this function is the instance of the item being called. The instance will have its `player`
-// field set if the item function is being ran by a player (which it should be most of the time). It will also have its `entity`
-// field set if the item function is being ran while the item is in the world, and not in a player's inventory.
+-- The only argument passed into this function is the instance of the item being called. The instance will have its `player`
+-- field set if the item function is being ran by a player (which it should be most of the time). It will also have its `entity`
+-- field set if the item function is being ran while the item is in the world, and not in a player's inventory.
 --
-// The item will be removed after the item function is ran. If you want to prevent this behaviour, then you can return `false`
-// in this function. See the example above.
-// @field[type=function] OnCanRun Function to call when checking whether or not this item function can be ran. This function is
-// ran **BOTH** on the client and server.
+-- The item will be removed after the item function is ran. If you want to prevent this behaviour, then you can return `false`
+-- in this function. See the example above.
+-- @field[type=function] OnCanRun Function to call when checking whether or not this item function can be ran. This function is
+-- ran **BOTH** on the client and server.
 --
-// The arguments are the same as `OnCanRun`, and the `player` and `entity` fields will be set on the item instance accordingly.
-// Returning `true` will allow the item function to be ran. Returning `false` will prevent it from running and additionally
-// hide it from the UI. See the example above.
-// @field[type=function,opt] OnClick This function is called when the player clicks on this item function's entry in the UI.
-// This function is ran **ONLY** on the client, and is only ran if `OnCanRun` succeeds.
+-- The arguments are the same as `OnCanRun`, and the `player` and `entity` fields will be set on the item instance accordingly.
+-- Returning `true` will allow the item function to be ran. Returning `false` will prevent it from running and additionally
+-- hide it from the UI. See the example above.
+-- @field[type=function,opt] OnClick This function is called when the player clicks on this item function's entry in the UI.
+-- This function is ran **ONLY** on the client, and is only ran if `OnCanRun` succeeds.
 --
-// The same arguments from `OnCanRun` and `OnRun` apply to this function.
+-- The same arguments from `OnCanRun` and `OnRun` apply to this function.
 
-/*
+--[[--
 Changing the way an item's icon is rendered is done by modifying the location and angle of the model, as well as the FOV of the
 camera. You can tweak the values in code, or use the `ix_dev_icon` console command to visually position the model and camera. An
 example entry for an item's icon is below:
@@ -124,14 +124,14 @@ example entry for an item's icon is below:
 
 Note that this will probably not work for your item's specific model, since every model has a different size, origin, etc. All
 item icons need to be tweaked individually.
-*/
-// @table ItemIconStructure
-// @realm client
-// @field[type=vector] pos Location of the model relative to the camera. +X is forward, +Z is up
-// @field[type=angle] ang Angle of the model
-// @field[type=number] fov FOV of the camera
+]]
+-- @table ItemIconStructure
+-- @realm client
+-- @field[type=vector] pos Location of the model relative to the camera. +X is forward, +Z is up
+-- @field[type=angle] ang Angle of the model
+-- @field[type=number] fov FOV of the camera
 
-/*
+--[[--
 When creating an item class, the file will have a global table `ITEM` set that you use to define the item's values/methods. An
 example item class is below:
 
@@ -145,25 +145,25 @@ example item class is below:
 
 Note that the below list only includes the default fields available for *all* items, and not special ones defined in custom
 item bases.
-*/
-// @table ItemStructure
-// @realm shared
-// @field[type=string] name Display name of the item
-// @field[type=string] description Detailed description of the item
-// @field[type=string] model Model to use for the item's icon and when it's dropped in the world
-// @field[type=number,opt=1] width Width of the item in grid cells
-// @field[type=number,opt=1] height Height of the item in grid cells
-// @field[type=number,opt=0] price How much money it costs to purchase this item in the business menu
-// @field[type=string,opt] category Name of the category this item belongs to - mainly used for the business menu
-// @field[type=boolean,opt=false] noBusiness Whether or not to disallow purchasing this item in the business menu
-// @field[type=table,opt] factions List of factions allowed to purchase this item in the business menu
-// @field[type=table,opt] classes List of character classes allowed to purchase this item in the business menu. Classes are
-// checked after factions, so the character must also be in an allowed faction
-// @field[type=string,opt] flag List of flags (as a string - e.g `"a"` or `"abc"`) allowed to purchase this item in the
-// business menu. Flags are checked last, so the character must also be in an allowed faction and class
-// @field[type=ItemIconStructure,opt] iconCam How to render this item's icon
-// @field[type=table,opt] functions List of all item functions that this item has. See `ItemFunctionStructure` on how to define
-// new item functions
+]]
+-- @table ItemStructure
+-- @realm shared
+-- @field[type=string] name Display name of the item
+-- @field[type=string] description Detailed description of the item
+-- @field[type=string] model Model to use for the item's icon and when it's dropped in the world
+-- @field[type=number,opt=1] width Width of the item in grid cells
+-- @field[type=number,opt=1] height Height of the item in grid cells
+-- @field[type=number,opt=0] price How much money it costs to purchase this item in the business menu
+-- @field[type=string,opt] category Name of the category this item belongs to - mainly used for the business menu
+-- @field[type=boolean,opt=false] noBusiness Whether or not to disallow purchasing this item in the business menu
+-- @field[type=table,opt] factions List of factions allowed to purchase this item in the business menu
+-- @field[type=table,opt] classes List of character classes allowed to purchase this item in the business menu. Classes are
+-- checked after factions, so the character must also be in an allowed faction
+-- @field[type=string,opt] flag List of flags (as a string - e.g `"a"` or `"abc"`) allowed to purchase this item in the
+-- business menu. Flags are checked last, so the character must also be in an allowed faction and class
+-- @field[type=ItemIconStructure,opt] iconCam How to render this item's icon
+-- @field[type=table,opt] functions List of all item functions that this item has. See `ItemFunctionStructure` on how to define
+-- new item functions
 
 local ITEM = ix.meta.item or {}
 ITEM.__index = ITEM
@@ -172,58 +172,58 @@ ITEM.description = ITEM.description or "An item that is undefined."
 ITEM.id = ITEM.id or 0
 ITEM.uniqueID = "undefined"
 
-/// Returns a string representation of this item.
-// @realm shared
-// @treturn string String representation
-// @usage print(ix.item.instances[1])
-// > "item[1]"
+--- Returns a string representation of this item.
+-- @realm shared
+-- @treturn string String representation
+-- @usage print(ix.item.instances[1])
+-- > "item[1]"
 function ITEM:__tostring()
     return "item["..self.uniqueID.."]["..self.id.."]"
 end
 
-/// Returns true if this item is equal to another item. Internally, this checks item IDs.
-// @realm shared
-// @item other Item to compare to
-// @treturn bool Whether or not this item is equal to the given item
-// @usage print(ix.item.instances[1] == ix.item.instances[2])
-// > false
+--- Returns true if this item is equal to another item. Internally, this checks item IDs.
+-- @realm shared
+-- @item other Item to compare to
+-- @treturn bool Whether or not this item is equal to the given item
+-- @usage print(ix.item.instances[1] == ix.item.instances[2])
+-- > false
 function ITEM:__eq(other)
     return self:GetID() == other:GetID()
 end
 
-/// Returns this item's database ID. This is guaranteed to be unique.
-// @realm shared
-// @treturn number Unique ID of item
+--- Returns this item's database ID. This is guaranteed to be unique.
+-- @realm shared
+-- @treturn number Unique ID of item
 function ITEM:GetID()
     return self.id
 end
 
-/// Returns the name of the item.
-// @realm shared
-// @treturn string The name of the item
+--- Returns the name of the item.
+-- @realm shared
+-- @treturn string The name of the item
 function ITEM:GetName()
     return (CLIENT and L(self.name) or self.name)
 end
 
-/// Returns the description of the item.
-// @realm shared
-// @treturn string The description of the item
+--- Returns the description of the item.
+-- @realm shared
+-- @treturn string The description of the item
 function ITEM:GetDescription()
     if (!self.description) then return "ERROR" end
 
     return L(self.description or "noDesc")
 end
 
-/// Returns the model of the item.
-// @realm shared
-// @treturn string The model of the item
+--- Returns the model of the item.
+-- @realm shared
+-- @treturn string The model of the item
 function ITEM:GetModel()
     return self.model
 end
 
-/// Returns the skin of the item.
-// @realm shared
-// @treturn number The skin of the item
+--- Returns the skin of the item.
+-- @realm shared
+-- @treturn number The skin of the item
 function ITEM:GetSkin()
     return self.skin or 0
 end
@@ -232,23 +232,23 @@ function ITEM:GetMaterial()
     return nil
 end
 
-/// Returns the ID of the owning character, if one exists.
-// @realm shared
-// @treturn number The owning character's ID
+--- Returns the ID of the owning character, if one exists.
+-- @realm shared
+-- @treturn number The owning character's ID
 function ITEM:GetCharacterID()
     return self.characterID
 end
 
-/// Returns the SteamID64 of the owning player, if one exists.
-// @realm shared
-// @treturn number The owning player's SteamID64
+--- Returns the SteamID64 of the owning player, if one exists.
+-- @realm shared
+-- @treturn number The owning player's SteamID64
 function ITEM:GetPlayerID()
     return self.playerID
 end
 
-/// A utility function which prints the item's details.
-// @realm shared
-// @bool[opt=false] detail Whether additional detail should be printed or not(Owner, X position, Y position)
+--- A utility function which prints the item's details.
+-- @realm shared
+-- @bool[opt=false] detail Whether additional detail should be printed or not(Owner, X position, Y position)
 function ITEM:Print(detail)
     if (detail == true) then
         print(Format("%s[%s]: >> [%s](%s,%s)", self.uniqueID, self.id, self.owner, self.gridX, self.gridY))
@@ -257,8 +257,8 @@ function ITEM:Print(detail)
     end
 end
 
-/// A utility function printing the item's stored data.
-// @realm shared
+--- A utility function printing the item's stored data.
+-- @realm shared
 function ITEM:PrintData()
     self:Print(true)
     print("ITEM DATA:")
@@ -267,13 +267,13 @@ function ITEM:PrintData()
     end
 end
 
-/// Calls one of the item's methods.
-// @realm shared
-// @string method The method to be called
-// @player client The client to pass when calling the method, if applicable
-// @entity entity The eneity to pass when calling the method, if applicable
-// @param ... Arguments to pass to the method
-// @return The values returned by the method
+--- Calls one of the item's methods.
+-- @realm shared
+-- @string method The method to be called
+-- @player client The client to pass when calling the method, if applicable
+-- @entity entity The eneity to pass when calling the method, if applicable
+-- @param ... Arguments to pass to the method
+-- @return The values returned by the method
 function ITEM:Call(method, client, entity, ...)
     local oldPlayer, oldEntity = self.player, self.entity
 
@@ -293,9 +293,9 @@ function ITEM:Call(method, client, entity, ...)
     self.entity = oldEntity
 end
 
-/// Returns the player that owns this item.
-// @realm shared
-// @treturn player Player owning this item
+--- Returns the player that owns this item.
+-- @realm shared
+-- @treturn player Player owning this item
 function ITEM:GetOwner()
     local inventory = ix.item.inventories[self.invID]
 
@@ -314,13 +314,13 @@ function ITEM:GetOwner()
     end
 end
 
-/// Sets a key within the item's data.
-// @realm shared
-// @string key The key to store the value within
-// @param[opt=nil] value The value to store within the key
-// @tab[opt=nil] receivers The players to replicate the data on
-// @bool[opt=false] noSave Whether to disable saving the data on the database or not
-// @bool[opt=false] noCheckEntity Whether to disable setting the data on the entity, if applicable
+--- Sets a key within the item's data.
+-- @realm shared
+-- @string key The key to store the value within
+-- @param[opt=nil] value The value to store within the key
+-- @tab[opt=nil] receivers The players to replicate the data on
+-- @bool[opt=false] noSave Whether to disable saving the data on the database or not
+-- @bool[opt=false] noCheckEntity Whether to disable setting the data on the entity, if applicable
 function ITEM:SetData(key, value, receivers, noSave, noCheckEntity)
     self.data = self.data or {}
     self.data[key] = value
@@ -354,11 +354,11 @@ function ITEM:SetData(key, value, receivers, noSave, noCheckEntity)
     end
 end
 
-/// Returns the value stored on a key within the item's data.
-// @realm shared
-// @string key The key in which the value is stored
-// @param[opt=nil] default The value to return in case there is no value stored in the key
-// @return The value stored within the key
+--- Returns the value stored on a key within the item's data.
+-- @realm shared
+-- @string key The key in which the value is stored
+-- @param[opt=nil] default The value to return in case there is no value stored in the key
+-- @return The value stored within the key
 function ITEM:GetData(key, default)
     self.data = self.data or {}
 
@@ -390,31 +390,31 @@ function ITEM:GetData(key, default)
     return
 end
 
-/// Changes the function called on specific events for the item.
-// @realm shared
-// @string name The name of the hook
-// @func func The function to call once the event occurs
+--- Changes the function called on specific events for the item.
+-- @realm shared
+-- @string name The name of the hook
+-- @func func The function to call once the event occurs
 function ITEM:Hook(name, func)
     if (name) then
         self.hooks[name] = func
     end
 end
 
-/// Changes the function called after hooks for specific events for the item.
-// @realm shared
-// @string name The name of the hook
-// @func func The function to call after the original hook was called
+--- Changes the function called after hooks for specific events for the item.
+-- @realm shared
+-- @string name The name of the hook
+-- @func func The function to call after the original hook was called
 function ITEM:PostHook(name, func)
     if (name) then
         self.postHooks[name] = func
     end
 end
 
-/// Removes the item.
-// @realm shared
-// @bool bNoReplication Whether or not the item's removal should not be replicated.
-// @bool bNoDelete Whether or not the item should not be fully deleted
-// @treturn bool Whether the item was successfully deleted or not
+--- Removes the item.
+-- @realm shared
+-- @bool bNoReplication Whether or not the item's removal should not be replicated.
+-- @bool bNoDelete Whether or not the item should not be fully deleted
+-- @treturn bool Whether the item was successfully deleted or not
 function ITEM:Remove(bNoReplication, bNoDelete)
     local inv = ix.item.inventories[self.invID]
 
@@ -456,7 +456,7 @@ function ITEM:Remove(bNoReplication, bNoDelete)
             return false
         end
     else
-        // @todo definition probably isn't needed
+        -- @todo definition probably isn't needed
         inv = ix.item.inventories[self.invID]
 
         if (inv) then
@@ -499,9 +499,9 @@ function ITEM:Remove(bNoReplication, bNoDelete)
 end
 
 if (SERVER) then
-    /// Returns the item's entity.
-    // @realm server
-    // @treturn entity The entity of the item
+    --- Returns the item's entity.
+    -- @realm server
+    -- @treturn entity The entity of the item
     function ITEM:GetEntity()
         local id = self:GetID()
 
@@ -512,24 +512,24 @@ if (SERVER) then
         end
     end
 
-    /// Spawn an item entity based off the item table.
-    // @realm server
-    // @param[type=vector] position The position in which the item's entity will be spawned
-    // @param[type=angle] angles The angles at which the item's entity will spawn
-    // @treturn entity The spawned entity
+    --- Spawn an item entity based off the item table.
+    -- @realm server
+    -- @param[type=vector] position The position in which the item's entity will be spawned
+    -- @param[type=angle] angles The angles at which the item's entity will spawn
+    -- @treturn entity The spawned entity
     function ITEM:Spawn(position, angles)
-        // Check if the item has been created before.
+        -- Check if the item has been created before.
         if (ix.item.instances[self.id]) then
             local client
 
-            // Spawn the actual item entity.
+            -- Spawn the actual item entity.
             local entity = ents.Create("ix_item")
             entity:Spawn()
             entity:SetAngles(angles or Angle(0, 0, 0))
             entity:SetItem(self.id)
 
-            // If the first argument is a player, then we will find a position to drop
-            // the item based off their aim.
+            -- If the first argument is a player, then we will find a position to drop
+            -- the item based off their aim.
             if (type(position) == "Player") then
                 client = position
                 position = position:GetItemDropPos(entity)
@@ -548,16 +548,16 @@ if (SERVER) then
         end
     end
 
-    /// Transfers an item to a specific inventory.
-    // @realm server
-    // @number invID The inventory to transfer the item to
-    // @number x The X position to which the item should be transferred on the new inventory
-    // @number y The Y position to which the item should be transferred on the new inventory
-    // @player client The player to which the item is being transferred
-    // @bool noReplication Whether there should be no replication of the transferral
-    // @bool isLogical Whether or not an entity should spawn if the item is transferred to the world
-    // @treturn[1] bool Whether the transfer was successful or not
-    // @treturn[1] string The error, if applicable
+    --- Transfers an item to a specific inventory.
+    -- @realm server
+    -- @number invID The inventory to transfer the item to
+    -- @number x The X position to which the item should be transferred on the new inventory
+    -- @number y The Y position to which the item should be transferred on the new inventory
+    -- @player client The player to which the item is being transferred
+    -- @bool noReplication Whether there should be no replication of the transferral
+    -- @bool isLogical Whether or not an entity should spawn if the item is transferred to the world
+    -- @treturn[1] bool Whether the transfer was successful or not
+    -- @treturn[1] string The error, if applicable
     function ITEM:Transfer(invID, x, y, client, noReplication, isLogical)
         invID = invID or 0
 
@@ -572,7 +572,7 @@ if (SERVER) then
             client = curInv.GetOwner and curInv:GetOwner() or nil
         end
 
-        // check if this item doesn't belong to another one of this player's characters
+        -- check if this item doesn't belong to another one of this player's characters
         local itemPlayerID = self:GetPlayerID()
         local itemCharacterID = self:GetCharacterID()
 
@@ -632,7 +632,7 @@ if (SERVER) then
 
                 if (status) then
                     if (self.invID > 0 and prevID != 0) then
-                        // we are transferring this item from one inventory to another
+                        -- we are transferring this item from one inventory to another
                         curInv:Remove(self.id, false, true, true)
 
                         if (self.OnTransferred) then
@@ -642,7 +642,7 @@ if (SERVER) then
                         hook.Run("OnItemTransferred", self, curInv, inventory)
                         return true
                     elseif (self.invID > 0 and prevID == 0) then
-                        // we are transferring this item from the world to an inventory
+                        -- we are transferring this item from the world to an inventory
                         ix.item.inventories[0][self.id] = nil
 
                         if (self.OnTransferred) then
@@ -656,7 +656,7 @@ if (SERVER) then
                     return false, result
                 end
             elseif (IsValid(client)) then
-                // we are transferring this item from an inventory to the world
+                -- we are transferring this item from an inventory to the world
                 self.invID = 0
                 curInv:Remove(self.id, false, true)
 

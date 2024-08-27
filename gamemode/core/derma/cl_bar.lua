@@ -1,6 +1,6 @@
 
-// bar manager
-// this manages positions for bar panels
+-- bar manager
+-- this manages positions for bar panels
 local PANEL = {}
 
 AccessorFunc(PANEL, "padding", "Padding", FORCE_NUMBER)
@@ -13,7 +13,7 @@ function PANEL:Init()
     self.bars = {}
     self.padding = 2
 
-    // add bars that were registered before manager creation
+    -- add bars that were registered before manager creation
     for _, v in ipairs(ix.bar.list) do
         v.panel = self:AddBar(v.index, v.color, v.priority)
     end
@@ -58,7 +58,7 @@ function PANEL:RemoveBar(panel)
     if (toRemove) then
         table.remove(self.bars, toRemove)
 
-        // Decrease index value for the next bars
+        -- Decrease index value for the next bars
         for i = toRemove, #self.bars do
             ix.bar.list[i].index = i
             self.bars[i]:SetID(i)
@@ -69,14 +69,14 @@ function PANEL:RemoveBar(panel)
     self:Sort()
 end
 
-// sort bars by priority
+-- sort bars by priority
 function PANEL:Sort()
     table.sort(self.bars, function(a, b)
         return a:GetPriority() < b:GetPriority()
     end)
 end
 
-// update target Y positions
+-- update target Y positions
 function PANEL:Organize()
     local currentY = 0
 
@@ -100,7 +100,7 @@ function PANEL:Think()
 
     self:SetAlpha(255 * fraction)
 
-    // don't update bars when not visible
+    -- don't update bars when not visible
     if (fraction == 0) then
         return
     end

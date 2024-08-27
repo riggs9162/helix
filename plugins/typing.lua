@@ -14,7 +14,7 @@ if (CLIENT) then
     local shadowColor = Color(66, 66, 66)
     local currentClass
 
-    // we can't rely on matching non-alphanumeric characters (i.e %W) due to patterns matching single bytes and not UTF-8 chars
+    -- we can't rely on matching non-alphanumeric characters (i.e %W) due to patterns matching single bytes and not UTF-8 chars
     local symbolPattern = "[~`!@#$%%%^&*()_%+%-={}%[%]|;:'\",%./<>?]"
 
     function PLUGIN:LoadFonts(font, genericFont)
@@ -78,7 +78,7 @@ if (CLIENT) then
                 return !ix.chat.classes[chatType].bNoIndicator and chatType or nil
             end
 
-            // some commands will have their own typing indicator, so we'll make sure we're actually typing out a command first
+            -- some commands will have their own typing indicator, so we'll make sure we're actually typing out a command first
             local start, _, commandName = text:find("/(%S+)%s")
 
             if (start == 1) then
@@ -227,8 +227,8 @@ else
 
         local newClass = net.ReadString()
 
-        // send message to players in pvs only since they're the only ones who can see the indicator
-        // we'll broadcast if the type class is empty because they might move out of pvs before the ending net message is sent
+        -- send message to players in pvs only since they're the only ones who can see the indicator
+        -- we'll broadcast if the type class is empty because they might move out of pvs before the ending net message is sent
         net.Start("ixTypeClass")
         net.WriteEntity(client)
         net.WriteString(newClass)

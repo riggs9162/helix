@@ -2,7 +2,7 @@
 local animationTime = 1
 local padding = 32
 
-// entity menu button
+-- entity menu button
 DEFINE_BASECLASS("ixMenuButton")
 local PANEL = {}
 
@@ -40,7 +40,7 @@ end
 
 vgui.Register("ixEntityMenuButton", PANEL, "ixMenuButton")
 
-// entity menu list
+-- entity menu list
 DEFINE_BASECLASS("EditablePanel")
 PANEL = {}
 
@@ -103,7 +103,7 @@ end
 
 vgui.Register("ixEntityMenuList", PANEL, "EditablePanel")
 
-// entity menu
+-- entity menu
 DEFINE_BASECLASS("EditablePanel")
 PANEL = {}
 
@@ -117,7 +117,7 @@ function PANEL:Init()
         return
     end
 
-    // close entity tooltip if it's open
+    -- close entity tooltip if it's open
     if (IsValid(ix.gui.entityInfo)) then
         ix.gui.entityInfo:Remove()
     end
@@ -177,7 +177,7 @@ function PANEL:Think()
     self.desiredHeight = math.max(self.list:GetTall() + padding * 2, self:GetApproximateScreenHeight(entity, distance))
 end
 
-function PANEL:Paint(width, height) // luacheck: ignore 312
+function PANEL:Paint(width, height) -- luacheck: ignore 312
     local selfHalf = self:GetTall() * 0.5
     local entity = self.entity
 
@@ -186,7 +186,7 @@ function PANEL:Paint(width, height) // luacheck: ignore 312
 
     local y = selfHalf - height * 0.5
 
-    DisableClipping(true) // for cheap blur
+    DisableClipping(true) -- for cheap blur
     render.SetScissorRect(0, y, width, y + height, true)
         if (IsValid(entity)) then
             cam.Start3D()
@@ -219,7 +219,7 @@ function PANEL:Paint(width, height) // luacheck: ignore 312
     render.SetScissorRect(0, 0, 0, 0, false)
     DisableClipping(false)
 
-    // scissor again because 3d rendering messes with the clipping apparently?
+    -- scissor again because 3d rendering messes with the clipping apparently?
     render.SetScissorRect(0, y, width, y + height, true)
         surface.SetDrawColor(ix.config.Get("color"))
         surface.DrawRect(ScrW() * 0.5, y + padding, 1, height - padding * 2)

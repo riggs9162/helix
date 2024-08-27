@@ -98,7 +98,7 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
         return
     end
 
-    // draw all areas
+    -- draw all areas
     for k, v in pairs(ix.area.stored) do
         local center, min, max = self:GetLocalAreaPosition(v.startPosition, v.endPosition)
         local color = ColorAlpha(v.properties.color or ix.config.Get("color"), 255)
@@ -119,7 +119,7 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
         cam.End2D()
     end
 
-    // draw currently edited area
+    -- draw currently edited area
     if (self.editStart) then
         local center, min, max = self:GetLocalAreaPosition(self.editStart, self:GetPlayerAreaTrace().HitPos)
         local color = Color(255, 255, 255, 25 + (1 + math.sin(SysTime() * 6)) * 115)
@@ -247,7 +247,7 @@ net.Receive("ixAreaSync", function()
         return
     end
 
-    // Set the list of texts to the ones provided by the server.
+    -- Set the list of texts to the ones provided by the server.
     ix.area.stored = util.JSONToTable(uncompressed)
 end)
 

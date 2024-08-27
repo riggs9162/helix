@@ -71,7 +71,7 @@ function PANEL:Init()
                 add = 35
             end
 
-            // your stat
+            -- your stat
             do
                 if !(boostedValue < 0 and math.abs(boostedValue) > self.value) then
                     surface.SetDrawColor(color.r + add, color.g + add, color.b + add, 230)
@@ -83,7 +83,7 @@ function PANEL:Init()
                 end
             end
 
-            // boosted stat
+            -- boosted stat
             do
                 local boostValue
 

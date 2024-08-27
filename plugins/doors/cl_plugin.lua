@@ -1,5 +1,5 @@
 
-// luacheck: globals ACCESS_LABELS
+-- luacheck: globals ACCESS_LABELS
 ACCESS_LABELS = {}
 ACCESS_LABELS[DOOR_OWNER] = "owner"
 ACCESS_LABELS[DOOR_TENANT] = "tenant"
@@ -59,7 +59,7 @@ function PLUGIN:DrawDoorInfo(door, width, position, angles, scale, clientPositio
         return
     end
 
-    // title + background
+    -- title + background
     surface.SetFont("ix3D2DMediumFont")
     local nameWidth, nameHeight = surface.GetTextSize(info.name)
 
@@ -70,7 +70,7 @@ function PLUGIN:DrawDoorInfo(door, width, position, angles, scale, clientPositio
     surface.SetTextPos(-nameWidth * 0.5, -nameHeight * 0.5)
     surface.DrawText(info.name)
 
-    // description
+    -- description
     local lines = ix.util.WrapText(info.description, width, "ix3D2DSmallFont")
     local y = nameHeight * 0.5 + 4
 
@@ -84,7 +84,7 @@ function PLUGIN:DrawDoorInfo(door, width, position, angles, scale, clientPositio
         y = y + textHeight
     end
 
-    // background blur
+    -- background blur
     ix.util.PushBlur(function()
         cam.Start3D2D(position, angles, scale)
             surface.SetDrawColor(11, 11, 11, math.max(alpha - 100, 0))
@@ -122,7 +122,7 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
             endpos = position
         }
 
-        // trace from shortest side to center to get correct position for rendering
+        -- trace from shortest side to center to get correct position for rendering
         if (size.z < size.x and size.z < size.y) then
             trace.start = position - v:GetUp() * size.z
             width = size.y
@@ -149,12 +149,12 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
         local positionOpposite = trace.HitPos + (trace.HitNormal * 2)
 
         if (trace.HitNormal:Dot((clientPosition - position):GetNormalized()) < 0) then
-            // draw front
+            -- draw front
             cam.Start3D2D(positionFront, angles, 0.1)
                 self:DrawDoorInfo(v, width * 8, positionFront, angles, 0.1, clientPosition)
             cam.End3D2D()
         else
-            // draw back
+            -- draw back
             cam.Start3D2D(positionOpposite, anglesOpposite, 0.1)
                 self:DrawDoorInfo(v, width * 8, positionOpposite, anglesOpposite, 0.1, clientPosition)
             cam.End3D2D()

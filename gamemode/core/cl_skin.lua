@@ -399,9 +399,9 @@ function SKIN:PaintChatboxTabButton(panel, width, height)
         end
     end
 
-    // border
+    -- border
     surface.SetDrawColor(color_black)
-    surface.DrawRect(width - 1, 0, 1, height) // right
+    surface.DrawRect(width - 1, 0, 1, height) -- right
 end
 
 function SKIN:PaintChatboxTabs(panel, width, height, alpha)
@@ -418,10 +418,10 @@ function SKIN:PaintChatboxTabs(panel, width, height, alpha)
         local button = tab:GetButton()
         local x, _ = button:GetPos()
 
-        // outline
+        -- outline
         surface.SetDrawColor(0, 0, 0, 200)
-        surface.DrawRect(0, height - 1, x, 1) // left
-        surface.DrawRect(x + button:GetWide(), height - 1, width - x - button:GetWide(), 1) // right
+        surface.DrawRect(0, height - 1, x, 1) -- left
+        surface.DrawRect(x + button:GetWide(), height - 1, width - x - button:GetWide(), 1) -- right
     end
 end
 
@@ -454,16 +454,16 @@ function SKIN:DrawChatboxPreviewBox(x, y, text, color)
     local textWidth, textHeight = surface.GetTextSize(text)
     local width, height = textWidth + 8, textHeight + 8
 
-    // background
+    -- background
     surface.SetDrawColor(color)
     surface.DrawRect(x, y, width, height)
 
-    // text
+    -- text
     surface.SetTextColor(color_white)
     surface.SetTextPos(x + width * 0.5 - textWidth * 0.5, y + height * 0.5 - textHeight * 0.5)
     surface.DrawText(text)
 
-    // outline
+    -- outline
     surface.SetDrawColor(color.r * 0.5, color.g * 0.5, color.b * 0.5, 255)
     surface.DrawOutlinedRect(x, y, width, height)
 
@@ -473,23 +473,23 @@ end
 function SKIN:DrawChatboxPrefixBox(panel, width, height)
     local color = panel:GetBackgroundColor()
 
-    // background
+    -- background
     surface.SetDrawColor(color)
     surface.DrawRect(0, 0, width, height)
 
-    // outline
+    -- outline
     surface.SetDrawColor(color.r * 0.5, color.g * 0.5, color.b * 0.5, 255)
     surface.DrawOutlinedRect(0, 0, width, height)
 end
 
 
 function SKIN:PaintChatboxAutocompleteEntry(panel, width, height)
-    // selected background
+    -- selected background
     if (panel.highlightAlpha > 0) then
         self:DrawImportantBackground(0, 0, width, height, ColorAlpha(ix.config.Get("color"), panel.highlightAlpha * 66))
     end
 
-    // lower border
+    -- lower border
     surface.SetDrawColor(200, 200, 200, 33)
     surface.DrawRect(0, height - 1, width, 1)
 end
@@ -501,11 +501,11 @@ function SKIN:PaintWindowMaximizeButton(panel, width, height)
 end
 
 function SKIN:PaintInfoBar(panel, width, height, color)
-    // bar
+    -- bar
     surface.SetDrawColor(color.r, color.g, color.b, 250)
     surface.DrawRect(0, 0, width, height)
 
-    // gradient overlay
+    -- gradient overlay
     surface.SetDrawColor(230, 230, 230, 8)
     surface.SetTexture(gradientUp)
     surface.DrawTexturedRect(0, 0, width, height)
@@ -541,11 +541,11 @@ function SKIN:PaintDeathScreen(panel, width, height, progress)
 end
 
 do
-    // check if sounds exist, otherwise fall back to default UI sounds
+    -- check if sounds exist, otherwise fall back to default UI sounds
     local bWhoosh = file.Exists("sound/helix/ui/whoosh1.wav", "GAME")
     local bRollover = file.Exists("sound/helix/ui/rollover.wav", "GAME")
     local bPress = file.Exists("sound/helix/ui/press.wav", "GAME")
-    local bNotify = file.Exists("sound/helix/ui/REPLACEME.wav", "GAME") // @todo
+    local bNotify = file.Exists("sound/helix/ui/REPLACEME.wav", "GAME") -- @todo
 
     sound.Add({
         name = "Helix.Whoosh",

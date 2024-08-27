@@ -31,7 +31,7 @@ function ix.area.Create(name, type, startPosition, endPosition, bNoReplicate, pr
         properties = properties
     }
 
-    // network to clients if needed
+    -- network to clients if needed
     if (!bNoReplicate) then
         net.Start("ixAreaAdd")
             net.WriteString(name)
@@ -46,7 +46,7 @@ end
 function ix.area.Remove(name, bNoReplicate)
     ix.area.stored[name] = nil
 
-    // network to clients if needed
+    -- network to clients if needed
     if (!bNoReplicate) then
         net.Start("ixAreaRemove")
             net.WriteString(name)

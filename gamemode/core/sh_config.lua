@@ -1,6 +1,6 @@
 
-/// Helper library for creating/setting config options.
-// @module ix.config
+--- Helper library for creating/setting config options.
+-- @module ix.config
 
 ix.config = ix.config or {}
 ix.config.stored = ix.config.stored or {}
@@ -20,15 +20,15 @@ CAMI.RegisterPrivilege({
     MinAccess = "superadmin"
 })
 
-/// Creates a config option with the given information.
-// @realm shared
-// @string key Unique ID of the config
-// @param value Default value that this config will have
-// @string description Description of the config
-// @func[opt=nil] callback Function to call when config is changed
-// @tab[opt=nil] data Additional settings for this config option
-// @bool[opt=false] bNoNetworking Whether or not to prevent networking the config
-// @bool[opt=false] bSchemaOnly Whether or not the config is for the schema only
+--- Creates a config option with the given information.
+-- @realm shared
+-- @string key Unique ID of the config
+-- @param value Default value that this config will have
+-- @string description Description of the config
+-- @func[opt=nil] callback Function to call when config is changed
+-- @tab[opt=nil] data Additional settings for this config option
+-- @bool[opt=false] bNoNetworking Whether or not to prevent networking the config
+-- @bool[opt=false] bSchemaOnly Whether or not the config is for the schema only
 function ix.config.Add(key, value, description, callback, data, bNoNetworking, bSchemaOnly)
     data = istable(data) and data or {}
 
@@ -43,7 +43,7 @@ function ix.config.Add(key, value, description, callback, data, bNoNetworking, b
     local default = value
     data.type = nil
 
-    // using explicit nil comparisons so we don't get caught by a config's value being `false`
+    -- using explicit nil comparisons so we don't get caught by a config's value being `false`
     if (oldConfig != nil) then
         if (oldConfig.value != nil) then
             value = oldConfig.value
@@ -67,17 +67,17 @@ function ix.config.Add(key, value, description, callback, data, bNoNetworking, b
     }
 end
 
-/// Sets the default value for a config option.
-// @realm shared
-// @string key Unique ID of the config
-// @param value Default value for the config option
+--- Sets the default value for a config option.
+-- @realm shared
+-- @string key Unique ID of the config
+-- @param value Default value for the config option
 function ix.config.SetDefault(key, value)
     local config = ix.config.stored[key]
 
     if (config) then
         config.default = value
     else
-        // set up dummy config if we're setting default of config that doesn't exist yet (i.e schema setting framework default)
+        -- set up dummy config if we're setting default of config that doesn't exist yet (i.e schema setting framework default)
         ix.config.stored[key] = {
             value = value,
             default = value
@@ -97,10 +97,10 @@ function ix.config.ForceSet(key, value, noSave)
     end
 end
 
-/// Sets the value of a config option.
-// @realm shared
-// @string key Unique ID of the config
-// @param value New value to assign to the config
+--- Sets the value of a config option.
+-- @realm shared
+-- @string key Unique ID of the config
+-- @param value New value to assign to the config
 function ix.config.Set(key, value)
     local config = ix.config.stored[key]
 
@@ -125,15 +125,15 @@ function ix.config.Set(key, value)
     end
 end
 
-/// Retrieves a value of a config option. If it is not set, it'll return the default that you've specified.
-// @realm shared
-// @string key Unique ID of the config
-// @param default Default value to return if the config is not set
-// @return Value associated with the key, or the default that was given if it doesn't exist
+--- Retrieves a value of a config option. If it is not set, it'll return the default that you've specified.
+-- @realm shared
+-- @string key Unique ID of the config
+-- @param default Default value to return if the config is not set
+-- @return Value associated with the key, or the default that was given if it doesn't exist
 function ix.config.Get(key, default)
     local config = ix.config.stored[key]
 
-    // ensure we aren't accessing a dummy value
+    -- ensure we aren't accessing a dummy value
     if (config and config.type) then
         if (config.value != nil) then
             return config.value
@@ -145,9 +145,9 @@ function ix.config.Get(key, default)
     return default
 end
 
-/// Loads all saved config options from disk.
-// @realm shared
-// @internal
+--- Loads all saved config options from disk.
+-- @realm shared
+-- @internal
 function ix.config.Load()
     if (SERVER) then
         local globals = ix.data.Get("config", nil, true, true)
@@ -194,9 +194,9 @@ if (SERVER) then
         net.Send(client)
     end
 
-    /// Saves all config options to disk.
-    // @realm server
-    // @internal
+    --- Saves all config options to disk.
+    -- @realm server
+    -- @internal
     function ix.config.Save()
         local globals = {}
         local data = {}
@@ -209,7 +209,7 @@ if (SERVER) then
             end
         end
 
-        // Global and schema data set respectively.
+        -- Global and schema data set respectively.
         ix.data.Set("config", globals, true, true)
         ix.data.Set("config", data, false, true)
     end
@@ -266,7 +266,7 @@ if (SERVER) then
         local bShouldEnable = net.ReadBool()
 
         if ((bShouldEnable and bUnloaded) or (!bShouldEnable and !bUnloaded)) then
-            ix.plugin.SetUnloaded(uniqueID, !bShouldEnable) // flip bool since we're setting unloaded, not enabled
+            ix.plugin.SetUnloaded(uniqueID, !bShouldEnable) -- flip bool since we're setting unloaded, not enabled
 
             ix.util.NotifyLocalized(bShouldEnable and "pluginLoaded" or "pluginUnloaded", nil, client:GetName(), uniqueID)
             ix.log.Add(client, bShouldEnable and "pluginLoaded" or "pluginUnloaded", uniqueID)

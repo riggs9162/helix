@@ -4,7 +4,7 @@ local audioFadeInTime = 2
 local animationTime = 0.5
 local matrixZScale = Vector(1, 1, 0.0001)
 
-// character menu panel
+-- character menu panel
 DEFINE_BASECLASS("ixSubpanelParent")
 local PANEL = {}
 
@@ -67,7 +67,7 @@ function PANEL:Paint(width, height)
     local bShouldScale = self.currentScale != 1
     local matrix
 
-    // draw child panels with scaling if needed
+    -- draw child panels with scaling if needed
     if (bShouldScale) then
         matrix = Matrix()
         matrix:Scale(matrixZScale * self.currentScale)
@@ -98,7 +98,7 @@ end
 
 vgui.Register("ixCharMenuPanel", PANEL, "ixSubpanelParent")
 
-// character menu main button list
+-- character menu main button list
 PANEL = {}
 
 function PANEL:Init()
@@ -119,7 +119,7 @@ end
 function PANEL:SizeToContents()
     self:GetCanvas():InvalidateLayout(true)
 
-    // if the canvas has extra space, forcefully dock to the bottom so it doesn't anchor to the top
+    -- if the canvas has extra space, forcefully dock to the bottom so it doesn't anchor to the top
     if (self:GetTall() > self:GetCanvas():GetTall()) then
         self:GetCanvas():Dock(BOTTOM)
     else
@@ -129,7 +129,7 @@ end
 
 vgui.Register("ixCharMenuButtonList", PANEL, "DScrollPanel")
 
-// main character menu panel
+-- main character menu panel
 PANEL = {}
 
 AccessorFunc(PANEL, "bUsingCharacter", "UsingCharacter", FORCE_BOOL)
@@ -157,7 +157,7 @@ function PANEL:Init()
     logoPanel.Paint = function(panel, width, height)
         local matrix = self.currentMatrix
 
-        // don't scale the background because it fucks the blur
+        -- don't scale the background because it fucks the blur
         if (matrix) then
             cam.PopModelMatrix()
         end
@@ -170,11 +170,11 @@ function PANEL:Init()
         render.SetScissorRect(0, screenY, width, screenY + newHeight, true)
         ix.util.DrawBlur(panel, 15, nil, 200)
 
-        // background dim
+        -- background dim
         surface.SetDrawColor(0, 0, 0, 100)
         surface.DrawRect(0, y, width, newHeight)
 
-        // border lines
+        -- border lines
         surface.SetDrawColor(ix.config.Get("color") or color_white)
         surface.DrawRect(0, y, width, 1)
         surface.DrawRect(0, y + newHeight - 1, width, 1)
@@ -190,7 +190,7 @@ function PANEL:Init()
         render.SetScissorRect(0, 0, 0, 0, false)
     end
 
-    // draw schema logo material instead of text if available
+    -- draw schema logo material instead of text if available
     local logo = Schema.logo and ix.util.GetMaterial(Schema.logo)
 
     if (logo and !logo:IsError()) then
@@ -229,17 +229,17 @@ function PANEL:Init()
         logoPanel:SetTall(newHeight)
     end
 
-    // button list
+    -- button list
     self.mainButtonList = self:Add("ixCharMenuButtonList")
     self.mainButtonList:Dock(LEFT)
 
-    // create character button
+    -- create character button
     local createButton = self.mainButtonList:Add("ixMenuButton")
     createButton:SetText("create")
     createButton:SizeToContents()
     createButton.DoClick = function()
         local maximum = hook.Run("GetMaxPlayerCharacter", LocalPlayer()) or ix.config.Get("maxCharacters", 5)
-        // don't allow creation if we've hit the character limit
+        -- don't allow creation if we've hit the character limit
         if (#ix.characters >= maximum) then
             self:GetParent():ShowNotice(3, L("maxCharacters"))
             return
@@ -250,7 +250,7 @@ function PANEL:Init()
         parent.newCharacterPanel:SlideUp()
     end
 
-    // load character button
+    -- load character button
     self.loadButton = self.mainButtonList:Add("ixMenuButton")
     self.loadButton:SetText("load")
     self.loadButton:SizeToContents()
@@ -263,7 +263,7 @@ function PANEL:Init()
         self.loadButton:SetDisabled(true)
     end
 
-    // community button
+    -- community button
     local extraURL = ix.config.Get("communityURL", "")
     local extraText = ix.config.Get("communityText", "@community")
 
@@ -280,7 +280,7 @@ function PANEL:Init()
         end
     end
 
-    // leave/return button
+    -- leave/return button
     self.returnButton = self.mainButtonList:Add("ixMenuButton")
     self:UpdateReturnButton()
     self.returnButton.DoClick = function()
@@ -304,8 +304,8 @@ function PANEL:UpdateReturnButton(bValue)
 end
 
 function PANEL:OnDim()
-    // disable input on this panel since it will still be in the background while invisible - prone to stray clicks if the
-    // panels overtop slide out of the way
+    -- disable input on this panel since it will still be in the background while invisible - prone to stray clicks if the
+    -- panels overtop slide out of the way
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
 end
@@ -314,7 +314,7 @@ function PANEL:OnUndim()
     self:SetMouseInputEnabled(true)
     self:SetKeyboardInputEnabled(true)
 
-    // we may have just deleted a character so update the status of the return button
+    -- we may have just deleted a character so update the status of the return button
     self.bUsingCharacter = LocalPlayer().GetCharacter and LocalPlayer():GetCharacter()
     self:UpdateReturnButton()
 end
@@ -335,7 +335,7 @@ end
 
 vgui.Register("ixCharMenuMain", PANEL, "ixCharMenuPanel")
 
-// container panel
+-- container panel
 PANEL = {}
 
 function PANEL:Init()
@@ -354,21 +354,21 @@ function PANEL:Init()
     self:SetSize(ScrW(), ScrH())
     self:SetPos(0, 0)
 
-    // main menu panel
+    -- main menu panel
     self.mainPanel = self:Add("ixCharMenuMain")
 
-    // new character panel
+    -- new character panel
     self.newCharacterPanel = self:Add("ixCharMenuNew")
     self.newCharacterPanel:SlideDown(0)
 
-    // load character panel
+    -- load character panel
     self.loadCharacterPanel = self:Add("ixCharMenuLoad")
     self.loadCharacterPanel:SlideDown(0)
 
-    // notice bar
+    -- notice bar
     self.notice = self:Add("ixNoticeBar")
 
-    // finalization
+    -- finalization
     self:MakePopup()
     self.currentAlpha = 255
     self.volume = 0
@@ -389,7 +389,7 @@ end
 
 function PANEL:PlayMusic()
     local path = "sound/" .. ix.config.Get("music")
-    local url = path:match("http[s]?://.+")
+    local url = path:match("http[s]?:--.+")
     local play = url and sound.PlayURL or sound.PlayFile
     path = url and url or path
 
@@ -445,7 +445,7 @@ end
 function PANEL:OnCharacterDeleted(character)
     if (#ix.characters == 0) then
         self.mainPanel.loadButton:SetDisabled(true)
-        self.mainPanel:Undim() // undim since the load panel will slide down
+        self.mainPanel:Undim() -- undim since the load panel will slide down
     else
         self.mainPanel.loadButton:SetDisabled(false)
     end
@@ -500,7 +500,7 @@ function PANEL:Close(bFromMenu)
         end
     })
 
-    // hide children if we're already dimmed
+    -- hide children if we're already dimmed
     if (bFromMenu) then
         for _, v in pairs(self:GetChildren()) do
             if (IsValid(v)) then
@@ -508,7 +508,7 @@ function PANEL:Close(bFromMenu)
             end
         end
     else
-        // fade out the main panel quicker because it significantly blocks the screen
+        -- fade out the main panel quicker because it significantly blocks the screen
         self.mainPanel.currentAlpha = 255
 
         self.mainPanel:CreateAnimation(animationTime * 2, {
@@ -525,7 +525,7 @@ function PANEL:Close(bFromMenu)
         })
     end
 
-    // relinquish mouse control
+    -- relinquish mouse control
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
     gui.EnableScreenClicker(false)

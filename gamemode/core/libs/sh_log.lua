@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Logging helper functions.
 
 Predefined flags:
@@ -9,10 +9,10 @@ Predefined flags:
     FLAG_DANGER
     FLAG_SERVER
     FLAG_DEV
-*/
-// @module ix.log
+]]
+-- @module ix.log
 
-// luacheck: globals FLAG_NORMAL FLAG_SUCCESS FLAG_WARNING FLAG_DANGER FLAG_SERVER FLAG_DEV
+-- luacheck: globals FLAG_NORMAL FLAG_SUCCESS FLAG_WARNING FLAG_DANGER FLAG_SERVER FLAG_DEV
 FLAG_NORMAL = 0
 FLAG_SUCCESS = 1
 FLAG_WARNING = 2
@@ -50,11 +50,11 @@ if (SERVER) then
 
     ix.log.types = ix.log.types or {}
 
-    /// Adds a log type
-    // @realm server
-    // @string logType Log category
-    // @string format The string format that log messages should use
-    // @number flag Log level
+    --- Adds a log type
+    -- @realm server
+    -- @string logType Log category
+    -- @string format The string format that log messages should use
+    -- @number flag Log level
     function ix.log.AddType(logType, format, flag)
         ix.log.types[logType] = {format = format, flag = flag}
     end
@@ -92,11 +92,11 @@ if (SERVER) then
         end
     end
 
-    /// Add a log message
-    // @realm server
-    // @player client Player who instigated the log
-    // @string logType Log category
-    // @param ... Arguments to pass to the log
+    --- Add a log message
+    -- @realm server
+    -- @player client Player who instigated the log
+    -- @string logType Log category
+    -- @param ... Arguments to pass to the log
     function ix.log.Add(client, logType, ...)
         local logString, logFlag = ix.log.Parse(client, logType, ...)
         if (logString == -1) then return end

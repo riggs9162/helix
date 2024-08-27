@@ -1,7 +1,7 @@
-/*
+--[[--
 Item manipulation and helper functions.
-*/
-// @module ix.item
+]]
+-- @module ix.item
 
 ix.item = ix.item or {}
 ix.item.list = ix.item.list or {}
@@ -18,7 +18,7 @@ if (!ix.item.inventories[0]) then
     ix.item.inventories[0] = {}
 end
 
-// Declare some supports for logic inventory
+-- Declare some supports for logic inventory
 local zeroInv = ix.item.inventories[0]
 
 function zeroInv:GetID()
@@ -29,7 +29,7 @@ function zeroInv:OnCheckAccess(client)
     return true
 end
 
-// WARNING: You have to manually sync the data to client if you're trying to use item in the logical inventory in the vgui.
+-- WARNING: You have to manually sync the data to client if you're trying to use item in the logical inventory in the vgui.
 function zeroInv:Add(uniqueID, quantity, data, x, y)
     quantity = quantity or 1
 
@@ -103,12 +103,12 @@ function ix.item.Instance(index, uniqueID, itemData, x, y, callback, characterID
     end
 end
 
-/// Retrieves an item table.
-// @realm shared
-// @string identifier Unique ID of the item
-// @treturn item Item table
-// @usage print(ix.item.Get("example"))
-// > "item[example][0]"
+--- Retrieves an item table.
+-- @realm shared
+-- @string identifier Unique ID of the item
+-- @treturn item Item table
+-- @usage print(ix.item.Get("example"))
+-- > "item[example][0]"
 function ix.item.Get(identifier)
     return ix.item.base[identifier] or ix.item.list[identifier]
 end
@@ -169,7 +169,7 @@ function ix.item.Register(uniqueID, baseID, isBaseItem, path, luaGenerated)
                         local path, level, pitch, volume = hook.Run("GetItemPickupSound", item) or "npc/zombie/foot_slide" .. math.random(1, 3) .. ".wav", 75, math.random(90, 120), 1
                         client:EmitSound(path, level, pitch, volume)
 
-                        if (item.data) then // I don't like it but, meh...
+                        if (item.data) then -- I don't like it but, meh...
                             for k, v in pairs(item.data) do
                                 item:SetData(k, v)
                             end
@@ -243,7 +243,7 @@ function ix.item.Register(uniqueID, baseID, isBaseItem, path, luaGenerated)
             (isBaseItem and ix.item.base or ix.item.list)[ITEM.uniqueID] = ITEM
 
             if (IX_RELOADED) then
-                // we don't know which item was actually edited, so we'll refresh all of them
+                -- we don't know which item was actually edited, so we'll refresh all of them
                 for _, v in pairs(ix.item.instances) do
                     if (v.uniqueID == uniqueID) then
                         ix.util.MetatableSafeTableMerge(v, ITEM)
@@ -263,20 +263,20 @@ end
 function ix.item.LoadFromDir(directory)
     local files, folders
 
-    files = file.Find(directory.."/base/*.lua", "LUA")
+    files = file.Find(directory.."/base--[[--.lua", "LUA")
 
     for _, v in ipairs(files) do
         ix.item.Load(directory.."/base/"..v, nil, true)
     end
 
-    files, folders = file.Find(directory.."/*", "LUA")
+    files, folders = file.Find(directory.."--[[--", "LUA")
 
     for _, v in ipairs(folders) do
         if (v == "base") then
             continue
         end
 
-        for _, v2 in ipairs(file.Find(directory.."/"..v.."/*.lua", "LUA")) do
+        for _, v2 in ipairs(file.Find(directory.."/"..v.."--[[--.lua", "LUA")) do
             ix.item.Load(directory.."/"..v .. "/".. v2, "base_"..v)
         end
     end
@@ -477,7 +477,7 @@ do
             local item = ix.item.instances[itemID]
             local panel = ix.gui["inv" .. invID]
 
-            // update inventory UI if it's open
+            -- update inventory UI if it's open
             if (IsValid(panel)) then
                 local icon = panel.panels[itemID]
 
@@ -486,7 +486,7 @@ do
                 end
             end
 
-            // update inventory slots
+            -- update inventory slots
             if (item) then
                 inventory.slots[oldX][oldY] = nil
 
@@ -530,7 +530,7 @@ do
                 return
             end
 
-            // we need to close any bag windows that are open because of this item
+            -- we need to close any bag windows that are open because of this item
             if (item.isBag) then
                 local itemInv = item:GetInventory()
 
@@ -672,7 +672,7 @@ do
                 end
 
                 if (item.postHooks[action]) then
-                    // Posthooks shouldn't override the result from OnRun
+                    -- Posthooks shouldn't override the result from OnRun
                     item.postHooks[action](item, result, data)
                 end
 
@@ -807,13 +807,13 @@ do
         end)
     end
 
-    /// Instances and spawns a given item type.
-    // @realm server
-    // @string uniqueID Unique ID of the item
-    // @vector position The position in which the item's entity will be spawned
-    // @func[opt=nil] callback Function to call when the item entity is created
-    // @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
-    // @tab[opt=nil] data Additional data for this item instance
+    --- Instances and spawns a given item type.
+    -- @realm server
+    -- @string uniqueID Unique ID of the item
+    -- @vector position The position in which the item's entity will be spawned
+    -- @func[opt=nil] callback Function to call when the item entity is created
+    -- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
+    -- @tab[opt=nil] data Additional data for this item instance
     function ix.item.Spawn(uniqueID, position, callback, angles, data)
         ix.item.Instance(0, uniqueID, data or {}, 1, 1, function(item)
             local entity = item:Spawn(position, angles)
@@ -825,13 +825,13 @@ do
     end
 end
 
-/// Inventory util functions for character
-// @classmod Character
+--- Inventory util functions for character
+-- @classmod Character
 
-/// Returns this character's associated `Inventory` object.
-// @function GetInventory
-// @realm shared
-// @treturn Inventory This character's inventory
+--- Returns this character's associated `Inventory` object.
+-- @function GetInventory
+-- @realm shared
+-- @treturn Inventory This character's inventory
 ix.char.RegisterVar("Inventory", {
     bNoNetworking = true,
     bNoDisplay = true,

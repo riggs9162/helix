@@ -121,7 +121,7 @@ if (CLIENT) then
                     self.startTime = curTime
                     self.finishTime = curTime + ix.config.Get("mapSceneTime", 30)
 
-                    // Reset PVS, we're moving to a new scene.
+                    -- Reset PVS, we're moving to a new scene.
                     client.ixMapSceneSentPVS = false
 
                     if (ordered) then
@@ -161,7 +161,7 @@ if (CLIENT) then
             view.origin = realOrigin + realAngles:Up()*y3 + realAngles:Right()*x3
             view.angles = realAngles + Angle(y3 * -0.5, x3 * -0.5, 0)
 
-            // Send the PVS to the server if it's not already sent.
+            -- Send the PVS to the server if it's not already sent.
             if (client.ixMapSceneSentPVS != true) then
                 net.Start("ixMapScenePVS")
                     net.WriteVector(realOrigin)
@@ -174,7 +174,7 @@ if (CLIENT) then
 
             return view
         else
-            // Reset PVS, we're not in the character menu.
+            -- Reset PVS, we're not in the character menu.
             if (client.ixMapSceneSentPVS != false) then
                 net.Start("ixMapScenePVS")
                 net.SendToServer()
@@ -235,7 +235,7 @@ if (CLIENT) then
             return
         end
 
-        // Set the list of texts to the ones provided by the server.
+        -- Set the list of texts to the ones provided by the server.
         PLUGIN.scenes = util.JSONToTable(uncompressed)
 
         for k, v in pairs(PLUGIN.scenes) do
@@ -327,7 +327,7 @@ ix.command.Add("MapSceneAdd", {
     OnRun = function(self, client, bIsPair)
         local position, angles = client:EyePos(), client:EyeAngles()
 
-        // This scene is in a pair for moving scenes.
+        -- This scene is in a pair for moving scenes.
         if (tobool(bIsPair) and !client.ixScnPair) then
             client.ixScnPair = {position, angles}
 

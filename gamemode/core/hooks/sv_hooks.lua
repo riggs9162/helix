@@ -38,7 +38,7 @@ function GM:PlayerInitialSpawn(client)
     client:LoadData(function(data)
         if (!IsValid(client)) then return end
 
-        // Don't use the character cache if they've connected to another server using the same database
+        -- Don't use the character cache if they've connected to another server using the same database
         local address = ix.util.GetAddress()
         local bNoCache = client:GetData("lastIP", address) != address
         client:SetData("lastIP", address)
@@ -237,10 +237,10 @@ function GM:EntityTakeDamage(entity, dmgInfo)
 end
 
 function GM:PrePlayerLoadedCharacter(client, character, lastChar)
-    // Reset all bodygroups
+    -- Reset all bodygroups
     client:ResetBodygroups()
 
-    // Remove all skins
+    -- Remove all skins
     client:SetSkin(0)
 end
 
@@ -352,12 +352,12 @@ function GM:PlayerSpawn(client)
     hook.Run("PlayerLoadout", client)
 end
 
-// Shortcuts for (super)admin only things.
+-- Shortcuts for (super)admin only things.
 local function IsAdmin(_, client)
     return client:IsAdmin()
 end
 
-// Set the gamemode hooks to the appropriate shortcuts.
+-- Set the gamemode hooks to the appropriate shortcuts.
 GM.PlayerGiveSWEP = IsAdmin
 GM.PlayerSpawnEffect = IsAdmin
 GM.PlayerSpawnSENT = IsAdmin
@@ -484,7 +484,7 @@ function GM:VoiceDistanceChanged(distance)
     voiceDistance = distance * distance
 end
 
-// Called when weapons should be given to a player.
+-- Called when weapons should be given to a player.
 function GM:PlayerLoadout(client)
     if (client.ixSkipLoadout) then
         client.ixSkipLoadout = nil
@@ -499,10 +499,10 @@ function GM:PlayerLoadout(client)
 
     local character = client:GetCharacter()
 
-    // Check if they have loaded a character.
+    -- Check if they have loaded a character.
     if (character) then
         client:SetupHands()
-        // Set their player model to the character's model.
+        -- Set their player model to the character's model.
         client:SetModel(client:GetModel())
         client:Give("ix_hands")
         client:SetWalkSpeed(ix.config.Get("walkSpeed"))
@@ -512,17 +512,17 @@ function GM:PlayerLoadout(client)
         local faction = ix.faction.indices[client:Team()]
 
         if (faction) then
-            // If their faction wants to do something when the player spawns, let it.
+            -- If their faction wants to do something when the player spawns, let it.
             if (faction.OnSpawn) then
                 faction:OnSpawn(client)
             end
 
-            // @todo add docs for player:Give() failing if player already has weapon - which means if a player is given a weapon
-            // here due to the faction weapons table, the weapon's :Give call in the weapon base will fail since the player
-            // will already have it by then. This will cause issues for weapons that have pac data since the parts are applied
-            // only if the weapon returned by :Give() is valid
+            -- @todo add docs for player:Give() failing if player already has weapon - which means if a player is given a weapon
+            -- here due to the faction weapons table, the weapon's :Give call in the weapon base will fail since the player
+            -- will already have it by then. This will cause issues for weapons that have pac data since the parts are applied
+            -- only if the weapon returned by :Give() is valid
 
-            // If the faction has default weapons, give them to the player.
+            -- If the faction has default weapons, give them to the player.
             if (faction.weapons) then
                 for _, v in ipairs(faction.weapons) do
                     client:Give(v)
@@ -530,7 +530,7 @@ function GM:PlayerLoadout(client)
             end
         end
 
-        // Ditto, but for classes.
+        -- Ditto, but for classes.
         local class = ix.class.list[client:GetCharacter():GetClass()]
 
         if (class) then
@@ -545,7 +545,7 @@ function GM:PlayerLoadout(client)
             end
         end
 
-        // Ditto, but for ranks.
+        -- Ditto, but for ranks.
         local rank = ix.rank.list[client:GetCharacter():GetRank()]
 
         if (rank) then
@@ -560,7 +560,7 @@ function GM:PlayerLoadout(client)
             end
         end
 
-        // Apply any flags as needed.
+        -- Apply any flags as needed.
         ix.flag.OnSpawn(client)
         ix.attributes.Setup(client)
 
@@ -575,7 +575,7 @@ function GM:PlayerLoadout(client)
 end
 
 function GM:PostPlayerLoadout(client)
-    // Reload All Attrib Boosts
+    -- Reload All Attrib Boosts
     local character = client:GetCharacter()
 
     if (character:GetInventory()) then
@@ -590,21 +590,21 @@ function GM:PostPlayerLoadout(client)
         end
     end
 
-    // If their faction wants to do something when the player's loadout is set, let it.
+    -- If their faction wants to do something when the player's loadout is set, let it.
     local faction = ix.faction.indices[client:Team()]
 
     if (faction and faction.OnLoadout) then
         faction:OnLoadout(client)
     end
 
-    // Ditto, but for classes.
+    -- Ditto, but for classes.
     local class = ix.class.list[character:GetClass()]
 
     if (class and class.OnLoadout) then
         class:OnLoadout(client)
     end
 
-    // Ditto, but for ranks.
+    -- Ditto, but for ranks.
     local rank = ix.rank.list[character:GetRank()]
 
     if (rank and rank.OnLoadout) then
@@ -857,10 +857,10 @@ function GM:GetGameDescription()
 end
 
 function GM:OnPlayerUseBusiness(client, item)
-    // You can manipulate purchased items with this hook.
-    // does not requires any kind of return.
-    // ex) item:SetData("businessItem", true)
-    // then every purchased item will be marked as Business Item.
+    -- You can manipulate purchased items with this hook.
+    -- does not requires any kind of return.
+    -- ex) item:SetData("businessItem", true)
+    -- then every purchased item will be marked as Business Item.
 end
 
 function GM:PlayerDeathSound()
@@ -897,14 +897,14 @@ end
 function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     if (!IsValid(physObj)) then return false end
 
-    // Object is already frozen (!?)
+    -- Object is already frozen (!?)
     if (!physObj:IsMoveable()) then return false end
     if (entity:GetUnFreezable()) then return false end
 
     physObj:EnableMotion(false)
 
-    // With the jeep we need to pause all of its physics objects
-    // to stop it spazzing out and killing the server.
+    -- With the jeep we need to pause all of its physics objects
+    -- to stop it spazzing out and killing the server.
     if (entity:GetClass() == "prop_vehicle_jeep") then
         local objects = entity:GetPhysicsObjectCount()
 
@@ -913,7 +913,7 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
         end
     end
 
-    // Add it to the player's frozen props
+    -- Add it to the player's frozen props
     client:AddFrozenPhysicsObject(entity, physObj)
     client:SendHint("PhysgunUnfreeze", 0.3)
     client:SuppressHint("PhysgunFreeze")
@@ -1002,7 +1002,7 @@ function GM:GetPreferredCarryAngles(entity)
         if (itemTable) then
             local preferedAngle = itemTable.preferedAngle
 
-            if (preferedAngle) then // I don't want to return something
+            if (preferedAngle) then -- I don't want to return something
                 return preferedAngle
             end
         end
@@ -1014,7 +1014,7 @@ function GM:PluginShouldLoad(uniqueID)
 end
 
 function GM:DatabaseConnected()
-    // Create the SQL tables if they do not exist.
+    -- Create the SQL tables if they do not exist.
     ix.db.LoadTables()
     ix.log.LoadTables()
 

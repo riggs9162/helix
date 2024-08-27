@@ -1,17 +1,17 @@
 
-/*
+--[[--
 Inventory manipulation and helper functions.
-*/
-// @module ix.inventory
+]]
+-- @module ix.inventory
 
 ix.inventory = ix.inventory or {}
 
 ix.util.Include("helix/gamemode/core/meta/sh_inventory.lua")
 
-/// Retrieves an inventory table.
-// @realm shared
-// @number invID Index of the inventory
-// @treturn Inventory Inventory table
+--- Retrieves an inventory table.
+-- @realm shared
+-- @number invID Index of the inventory
+-- @treturn Inventory Inventory table
 function ix.inventory.Get(invID)
     return ix.item.inventories[invID]
 end
@@ -22,19 +22,19 @@ function ix.inventory.Create(width, height, id)
     return inventory
 end
 
-/// Loads an inventory and associated items from the database into memory. If you are passing a table into `invID`, it
-// requires a table where the key is the inventory ID, and the value is a table of the width and height values. See below
-// for an example.
-// @realm server
-// @param invID Inventory ID or table of inventory IDs
-// @number width Width of inventory (this is not used when passing a table to `invID`)
-// @number height Height of inventory (this is not used when passing a table to `invID`)
-// @func callback Function to call when inventory is restored
-// @usage ix.inventory.Restore({
-//     [10] = {5, 5},
-//     [11] = {7, 4}
-// })
-// // inventories 10 and 11 with sizes (5, 5) and (7, 4) will be loaded
+--- Loads an inventory and associated items from the database into memory. If you are passing a table into `invID`, it
+-- requires a table where the key is the inventory ID, and the value is a table of the width and height values. See below
+-- for an example.
+-- @realm server
+-- @param invID Inventory ID or table of inventory IDs
+-- @number width Width of inventory (this is not used when passing a table to `invID`)
+-- @number height Height of inventory (this is not used when passing a table to `invID`)
+-- @func callback Function to call when inventory is restored
+-- @usage ix.inventory.Restore({
+--     [10] = {5, 5},
+--     [11] = {7, 4}
+-- })
+-- -- inventories 10 and 11 with sizes (5, 5) and (7, 4) will be loaded
 function ix.inventory.Restore(invID, width, height, callback)
     local inventories = {}
 
@@ -71,7 +71,7 @@ function ix.inventory.Restore(invID, width, height, callback)
                     local invInfo = inventories[itemInvID]
 
                     if (!itemInvID or !invInfo) then
-                        // don't restore items with an invalid inventory id or type
+                        -- don't restore items with an invalid inventory id or type
                         continue
                     end
 

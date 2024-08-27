@@ -35,11 +35,11 @@ end
 function ix.area.AddType(type, name)
     name = name or type
 
-    // only store localized strings on the client
+    -- only store localized strings on the client
     ix.area.types[type] = CLIENT and name or true
 end
 
-// returns the nearest and closest area from the specified position
+-- returns the nearest and closest area from the specified position
 function ix.area.GetNearestArea(position, distance)
     local found = {}
     for id, info in pairs(ix.area.stored) do
@@ -51,7 +51,7 @@ function ix.area.GetNearestArea(position, distance)
         end
     end
 
-    // return the area with the shortest distance
+    -- return the area with the shortest distance
     table.sort(found, function(a, b)
         return a[2] < b[2]
     end)
@@ -80,7 +80,7 @@ ix.util.Include("cl_plugin.lua")
 ix.util.Include("sv_hooks.lua")
 ix.util.Include("cl_hooks.lua")
 
-// return world center, local min, and local max from world start/end positions
+-- return world center, local min, and local max from world start/end positions
 function PLUGIN:GetLocalAreaPosition(startPosition, endPosition)
     local center = LerpVector(0.5, startPosition, endPosition)
     local min = WorldToLocal(startPosition, angle_zero, center, angle_zero)
@@ -107,12 +107,12 @@ end
 do
     local PLAYER = FindMetaTable("Player")
 
-    // returns the current area the player is in, or the last valid one if the player is not in an area
+    -- returns the current area the player is in, or the last valid one if the player is not in an area
     function PLAYER:GetArea()
         return self.ixArea
     end
 
-    // returns true if the player is in any area, this does not use the last valid area like GetArea does
+    -- returns true if the player is in any area, this does not use the last valid area like GetArea does
     function PLAYER:IsInArea()
         return self.ixInArea
     end

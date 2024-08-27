@@ -2,21 +2,21 @@
 util.AddNetworkString("ixDoorMenu")
 util.AddNetworkString("ixDoorPermission")
 
-// Variables for door data.
+-- Variables for door data.
 local variables = {
-    // Whether or not the door will be disabled.
+    -- Whether or not the door will be disabled.
     "disabled",
-    // The name of the door.
+    -- The name of the door.
     "name",
-    // Price of the door.
+    -- Price of the door.
     "price",
-    // If the door is ownable.
+    -- If the door is ownable.
     "ownable",
-    // The faction that owns a door.
+    -- The faction that owns a door.
     "faction",
-    // The class that owns a door.
+    -- The class that owns a door.
     "class",
-    // Whether or not the door will be hidden.
+    -- Whether or not the door will be hidden.
     "visible"
 }
 
@@ -56,23 +56,23 @@ function PLUGIN:CopyParentDoor(child)
     end
 end
 
-// Called after the entities have loaded.
+-- Called after the entities have loaded.
 function PLUGIN:LoadData()
-    // Restore the saved door information.
+    -- Restore the saved door information.
     local data = self:GetData()
 
     if (!data) then
         return
     end
 
-    // Loop through all of the saved doors.
+    -- Loop through all of the saved doors.
     for k, v in pairs(data) do
-        // Get the door entity from the saved ID.
+        -- Get the door entity from the saved ID.
         local entity = ents.GetMapCreatedEntity(k)
 
-        // Check it is a valid door in-case something went wrong.
+        -- Check it is a valid door in-case something went wrong.
         if (IsValid(entity) and entity:IsDoor()) then
-            // Loop through all of our door variables.
+            -- Loop through all of our door variables.
             for k2, v2 in pairs(v) do
                 if (k2 == "children") then
                     entity.ixChildren = v2
@@ -101,9 +101,9 @@ function PLUGIN:LoadData()
     end
 end
 
-// Called before the gamemode shuts down.
+-- Called before the gamemode shuts down.
 function PLUGIN:SaveDoorData()
-    // Create an empty table to save information in.
+    -- Create an empty table to save information in.
     local data = {}
         local doors = {}
 
@@ -115,12 +115,12 @@ function PLUGIN:SaveDoorData()
 
         local doorData
 
-        // Loop through doors with information.
+        -- Loop through doors with information.
         for k, v in pairs(doors) do
-            // Another empty table for actual information regarding the door.
+            -- Another empty table for actual information regarding the door.
             doorData = {}
 
-            // Save all of the needed variables to the doorData table.
+            -- Save all of the needed variables to the doorData table.
             for _, v2 in ipairs(variables) do
                 local value = v:GetNetVar(v2)
 
@@ -141,12 +141,12 @@ function PLUGIN:SaveDoorData()
                 doorData.faction = v.ixFactionID
             end
 
-            // Add the door to the door information.
+            -- Add the door to the door information.
             if (!table.IsEmpty(doorData)) then
                 data[k] = doorData
             end
         end
-    // Save all of the door information.
+    -- Save all of the door information.
     self:SetData(data)
 end
 
@@ -156,18 +156,18 @@ function PLUGIN:CanPlayerUseDoor(client, entity)
     end
 end
 
-// Whether or not a player a player has any abilities over the door, such as locking.
+-- Whether or not a player a player has any abilities over the door, such as locking.
 function PLUGIN:CanPlayerAccessDoor(client, door, access)
     local faction = door:GetNetVar("faction")
 
-    // If the door has a faction set which the client is a member of, allow access.
+    -- If the door has a faction set which the client is a member of, allow access.
     if (faction and client:Team() == faction) then
         return true
     end
 
     local class = door:GetNetVar("class")
 
-    // If the door has a faction set which the client is a member of, allow access.
+    -- If the door has a faction set which the client is a member of, allow access.
     local classData = ix.class.list[class]
     local charClass = client:GetCharacter():GetClass()
     local classData2 = ix.class.list[charClass]

@@ -3,19 +3,19 @@ PLUGIN.name = "Save Items"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "Saves items that were dropped."
 
-/*
+--[[--
     function PLUGIN:OnSavedItemLoaded(items)
         for k, v in ipairs(items) do
-            // do something
+            -- do something
         end
     end
 
     function PLUGIN:ShouldDeleteSavedItems()
         return true
     end
-*/
+]]
 
-// as title says.
+-- as title says.
 
 function PLUGIN:LoadData()
     local items = self:GetData()
@@ -31,7 +31,7 @@ function PLUGIN:LoadData()
 
         if (#idRange > 0) then
             if (hook.Run("ShouldDeleteSavedItems") == true) then
-                // don't spawn saved item and just delete them.
+                -- don't spawn saved item and just delete them.
                 local query = mysql:Delete("ix_items")
                     query:WhereIn("item_id", idRange)
                 query:Execute()
@@ -84,13 +84,13 @@ function PLUGIN:LoadData()
                                 end
                             end
 
-                            // we need to manually restore bag inventories in the world since they don't have a current owner
-                            // that it can automatically restore along with the character when it's loaded
+                            -- we need to manually restore bag inventories in the world since they don't have a current owner
+                            -- that it can automatically restore along with the character when it's loaded
                             if (!table.IsEmpty(bagInventories)) then
                                 ix.inventory.Restore(bagInventories)
                             end
 
-                            hook.Run("OnSavedItemLoaded", loadedItems) // when you have something in the dropped item.
+                            hook.Run("OnSavedItemLoaded", loadedItems) -- when you have something in the dropped item.
                         end
                     end)
                 query:Execute()

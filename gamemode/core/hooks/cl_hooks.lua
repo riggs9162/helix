@@ -110,7 +110,7 @@ function GM:LoadFonts(font, genericFont)
         weight = 800
     })
 
-    // The more readable font.
+    -- The more readable font.
     font = genericFont
 
     surface.CreateFont("ixBigFont", {
@@ -218,7 +218,7 @@ function GM:LoadFonts(font, genericFont)
         weight = 800
     })
 
-    // Introduction fancy font.
+    -- Introduction fancy font.
     font = "Roboto Th"
 
     surface.CreateFont("ixIntroTitleFont", {
@@ -302,7 +302,7 @@ function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos
     local client = LocalPlayer()
     local bWepRaised = client:IsWepRaised()
 
-    // update tween if the raised state is out of date
+    -- update tween if the raised state is out of date
     if (client.ixWasWeaponRaised != bWepRaised) then
         local fraction = bWepRaised and 0 or 1
 
@@ -404,10 +404,10 @@ function GM:NetworkEntityCreated(entity)
     if (entity:IsPlayer()) then
         entity:SetIK(false)
 
-        // we've just discovered a new player, so we need to update their animation state
+        -- we've just discovered a new player, so we need to update their animation state
         if (entity != LocalPlayer()) then
-            // we don't need to call the PlayerWeaponChanged hook here since it'll be handled below,
-            // when this player's weapon has been discovered
+            -- we don't need to call the PlayerWeaponChanged hook here since it'll be handled below,
+            -- when this player's weapon has been discovered
             hook.Run("PlayerModelChanged", entity, entity:GetModel())
         end
     elseif (entity:IsWeapon()) then
@@ -669,14 +669,14 @@ function GM:PopulateImportantCharacterInfo(client, character, container)
     local color = team.GetColor(client:Team())
     container:SetArrowColor(color)
 
-    // name
+    -- name
     local name = container:AddRow("name")
     name:SetImportant()
     name:SetText(hookRun("GetCharacterName", client) or character:GetName())
     name:SetBackgroundColor(color)
     name:SizeToContents()
 
-    // injured text
+    -- injured text
     local injureText, injureTextColor = hookRun("GetInjuredText", client)
 
     if (injureText) then
@@ -689,7 +689,7 @@ function GM:PopulateImportantCharacterInfo(client, character, container)
 end
 
 function GM:PopulateCharacterInfo(client, character, container)
-    // description
+    -- description
     local descriptionText = character:GetDescription()
     descriptionText = (descriptionText:utf8len() > 128 and
         string.format("%s...", descriptionText:utf8sub(1, 125)) or
@@ -774,7 +774,7 @@ function GM:CreateMove(command)
     end
 end
 
-// Called when use has been pressed on an item.
+-- Called when use has been pressed on an item.
 function GM:ShowEntityMenu(entity)
     local options = entity:GetEntityMenu(LocalPlayer())
 
@@ -951,7 +951,7 @@ hook.Add("player_spawn", "ixPlayerSpawn", function(data)
     local client = Player(data.userid)
 
     if (IsValid(client)) then
-        // GetBoneName returns __INVALIDBONE__ for everything the first time you use it, so we'll force an update to make them valid
+        -- GetBoneName returns __INVALIDBONE__ for everything the first time you use it, so we'll force an update to make them valid
         client:SetupBones()
         client:SetIK(false)
 

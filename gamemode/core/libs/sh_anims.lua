@@ -1,5 +1,5 @@
 
-/*
+--[[--
 Player model animation.
 
 Helix comes with support for using NPC animations/models as regular player models by manually translating animations. There are
@@ -16,8 +16,8 @@ a few standard animation sets that are built-in that should cover most non-playe
 If you find that your models are T-posing when they work elsewhere, you'll probably need to set the model class for your
 model with `ix.anim.SetModelClass` in order for the correct animations to be used. If you'd like to add your own animation
 class, simply add to the `ix.anim` table with a model class name and the required animation translation table.
-*/
-// @module ix.anim
+]]
+-- @module ix.anim
 
 ix.anim = ix.anim or {}
 ix.anim.citizen_male = {
@@ -397,11 +397,11 @@ ix.anim.fastZombie = {
 
 local translations = {}
 
-/// Sets a model's animation class.
-// @realm shared
-// @string model Model name to set the animation class for
-// @string class Animation class to assign to the model
-// @usage ix.anim.SetModelClass("models/police.mdl", "metrocop")
+--- Sets a model's animation class.
+-- @realm shared
+-- @string model Model name to set the animation class for
+-- @string class Animation class to assign to the model
+-- @usage ix.anim.SetModelClass("models/police.mdl", "metrocop")
 function ix.anim.SetModelClass(model, class)
     if (!ix.anim[class]) then
         error("'" .. tostring(class) .. "' is not a valid animation class!")
@@ -410,13 +410,13 @@ function ix.anim.SetModelClass(model, class)
     translations[model:lower()] = class
 end
 
-/// Gets a model's animation class.
-// @realm shared
-// @string model Model to get the animation class for
-// @treturn[1] string Animation class of the model
-// @treturn[2] nil If there was no animation associated with the given model
-// @usage ix.anim.GetModelClass("models/police.mdl")
-// > metrocop
+--- Gets a model's animation class.
+-- @realm shared
+-- @string model Model to get the animation class for
+-- @treturn[1] string Animation class of the model
+-- @treturn[2] nil If there was no animation associated with the given model
+-- @usage ix.anim.GetModelClass("models/police.mdl")
+-- > metrocop
 function ix.anim.GetModelClass(model)
     if (!model) then
         return
@@ -456,20 +456,20 @@ if (SERVER) then
 
     local playerMeta = FindMetaTable("Player")
 
-    /// Player anim methods
-    // @classmod Player
+    --- Player anim methods
+    -- @classmod Player
 
-    /// Forces this player's model to play an animation sequence. It also prevents the player from firing their weapon while the
-    // animation is playing.
-    // @realm server
-    // @string sequence Name of the animation sequence to play
-    // @func[opt=nil] callback Function to call when the animation finishes. This is also called immediately if the animation
-    // fails to play
-    // @number[opt=nil] time How long to play the animation for. This defaults to the duration of the animation
-    // @bool[opt=false] bNoFreeze Whether or not to avoid freezing this player in place while the animation is playing
-    // @bool[opt=false] loop Whether or not to have the animation loop. This does nothing if time is not set to greater than the duration of the animation
-    // @number[opt=1] speed The speed at which the animation should play
-    // @see LeaveSequence
+    --- Forces this player's model to play an animation sequence. It also prevents the player from firing their weapon while the
+    -- animation is playing.
+    -- @realm server
+    -- @string sequence Name of the animation sequence to play
+    -- @func[opt=nil] callback Function to call when the animation finishes. This is also called immediately if the animation
+    -- fails to play
+    -- @number[opt=nil] time How long to play the animation for. This defaults to the duration of the animation
+    -- @bool[opt=false] bNoFreeze Whether or not to avoid freezing this player in place while the animation is playing
+    -- @bool[opt=false] loop Whether or not to have the animation loop. This does nothing if time is not set to greater than the duration of the animation
+    -- @number[opt=1] speed The speed at which the animation should play
+    -- @see LeaveSequence
     function playerMeta:ForceSequence(sequence, callback, time, bNoFreeze, loop, speed)
         speed = speed or 1
 
@@ -521,8 +521,8 @@ if (SERVER) then
         return false
     end
 
-    /// Forcefully stops this player's model from playing an animation that was started by `ForceSequence`.
-    // @realm server
+    --- Forcefully stops this player's model from playing an animation that was started by `ForceSequence`.
+    -- @realm server
     function playerMeta:LeaveSequence()
         hook.Run("PlayerLeaveSequence", self)
 

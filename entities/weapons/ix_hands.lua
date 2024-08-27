@@ -51,10 +51,10 @@ SWEP.FireWhenLowered = true
 SWEP.HoldType = "fist"
 
 SWEP.holdDistance = 64
-SWEP.maxHoldDistance = 96 // how far away the held object is allowed to travel before forcefully dropping
-SWEP.maxHoldStress = 4000 // how much stress the held object can undergo before forcefully dropping
+SWEP.maxHoldDistance = 96 -- how far away the held object is allowed to travel before forcefully dropping
+SWEP.maxHoldStress = 4000 -- how much stress the held object can undergo before forcefully dropping
 
-// luacheck: globals ACT_VM_FISTS_DRAW ACT_VM_FISTS_HOLSTER
+-- luacheck: globals ACT_VM_FISTS_DRAW ACT_VM_FISTS_HOLSTER
 ACT_VM_FISTS_DRAW = 2
 ACT_VM_FISTS_HOLSTER = 1
 
@@ -198,7 +198,7 @@ function SWEP:Think()
                 end
             end
         end
-        // Prevents the camera from getting stuck when the object that the client is holding gets deleted.
+        -- Prevents the camera from getting stuck when the object that the client is holding gets deleted.
         if(!IsValid(self.heldEntity) and self:GetOwner():GetLocalVar("bIsHoldingObject", true)) then
             self:GetOwner():SetLocalVar("bIsHoldingObject", false)
         end

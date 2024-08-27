@@ -9,7 +9,7 @@ function PLUGIN:CanPlayerEnterAct(client, modelClass, variant, act)
         return false, L("notNow", client)
     end
 
-    // check if player's model class has an entry in this act table
+    -- check if player's model class has an entry in this act table
     modelClass = modelClass or ix.anim.GetModelClass(client:GetModel())
     local data = act[modelClass]
 
@@ -17,7 +17,7 @@ function PLUGIN:CanPlayerEnterAct(client, modelClass, variant, act)
         return false, L("modelNoSeq", client)
     end
 
-    // some models don't support certain variants
+    -- some models don't support certain variants
     local sequence = data.sequence[variant]
 
     if (!sequence) then

@@ -1,9 +1,9 @@
 
 local PANEL = {
     types = {
-        "Info", // info
-        "Success", // success
-        "Error" // error
+        "Info", -- info
+        "Success", -- success
+        "Error" -- error
     }
 }
 

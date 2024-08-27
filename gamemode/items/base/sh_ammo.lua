@@ -3,8 +3,8 @@ ITEM.name = "Ammo Base"
 ITEM.model = "models/Items/BoxSRounds.mdl"
 ITEM.width = 1
 ITEM.height = 1
-ITEM.ammo = "pistol" // type of the ammo
-ITEM.ammoAmount = 30 // amount of the ammo
+ITEM.ammo = "pistol" -- type of the ammo
+ITEM.ammoAmount = 30 -- amount of the ammo
 ITEM.description = "A Box that contains %s of Pistol Ammo"
 ITEM.category = "Ammunition"
 ITEM.useSound = "items/ammo_pickup.wav"
@@ -23,7 +23,7 @@ if (CLIENT) then
     end
 end
 
-// On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
+-- On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
 ITEM.functions.use = {
     name = "Load",
     tip = "useTip",
@@ -38,7 +38,7 @@ ITEM.functions.use = {
     end,
 }
 
-// Called after the item is registered into the item tables.
+-- Called after the item is registered into the item tables.
 function ITEM:OnRegistered()
     if (ix.ammo) then
         ix.ammo.Register(self.ammo)

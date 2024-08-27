@@ -1,7 +1,7 @@
 
 local padding = ScreenScale(32)
 
-// create character panel
+-- create character panel
 DEFINE_BASECLASS("ixCharMenuPanel")
 local PANEL = {}
 
@@ -16,11 +16,11 @@ function PANEL:Init()
     self.factionButtons = {}
     self.repopulatePanels = {}
 
-    // faction selection subpanel
+    -- faction selection subpanel
     self.factionPanel = self:AddSubpanel("faction", true)
     self.factionPanel:SetTitle("chooseFaction")
     self.factionPanel.OnSetActive = function()
-        // if we only have one faction, we are always selecting that one so we can skip to the description section
+        -- if we only have one faction, we are always selecting that one so we can skip to the description section
         if (#self.factionButtons == 1) then
             self:SetActiveSubpanel("description", 0)
         end
@@ -65,7 +65,7 @@ function PANEL:Init()
         parent.mainPanel:Undim()
     end
 
-    // character customization subpanel
+    -- character customization subpanel
     self.description = self:AddSubpanel("description")
     self.description:SetTitle("chooseDescription")
 
@@ -105,7 +105,7 @@ function PANEL:Init()
     descriptionProceed:Dock(BOTTOM)
     descriptionProceed.DoClick = function()
         if (self:VerifyProgression("description")) then
-            // there are no panels on the attributes section other than the create button, so we can just create the character
+            -- there are no panels on the attributes section other than the create button, so we can just create the character
             if (#self.attributesPanel:GetChildren() < 2) then
                 self:SendPayload()
                 return
@@ -116,7 +116,7 @@ function PANEL:Init()
         end
     end
 
-    // attributes subpanel
+    -- attributes subpanel
     self.attributes = self:AddSubpanel("attributes")
     self.attributes:SetTitle("chooseSkills")
 
@@ -153,21 +153,21 @@ function PANEL:Init()
         self:SendPayload()
     end
 
-    // creation progress panel
+    -- creation progress panel
     self.progress = self:Add("ixSegmentedProgress")
     self.progress:SetBarColor(ix.config.Get("color"))
     self.progress:SetSize(parent:GetWide(), 0)
     self.progress:SizeToContents()
     self.progress:SetPos(0, parent:GetTall() - self.progress:GetTall())
 
-    // setup payload hooks
+    -- setup payload hooks
     self:AddPayloadHook("model", function(value)
         local faction = ix.faction.indices[self.payload.faction]
 
         if (faction) then
             local model = faction:GetModels(LocalPlayer())[value]
 
-            // assuming bodygroups
+            -- assuming bodygroups
             if (istable(model)) then
                 self.factionModel:SetModel(model[1], model[2] or 0, model[3])
                 self.descriptionModel:SetModel(model[1], model[2] or 0, model[3])
@@ -180,7 +180,7 @@ function PANEL:Init()
         end
     end)
 
-    // setup character creation hooks
+    -- setup character creation hooks
     net.Receive("ixCharacterAuthed", function()
         timer.Remove("ixCharacterCreateTimeout")
         self.awaitingResponse = false
@@ -266,8 +266,8 @@ function PANEL:OnSlideUp()
     self:Populate()
     self.progress:SetProgress(1)
 
-    // the faction subpanel will skip to next subpanel if there is only one faction to choose from,
-    // so we don't have to worry about it here
+    -- the faction subpanel will skip to next subpanel if there is only one faction to choose from,
+    -- so we don't have to worry about it here
     self:SetActiveSubpanel("faction", 0)
 end
 
@@ -281,7 +281,7 @@ function PANEL:ResetPayload(bWithHooks)
 
     self.payload = {}
 
-    // TODO: eh..
+    -- TODO: eh..
     function self.payload.Set(payload, key, value)
         self:SetPayload(key, value)
     end
@@ -319,7 +319,7 @@ function PANEL:RunPayloadHook(key, value)
 end
 
 function PANEL:GetContainerPanel(name)
-    // TODO: yuck
+    -- TODO: yuck
     if (name == "description") then
         return self.descriptionPanel
     elseif (name == "attributes") then
@@ -335,8 +335,8 @@ end
 
 function PANEL:Populate()
     if (!self.bInitialPopulate) then
-        // setup buttons for the faction panel
-        // TODO: make this a bit less janky
+        -- setup buttons for the faction panel
+        -- TODO: make this a bit less janky
         local lastSelected
 
         for _, v in pairs(self.factionButtons) do
@@ -375,14 +375,14 @@ function PANEL:Populate()
         end
     end
 
-    // remove panels created for character vars
+    -- remove panels created for character vars
     for i = 1, #self.repopulatePanels do
         self.repopulatePanels[i]:Remove()
     end
 
     self.repopulatePanels = {}
 
-    // payload is empty because we attempted to send it - for whatever reason we're back here again so we need to repopulate
+    -- payload is empty because we attempted to send it - for whatever reason we're back here again so we need to repopulate
     if (!self.payload.faction) then
         for _, v in pairs(self.factionButtons) do
             if (v:GetSelected()) then
@@ -396,7 +396,7 @@ function PANEL:Populate()
 
     local zPos = 1
 
-    // set up character vars
+    -- set up character vars
     for k, v in SortedPairsByMemberValue(ix.char.vars, "index") do
         if (!v.bNoDisplay and k != "__SortedIndex") then
             local container = self:GetContainerPanel(v.category or "description")
@@ -407,7 +407,7 @@ function PANEL:Populate()
 
             local panel
 
-            // if the var has a custom way of displaying, we'll use that instead
+            -- if the var has a custom way of displaying, we'll use that instead
             if (v.OnDisplay) then
                 panel = v:OnDisplay(container, self.payload)
             elseif (isstring(v.default)) then
@@ -421,7 +421,7 @@ function PANEL:Populate()
             end
 
             if (IsValid(panel)) then
-                // add label for entry
+                -- add label for entry
                 local label = container:Add("DLabel")
                 label:SetFont("ixMenuButtonLabelFont")
                 label:SetText(L(k):utf8upper())
@@ -429,7 +429,7 @@ function PANEL:Populate()
                 label:DockMargin(0, 16, 0, 2)
                 label:Dock(TOP)
 
-                // we need to set the docking order so the label is above the panel
+                -- we need to set the docking order so the label is above the panel
                 label:SetZPos(zPos - 1)
                 panel:SetZPos(zPos)
 
@@ -446,7 +446,7 @@ function PANEL:Populate()
     end
 
     if (!self.bInitialPopulate) then
-        // setup progress bar segments
+        -- setup progress bar segments
         if (#self.factionButtons > 1) then
             self.progress:AddSegment("@faction")
         end
@@ -457,7 +457,7 @@ function PANEL:Populate()
             self.progress:AddSegment("@skills")
         end
 
-        // we don't need to show the progress bar if there's only one segment
+        -- we don't need to show the progress bar if there's only one segment
         if (#self.progress:GetSegments() == 1) then
             self.progress:SetVisible(false)
         end

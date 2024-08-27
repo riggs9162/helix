@@ -11,7 +11,7 @@ local function EmitChange(pitch)
     LocalPlayer():EmitSound("weapons/ar2/ar2_empty.wav", 75, pitch or 150, 0.25)
 end
 
-// color setting
+-- color setting
 local PANEL = {}
 
 AccessorFunc(PANEL, "padding", "Padding", FORCE_NUMBER)
@@ -82,7 +82,7 @@ end
 
 vgui.Register("ixSettingsRowColor", PANEL, "ixSettingsRow")
 
-// color setting picker
+-- color setting picker
 DEFINE_BASECLASS("Panel")
 PANEL = {}
 
@@ -151,7 +151,7 @@ function PANEL:Remove()
 
     self:OnValueChanged()
 
-    // @todo open/close animations
+    -- @todo open/close animations
     self.bClosing = true
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
@@ -160,7 +160,7 @@ end
 
 vgui.Register("ixSettingsRowColorPicker", PANEL, "EditablePanel")
 
-// number setting
+-- number setting
 PANEL = {}
 
 function PANEL:Init()
@@ -246,7 +246,7 @@ end
 
 vgui.Register("ixSettingsRowNumber", PANEL, "ixSettingsRow")
 
-// number setting entry
+-- number setting entry
 DEFINE_BASECLASS("Panel")
 PANEL = {}
 
@@ -326,7 +326,7 @@ function PANEL:Remove()
 
     self:OnValueChanged()
 
-    // @todo open/close animations
+    -- @todo open/close animations
     self.bClosing = true
     self:SetMouseInputEnabled(false)
     self:SetKeyboardInputEnabled(false)
@@ -335,7 +335,7 @@ end
 
 vgui.Register("ixSettingsRowNumberEntry", PANEL, "EditablePanel")
 
-// string setting
+-- string setting
 PANEL = {}
 
 function PANEL:Init()
@@ -362,7 +362,7 @@ end
 
 vgui.Register("ixSettingsRowString", PANEL, "ixSettingsRow")
 
-// bool setting
+-- bool setting
 PANEL = {}
 
 function PANEL:Init()
@@ -385,7 +385,7 @@ end
 
 vgui.Register("ixSettingsRowBool", PANEL, "ixSettingsRow")
 
-// array setting
+-- array setting
 PANEL = {}
 
 function PANEL:Init()
@@ -399,7 +399,7 @@ function PANEL:Init()
         self:OnValueChanged(self:GetValue())
 
         panel:SizeToContents()
-        panel:SetWide(panel:GetWide() + 12) // padding for arrow (nice)
+        panel:SetWide(panel:GetWide() + 12) -- padding for arrow (nice)
 
         if (!self.bInitial) then
             EmitChange()
@@ -436,7 +436,7 @@ end
 
 vgui.Register("ixSettingsRowArray", PANEL, "ixSettingsRow")
 
-// settings row
+-- settings row
 PANEL = {}
 
 AccessorFunc(PANEL, "backgroundIndex", "BackgroundIndex", FORCE_NUMBER)
@@ -508,18 +508,18 @@ function PANEL:GetText()
     return self.text:GetText()
 end
 
-// implemented by row types
+-- implemented by row types
 function PANEL:GetValue()
 end
 
 function PANEL:SetValue(value)
 end
 
-// meant for array types to populate combo box values
+-- meant for array types to populate combo box values
 function PANEL:Populate(key, info)
 end
 
-// called when value is changed by user
+-- called when value is changed by user
 function PANEL:OnValueChanged(newValue)
 end
 
@@ -538,7 +538,7 @@ end
 
 vgui.Register("ixSettingsRow", PANEL, "EditablePanel")
 
-// settings panel
+-- settings panel
 PANEL = {}
 
 function PANEL:Init()
@@ -546,7 +546,7 @@ function PANEL:Init()
     self.rows = {}
     self.categories = {}
 
-    // scroll panel
+    -- scroll panel
     DEFINE_BASECLASS("DScrollPanel")
 
     self.canvas = self:Add("DScrollPanel")
@@ -618,7 +618,7 @@ function PANEL:SetSearchEnabled(bValue)
         return
     end
 
-    // search entry
+    -- search entry
     self.searchEntry = self:Add("ixIconTextEntry")
     self.searchEntry:Dock(TOP)
     self.searchEntry:SetEnterAllowed(false)
@@ -660,9 +660,9 @@ function PANEL:FilterRows(query)
                 OnComplete = function(animation, panel)
                     panel:SetVisible(bFound)
 
-                    // need this so categories are sized properly when animations are disabled - there is no guaranteed order
-                    // that animations will think so we SizeToContents here. putting it here will result in redundant calls but
-                    // I guess we have the performance to spare
+                    -- need this so categories are sized properly when animations are disabled - there is no guaranteed order
+                    -- that animations will think so we SizeToContents here. putting it here will result in redundant calls but
+                    -- I guess we have the performance to spare
                     if (ix.option.Get("disableAnimations", false)) then
                         category:SizeToContents()
                     end
@@ -710,7 +710,7 @@ hook.Add("CreateMenuButtons", "ixSettings", function(tabs)
                 category = L(category)
                 panel:AddCategory(category)
 
-                // sort options by language phrase rather than the key
+                -- sort options by language phrase rather than the key
                 table.sort(options, function(a, b)
                     return L(a.phrase) < L(b.phrase)
                 end)
@@ -723,7 +723,7 @@ hook.Add("CreateMenuButtons", "ixSettings", function(tabs)
                     row:SetText(L(data.phrase))
                     row:Populate(key, data)
 
-                    // type-specific properties
+                    -- type-specific properties
                     if (data.type == ix.type.number) then
                         row:SetMin(data.min or 0)
                         row:SetMax(data.max or 10)

@@ -82,11 +82,11 @@ ix.command.Add("CharGiveFlag", {
         bit.bor(ix.type.string, ix.type.optional)
     },
     OnRun = function(self, client, target, flags)
-        // show string request if no flags are specified
+        -- show string request if no flags are specified
         if (!flags) then
             local available = ""
 
-            // sort and display flags the character already has
+            -- sort and display flags the character already has
             for k, _ in SortedPairs(ix.flag.list) do
                 if (!target:HasFlags(k)) then
                     available = available .. k
@@ -260,7 +260,7 @@ ix.command.Add("CharSetName", {
         bit.bor(ix.type.text, ix.type.optional)
     },
     OnRun = function(self, client, target, newName)
-        // display string request panel if no name was specified
+        -- display string request panel if no name was specified
         if (newName:len() == 0) then
             return client:RequestString("@chgName", "@chgNameDesc", function(text)
                 ix.command.Run(client, "CharSetName", {target:GetName(), text})
@@ -854,7 +854,7 @@ ix.command.Add("CharSetClass", {
 
                 targetPlayer:NotifyLocalized("becomeClass", L(classTable.name, targetPlayer))
 
-                // only send second notification if the character isn't setting their own class
+                -- only send second notification if the character isn't setting their own class
                 if (client != targetPlayer) then
                     return "@setClass", target:GetName(), L(classTable.name, client)
                 end
