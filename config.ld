@@ -15,8 +15,8 @@ module_file = {
 }
 
 dir = "docs/html"
-project = "Helix"
-title = "Helix Documentation"
+project = "Minerva Servers - Helix Framework"
+title = "Minerva Servers - Helix Documentation"
 
 no_space_before_args = true
 style = "docs/css"
