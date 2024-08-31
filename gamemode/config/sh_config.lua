@@ -122,7 +122,7 @@ ix.config.Add("music", "music/hl2_song2.mp3", "The default music played in the c
     category = "appearance"
 })
 ix.config.Add("musicVolume", 0.5, "The volume of the music played in the character menu.", nil, {
-    data = {min = 0, max = 1, decimals = 2},
+    data = {min = 0, max = 2, decimals = 1},
     category = "appearance"
 })
 ix.config.Add("musicDelay", 0, "The delay before the music starts playing in the character menu.", nil, {
