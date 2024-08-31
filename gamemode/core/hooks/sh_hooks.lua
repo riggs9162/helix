@@ -357,9 +357,11 @@ do
             BaseClass:HandlePlayerSwimming(client, velocity) or
             BaseClass:HandlePlayerDucking(client, velocity)) then -- luacheck: ignore 542
         else
-            local length = velocity:Length2DSqr()
+            local maxSpeed = client:GetWalkSpeed()
+            maxSpeed = maxSpeed ^ 2
 
-            if (length > 22500) then
+            local length = velocity:Length2DSqr()
+            if (length > maxSpeed * 1.5) then
                 clientInfo.CalcIdeal = anims[ACT_MP_RUN][isRaised and 2 or 1]
             elseif (length > 0.25) then
                 clientInfo.CalcIdeal = anims[ACT_MP_WALK][isRaised and 2 or 1]
