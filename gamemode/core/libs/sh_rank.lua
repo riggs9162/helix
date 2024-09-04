@@ -21,9 +21,7 @@ ix.char.RegisterVar("rank", {
 -- @internal
 -- @string directory The path to the rank files.
 function ix.rank.LoadFromDir(directory)
-    for i = 1, #file.Find(directory.."--[[--.lua", "LUA") do
-        local v = file.Find(directory.."--[[--.lua", "LUA")[i]
-
+    for k, v in ipairs(file.Find(directory.."/*.lua", "LUA")) do
         local niceName = v:sub(4, -5)
         -- Determine a numeric identifier for this rank.
         local index = #ix.rank.list + 1
