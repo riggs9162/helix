@@ -553,7 +553,17 @@ end
 function GetCharacterDescription(client)
 end
 
---- @realm shared
+--- Returns the name of the character to be displayed in the chat box or other areas.
+-- @realm shared
+-- @player speaker Player that is speaking
+-- @string chatType Chat type of the message. This will be something registered with `ix.chat.Register` - like `ic`, `ooc`, etc.
+-- @treturn string Name of the character
+-- @usage -- Show the name of the character at all times to admins.
+-- function PLUGIN:GetCharacterName(speaker, chatType)
+-- 	if (LocalPlayer():IsAdmin()) then
+-- 		return speaker:GetCharacter():GetName()
+-- 	end
+-- end
 function GetCharacterName(speaker, chatType)
 end
 
