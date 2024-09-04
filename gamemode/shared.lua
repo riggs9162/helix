@@ -36,8 +36,6 @@
 -- > "string"
 ix.type = ix.type or {}
 
-local GM = GM or GAMEMODE
-
 -- Define gamemode information.
 GM.Name = "Helix"
 GM.Author = "nebulous.cloud"
@@ -45,19 +43,20 @@ GM.Website = "https://nebulous.cloud"
 GM.Version = "1.1"
 
 local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
+local version = GM.Version or "1.0"
 http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Servers/VERSION.txt", function(body)
-    if ( body == GM.Version ) then
+    if ( body == version ) then
         if ( SERVER ) then
-            MsgC(Color(0, 255, 0), "[Helix] You are using the latest version of the Helix Framework (" .. GM.Version .. ").\n")
+            MsgC(Color(0, 255, 0), "[Helix] You are using the latest version of the Helix Framework (" .. version .. ").\n")
         else
-            MsgC(Color(0, 255, 0), "[Helix] This server is using the latest version of the Helix Framework (" .. GM.Version .. ").\n")
+            MsgC(Color(0, 255, 0), "[Helix] This server is using the latest version of the Helix Framework (" .. version .. ").\n")
         end
     else
         if ( SERVER ) then
-            MsgC(Color(255, 0, 0), "[Helix] You are using an outdated version of the Helix Framework (" .. GM.Version .. "), the newest version is version " .. body .. ".\n")
+            MsgC(Color(255, 0, 0), "[Helix] You are using an outdated version of the Helix Framework (" .. version .. "), the newest version is version " .. body .. ".\n")
             MsgC(Color(255, 0, 0), "[Helix] Please update to the latest version by downloading it from " .. install .. "\n")
         else
-            MsgC(Color(255, 0, 0), "[Helix] This server is using an outdated version of the Helix Framework (" .. GM.Version .. ").\n")
+            MsgC(Color(255, 0, 0), "[Helix] This server is using an outdated version of the Helix Framework (" .. version .. ").\n")
         end
     end
 end)
