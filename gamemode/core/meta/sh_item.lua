@@ -304,6 +304,7 @@ function ITEM:GetOwner()
     end
 
     local id = self:GetID()
+    if (!id) then return end
 
     for _, v in player.Iterator() do
         local character = v:GetCharacter()
