@@ -36,11 +36,31 @@
 -- > "string"
 ix.type = ix.type or {}
 
+local GM = GM or GAMEMODE
+
 -- Define gamemode information.
 GM.Name = "Helix"
 GM.Author = "nebulous.cloud"
 GM.Website = "https://nebulous.cloud"
-GM.Version = "β"
+GM.Version = "1.1"
+
+local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
+http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Servers/VERSION.txt", function(body)
+    if ( body == GM.Version ) then
+        if ( SERVER ) then
+            MsgC(Color(0, 255, 0), "[Helix] You are using the latest version of the Helix Framework (" .. GM.Version .. ").\n")
+        else
+            MsgC(Color(0, 255, 0), "[Helix] This server is using the latest version of the Helix Framework (" .. GM.Version .. ").\n")
+        end
+    else
+        if ( SERVER ) then
+            MsgC(Color(255, 0, 0), "[Helix] You are using an outdated version of the Helix Framework (" .. GM.Version .. "), the newest version is version " .. body .. ".\n")
+            MsgC(Color(255, 0, 0), "[Helix] Please update to the latest version by downloading it from " .. install .. "\n")
+        else
+            MsgC(Color(255, 0, 0), "[Helix] This server is using an outdated version of the Helix Framework (" .. GM.Version .. ").\n")
+        end
+    end
+end)
 
 do
     -- luacheck: globals player_manager
