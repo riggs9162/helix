@@ -503,7 +503,13 @@ function GM:PlayerLoadout(client)
     if (character) then
         client:SetupHands()
         -- Set their player model to the character's model.
-        client:SetModel(character:GetModel())
+
+        local charModel = character:GetModel()
+        if ( istable(charModel) ) then
+            charModel = charModel[math.random(1, #charModel)]
+        end
+
+        client:SetModel(charModel)
         client:Give("ix_hands")
         client:SetWalkSpeed(ix.config.Get("walkSpeed"))
         client:SetRunSpeed(ix.config.Get("runSpeed"))
