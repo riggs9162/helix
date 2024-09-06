@@ -262,6 +262,23 @@ function META:GetFilledSlotCount()
     return count
 end
 
+--- Returns the amount of slots currently free in the Inventory.
+-- @realm shared
+-- @treturn number The amount of slots currently free.
+function META:GetFreeSlotCount()
+    local count = 0
+
+    for x = 1, self.w do
+        for y = 1, self.h do
+            if (!(self.slots[x] or {})[y]) then
+                count = count + 1
+            end
+        end
+    end
+
+    return count
+end
+
 --- Finds an empty slot of a specified width and height.
 -- In most cases, to check if an `Item` can actually fit in the `Inventory`,
 -- as if it can't, it will just return `nil`.
