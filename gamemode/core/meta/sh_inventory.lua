@@ -287,6 +287,10 @@ end
 function META:GetSlotCountForItem(item)
     local count = 0
 
+    if ( isstring(item) ) then
+        item = ix.item.Get(item)
+    end
+
     for x = 1, self.w do
         for y = 1, self.h do
             if (self:CanItemFit(x, y, item.width, item.height)) then
