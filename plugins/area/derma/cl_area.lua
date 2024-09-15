@@ -23,10 +23,10 @@ function PANEL:Init()
     self.label:SetText("Area")
 
     self.text = ""
-    self.tickSound = "ui/buttonrollover.wav"
-    self.tickSoundRange = {190, 200}
+    self.tickSound = ix.config.Get("areaTickSound", "npc/roller/mine/rmine_chirp_ping1.wav")
+    self.tickSoundRange = {ix.config.Get("areaTickSoundMin", 190), ix.config.Get("areaTickSoundMax", 200)}
     self.backgroundAlpha = 255
-    self.expireTime = 8
+    self.expireTime = ix.config.Get("areaExpireTime", 8)
     self.animationTime = 2
 
     self.character = 1
@@ -70,7 +70,9 @@ function PANEL:Think()
             self.character = self.character + 1
             self.label:SetText(string.utf8sub(self.text, 1, self.character))
 
-            LocalPlayer():EmitSound(self.tickSound, 100, math.random(self.tickSoundRange[1], self.tickSoundRange[2]))
+            if (ix.config.Get("areaTickSoundEnabled", true)) then
+                LocalPlayer():EmitSound(self.tickSound, 100, math.random(self.tickSoundRange[1], self.tickSoundRange[2]))
+            end
         end
 
         if (time >= self.createTime + self.expireTime and !self.bRemoving) then
@@ -148,6 +150,9 @@ function PANEL:Init()
 end
 
 function PANEL:AddEntry(entry, color)
+    if (!entry) then return end
+    if (!ix.config.Get("areaShowNotifications", true)) then return end
+
     color = color or ix.config.Get("color")
 
     local id = #self.entries + 1

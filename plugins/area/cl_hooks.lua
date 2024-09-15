@@ -78,18 +78,21 @@ function PLUGIN:HUDPaint()
     local area = ix.area.stored[id]
     local height = ScrH()
 
-    local y = 64
-    y = y + DrawTextBackground(64, y, L("areaEditMode"), nil, ix.config.Get("color"))
+    local x, y = ScreenScale(16), ScreenScale(16)
+    if (IsValid(ix.gui.areaEdit)) then
+        x = ix.gui.areaEdit:GetWide() + ScreenScale(16)
+    end
+    y = y + DrawTextBackground(x, y, L("areaEditMode"), nil, ix.config.Get("color"))
 
     if (!self.editStart) then
-        y = y + DrawTextBackground(64, y, L("areaEditTip"), "ixSmallTitleFont")
-        DrawTextBackground(64, y, L("areaRemoveTip"), "ixSmallTitleFont")
+        y = y + DrawTextBackground(x, y, L("areaEditTip"), "ixSmallTitleFont")
+        DrawTextBackground(x, y, L("areaRemoveTip"), "ixSmallTitleFont")
     else
-        DrawTextBackground(64, y, L("areaFinishTip"), "ixSmallTitleFont")
+        DrawTextBackground(x, y, L("areaFinishTip"), "ixSmallTitleFont")
     end
 
     if (area) then
-        DrawTextBackground(64, height - 64 - ScreenScale(12), id, "ixSmallTitleFont", area.properties.color)
+        DrawTextBackground(x, height - 64 - ScreenScale(12), id, "ixSmallTitleFont", area.properties.color)
     end
 end
 

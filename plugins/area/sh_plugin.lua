@@ -25,6 +25,51 @@ ix.config.Add("areaTickTime", 1, "How many seconds between each time a character
     }
 )
 
+ix.config.Add("areaTickSoundEnabled", true, "Whether or not to play a sound when entering or exiting areas.",
+    nil,
+    {
+        category = "areas"
+    }
+)
+
+ix.config.Add("areaTickSound", "ui/buttonrollover.wav", "The sound to play when entering or exiting areas.",
+    nil,
+    {
+        category = "areas"
+    }
+)
+
+ix.config.Add("areaTickSoundMin", 190, "The minimum pitch of the area tick sound.",
+    nil,
+    {
+        data = {min = 1, max = 255},
+        category = "areas"
+    }
+)
+
+ix.config.Add("areaTickSoundMax", 200, "The maximum pitch of the area tick sound.",
+    nil,
+    {
+        data = {min = 1, max = 255},
+        category = "areas"
+    }
+)
+
+ix.config.Add("areaExpireTime", 8, "How many seconds before an area notification fades away.",
+    nil,
+    {
+        data = {min = 1, max = 60},
+        category = "areas"
+    }
+)
+
+ix.config.Add("areaShowNotifications", true, "Whether or not to show area notifications.",
+    nil,
+    {
+        category = "areas"
+    }
+)
+
 function ix.area.AddProperty(name, type, default, data)
     ix.area.properties[name] = {
         type = type,

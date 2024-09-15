@@ -1,6 +1,7 @@
 
 local PLUGIN = PLUGIN
 local PANEL = {}
+local padding = ScreenScale(16)
 
 function PANEL:Init()
     if (IsValid(ix.gui.areaEdit)) then
@@ -8,12 +9,20 @@ function PANEL:Init()
     end
 
     ix.gui.areaEdit = self
+
     self.list = {}
     self.properties = {}
 
-    self:SetDeleteOnClose(true)
-    self:SetSizable(true)
-    self:SetTitle(L("areaNew"))
+    self:SetSize(ScrW() / 3, ScrH())
+    self:DockPadding(padding, padding, padding, padding)
+
+    local label = self:Add("DLabel")
+    label:SetText(L("areas"))
+    label:SetFont("ixTitleFont")
+    label:SetTextColor(ix.config.Get("color"))
+    label:SizeToContents()
+    label:Dock(TOP)
+    label:DockMargin(0, 0, 0, padding)
 
     -- scroll panel
     self.canvas = self:Add("DScrollPanel")
@@ -36,6 +45,7 @@ function PANEL:Init()
     self.typeEntry:Dock(RIGHT)
     self.typeEntry:SetFont("ixMenuButtonFont")
     self.typeEntry:SetTextColor(color_white)
+    self.typeEntry:SetFont("ixMenuButtonFont")
     self.typeEntry.OnSelect = function(panel)
         panel:SizeToContents()
         panel:SetWide(panel:GetWide() + 12) -- padding for arrow (nice)
@@ -70,8 +80,9 @@ function PANEL:Init()
         elseif (v.type == ix.type.bool) then
             panel = vgui.Create("ixCheckBox")
             panel:SetChecked(v.default, true)
+            panel:SetTall(ScreenScale(14))
         elseif (v.type == ix.type.color) then
-            panel = vgui.Create("DButton")
+            panel = vgui.Create("ixMenuButton")
             panel.value = v.default
             panel:SetText("")
             panel:SetSize(64, 64)
@@ -84,11 +95,8 @@ function PANEL:Init()
             end
 
             panel.Paint = function(_, width, height)
-                surface.SetDrawColor(0, 0, 0, 255)
-                surface.DrawOutlinedRect(0, 0, width, height)
-
                 surface.SetDrawColor(panel.value)
-                surface.DrawRect(4, 4, width - 8, height - 8)
+                surface.DrawRect(0, 0, width, height)
             end
 
             panel.DoClick = function()
@@ -128,17 +136,13 @@ function PANEL:Init()
     end
 
     -- save button
-    self.saveButton = self:Add("DButton")
+    self.saveButton = self:Add("ixMenuButton")
     self.saveButton:SetText(L("save"))
     self.saveButton:SizeToContents()
     self.saveButton:Dock(BOTTOM)
     self.saveButton.DoClick = function()
         self:Submit()
     end
-
-    self:SizeToContents()
-    self:SetPos(64, 0)
-    self:CenterVertical()
 end
 
 function PANEL:SizeToContents()
@@ -186,7 +190,27 @@ function PANEL:OnRemove()
     PLUGIN.editProperties = nil
 end
 
-vgui.Register("ixAreaEdit", PANEL, "DFrame")
+local gradientLeft = ix.util.GetMaterial("vgui/gradient-l")
+function PANEL:Paint(width, height)
+    ix.util.DrawBlur(self)
+
+    surface.SetDrawColor(0, 0, 0, 100)
+    surface.DrawRect(0, 0, width, height)
+
+    derma.SkinFunc("DrawImportantBackground", 0, 0, width, height)
+
+    surface.SetDrawColor(0, 0, 0, 200)
+    surface.SetMaterial(gradientLeft)
+    surface.DrawTexturedRect(0, 0, width, height)
+end
+
+function PANEL:Think()
+    if (input.IsKeyDown(KEY_TAB) or input.IsMouseDown(KEY_ESCAPE)) then
+        self:Remove()
+    end
+end
+
+vgui.Register("ixAreaEdit", PANEL, "DPanel")
 
 if (IsValid(ix.gui.areaEdit)) then
     ix.gui.areaEdit:Remove()
