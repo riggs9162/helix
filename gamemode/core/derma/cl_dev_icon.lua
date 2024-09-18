@@ -195,10 +195,10 @@ hook.Add("CreateDeveloperMenuButtons", "ixDeveloperItemCam", function(tabs)
             end
 
             modelPath.setting.OnChange = function(this)
-                local model = this:GetValue()
+                local value = this:GetValue()
 
-                if (model and model != "") then
-                    model:SetModel(model)
+                if (value and value != "") then
+                    model:SetModel(value)
                 end
             end
 
