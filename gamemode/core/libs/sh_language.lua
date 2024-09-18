@@ -72,7 +72,7 @@ if (SERVER) then
     -- luacheck: globals L
     function L(key, client, ...)
         local languages = ix.lang.stored
-        local langKey = ix.option.Get(client, "language", "english")
+        local langKey = IsValid(client) and ix.option.Get(client, "language", "english") or "english"
         local info = languages[langKey] or languages.english
 
         return string.format(info and info[key] or languages.english[key] or key, ...)
@@ -81,7 +81,7 @@ if (SERVER) then
     -- luacheck: globals L2
     function L2(key, client, ...)
         local languages = ix.lang.stored
-        local langKey = ix.option.Get(client, "language", "english")
+        local langKey = IsValid(client) and ix.option.Get(client, "language", "english") or "english"
         local info = languages[langKey] or languages.english
 
         if (info and info[key]) then
