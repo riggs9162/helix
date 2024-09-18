@@ -206,7 +206,8 @@ function PANEL:Submit()
 
     local pos = PLUGIN:GetPlayerAreaTrace().HitPos
     local snap = ix.option.Get("areaEditSnap", 8)
-    pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
+    snap = snap == 0 and 0.1 or snap
+    pos = Vector(math.Round(pos.x / snap) * snap, math.Round(pos.y / snap) * snap, math.Round(pos.z / snap) * snap)
 
     net.Start("ixAreaAdd")
         net.WriteString(name)

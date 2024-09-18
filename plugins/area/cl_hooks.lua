@@ -126,7 +126,8 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
     if (self.editStart) then
         local pos = self:GetPlayerAreaTrace().HitPos
         local snap = ix.option.Get("areaEditSnap", 8)
-        pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
+        snap = snap == 0 and 0.1 or snap
+        pos = Vector(math.Round(pos.x / snap) * snap, math.Round(pos.y / snap) * snap, math.Round(pos.z / snap) * snap)
 
         local center, min, max = self:GetLocalAreaPosition(self.editStart, pos)
         local color = Color(255, 255, 255, 25 + (1 + math.sin(SysTime() * 6)) * 115)
@@ -154,7 +155,8 @@ function PLUGIN:EditClick()
     if (!self.editStart) then
         local pos = self:GetPlayerAreaTrace().HitPos
         local snap = ix.option.Get("areaEditSnap", 8)
-        pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
+        snap = snap == 0 and 0.1 or snap
+        pos = Vector(math.Round(pos.x / snap) * snap, math.Round(pos.y / snap) * snap, math.Round(pos.z / snap) * snap)
         
         self.editStart = pos
     elseif (self.editStart and !self.editProperties) then
