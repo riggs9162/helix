@@ -11,6 +11,8 @@ LANGUAGE = {
     areaRemoveTip = "Press reload to remove the area you're currently in.",
     areaDeleteConfirm = "Are you sure you want to delete the area \"%s\"?",
     areaDelete = "Delete Area",
+    optAreaEditSnap = "Area Edit Snap",
+    optdAreaEditSnap = "The grid size for area editing.",
 
     cmdAreaEdit = "Enters area edit mode."
 }

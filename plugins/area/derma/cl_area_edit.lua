@@ -3,6 +3,8 @@ local PLUGIN = PLUGIN
 local PANEL = {}
 local padding = ScreenScale(16)
 
+DEFINE_BASECLASS("DPanel")
+
 function PANEL:Init()
     if (IsValid(ix.gui.areaEdit)) then
         ix.gui.areaEdit:Remove()
@@ -10,66 +12,58 @@ function PANEL:Init()
 
     ix.gui.areaEdit = self
 
+    self:SetSize(ScrW() / 3, ScrH())
+    self:SetPos(-self:GetWide(), 0)
+    self:DockPadding(padding, padding, padding, padding)
+    self:MakePopup()
+    self:SetTitle("")
+    self:ShowCloseButton(false)
+
     self.list = {}
     self.properties = {}
 
-    self:SetSize(ScrW() / 3, ScrH())
-    self:DockPadding(padding, padding, padding, padding)
-
-    local label = self:Add("DLabel")
-    label:SetText(L("areas"))
-    label:SetFont("ixTitleFont")
-    label:SetTextColor(ix.config.Get("color"))
-    label:SizeToContents()
-    label:Dock(TOP)
-    label:DockMargin(0, 0, 0, padding)
+    self.currentAlpha = 0
+    self.currentX = -self:GetWide()
 
     -- scroll panel
     self.canvas = self:Add("DScrollPanel")
     self.canvas:Dock(FILL)
 
     -- name entry
-    self.nameEntry = vgui.Create("ixTextEntry")
-    self.nameEntry:SetFont("ixMenuButtonFont")
-    self.nameEntry:SetText(L("areaNew"))
-
-    local listRow = self.canvas:Add("ixListRow")
-    listRow:SetList(self.list)
-    listRow:SetLabelText(L("name"))
-    listRow:SetRightPanel(self.nameEntry)
-    listRow:Dock(TOP)
-    listRow:SizeToContents()
+    self.nameEntry = self.canvas:Add("ixSettingsRowString")
+    self.nameEntry:SetText(L("name"))
+    self.nameEntry:SetValue(L("areaNew"))
+    self.nameEntry:Dock(TOP)
+    self.nameEntry:DockMargin(0, 0, 0, 8)
 
     -- type entry
-    self.typeEntry = self.canvas:Add("DComboBox")
-    self.typeEntry:Dock(RIGHT)
-    self.typeEntry:SetFont("ixMenuButtonFont")
-    self.typeEntry:SetTextColor(color_white)
-    self.typeEntry:SetFont("ixMenuButtonFont")
-    self.typeEntry.OnSelect = function(panel)
-        panel:SizeToContents()
-        panel:SetWide(panel:GetWide() + 12) -- padding for arrow (nice)
-    end
+    self.typeEntry = self.canvas:Add("ixSettingsRowArray")
+    self.typeEntry:Dock(TOP)
+    self.typeEntry:DockMargin(0, 0, 0, 8)
+    self.typeEntry:SetText(L("type"))
 
+    local i = 1
     for id, name in pairs(ix.area.types) do
-        self.typeEntry:AddChoice(L(name), id, id == "area")
+        self.typeEntry.setting:AddChoice(L(name), id, id == "area")
+        self.typeEntry.array[id] = i
+
+        i = i + 1
     end
 
-    listRow = self.canvas:Add("ixListRow")
-    listRow:SetList(self.list)
-    listRow:SetLabelText(L("type"))
-    listRow:SetRightPanel(self.typeEntry)
-    listRow:Dock(TOP)
-    listRow:SizeToContents()
+    self.typeEntry.OnValueChanged = function(_, value)
+        print(value)
+    end
 
     -- properties
     for k, v in pairs(ix.area.properties) do
+        /*
         local panel
 
         if (v.type == ix.type.string or v.type == ix.type.number) then
             panel = vgui.Create("ixTextEntry")
             panel:SetFont("ixMenuButtonFont")
             panel:SetText(tostring(v.default))
+            panel:RequestFocus()
 
             if (v.type == ix.type.number) then
                 panel.realGetValue = panel.GetValue
@@ -107,6 +101,11 @@ function PANEL:Init()
                     panel.picker:SetColor(panel.value)
                     panel.picker:SetVisible(true)
                     panel.picker:MakePopup()
+                    panel.picker.OnFocusChanged = function(_, b)
+                        if (!b) then
+                            panel.picker:SetVisible(false)
+                        end
+                    end
                 else
                     panel.picker:SetVisible(false)
                 end
@@ -129,6 +128,32 @@ function PANEL:Init()
             row:Dock(TOP)
             row:SizeToContents()
         end
+        */
+
+        local panel
+
+        if (v.type == ix.type.string or v.type == ix.type.number) then
+            panel = self.canvas:Add("ixSettingsRowString")
+            panel:SetText(L(k))
+            panel:SetValue(tostring(v.default))
+
+            if (v.type == ix.type.number) then
+                panel.realGetValue = panel.GetValue
+                panel.GetValue = function()
+                    return tonumber(panel:realGetValue()) or v.default
+                end
+            end
+        elseif (v.type == ix.type.bool) then
+            panel = self.canvas:Add("ixSettingsRowBool")
+            panel:SetText(L(k))
+            panel:SetValue(v.default, true)
+        elseif (v.type == ix.type.color) then
+            panel = self.canvas:Add("ixSettingsRowColor")
+            panel:SetText(L(k))
+        end
+
+        panel:Dock(TOP)
+        panel:DockMargin(0, 0, 0, 8)
 
         self.properties[k] = function()
             return panel:GetValue()
@@ -143,19 +168,26 @@ function PANEL:Init()
     self.saveButton.DoClick = function()
         self:Submit()
     end
-end
 
-function PANEL:SizeToContents()
-    local width = 64
-    local height = 37
+    self:CreateAnimation(0.25, {
+        index = 1,
+        target = {currentAlpha = 255},
+        easing = "outQuint",
 
-    for _, v in ipairs(self.canvas:GetCanvas():GetChildren()) do
-        width = math.max(width, v:GetLabelWidth())
-        height = height + v:GetTall()
-    end
+        Think = function(animation, panel)
+            panel:SetAlpha(panel.currentAlpha)
+        end
+    })
 
-    self:SetWide(width + 200)
-    self:SetTall(height + self.saveButton:GetTall())
+    self:CreateAnimation(0.25, {
+        index = 2,
+        target = {currentX = 0},
+        easing = "outQuint",
+
+        Think = function(animation, panel)
+            panel:SetX(panel.currentX)
+        end
+    })
 end
 
 function PANEL:Submit()
@@ -172,13 +204,15 @@ function PANEL:Submit()
         properties[k] = v()
     end
 
-    local _, type = self.typeEntry:GetSelected()
+    local pos = PLUGIN:GetPlayerAreaTrace().HitPos
+    local snap = ix.option.Get("areaEditSnap", 8)
+    pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
 
     net.Start("ixAreaAdd")
         net.WriteString(name)
-        net.WriteString(type)
+        net.WriteString(self.typeEntry:GetValue())
         net.WriteVector(PLUGIN.editStart)
-        net.WriteVector(PLUGIN:GetPlayerAreaTrace().HitPos)
+        net.WriteVector(pos)
         net.WriteTable(properties)
     net.SendToServer()
 
@@ -194,24 +228,50 @@ local gradientLeft = ix.util.GetMaterial("vgui/gradient-l")
 function PANEL:Paint(width, height)
     ix.util.DrawBlur(self)
 
-    surface.SetDrawColor(0, 0, 0, 100)
+    surface.SetDrawColor(0, 0, 0, 66)
     surface.DrawRect(0, 0, width, height)
 
     derma.SkinFunc("DrawImportantBackground", 0, 0, width, height)
 
-    surface.SetDrawColor(0, 0, 0, 200)
+    surface.SetDrawColor(0, 0, 0, 66)
     surface.SetMaterial(gradientLeft)
     surface.DrawTexturedRect(0, 0, width, height)
 end
 
-function PANEL:Think()
-    if (input.IsKeyDown(KEY_TAB) or input.IsMouseDown(KEY_ESCAPE)) then
+function PANEL:OnKeyCodePressed(key)
+    if (key == KEY_TAB) then
         self:Remove()
     end
 end
 
-vgui.Register("ixAreaEdit", PANEL, "DPanel")
+function PANEL:Remove()
+    self:CreateAnimation(0.25, {
+        index = 1,
+        target = {currentAlpha = 0},
+        easing = "outQuint",
+
+        Think = function(animation, panel)
+            panel:SetAlpha(panel.currentAlpha)
+        end,
+
+        OnComplete = function(animation, panel)
+            BaseClass.Remove(panel)
+        end
+    })
+
+    self:CreateAnimation(0.25, {
+        index = 2,
+        target = {currentX = -self:GetWide()},
+        easing = "outQuint",
+
+        Think = function(animation, panel)
+            panel:SetX(panel.currentX)
+        end
+    })
+end
+
+vgui.Register("ixAreaEdit", PANEL, "DFrame")
 
 if (IsValid(ix.gui.areaEdit)) then
-    ix.gui.areaEdit:Remove()
+    BaseClass.Remove(ix.gui.areaEdit)
 end

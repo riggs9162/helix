@@ -80,7 +80,7 @@ function PLUGIN:HUDPaint()
 
     local x, y = ScreenScale(16), ScreenScale(16)
     if (IsValid(ix.gui.areaEdit)) then
-        x = ix.gui.areaEdit:GetWide() + ScreenScale(16)
+        x = ix.gui.areaEdit:GetX() + ix.gui.areaEdit:GetWide() + ScreenScale(16)
     end
     y = y + DrawTextBackground(x, y, L("areaEditMode"), nil, ix.config.Get("color"))
 
@@ -124,7 +124,11 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
 
     -- draw currently edited area
     if (self.editStart) then
-        local center, min, max = self:GetLocalAreaPosition(self.editStart, self:GetPlayerAreaTrace().HitPos)
+        local pos = self:GetPlayerAreaTrace().HitPos
+        local snap = ix.option.Get("areaEditSnap", 8)
+        pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
+
+        local center, min, max = self:GetLocalAreaPosition(self.editStart, pos)
         local color = Color(255, 255, 255, 25 + (1 + math.sin(SysTime() * 6)) * 115)
 
         render.DrawWireframeBox(center, angle_zero, min, max, color)
@@ -148,7 +152,11 @@ end
 
 function PLUGIN:EditClick()
     if (!self.editStart) then
-        self.editStart = LocalPlayer():GetEyeTraceNoCursor().HitPos
+        local pos = self:GetPlayerAreaTrace().HitPos
+        local snap = ix.option.Get("areaEditSnap", 8)
+        pos = Vector(math.Round(pos.x / 8) * snap, math.Round(pos.y / 8) * snap, math.Round(pos.z / 8) * snap)
+        
+        self.editStart = pos
     elseif (self.editStart and !self.editProperties) then
         self.editProperties = true
 

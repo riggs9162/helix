@@ -70,6 +70,13 @@ ix.config.Add("areaShowNotifications", true, "Whether or not to show area notifi
     }
 )
 
+ix.option.Add("areaEditSnap", ix.type.number, 8, {
+    category = "areas",
+    min = 0,
+    max = 64,
+    decimals = 0
+})
+
 function ix.area.AddProperty(name, type, default, data)
     ix.area.properties[name] = {
         type = type,
