@@ -161,7 +161,7 @@ do
 
     -- returns the current area the player is in, or the last valid one if the player is not in an area
     function PLAYER:GetArea()
-        return self.ixArea
+        return self:GetNetVar("area", "")
     end
 
     -- returns true if the player is in any area, this does not use the last valid area like GetArea does

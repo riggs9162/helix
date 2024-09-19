@@ -28,12 +28,12 @@ function PLUGIN:PlayerInitialSpawn(client)
 end
 
 function PLUGIN:PlayerLoadedCharacter(client)
-    client.ixArea = ""
+    client:SetNetVar("area", "")
     client.ixInArea = nil
 end
 
 function PLUGIN:PlayerSpawn(client)
-    client.ixArea = ""
+    client:SetNetVar("area", "")
     client.ixInArea = nil
 end
 
@@ -59,8 +59,8 @@ function PLUGIN:AreaThink()
             local id = overlappingBoxes[1]
 
             if (oldID != id) then
-                hook.Run("OnPlayerAreaChanged", client, client.ixArea, id)
-                client.ixArea = id
+                hook.Run("OnPlayerAreaChanged", client, client:GetNetVar("area", id), id)
+                client:SetNetVar("area", id)
             end
 
             client.ixInArea = true

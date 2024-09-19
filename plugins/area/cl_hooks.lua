@@ -197,7 +197,6 @@ end
 
 function PLUGIN:OnAreaChanged(oldID, newID)
     local client = LocalPlayer()
-    client.ixArea = newID
 
     local area = ix.area.stored[newID]
 
