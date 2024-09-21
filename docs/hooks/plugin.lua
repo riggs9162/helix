@@ -628,7 +628,15 @@ end
 function GetPlayerPainSound(client)
 end
 
---- @realm shared
+--- Returns the damage that the player should deal with his punches.
+-- @realm shared
+-- @player client Client that is punching
+-- @number damage Base damage of the punch
+-- @tab context Context of the punch
+-- @treturn number Damage to deal
+-- @usage function PLUGIN:GetPlayerPunchDamage(client, damage, context)
+-- 	return (client:IsAdmin() and damage * 2) or damage -- Admins deal double damage.
+-- end
 function GetPlayerPunchDamage(client, damage, context)
 end
 
@@ -804,7 +812,14 @@ end
 function OnItemSpawned(entity)
 end
 
---- @realm shared
+--- Called when an item was transferred from one inventory to another.
+-- @realm shared
+-- @item item Item that was transferred
+-- @tab curInv Current inventory
+-- @tab inventory Inventory that item was transferred to
+-- @usage function PLUGIN:OnItemTransferred(item, curInv, inventory)
+-- 	print("Item "..item:GetName().." was transferred to "..inventory:GetOwner():Name())
+-- end
 function OnItemTransferred(item, curInv, inventory)
 end
 
@@ -827,7 +842,14 @@ end
 function OnPickupMoney(client, self)
 end
 
---- @realm shared
+--- Called when a player moved to a new area.
+-- @realm shared
+-- @player client Player that moved to a new area
+-- @number oldID ID of the old area
+-- @number newID ID of the new area
+-- @usage function PLUGIN:OnPlayerAreaChanged(client, oldID, newID)
+-- 	client:Notify("You have moved to "..newID..".")
+-- end
 function OnPlayerAreaChanged(client, oldID, newID)
 end
 
@@ -835,6 +857,9 @@ end
 -- @realm server
 -- @player client Player that entered or exited the observer mode
 -- @bool state Previous observer state
+-- @usage function PLUGIN:OnPlayerObserve(client, state)
+-- 	client:Notify(state and "You have entered observer mode." or "You have exited observer mode.")
+-- end
 function OnPlayerObserve(client, state)
 end
 
@@ -852,18 +877,27 @@ end
 -- @entity entity Door that was purchased or sold
 -- @bool bBuying Whether or not the player is bying a door
 -- @func bCallOnDoorChild Function to call something on the door child
+-- @usage function PLUGIN:OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
+-- 	client:Notify("You have "..(bBuying and "purchased" or "sold").." a door.")
+-- end
 function OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
 end
 
 --- Called when a player was restricted.
 -- @realm server
 -- @player client Player that was restricted
+-- @usage function PLUGIN:OnPlayerRestricted(client)
+-- 	client:Kick("You have been restricted.")
+-- end
 function OnPlayerRestricted(client)
 end
 
 --- Called when a player was unrestricted.
 -- @realm server
 -- @player client Player that was unrestricted
+-- @usage function PLUGIN:OnPlayerUnRestricted(client)
+-- 	client:Notify("You have been unrestricted.")
+-- end
 function OnPlayerUnRestricted(client)
 end
 
@@ -921,6 +955,9 @@ end
 --- Called when a player leaves a certain sequence.
 -- @realm server
 -- @player client Player that has left a sequence
+-- @usage function PLUGIN:PlayerLeaveSequence(client)
+-- 	client:Notify("You have left the sequence.")
+-- end
 function PlayerLeaveSequence(client)
 end
 
@@ -929,6 +966,9 @@ end
 -- @player client Player that has loaded a character
 -- @char character Character that was loaded
 -- @char currentChar Character that player was using
+-- @usage function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
+-- 	client:Notify("Welcome back, "..character:GetName().."!")
+-- end
 function PlayerLoadedCharacter(client, character, currentChar)
 end
 
@@ -1072,12 +1112,18 @@ end
 
 --- Called when server data was loaded.
 -- @realm server
+-- @usage function PLUGIN:PostLoadData()
+-- 	print("Data has been loaded.")
+-- end
 function PostLoadData()
 end
 
 --- Called after player loadout.
 -- @realm server
 -- @player client
+-- @usage function PLUGIN:PostPlayerLoadout(client)
+-- 	client:StripWeapon("ix_keys") -- Strip keys from player loadout.
+-- end
 function PostPlayerLoadout(client)
 end
 
@@ -1127,6 +1173,11 @@ end
 
 --- Called when server is saving data.
 -- @realm server
+-- @usage function PLUGIN:SaveData()
+-- 	for k, v in player.Iterator() do
+-- 		ix.util.Notify(v, "The server's data has been saved.")
+-- 	end
+-- end
 function SaveData()
 end
 
@@ -1150,7 +1201,13 @@ end
 function ShipmentItemTaken(client, uniqueID, amount)
 end
 
---- @realm client
+--- Wether or not a specific bar of the hud should be drawn.
+-- @realm client
+-- @number bar Bar ID
+-- @treturn bool Whether or not the bar should be drawn
+-- @usage function PLUGIN:ShouldBarDraw(bar)
+-- 	return bar == "stm" -- Only draw the stamina bar.
+-- end
 function ShouldBarDraw(bar)
 end
 
@@ -1163,11 +1220,24 @@ end
 function ShouldDeleteSavedItems()
 end
 
---- @realm client
+--- Whether or not the area should be displayed when entering it.
+-- @realm client
+-- @number newID ID of the new area
+-- @treturn bool Whether or not the area should be displayed
+-- @usage function PLUGIN:ShouldDisplayArea(newID)
+-- 	return newID == 1 -- Only display area 1.
+-- end
 function ShouldDisplayArea(newID)
 end
 
---- @realm client
+--- Whether or not the crosshair should be drawn.
+-- @realm client
+-- @player client Player that the crosshair is being drawn for
+-- @weapon weapon Weapon that the crosshair is being drawn for
+-- @treturn bool Whether or not the crosshair should be drawn
+-- @usage function PLUGIN:ShouldDrawCrosshair(client, weapon)
+-- 	return client:IsAdmin() -- Only draw crosshair for admins.
+-- end
 function ShouldDrawCrosshair(client, weapon)
 end
 
@@ -1175,7 +1245,12 @@ end
 function ShouldDrawItemSize(item)
 end
 
---- @realm client
+--- Wehther or not the hud bars should be hidden.
+-- @realm client
+-- @treturn bool Whether or not the hud bars should be hidden
+-- @usage function PLUGIN:ShouldHideBars()
+-- 	return true -- Hide all hud bars.
+-- end
 function ShouldHideBars()
 end
 
@@ -1227,7 +1302,13 @@ end
 function ShouldRestoreInventory(characterID, inventoryID, inventoryType)
 end
 
---- @realm client
+--- Whether or not to show the player on the scoreboard.
+-- @realm client
+-- @player client Player to show on the scoreboard
+-- @treturn bool Whether or not to show the player on the scoreboard
+-- @usage function PLUGIN:ShouldShowPlayerOnScoreboard(client)
+--  return !client:IsAdmin() -- Admins will not be shown on the scoreboard, but regular players will.
+-- end
 function ShouldShowPlayerOnScoreboard(client)
 end
 
