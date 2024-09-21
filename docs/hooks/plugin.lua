@@ -1233,7 +1233,7 @@ end
 --- Whether or not the crosshair should be drawn.
 -- @realm client
 -- @player client Player that the crosshair is being drawn for
--- @weapon weapon Weapon that the crosshair is being drawn for
+-- @entity weapon Weapon that the crosshair is being drawn for
 -- @treturn bool Whether or not the crosshair should be drawn
 -- @usage function PLUGIN:ShouldDrawCrosshair(client, weapon)
 -- 	return client:IsAdmin() -- Only draw crosshair for admins.
