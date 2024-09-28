@@ -65,6 +65,7 @@ AccessorFunc(PANEL, "padding", "Padding", FORCE_NUMBER)
 AccessorFunc(PANEL, "animationTime", "AnimationTime", FORCE_NUMBER)
 AccessorFunc(PANEL, "subpanelAnimationTime", "SubpanelAnimationTime", FORCE_NUMBER)
 AccessorFunc(PANEL, "leftOffset", "LeftOffset", FORCE_NUMBER)
+AccessorFunc(PANEL, "rightOffset", "RightOffset", FORCE_NUMBER)
 
 function PANEL:Init()
     self.subpanels = {}
@@ -74,6 +75,7 @@ function PANEL:Init()
     self.targetSubpanelX = DEFAULT_PADDING
     self.padding = DEFAULT_PADDING
     self.leftOffset = 0
+    self.rightOffset = 0
 
     self.animationTime = DEFAULT_ANIMATION_TIME
     self.subpanelAnimationTime = DEFAULT_SUBPANEL_ANIMATION_TIME
@@ -161,7 +163,7 @@ function PANEL:SetSubpanelPos(id, x)
         local right = currentPanel:GetRightPanel()
 
         if (IsValid(right)) then
-            right:MoveRightOf(currentPanel, self.padding)
+            right:MoveRightOf(currentPanel, self.padding + self.rightOffset)
         end
 
         currentPanel = right

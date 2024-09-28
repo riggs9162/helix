@@ -112,11 +112,11 @@ end
 
 --- Retrieves a class table.
 -- @realm shared
--- @number identifier Index of the class
+-- @tab identifier An identifier for the class, such as a name, index, or unique ID
 -- @treturn table Class table
 function ix.class.Get(identifier)
     for _, v in ipairs(ix.class.list) do
-        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or v.index == identifier) then
+        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier) or v.index == tonumber(identifier))) then
             return v
         end
     end

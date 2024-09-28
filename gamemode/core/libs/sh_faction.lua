@@ -82,12 +82,18 @@ end
 
 --- Retrieves a faction table.
 -- @realm shared
--- @param identifier Index or name of the faction
+-- @tab identifier An identifier for the class, such as a name, index, or unique ID
 -- @treturn table Faction table
 -- @usage print(ix.faction.Get(Entity(1):Team()).name)
 -- > "Citizen"
 function ix.faction.Get(identifier)
-    return ix.faction.indices[identifier] or ix.faction.teams[identifier]
+    for _, v in ipairs(ix.faction.indices) do
+        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier) or v.index == tonumber(identifier))) then
+            return v
+        end
+    end
+
+    return nil
 end
 
 --- Retrieves a faction index.
