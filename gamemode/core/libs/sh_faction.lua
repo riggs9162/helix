@@ -88,7 +88,7 @@ end
 -- > "Citizen"
 function ix.faction.Get(identifier)
     for _, v in ipairs(ix.faction.indices) do
-        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier) or v.index == tonumber(identifier))) then
+        if (v.index == tonumber(identifier) or ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier))) then
             return v
         end
     end
