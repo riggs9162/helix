@@ -6,3 +6,4 @@ docs/html
 .DS_Store
 helix.yml
 /ldoc
+helix.yml.txt
