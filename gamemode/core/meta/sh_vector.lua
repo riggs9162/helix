@@ -88,3 +88,19 @@ function meta:Up(vUp)
 
     return vRet
 end
+
+local trace = {collisiongroup = COLLISION_GROUP_WORLD, output = {}}
+
+--- Returns whether or not the vector is in the world.
+-- @realm shared
+-- @treturn bool Whether or not the vector is in the world
+-- @usage -- Prints whether or not the vector is in the world
+-- print(Entity(1):GetPos():InWorld())
+function meta:InWorld()
+    if ( SERVER ) then return util.IsInWorld(self) end
+
+    trace.start = self
+	trace.endpos = self
+
+    return util.TraceLine(tr).HitWorld
+end
