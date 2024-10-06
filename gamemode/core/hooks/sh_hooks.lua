@@ -21,11 +21,70 @@ HOLDTYPE_TRANSLATOR["camera"] = "smg"
 HOLDTYPE_TRANSLATOR["magic"] = "normal"
 HOLDTYPE_TRANSLATOR["revolver"] = "pistol"
 
+-- luacheck: globals  PLAYER_HOLDTYPE_TRANSLATOR
+PLAYER_HOLDTYPE_TRANSLATOR = {}
+PLAYER_HOLDTYPE_TRANSLATOR[""] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["fist"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["pistol"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["grenade"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["melee"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["slam"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["melee2"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["passive"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["knife"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["duel"] = "normal"
+PLAYER_HOLDTYPE_TRANSLATOR["bugbait"] = "normal"
+
+local PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR
+local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
 local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
 function GM:TranslateActivity(client, act)
     local clientInfo = client:GetTable()
+    local modelClass = clientInfo.ixAnimModelClass or "player"
     local bRaised = client:IsWepRaised()
+
+    if (modelClass == "player") then
+        local weapon = client:GetActiveWeapon()
+        local bAlwaysRaised = ix.config.Get("weaponAlwaysRaised")
+        weapon = IsValid(weapon) and weapon or nil
+
+        if (!bAlwaysRaised and weapon and !bRaised and client:OnGround()) then
+            local model = string.lower(client:GetModel())
+
+            if (string.find(model, "zombie")) then
+                local tree = ix.anim.zombie
+
+                if (string.find(model, "fast")) then
+                    tree = ix.anim.fastZombie
+                end
+
+                if (tree[act]) then
+                    return tree[act]
+                end
+            end
+
+            local holdType = weapon and (weapon.HoldType or weapon:GetHoldType()) or "normal"
+
+            if (!bAlwaysRaised and weapon and !bRaised and client:OnGround()) then
+                holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
+            end
+
+            local tree = ix.anim.player[holdType]
+
+            if (tree and tree[act]) then
+                if (isstring(tree[act])) then
+                    clientInfo.CalcSeqOverride = client:LookupSequence(tree[act])
+
+                    return
+                else
+                    return tree[act]
+                end
+            end
+        end
+
+        return self.BaseClass:TranslateActivity(client, act)
+    end
 
     if (clientInfo.ixAnimTable) then
         local glide = clientInfo.ixAnimGlide
@@ -61,46 +120,6 @@ function GM:TranslateActivity(client, act)
                 return clientInfo.ixAnimGlide
             end
         end
-    end
-end
-
-function GM:UpdateAnimation(client, velocity, maxGroundSpeed)
-    if (client:GetNetVar("forcedSequence")) then
-        client:SetPlaybackRate(client:GetNetVar("sequenceSpeed", 1))
-    else
-        local len = velocity:Length()
-        local rate = 1.0
-        if (len > 0.5) then
-            rate = (len / maxGroundSpeed)
-        end
-
-        local playbackRate = math.Clamp(rate, 0, ix.config.Get("animMaxRate", 1.5))
-        client:SetPlaybackRate(playbackRate)
-    end
-
-    -- We only need to do this clientside..
-    if (CLIENT) then
-        if (client:InVehicle()) then
-            --
-            -- This is used for the 'rollercoaster' arms
-            --
-            local Vehicle = client:GetVehicle()
-            local Velocity = Vehicle:GetVelocity()
-            local fwd = Vehicle:GetUp()
-            local dp = fwd:Dot(Vector(0, 0, 1))
-
-            client:SetPoseParameter("vertical_velocity", (dp < 0 && dp || 0) + fwd:Dot(Velocity) * 0.005)
-
-            -- Pass the vehicles steer param down to the player
-            local steer = Vehicle:GetPoseParameter("vehicle_steer")
-            steer = steer * 2 - 1 -- convert from 0..1 to -1..1
-            if (Vehicle:GetClass() == "prop_vehicle_prisoner_pod") then steer = 0 client:SetPoseParameter("aim_yaw", math.NormalizeAngle(client:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
-            client:SetPoseParameter("vehicle_steer", steer)
-
-        end
-
-        GAMEMODE:GrabEarAnimation(client)
-        GAMEMODE:MouthMoveAnimation(client)
     end
 end
 
@@ -166,31 +185,39 @@ end
 
 function GM:DoAnimationEvent(client, event, data)
     local class = client.ixAnimModelClass
-    local weapon = client:GetActiveWeapon()
 
-    if (IsValid(weapon)) then
-        local animation = client.ixAnimTable
-        if (!animation) then return ACT_INVALID end
+    if (class == "player") then
+        return self.BaseClass:DoAnimationEvent(client, event, data)
+    else
+        local weapon = client:GetActiveWeapon()
 
-        local attack = isstring(animation.attack) and client:LookupSequence(animation.attack) or animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1
-        local reload = isstring(animation.reload) and client:LookupSequence(animation.reload) or animation.reload or ACT_GESTURE_RELOAD_SMG1
+        if (IsValid(weapon)) then
+            local animation = client.ixAnimTable
 
-        if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
-            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
+            local attack = isstring(animation.attack) and client:LookupSequence(animation.attack) or animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1
+            local reload = isstring(animation.reload) and client:LookupSequence(animation.reload) or animation.reload or ACT_GESTURE_RELOAD_SMG1
 
-            return ACT_VM_PRIMARYATTACK
-        elseif (event == PLAYERANIMEVENT_ATTACK_SECONDARY) then
-            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
+            if (event == PLAYERANIMEVENT_ATTACK_PRIMARY) then
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
 
-            return ACT_VM_SECONDARYATTACK
-        elseif (event == PLAYERANIMEVENT_RELOAD) then
-            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, reload, true)
+                return ACT_VM_PRIMARYATTACK
+            elseif (event == PLAYERANIMEVENT_ATTACK_SECONDARY) then
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
 
-            return ACT_INVALID
-        elseif (event == PLAYERANIMEVENT_JUMP) then
-            client:AnimRestartMainSequence()
+                return ACT_VM_SECONDARYATTACK
+            elseif (event == PLAYERANIMEVENT_RELOAD) then
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, reload, true)
 
-            return ACT_INVALID
+                return ACT_INVALID
+            elseif (event == PLAYERANIMEVENT_JUMP) then
+                client:AnimRestartMainSequence()
+
+                return ACT_INVALID
+            elseif (event == PLAYERANIMEVENT_CANCEL_RELOAD) then
+                client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+
+                return ACT_INVALID
+            end
         end
     end
 
@@ -305,91 +332,60 @@ function GM:PlayerModelChanged(client, model)
     UpdateAnimationTable(client)
 end
 
-do
-    local vectorAngle = FindMetaTable("Vector").Angle
-    local normalizeAngle = math.NormalizeAngle
+local vectorAngle = FindMetaTable("Vector").Angle
+local normalizeAngle = math.NormalizeAngle
 
-    local function get_holdtype_table(client, class)
-        local weapon = client:GetActiveWeapon()
-        if (!IsValid(weapon)) then
-            return ix.anim[class]["normal"]
+function GM:CalcMainActivity(client, velocity)
+    local clientInfo = client:GetTable()
+    local forcedSequence = client:GetNetVar("forcedSequence")
+
+    if (forcedSequence) then
+        if (client:GetSequence() != forcedSequence) then
+            client:SetCycle(0)
         end
-    
-        local holdType = (weapon.HoldType or weapon:GetHoldType()) or "normal"
-        holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
-    
-        return ix.anim[class][holdType]
+
+        return -1, forcedSequence
     end
 
-    function GM:CalcMainActivity(client, velocity)
-        local clientInfo = client:GetTable()
-        local forcedSequence = client:GetNetVar("forcedSequence")
+    client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
 
-        if (forcedSequence) then
-            if (client:GetSequence() != forcedSequence or (client:GetCycle() == 1 and client:GetNetVar("sequenceLoop"))) then
-                client:SetCycle(0)
-            end
+    clientInfo.CalcIdeal = ACT_MP_STAND_IDLE
 
-            return -1, forcedSequence
+    -- we could call the baseclass function, but it's faster to do it this way
+    local BaseClass = GAMEMODE.BaseClass
+
+    if (BaseClass:HandlePlayerNoClipping(client, velocity) or
+        BaseClass:HandlePlayerDriving(client) or
+        BaseClass:HandlePlayerVaulting(client, velocity) or
+        BaseClass:HandlePlayerJumping(client, velocity) or
+        BaseClass:HandlePlayerSwimming(client, velocity) or
+        BaseClass:HandlePlayerDucking(client, velocity)) then -- luacheck: ignore 542
+    else
+        local length = velocity:Length2DSqr()
+
+        if (length > 22500) then
+            clientInfo.CalcIdeal = ACT_MP_RUN
+        elseif (length > 0.25) then
+            clientInfo.CalcIdeal = ACT_MP_WALK
         end
-
-        client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
-
-        local model = client:GetModel()
-        local class = ix.anim.GetModelClass(model)
-    
-        local anims = get_holdtype_table(client, class)
-        if (!anims or !anims[ACT_MP_STAND_IDLE]) then return end
-
-        local isRaised = client:IsWepRaised()
-        local sequenceOverride = clientInfo.CalcSeqOverride
-
-        clientInfo.CalcSeqOverride = -1
-        clientInfo.CalcIdeal = anims[ACT_MP_STAND_IDLE][isRaised and 2 or 1]
-
-        -- we could call the baseclass function, but it's faster to do it this way
-        local BaseClass = self.BaseClass
-
-        if (BaseClass:HandlePlayerNoClipping(client, velocity) or
-            BaseClass:HandlePlayerDriving(client) or
-            BaseClass:HandlePlayerVaulting(client, velocity) or
-            BaseClass:HandlePlayerJumping(client, velocity) or
-            BaseClass:HandlePlayerSwimming(client, velocity) or
-            BaseClass:HandlePlayerDucking(client, velocity)) then -- luacheck: ignore 542
-        else
-            local maxSpeed = client:GetWalkSpeed()
-            maxSpeed = maxSpeed ^ 2
-
-            local length = velocity:Length2DSqr()
-            if (length > maxSpeed * 1.5) then
-                clientInfo.CalcIdeal = anims[ACT_MP_RUN][isRaised and 2 or 1]
-            elseif (length > 0.25) then
-                clientInfo.CalcIdeal = anims[ACT_MP_WALK][isRaised and 2 or 1]
-            end
-        end
-
-        clientInfo.m_bWasOnGround = client:OnGround()
-        clientInfo.m_bWasNoclipping = (client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle())
-
-        if (isstring(clientInfo.CalcSeqOverride)) then
-            clientInfo.CalcSeqOverride = client:LookupSequence(clientInfo.CalcSeqOverride)
-        end
-    
-        if (isstring(clientInfo.CalcIdeal)) then
-            clientInfo.CalcSeqOverride = client:LookupSequence(clientInfo.CalcIdeal)
-        end
-    
-        return clientInfo.CalcIdeal, clientInfo.CalcSeqOverride
     end
+
+    hook.Run("TranslateActivity", client, clientInfo.CalcIdeal)
+
+    local sequenceOverride = clientInfo.CalcSeqOverride
+    clientInfo.CalcSeqOverride = -1
+
+    clientInfo.m_bWasOnGround = client:OnGround()
+    clientInfo.m_bWasNoclipping = (client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle())
+
+    return clientInfo.CalcIdeal, sequenceOverride or clientInfo.CalcSeqOverride or -1
 end
 
-do
-    local KEY_BLACKLIST = IN_ATTACK + IN_ATTACK2
+local KEY_BLACKLIST = IN_ATTACK + IN_ATTACK2
 
-    function GM:StartCommand(client, command)
-        if (!client:CanShootWeapon()) then
-            command:RemoveKey(KEY_BLACKLIST)
-        end
+function GM:StartCommand(client, command)
+    if (!client:CanShootWeapon()) then
+        command:RemoveKey(KEY_BLACKLIST)
     end
 end
 
