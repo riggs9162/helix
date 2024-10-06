@@ -40,7 +40,7 @@ ix.type = ix.type or {}
 GM.Name = "Helix"
 GM.Author = "nebulous.cloud"
 GM.Website = "https://nebulous.cloud"
-GM.Version = "1.2"
+GM.Version = "1.3"
 
 local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
 local version = GM.Version or "1.0"
