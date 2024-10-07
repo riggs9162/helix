@@ -361,9 +361,11 @@ function GM:CalcMainActivity(client, velocity)
         BaseClass:HandlePlayerSwimming(client, velocity) or
         BaseClass:HandlePlayerDucking(client, velocity)) then -- luacheck: ignore 542
     else
+        local maxSpeed = client:GetWalkSpeed()
+        maxSpeed = maxSpeed ^ 2
+        
         local length = velocity:Length2DSqr()
-
-        if (length > 22500) then
+        if (length > maxSpeed * 1.5) then
             clientInfo.CalcIdeal = ACT_MP_RUN
         elseif (length > 0.25) then
             clientInfo.CalcIdeal = ACT_MP_WALK
