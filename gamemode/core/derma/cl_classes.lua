@@ -143,7 +143,7 @@ hook.Add("CreateMenuButtons", "ixClasses", function(tabs)
 end)
 
 net.Receive("ixClassUpdate", function()
-    local client = net.ReadEntity()
+    local client = net.ReadPlayer()
 
     if (ix.gui.classes and ix.gui.classes:IsVisible()) then
         if (client == LocalPlayer()) then

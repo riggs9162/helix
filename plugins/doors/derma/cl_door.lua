@@ -4,7 +4,7 @@ local PANEL = {}
 local function DoorSetPermission(door, target, permission)
     net.Start("ixDoorPermission")
         net.WriteEntity(door)
-        net.WriteEntity(target)
+        net.WritePlayer(target)
         net.WriteUInt(permission, 4)
     net.SendToServer()
 end

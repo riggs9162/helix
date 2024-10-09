@@ -119,7 +119,7 @@ do
                 hook.Run("PlayerModelChanged", self, model, oldModel)
 
                 net.Start("PlayerModelChanged")
-                    net.WriteEntity(self)
+                    net.WritePlayer(self)
                     net.WriteString(model)
                     net.WriteString(oldModel)
                 net.Broadcast()
@@ -130,7 +130,7 @@ do
 
         function playerMeta:SelectWeapon(className)
             net.Start("PlayerSelectWeapon")
-                net.WriteEntity(self)
+                net.WritePlayer(self)
                 net.WriteString(className)
             net.Broadcast()
 
@@ -138,11 +138,11 @@ do
         end
     else
         net.Receive("PlayerModelChanged", function(length)
-            hook.Run("PlayerModelChanged", net.ReadEntity(), net.ReadString(), net.ReadString())
+            hook.Run("PlayerModelChanged", net.ReadPlayer(), net.ReadString(), net.ReadString())
         end)
 
         net.Receive("PlayerSelectWeapon", function(length)
-            local client = net.ReadEntity()
+            local client = net.ReadPlayer()
             local className = net.ReadString()
 
             if (!IsValid(client)) then
