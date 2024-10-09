@@ -347,7 +347,7 @@ if (SERVER) then
             text = hook.Run("PlayerMessageSend", speaker, chatType, text, bAnonymous, receivers, rawText) or text
 
             net.Start("ixChatMessage")
-                net.WriteEntity(speaker)
+                net.WritePlayer(speaker)
                 net.WriteString(chatType)
                 net.WriteString(text)
                 net.WriteBool(bAnonymous or false)
@@ -374,7 +374,7 @@ else
 
     -- Call OnChatAdd for the appropriate chatType.
     net.Receive("ixChatMessage", function()
-        local client = net.ReadEntity()
+        local client = net.ReadPlayer()
         local chatType = net.ReadString()
         local text = net.ReadString()
         local anonymous = net.ReadBool()

@@ -459,7 +459,7 @@ function ix.anim.GetModelClass(model)
     if (!model) then
         return
     end
-    
+
     model = string.lower(model)
     local class = translations[model]
 
@@ -515,7 +515,7 @@ if (SERVER) then
 
         if (!sequence) then
             net.Start("ixSequenceReset")
-                net.WriteEntity(self)
+                net.WritePlayer(self)
             net.Broadcast()
 
             return
@@ -589,7 +589,7 @@ else
     end)
 
     net.Receive("ixSequenceReset", function()
-        local entity = net.ReadEntity()
+        local entity = net.ReadPlayer()
 
         if (IsValid(entity)) then
             hook.Run("PlayerLeaveSequence", entity)

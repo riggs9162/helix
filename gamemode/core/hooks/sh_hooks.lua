@@ -314,7 +314,7 @@ function GM:PlayerSwitchWeapon(client, oldWeapon, weapon)
     -- the player switched weapon themself (i.e not through SelectWeapon), so we have to network it here
     if (SERVER) then
         net.Start("PlayerSelectWeapon")
-            net.WriteEntity(client)
+            net.WritePlayer(client)
             net.WriteString(weapon:GetClass())
         net.Broadcast()
     end
@@ -326,7 +326,7 @@ function GM:PlayerModelChanged(client, model)
     if (!model) then
         return
     end
-    
+
     client.ixAnimModelClass = ix.anim.GetModelClass(model)
 
     UpdateAnimationTable(client)
@@ -363,7 +363,7 @@ function GM:CalcMainActivity(client, velocity)
     else
         local maxSpeed = client:GetWalkSpeed()
         maxSpeed = maxSpeed ^ 2
-        
+
         local length = velocity:Length2DSqr()
         if (length > maxSpeed * 1.5) then
             clientInfo.CalcIdeal = ACT_MP_RUN
@@ -639,7 +639,7 @@ if (SERVER) then
         UpdateAnimationTable(client)
 
         net.Start("PlayerVehicle")
-            net.WriteEntity(client)
+            net.WritePlayer(client)
             net.WriteEntity(vehicle)
             net.WriteBool(true)
         net.Broadcast()
@@ -649,14 +649,14 @@ if (SERVER) then
         UpdateAnimationTable(client)
 
         net.Start("PlayerVehicle")
-            net.WriteEntity(client)
+            net.WritePlayer(client)
             net.WriteEntity(vehicle)
             net.WriteBool(false)
         net.Broadcast()
     end
 else
     net.Receive("PlayerVehicle", function(length)
-        local client = net.ReadEntity()
+        local client = net.ReadPlayer()
         local vehicle = net.ReadEntity()
         local bEntered = net.ReadBool()
 

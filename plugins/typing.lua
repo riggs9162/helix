@@ -173,7 +173,7 @@ if (CLIENT) then
     end
 
     net.Receive("ixTypeClass", function()
-        local client = net.ReadEntity()
+        local client = net.ReadPlayer()
 
         if (!IsValid(client) or client == LocalPlayer()) then
             return
@@ -215,7 +215,7 @@ else
 
     function PLUGIN:PlayerSpawn(client)
         net.Start("ixTypeClass")
-            net.WriteEntity(client)
+            net.WritePlayer(client)
             net.WriteString("")
         net.Broadcast()
     end
@@ -230,7 +230,7 @@ else
         -- send message to players in pvs only since they're the only ones who can see the indicator
         -- we'll broadcast if the type class is empty because they might move out of pvs before the ending net message is sent
         net.Start("ixTypeClass")
-        net.WriteEntity(client)
+        net.WritePlayer(client)
         net.WriteString(newClass)
 
         if (newClass == "") then
