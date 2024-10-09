@@ -433,7 +433,9 @@ ix.allowedHoldableClasses = {
     ["prop_physics"] = true,
     ["prop_physics_override"] = true,
     ["prop_physics_multiplayer"] = true,
-    ["prop_ragdoll"] = true
+    ["prop_ragdoll"] = true,
+    ["func_physbox"] = true,
+    ["npc_turret_floor"] = true,
 }
 
 function GM:CanPlayerHoldObject(client, entity)
