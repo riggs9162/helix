@@ -365,7 +365,8 @@ function GM:CalcMainActivity(client, velocity)
         maxSpeed = maxSpeed ^ 2
 
         local length = velocity:Length2DSqr()
-        if (length > maxSpeed * 1.5) then
+        if (length > 22500) then
+        --if (length > maxSpeed * 1.5) then
             clientInfo.CalcIdeal = ACT_MP_RUN
         elseif (length > 0.25) then
             clientInfo.CalcIdeal = ACT_MP_WALK
