@@ -139,6 +139,12 @@ function ix.rank.GetPlayers(rank)
     return players
 end
 
+function charMeta:GetRankData()
+    if ( !self ) then return nil end
+
+    return ix.rank.Get(self:GetRank()) or nil
+end
+
 if (SERVER) then
     --- Character rank methods
     -- @classmod Character

@@ -144,6 +144,12 @@ function ix.class.GetPlayers(class)
     return players
 end
 
+function charMeta:GetClassData()
+    if ( !self ) then return nil end
+
+    return ix.class.Get(self:GetClass()) or nil
+end
+
 if (SERVER) then
     --- Character class methods
     -- @classmod Character
