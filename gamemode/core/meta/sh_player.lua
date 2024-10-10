@@ -166,6 +166,19 @@ function meta:ResetBodygroups()
     end
 end
 
+--- Sets the bodygroup of this player's model by its name.
+-- @realm shared
+-- @string name Name of the bodygroup
+-- @number value Value to set the bodygroup to
+-- @usage client:SetBodygroupName("head", 1)
+function meta:SetBodygroupName(name, value)
+    local index = self:FindBodygroupByName(name)
+
+    if (index > -1) then
+        self:SetBodygroup(index, value)
+    end
+end
+
 if (SERVER) then
     util.AddNetworkString("ixActionBar")
     util.AddNetworkString("ixActionBarReset")
