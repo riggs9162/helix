@@ -1,7 +1,7 @@
 
 {%
 local baseUrl = ldoc.css:gsub("ldoc.css", "")
-local repo = "https://github.com/Minerva-Servers/helix/tree/Minerva-Servers"
+local repo = "https://github.com/Minerva-Servers/helix/"
 local pageTitle = mod and (ldoc.display_name(mod) .. " - " .. ldoc.title) or ldoc.title
 
 local oldmarkup = ldoc.markup
@@ -22,7 +22,7 @@ function ldoc.is_kind_classmethod(kind)
 end
 
 function ldoc.repo_reference(item)
-	return repo .. "tree/master" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
+	return repo .. "tree/Minerva-Servers" .. item.file.filename:gsub(item.file.base, "/gamemode") .. "#L" .. item.lineno
 end
 
 local function moduleDescription(mod)
