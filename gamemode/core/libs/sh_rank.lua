@@ -139,6 +139,8 @@ function ix.rank.GetPlayers(rank)
     return players
 end
 
+--- Retrieves the character's rank data (name, description, etc).
+-- @realm shared
 function charMeta:GetRankData()
     if ( !self ) then return nil end
 

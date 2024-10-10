@@ -144,6 +144,8 @@ function ix.class.GetPlayers(class)
     return players
 end
 
+--- Retrieves the character's class data (name, description, etc).
+-- @realm shared
 function charMeta:GetClassData()
     if ( !self ) then return nil end
 
