@@ -6,6 +6,8 @@ do
     util.AddNetworkString("ixDataSync")
 
     function playerMeta:LoadData(callback)
+        hook.Run("PrePlayerDataLoaded", self)
+
         local name = self:SteamName()
         local steamID64 = self:SteamID64()
         local timestamp = math.floor(os.time())
@@ -43,6 +45,8 @@ do
                         callback({})
                     end
                 end
+
+                hook.Run("PostPlayerDataLoaded", self)
             end)
         query:Execute()
 
