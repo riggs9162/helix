@@ -807,6 +807,47 @@ end
 
 function GM:SaveData()
     ix.date.Save()
+
+    // Go through all doors and set their networked vars wether or not they are locked
+    local doors = {}
+    for _, v in ents.Iterator() do
+        if (v:IsDoor()) then
+            doors[#doors + 1] = v:EntIndex()
+        end
+    end
+
+    if (#doors > 0) then
+        for _, v in ipairs(doors) do
+            local entity = Entity(v)
+
+            if (IsValid(entity)) then
+                local partner = entity.ixPartner
+
+                if (IsValid(partner)) then
+                    entity:SetNetVar("locked", entity:GetSaveTable().m_bLocked)
+                    partner:SetNetVar("locked", entity:GetSaveTable().m_bLocked)
+                end
+            end
+        end
+    end
+
+    // Do the same for vehicles...
+    local vehicles = {}
+    for _, v in ents.Iterator() do
+        if (v:IsVehicle()) then
+            vehicles[#vehicles + 1] = v:EntIndex()
+        end
+    end
+
+    if (#vehicles > 0) then
+        for _, v in ipairs(vehicles) do
+            local entity = Entity(v)
+
+            if (IsValid(entity)) then
+                entity:SetNetVar("locked", entity:GetSaveTable().VehicleLocked)
+            end
+        end
+    end
 end
 
 function GM:ShutDown()
