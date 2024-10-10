@@ -213,7 +213,7 @@ if (SERVER) then
 
         local nextRank = rankData.sortOrder + 1
 
-        for _, v in ipairs(ix.rank.list) do
+        for k, v in ipairs(ix.rank.list) do
             if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
                 self:SetRank(k)
                 hook.Run("PlayerJoinedRank", ply, k, rank)
@@ -243,7 +243,7 @@ if (SERVER) then
 
         local nextRank = rankData.sortOrder - 1
 
-        for _, v in ipairs(ix.rank.list) do
+        for k, v in ipairs(ix.rank.list) do
             if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
                 self:SetRank(k)
                 hook.Run("PlayerJoinedRank", ply, k, rank)
