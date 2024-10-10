@@ -132,6 +132,8 @@ function ix.class.GetPlayers(class)
     local players = {}
 
     for _, v in player.Iterator() do
+        if ( !IsValid(v) ) then continue end
+
         local char = v:GetCharacter()
 
         if (char and char:GetClass() == class) then
@@ -173,7 +175,7 @@ if (SERVER) then
     -- @realm server
     function charMeta:KickClass()
         local client = self:GetPlayer()
-        if (!client) then return end
+        if ( !IsValid(client) ) then return end
 
         local goClass
 
@@ -185,7 +187,10 @@ if (SERVER) then
             end
         end
 
-        if (!goClass) then return end
+        if ( !goClass ) then
+            self:SetClass(nil)
+            return
+        end
 
         self:JoinClass(goClass)
 

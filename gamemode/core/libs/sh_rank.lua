@@ -128,9 +128,7 @@ function ix.rank.GetPlayers(rank)
     local players = {}
 
     for _, v in player.Iterator() do
-        if not ( IsValid(v) ) then
-            continue
-        end
+        if ( !IsValid(v) ) then continue end
 
         local char = v:GetCharacter()
         if (char and char:GetRank() == rank) then
@@ -172,7 +170,7 @@ if (SERVER) then
     -- @realm server
     function charMeta:KickRank()
         local client = self:GetPlayer()
-        if (!client) then return end
+        if ( !IsValid(client) ) then return end
 
         local goRank
 
@@ -184,9 +182,77 @@ if (SERVER) then
             end
         end
 
+        if ( !goRank ) then
+            self:SetRank(nil)
+            return
+        end
+
         self:JoinRank(goRank)
 
         hook.Run("PlayerJoinedRank", client, goRank)
+    end
+
+    --- Promotes the character to the next rank in order.
+    -- @realm server
+    function charMeta:RankPromote()
+        if ( !self ) then return false end
+
+        local ply = self:GetPlayer()
+        if ( !IsValid(ply) ) then return false end
+
+        local rank = self:GetRank()
+        if ( !rank ) then return false end
+
+        local rankData = ix.rank.Get(rank)
+        if ( !rankData ) then return false end
+
+        if ( !rankData.sortOrder ) then
+            ErrorNoHaltWithStack("Rank \"" .. rankData.name .. "\" does not have a sortOrder value!\n")
+            return false
+        end
+
+        local nextRank = rankData.sortOrder + 1
+
+        for _, v in ipairs(ix.rank.list) do
+            if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
+                self:SetRank(k)
+                hook.Run("PlayerJoinedRank", ply, k, rank)
+                break
+            end
+        end
+    end
+
+    --- Demotes the character to the previous rank in order.
+    -- @realm server
+    function charMeta:RankDemote()
+        if ( !self ) then return end
+
+        local ply = self:GetPlayer()
+        if ( !IsValid(ply) ) then return end
+
+        local rank = self:GetRank()
+        if ( !rank ) then return end
+
+        local rankData = ix.rank.Get(rank)
+        if ( !rankData ) then return end
+
+        if ( !rankData.sortOrder ) then
+            ErrorNoHaltWithStack("Rank \"" .. rankData.name .. "\" does not have a sortOrder value!\n")
+            return
+        end
+
+        local nextRank = rankData.sortOrder - 1
+
+        for _, v in ipairs(ix.rank.list) do
+            if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
+                self:SetRank(k)
+                hook.Run("PlayerJoinedRank", ply, k, rank)
+
+                return true
+            end
+        end
+
+        return false
     end
 
     function GM:PlayerJoinedRank(client, rank, oldRank)
