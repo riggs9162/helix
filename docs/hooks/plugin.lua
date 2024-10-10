@@ -1058,8 +1058,32 @@ end
 function PlayerWeaponChanged(client, weapon)
 end
 
---- @realm shared
-function PluginLoaded(uniqueID, pluginTable)
+--- Called before the player's data is about to be loaded
+-- @realm server
+-- @player client Player that is about to load data
+-- @usage function PLUGIN:PrePlayerDataLoaded(client)
+-- 	print("Player "..client:Name().." is about to load data.")
+-- end
+function PrePlayerDataLoaded(client)
+end
+
+--- Called when a player's data is about to be loaded.
+-- @realm server
+-- @player client Player that is about to load data
+-- @usage function PLUGIN:PlayerDataLoaded(client)
+-- 	print("Player "..client:Name().." is about to load data.")
+-- end
+-- @internal
+function PlayerDataLoaded(client)
+end
+
+--- Called after the player's data is fully loaded.
+-- @realm server
+-- @player client Player that has loaded data
+-- @usage function PLUGIN:PostPlayerDataLoaded(client)
+-- 	print("Player "..client:Name().." has loaded data.")
+-- end
+function PostPlayerDataLoaded(uniqueID, pluginTable)
 end
 
 --- @realm shared
