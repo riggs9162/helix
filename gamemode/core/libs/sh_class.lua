@@ -116,7 +116,7 @@ end
 -- @treturn table Class table
 function ix.class.Get(identifier)
     for _, v in ipairs(ix.class.list) do
-        if (ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier) or v.index == tonumber(identifier))) then
+        if ( tonumber(identifier) == v.index or ix.util.StringMatches(v.uniqueID, tostring(identifier)) or ix.util.StringMatches(v.name, tostring(identifier)) ) then
             return v
         end
     end

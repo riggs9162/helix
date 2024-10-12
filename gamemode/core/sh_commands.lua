@@ -841,6 +841,7 @@ ix.command.Add("CharSetClass", {
         for _, v in ipairs(ix.class.list) do
             if (ix.util.StringMatches(v.uniqueID, class) or ix.util.StringMatches(v.name, class)) then
                 classTable = v
+                break
             end
         end
 
