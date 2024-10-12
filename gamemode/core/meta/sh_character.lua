@@ -236,7 +236,7 @@ end
 function CHAR:GetPlayer()
     -- Set the player from entity index.
     if (isnumber(self.player)) then
-        local client = Player(self.player)
+        local client = Entity(self.player)
 
         if (IsValid(client)) then
             self.player = client
