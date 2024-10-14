@@ -571,6 +571,8 @@ function GM:HUDPaintBackground()
         surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
         surface.SetMaterial(vignette)
         surface.DrawTexturedRect(0, 0, scrW, scrH)
+
+        hook.Run("DrawVignette", vignetteAlphaDelta)
     end
 
     blurGoal = client:GetLocalVar("blur", 0) + (hookRun("AdjustBlurAmount", blurGoal) or 0)
