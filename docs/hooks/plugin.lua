@@ -511,7 +511,50 @@ end
 function CreateItemInteractionMenu(icon, menu, itemTable)
 end
 
---- @realm client
+--- Called whenever buttons are being created for the tab menu, this is useful for creating new tabs or modifying existing ones.
+-- @realm client
+-- @tab tabs Table of tabs to be modified
+-- @usage -- Create a new tab in the tab menu using localizations.
+-- function PLUGIN:CreateMenuButtons(tabs)
+-- 	tabs["skills"] = function(container)
+-- 		local button = container:Add("DButton")
+-- 		button:SetText("chooseSkills")
+-- 		button:Dock(FILL)
+-- 		button.DoClick = function(this)
+-- 			ix.util.NotifyLocalized("noDesc")
+-- 		end
+-- 	end
+-- end
+--
+-- -- You can also remove tabs by setting them to nil.
+-- function PLUGIN:CreateMenuButtons(tabs)
+-- 	tabs["inv"] = nil
+-- end
+--
+-- -- When creating tabs, you can use it as a table instead of a function instead to provide more information for the button and the tab itself.
+-- function PLUGIN:CreateMenuButtons(tabs)
+-- 	tabs["skills"] = {
+-- 		buttonColor = Color(255, 0, 0), -- color of the button
+-- 		bDefault = true, -- make this tab the default tab
+-- 		PopulateTabButton = function(info, button) -- function to populate the tab button
+-- 			print("Populating tab button for skills")
+-- 		end,
+-- 		Create = function(info, container) -- function to create the tab
+-- 			local button = container:Add("DButton")
+-- 			button:SetText("chooseSkills")
+-- 			button:Dock(FILL)
+-- 			button.DoClick = function(this)
+-- 				ix.util.NotifyLocalized("noDesc")
+-- 			end
+-- 		end,
+-- 		OnSelected = function(info, container) -- function to call when the tab is selected
+-- 			print("Selected tab skills")
+-- 		end,
+-- 		OnDeselected = function(info, container) -- function to call when the tab is deselected
+-- 			print("Deselected tab skills")
+-- 		end
+-- 	}
+-- end
 function CreateMenuButtons(tabs)
 end
 
@@ -1083,7 +1126,7 @@ end
 -- @usage function PLUGIN:PostPlayerDataLoaded(client)
 -- 	print("Player "..client:Name().." has loaded data.")
 -- end
-function PostPlayerDataLoaded(uniqueID, pluginTable)
+function PostPlayerDataLoaded(client)
 end
 
 --- @realm shared

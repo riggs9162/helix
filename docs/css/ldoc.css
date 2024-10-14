@@ -17,8 +17,8 @@
 	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
 	--font-style-code: Consolas, monospace;
 
-	--color-accent: rgb(115, 53, 142);
-	--color-accent-dark: rgb(85, 39, 105);
+	--color-accent: rgb(255, 100, 0);
+	--color-accent-dark: rgb(200, 50, 0);
 	--color-white: rgb(255, 255, 255);
 	--color-offwhite: rgb(200, 200, 200);
 	--color-white-accent: rgb(203, 190, 209);
@@ -70,16 +70,6 @@ ul li {
 
 	font-weight: 100;
 	font-size: var(--font-massive);
-	text-align: center;
-}
-
-.landing h2 {
-	margin: 0;
-	padding: 0;
-	border: none;
-
-	font-weight: 100;
-	font-size: var(--font-huge);
 	text-align: center;
 }
 
@@ -276,7 +266,7 @@ article .wrapper > *:first-child {
 /* header */
 article header {
 	color: rgb(255, 255, 255);
-	background-color: rgb(115, 53, 142);
+	background-color: var(--color-accent);
 	padding: var(--padding-tiny);
 }
 
@@ -323,7 +313,7 @@ article h2 {
 }
 
 article h3 {
-	color: rgb(115, 53, 142);
+	color: var(--color-accent);
 	margin-top: var(--padding-tiny);
 	text-transform: uppercase;
 }
@@ -336,13 +326,13 @@ article p a,
 article ul li a,
 article h1 a,
 article h2 a {
-	color: rgb(115, 53, 142);
+	color: var(--color-accent);
 	font-weight: 600;
 }
 
 article h1.title {
 	color: rgb(255, 255, 255);
-	background-color: rgb(115, 53, 142);
+	background-color: var(--color-accent);
 	margin-top: var(--padding-small);
 	margin-bottom: 0;
 	padding: var(--padding-tiny);
@@ -354,7 +344,7 @@ article h1.title {
 }
 
 a.reference {
-	color: rgb(115, 53, 142);
+	color: var(--color-accent);
 	float: right;
 	margin-top: 8px;
 	padding-left: 8px;
@@ -419,7 +409,8 @@ a.reference {
 }
 
 .method header .anchor:target h1 {
-	background-color: rgba(115, 53, 142, 0.2);
+	/*background-color: rgba(115, 53, 142, 0.2);*/
+	background-color: var(--color-accent);
 	background-clip: content-box;
 }
 
@@ -435,7 +426,7 @@ a.reference {
 }
 
 .method h3 {
-	color: rgb(115, 53, 142);
+	color: var(--color-accent);
 	font-size: var(--font-normal);
 	letter-spacing: 2px;
 	text-transform: uppercase;
@@ -478,7 +469,7 @@ a.reference {
 }
 
 .method ul li a {
-	color: rgb(115, 53, 142);
+	color: var(--color-accent);
 	font-weight: 600;
 }
 
@@ -493,7 +484,7 @@ a.reference {
 }
 
 .parameter {
-	background-color: rgb(115, 53, 142);
+	background-color: var(--color-accent);
 }
 
 .type {
@@ -514,7 +505,7 @@ a.type {
 }
 
 .or {
-	color: rgba(115, 53, 142, 0.5);
+	color: rgba(193, 114, 11, 0.5);
 	background-color: inherit;
 
 	width: calc(100% - 32px);
@@ -523,7 +514,7 @@ a.type {
 
 	text-align: center;
 	font-weight: 600;
-	border-bottom: 1px solid rgba(115, 53, 142, 0.5);
+	border-bottom: 1px solid rgba(193, 114, 11, 0.5);
 }
 
 .or span {

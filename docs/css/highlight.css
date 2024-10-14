@@ -1,24 +1,23 @@
-/*
-
-github.com style (c) Vasily Polovnyov <vast@whiteants.net>
-
-*/
+/* GLua-inspired theme for syntax highlighting */
 
 .hljs {
   display: block;
-  color: #333;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 0.5em;
+  border-radius: 4px;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #535346;
+  color: #6a9955;
   font-style: italic;
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-subst {
-  color: #333;
+  color: #569cd6;
   font-weight: bold;
 }
 
@@ -27,18 +26,18 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 .hljs-variable,
 .hljs-template-variable,
 .hljs-tag .hljs-attr {
-  color: #008080;
+  color: #b5cea8;
 }
 
 .hljs-string,
 .hljs-doctag {
-  color: #d14;
+  color: #ce9178;
 }
 
 .hljs-title,
 .hljs-section,
 .hljs-selector-id {
-  color: #900;
+  color: #dcdcaa;
   font-weight: bold;
 }
 
@@ -48,43 +47,42 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 .hljs-type,
 .hljs-class .hljs-title {
-  color: #458;
+  color: #4ec9b0;
   font-weight: bold;
 }
 
 .hljs-tag,
 .hljs-name,
 .hljs-attribute {
-  color: #000080;
-  font-weight: normal;
+  color: #9cdcfe;
 }
 
 .hljs-regexp,
 .hljs-link {
-  color: #009926;
+  color: #d16969;
 }
 
 .hljs-symbol,
 .hljs-bullet {
-  color: #990073;
+  color: #c586c0;
 }
 
 .hljs-built_in,
 .hljs-builtin-name {
-  color: #0086b3;
+  color: #569cd6;
 }
 
 .hljs-meta {
-  color: #999;
+  color: #c0c0c0;
   font-weight: bold;
 }
 
 .hljs-deletion {
-  background: #fdd;
+  background: #f44747;
 }
 
 .hljs-addition {
-  background: #dfd;
+  background: #144212;
 }
 
 .hljs-emphasis {
