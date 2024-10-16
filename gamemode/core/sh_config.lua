@@ -220,6 +220,10 @@ if (SERVER) then
 
         if (CAMI.PlayerHasAccess(client, "Helix - Manage Config", nil) and
             type(ix.config.stored[key].default) == type(value)) then
+
+            local customCanChange = ix.config.stored[key].data.CanChange
+            if ( customCanChange and !customCanChange(client, key, value) ) then return end
+
             ix.config.Set(key, value)
 
             if (ix.util.IsColor(value)) then
