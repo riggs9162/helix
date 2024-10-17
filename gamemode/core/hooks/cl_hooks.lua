@@ -292,7 +292,7 @@ function GM:OnCharacterMenuCreated(panel)
     end
 end
 
-local LOWERED_ANGLES = Angle(30, 0, -25)
+LOWERED_ANGLES = Angle(30, 0, -25)
 
 function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
     if (!IsValid(weapon)) then
@@ -309,23 +309,30 @@ function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos
         client.ixRaisedFraction = 1 - fraction
         client.ixRaisedTween = ix.tween.new(0.75, client, {
             ixRaisedFraction = fraction
-        }, "outQuint")
+        }, LOWER_EASE_INOUT or "outQuint")
 
         client.ixWasWeaponRaised = bWepRaised
     end
 
     local fraction = client.ixRaisedFraction
+    local lowerPos = weapon.LowerPosition or Vector(0, 0, 0)
     local rotation = weapon.LowerAngles or LOWERED_ANGLES
 
     if (ix.option.Get("altLower", true) and weapon.LowerAngles2) then
         rotation = weapon.LowerAngles2
     end
 
+    eyePos = eyePos + lowerPos.x * eyeAngles:Forward() * fraction
+    eyePos = eyePos + lowerPos.y * eyeAngles:Right() * fraction
+    eyePos = eyePos + lowerPos.z * eyeAngles:Up() * fraction
+
     eyeAngles:RotateAroundAxis(eyeAngles:Up(), rotation.p * fraction)
     eyeAngles:RotateAroundAxis(eyeAngles:Forward(), rotation.y * fraction)
     eyeAngles:RotateAroundAxis(eyeAngles:Right(), rotation.r * fraction)
 
+    viewModel:SetPos(eyePos)
     viewModel:SetAngles(eyeAngles)
+
     return self.BaseClass:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
 end
 
