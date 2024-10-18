@@ -73,6 +73,16 @@ ul li {
 	text-align: center;
 }
 
+.landing h2 {
+	margin: 0;
+	padding: 0;
+	border: none;
+
+	font-weight: 100;
+	font-size: var(--font-huge);
+	text-align: center;
+}
+
 .wrapper {
 	padding: var(--padding-small);
 }
