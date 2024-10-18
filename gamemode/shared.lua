@@ -40,12 +40,12 @@ ix.type = ix.type or {}
 GM.Name = "Helix"
 GM.Author = "nebulous.cloud"
 GM.Website = "https://nebulous.cloud"
-GM.Version = "1.3"
+GM.Version = "1.3.1"
 
-local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
 local version = GM.Version or "1.0"
-http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Servers/VERSION.txt", function(body)
-    if ( body == version ) then
+local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
+local function CheckVersion(response)
+    if ( response == version ) then
         if ( SERVER ) then
             MsgC(Color(0, 255, 0), "[Helix] You are using the latest version of the Helix Framework (" .. version .. ").\n")
         else
@@ -53,12 +53,18 @@ http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Serv
         end
     else
         if ( SERVER ) then
-            MsgC(Color(255, 0, 0), "[Helix] You are using an outdated version of the Helix Framework (" .. version .. "), the newest version is version " .. body .. ".\n")
+            MsgC(Color(255, 0, 0), "[Helix] You are using an outdated version of the Helix Framework (" .. version .. "), the newest version is version " .. response .. ".\n")
             MsgC(Color(255, 0, 0), "[Helix] Please update to the latest version by downloading it from " .. install .. "\n")
         else
             MsgC(Color(255, 0, 0), "[Helix] This server is using an outdated version of the Helix Framework (" .. version .. ").\n")
         end
     end
+end
+
+hook.Add("Initialize", "HelixVersionCheck", function()
+    http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Servers/VERSION.txt", function(response)
+        CheckVersion(response)
+    end)
 end)
 
 do
