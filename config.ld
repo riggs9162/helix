@@ -12,6 +12,7 @@ module_file = {
 	Inventory = "gamemode/core/meta/sh_inventory.lua",
 	Item = "gamemode/core/meta/sh_item.lua",
 	Player = "gamemode/core/meta/sh_player.lua",
+	Color = "gamemode/core/meta/sh_color.lua",
 	Vector = "gamemode/core/meta/sh_vector.lua"
 }
 
@@ -40,7 +41,8 @@ pretty_topic_names = true -- strips extension from manual filenames, this does n
 
 custom_tags = {
 	{"realm", hidden = true},
-	{"internal", hidden = true}
+	{"internal", hidden = true},
+	{"notes", hidden = false}
 }
 
 custom_display_name_handler = function(item, default_handler)

@@ -15,17 +15,23 @@ ix.currency.model = ix.currency.model or "models/props_lab/box01a.mdl"
 -- @string plural The name of the currency in it's plural form.
 -- @string model The model of the currency entity.
 function ix.currency.Set(symbol, singular, plural, model)
-    ix.currency.symbol = symbol
-    ix.currency.singular = singular
-    ix.currency.plural = plural
-    ix.currency.model = model
+    ix.currency.symbol = symbol or ix.currency.symbol
+    ix.currency.singular = singular or ix.currency.singular
+    ix.currency.plural = plural or ix.currency.plural
+    ix.currency.model = model or ix.currency.model
 end
 
 --- Returns a formatted string according to the current currency.
 -- @realm shared
 -- @number amount The amount of cash being formatted.
 -- @treturn string The formatted string.
+-- @usage ix.currency.Get(1000) -- "$1000"
 function ix.currency.Get(amount)
+    if (!isnumber(amount)) then
+        ErrorNoHaltWithStack("[Helix] Can't get currency: Invalid amount")
+        return nil
+    end
+
     if (amount == 1) then
         return ix.currency.symbol.."1 "..ix.currency.singular
     else
@@ -37,7 +43,13 @@ end
 -- @realm shared
 -- @number amount The amount of cash being formatted.
 -- @treturn string The formatted string.
+-- @usage ix.currency.Format(1000) -- "1,000"
 function ix.currency.Format(amount)
+    if (!isnumber(amount)) then
+        ErrorNoHaltWithStack("[Helix] Can't format currency: Invalid amount")
+        return nil
+    end
+
     local formatted = amount
 
     while true do
@@ -51,44 +63,83 @@ function ix.currency.Format(amount)
     return formatted
 end
 
---- Spawns an amount of cash at a specific location on the map.
+--- Applies a tax to a specified amount.
 -- @realm shared
--- @vector pos The position of the money to be spawned.
--- @number amount The amount of cash being spawned.
--- @angle[opt=angle_zero] angle The angle of the entity being spawned.
--- @treturn entity The spawned money entity.
-function ix.currency.Spawn(pos, amount, angle)
-    if (!amount or amount < 0) then
-        print("[Helix] Can't create currency entity: Invalid Amount of money")
-        return
+-- @number amount The amount of currency.
+-- @number rate The tax rate to apply (in percentage, e.g. 10 for 10%).
+-- @treturn number The taxed amount.
+-- @usage ix.currency.ApplyTax(100, 10) -- 90
+function ix.currency.ApplyTax(amount, rate)
+    if (!isnumber(amount) or !isnumber(rate) or rate < 0) then
+        ErrorNoHaltWithStack("[Helix] Can't apply tax: Invalid amount or rate")
+        return nil
     end
 
-    local money = ents.Create("ix_money")
-    money:Spawn()
-
-    if (IsValid(pos) and pos:IsPlayer()) then
-        pos = pos:GetItemDropPos(money)
-    elseif (!isvector(pos)) then
-        print("[Helix] Can't create currency entity: Invalid Position")
-
-        money:Remove()
-        return
-    end
-
-    money:SetPos(pos)
-    -- double check for negative.
-    money:SetAmount(math.Round(math.abs(amount)))
-    money:SetAngles(angle or angle_zero)
-    money:Activate()
-
-    return money
+    return amount - (amount * (rate / 100))
 end
 
-function GM:OnPickupMoney(client, moneyEntity)
-    if (IsValid(moneyEntity)) then
-        local amount = moneyEntity:GetAmount()
+--- Transfers currency from one character to another.
+-- @realm server
+-- @char fromChar The character to transfer currency from.
+-- @char toChar The character to transfer currency to.
+-- @number amount The amount to transfer.
+-- @treturn boolean Returns true if the transfer was successful.
+-- @usage ix.currency.Transfer(Entity(1), Entity(2), 100) -- true
+function ix.currency.Transfer(fromChar, toChar, amount)
+    if (!fromChar or !toChar) then
+        ErrorNoHaltWithStack("[Helix] Can't transfer currency: Invalid character(s)")
+        return false
+    end
 
-        client:GetCharacter():GiveMoney(amount)
+    if (fromChar:GetMoney() >= amount) then
+        fromChar:TakeMoney(amount)
+        toChar:GiveMoney(amount)
+        return true
+    end
+
+    return false
+end
+
+if (SERVER) then
+    --- Spawns an amount of cash at a specific location on the map.
+    -- @realm server
+    -- @vector pos The position of the money to be spawned.
+    -- @number amount The amount of cash being spawned.
+    -- @angle[opt=angle_zero] angle The angle of the entity being spawned.
+    -- @treturn entity The spawned money entity.
+    function ix.currency.Spawn(pos, amount, angle)
+        if (!amount or amount < 0) then
+            print("[Helix] Can't create currency entity: Invalid Amount of money")
+            return
+        end
+
+        local money = ents.Create("ix_money")
+        money:Spawn()
+
+        if (IsValid(pos) and pos:IsPlayer()) then
+            pos = pos:GetItemDropPos(money)
+        elseif (!isvector(pos)) then
+            print("[Helix] Can't create currency entity: Invalid Position")
+
+            money:Remove()
+            return
+        end
+
+        money:SetPos(pos)
+        -- double check for negative.
+        money:SetAmount(math.Round(math.abs(amount)))
+        money:SetAngles(angle or angle_zero)
+        money:Activate()
+
+        return money
+    end
+
+    function GM:OnPickupMoney(client, moneyEntity)
+        if (IsValid(moneyEntity)) then
+            local amount = moneyEntity:GetAmount()
+    
+            client:GetCharacter():GiveMoney(amount)
+        end
     end
 end
 

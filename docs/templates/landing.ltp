@@ -5,19 +5,25 @@
 </div>
 
 <div class="wrapper">
-	<p style="text-align: center;">Welcome to the documentation for the Edited Helix Framework by Minerva Servers.</p>
-	<h1>Differences</h1>
-	<p>Now you might be asking yourself what the main difference between the default Helix and the Minerva edited Helix Framework is. Mainly the big things are more customization for developers, also including a new feature called "ranks", which is merely a class copy and paste and rename but it's a nice feature to have. We also have a few more features that are not in the default Helix Framework, like expansions on config and a few other things.</p>
-	<p>For a full list of differences between the default Helix and the Minerva edited Helix Framework, check out the <a href="{* ldoc.url('manual/differences') *}">Differences</a> page in the manuals section.</p>
-	<h1>Documentation</h1>
-	<p>The sidebar shows the entire contents of the documentation. Libraries, functions, etc are all searchable with the search box at the top of the sidebar. Migrating from Clockwork? Check out the <a href="{* ldoc.url('manual/converting-from-clockwork') *}">conversion guide</a> in the manual.</p>
-	<h1>Server owners</h1>
-	<p>If you're looking to get your Helix server up and running as soon as possible, check out the <a href="{* ldoc.url('manual/getting-started') *}">Getting Started</a> guide in the manual.</p>
-	<h1>Community</h1>
-	<p>Questions? Want to show off your work? Maybe drop a new plugin release? Come join our community <a href="https://discord.gg/2AutUcF" target="_blank">Discord server</a>.</p>
-	<h1>Contributing</h1>
-	<p>Helix is a large project and there are still a few things missing here and there. Contributions to the documentation - from function references, to simple typo fixes - are welcomed! Check out the <code>ix.storage</code> library's <a href="https://github.com/Minerva-Servers/helix/blob/Minerva-Servers/gamemode/core/libs/sh_storage.lua" target="_blank">source code</a> for a good example on how to write documentation. You'll need a basic understanding of <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown</a>, since it's used extensively to generate the markup.</p>
-	<p>If you'd like to contribute code, you can visit the <a href="https://github.com/Minerva-Servers/helix/tree/Minerva-Servers" target="_blank">GitHub repository</a> and make a pull request.</p>
-	<h1>Learning</h1>
-	<p>Getting started on developing with the Helix framework requires an intermediate level of Garry's Mod Lua knowledge. You'll want to learn the basics before you get starting making a schema. The <a href="https://wiki.facepunch.com/gmod/" target="_blank">Garry's Mod Wiki</a> is a good place to start.</p>
+    <p style="text-align: center;">Welcome to the official documentation for the Minerva Servers' Edited Helix Framework.</p>
+
+    <h1>Key Enhancements</h1>
+    <p>Curious about the differences between the default Helix and Minerva’s edited version? Our framework offers enhanced customization for developers, including a new "ranks" feature, which simplifies class management. Additionally, we’ve expanded configuration options and added unique features not found in the default Helix version.</p>
+    <p>For a complete list of changes, please visit the <a href="{* ldoc.url('manual/differences') *}">Differences</a> page in our documentation.</p>
+
+    <h1>Comprehensive Documentation</h1>
+    <p>Explore the full range of documentation through the sidebar. Whether you’re looking for libraries, functions, or more, everything is searchable using the search bar. If you're transitioning from Clockwork, don’t miss our <a href="{* ldoc.url('manual/converting-from-clockwork') *}">conversion guide</a>.</p>
+
+    <h1>Server Setup</h1>
+    <p>Ready to launch your Helix server? Check out our step-by-step <a href="{* ldoc.url('manual/getting-started') *}">Getting Started</a> guide to get your server up and running quickly.</p>
+
+    <h1>Join Our Community</h1>
+    <p>Have questions, want to showcase your work, or release a new plugin? Join the conversation on our <a href="https://discord.gg/2AutUcF" target="_blank">Discord server</a>.</p>
+
+    <h1>Contribute to the Project</h1>
+    <p>We're always looking for contributions to improve the project, from enhancing documentation to fixing typos. Check out the <code>ix.storage</code> library's <a href="https://github.com/Minerva-Servers/helix/blob/Minerva-Servers/gamemode/core/libs/sh_storage.lua" target="_blank">source code</a> for an example of how to document code. Familiarity with <a href="https://guides.github.com/features/mastering-markdown/" target="_blank">Markdown</a> is essential as it’s widely used in our documentation process.</p>
+    <p>If you’d like to contribute code, head over to our <a href="https://github.com/Minerva-Servers/helix/tree/Minerva-Servers" target="_blank">GitHub repository</a> and submit a pull request.</p>
+
+    <h1>Learning Resources</h1>
+    <p>To develop with the Helix framework, a solid understanding of Garry's Mod Lua is required. For those new to Lua, we recommend starting with the basics on the <a href="https://wiki.facepunch.com/gmod/" target="_blank">Garry's Mod Wiki</a> before diving into schema development.</p>
 </div>

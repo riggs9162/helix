@@ -1456,5 +1456,117 @@ if ( CLIENT ) then
     end
 end
 
+--- Rolls a percentage chance.
+-- @realm shared
+-- @number chance The percentage chance (1-100).
+-- @treturn boolean Returns true if the chance succeeds.
+function ix.util.Chance(chance)
+    return math.random(100) <= chance
+end
+
+--- Picks a random value from a weighted table.
+-- @realm shared
+-- @tab tbl The table containing values with weights.
+-- @treturn any The randomly selected value.
+function ix.util.WeightedRandom(tbl)
+    local totalWeight = 0
+
+    for _, weight in pairs(tbl) do
+        totalWeight = totalWeight + weight
+    end
+
+    local randomWeight = math.random() * totalWeight
+
+    for value, weight in pairs(tbl) do
+        if (randomWeight < weight) then
+            return value
+        else
+            randomWeight = randomWeight - weight
+        end
+    end
+end
+
+--- Calculates the shortest distance between two angles.
+-- @realm shared
+-- @number ang1 The first angle.
+-- @number ang2 The second angle.
+-- @treturn number The shortest distance between the angles.
+function ix.util.CircularDistance(ang1, ang2)
+    local delta = (ang1 - ang2) % 360
+    if (delta > 180) then
+        delta = delta - 360
+    end
+    return delta
+end
+
+--- Finds the nearest entity to a given position.
+-- @realm server
+-- @vector pos The position to search around.
+-- @number radius The search radius.
+-- @string entClass The entity class to search for.
+-- @treturn entity The nearest entity.
+function ix.util.FindNearestEntity(pos, radius, entClass)
+    local entities = ents.FindInSphere(pos, radius)
+    local nearestEnt = nil
+    local nearestDist = math.huge
+
+    for _, ent in ipairs(entities) do
+        if (ent:GetClass() == entClass) then
+            local dist = ent:GetPos():Distance(pos)
+
+            if (dist < nearestDist) then
+                nearestEnt = ent
+                nearestDist = dist
+            end
+        end
+    end
+
+    return nearestEnt
+end
+
+--- Converts seconds into a formatted time string.
+-- @realm shared
+-- @number time The time in seconds.
+-- @treturn string Formatted string in H:MM:SS format.
+function ix.util.FormatTime(time)
+    local hours = math.floor(time / 3600)
+    local minutes = math.floor((time % 3600) / 60)
+    local seconds = time % 60
+
+    return string.format("%02d:%02d:%02d", hours, minutes, seconds)
+end
+
+--- Rounds a number to a specific number of decimal places.
+-- @realm shared
+-- @number num The number to round.
+-- @number decimalPlaces The number of decimal places to round to.
+-- @treturn number The rounded number.
+function ix.util.Round(num, decimalPlaces)
+    local mult = 10 ^ decimalPlaces
+    return math.Round(num * mult) / mult
+end
+
+--- Recursively finds files in a directory and its subdirectories.
+-- @realm server
+-- @string dir The directory to search.
+-- @treturn table A table of file paths.
+function ix.util.FindFilesRecursive(dir)
+    local files, dirs = file.Find(dir.."/*", "GAME")
+    local results = {}
+
+    for _, f in ipairs(files) do
+        table.insert(results, dir.."/"..f)
+    end
+
+    for _, d in ipairs(dirs) do
+        local subFiles = ix.util.FindFilesRecursive(dir.."/"..d)
+        for _, f in ipairs(subFiles) do
+            table.insert(results, f)
+        end
+    end
+
+    return results
+end
+
 ix.util.Include("helix/gamemode/core/meta/sh_entity.lua")
 ix.util.Include("helix/gamemode/core/meta/sh_player.lua")

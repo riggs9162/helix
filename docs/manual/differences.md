@@ -1,29 +1,36 @@
 # Differences
 
-All notable differences between the default Helix Framework and the Minerva edited version will be documented in this file.
+All notable differences between the default **Helix Framework** and the **Minerva** edited version are documented below.
 
-## Rank System
-A fully integrated rank system has been added to the Minerva version of Helix. This system is merely a copy of the default class system from the Framework.
+# Rank System
 
-## Reworked Animation System
-The animation system has been reworked to allow for more flexibility and customization. It fixes the most popular errors from the default Framework such as the "penguin" Overwatch Soldier models, or some animations that use strings instead of enums not properly working as intended.
+A fully integrated **rank system** has been added to the Minerva version of Helix. This system functions as a copy of the default class system from the Framework, with additional flexibility.
 
-## Developer Friendly
-The Minerva version of Helix is more developer-friendly than the default Framework. It includes more comments, better documentation, and more examples to help developers understand how to create plugins and modify their Schemas.
+# Reworked Animation System
 
-Most notable changes include:
-```
-|-- More detailed documentation for the following features:
-|   |-- Creating a Plugin
-|   |-- Creating a Schema
-|   |-- Creating a Faction
-|   |-- Creating a Class
-|   |-- Creating a Rank
-|   |-- Creating a Item
-|-- Expanded utility library
-|-- Proper bot support
-```
+The animation system has been **reworked** to provide greater flexibility and customization. Several issues in the default Framework have been fixed, including:
 
-## Enhancements towards Map Scenes Plugin
+- The "penguin" Overwatch Soldier models.
+- Animations using **strings** instead of enums not functioning as intended.
 
-The Map Scenes plugin has been enhanced to allow for more customization and flexibility.
+# Enhancements to the Map Scenes Plugin
+
+The **Map Scenes plugin** has been enhanced to allow more customization and flexibility, making it easier to adapt to various gameplay scenarios.
+
+# Developer-Friendly Enhancements
+
+The Minerva version of Helix is designed to be more **developer-friendly**, featuring improved documentation and examples. The following are the most notable changes:
+
+### More detailed documentation for the following features:
+
+- Creating a Plugin
+- Creating a Schema
+- Creating a Faction
+- Creating a Class
+- Creating a Rank
+- Creating an Item
+
+### Other enhancements include:
+
+- Expanded utility library for developer use.
+- Proper support for bots and their functionality within the system.

@@ -29,6 +29,13 @@ CAMI.RegisterPrivilege({
 -- @tab[opt=nil] data Additional settings for this config option
 -- @bool[opt=false] bNoNetworking Whether or not to prevent networking the config
 -- @bool[opt=false] bSchemaOnly Whether or not the config is for the schema only
+-- @usage ix.config.Add("gravity", 600, "The force of gravity on the server.", function(oldValue, newValue)
+--     if (oldValue != newValue and SERVER) then
+--         RunConsoleCommand("sv_gravity", newValue)
+--     end
+-- end)
+-- @usage ix.config.Add("secondaryColor", Color(255, 255, 255), "The second color of the schema.")
+-- @usage ix.config.Add("name", "John Doe", "The name of the server.")
 function ix.config.Add(key, value, description, callback, data, bNoNetworking, bSchemaOnly)
     data = istable(data) and data or {}
 
@@ -71,6 +78,12 @@ end
 -- @realm shared
 -- @string key Unique ID of the config
 -- @param value Default value for the config option
+-- @usage -- Set's the default value of the "color" config option to a randomised color
+-- local r = math.random(0, 255)
+-- local g = math.random(0, 255)
+-- local b = math.random(0, 255)
+-- 
+-- ix.config.SetDefault("color", Color(r, g, b))
 function ix.config.SetDefault(key, value)
     local config = ix.config.stored[key]
 
@@ -85,6 +98,12 @@ function ix.config.SetDefault(key, value)
     end
 end
 
+--- Forces a config option to be set to a specific value without any checks, callbacks or networking.
+-- @internal
+-- @realm shared
+-- @string key Unique ID of the config
+-- @param value New value to assign to the config
+-- @bool[opt=false] noSave Whether or not to save the config to disk
 function ix.config.ForceSet(key, value, noSave)
     local config = ix.config.stored[key]
 
@@ -97,10 +116,11 @@ function ix.config.ForceSet(key, value, noSave)
     end
 end
 
---- Sets the value of a config option.
+--- Sets the value of a config option. This function will reset all other config options to their default values if called before the data is fully loaded!
 -- @realm shared
 -- @string key Unique ID of the config
 -- @param value New value to assign to the config
+-- @usage ix.config.Set("color", Color(255, 0, 0)) -- sets the color to red
 function ix.config.Set(key, value)
     local config = ix.config.stored[key]
 

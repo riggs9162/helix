@@ -53,6 +53,22 @@ function ix.option.Add(key, optionType, default, data)
     categories[category] = categories[category] or {}
     categories[category][key] = true
 
+    ix.option.stored[key] = {
+        key = key,
+        phrase = "opt" .. upperName,
+        description = "optd" .. upperName,
+        type = optionType,
+        default = default,
+        min = data.min or 0,
+        max = data.max or 10,
+        decimals = data.decimals or 0,
+        category = data.category or "misc",
+        bNetworked = data.bNetworked and true or false,
+        hidden = data.hidden or nil,
+        populate = data.populate or nil,
+        OnChanged = data.OnChanged or nil
+    }
+
     --- You can specify additional optional arguments for `ix.option.Add` by passing in a table of specific fields as the fourth
     -- argument.
     -- @table OptionStructure
@@ -91,21 +107,6 @@ function ix.option.Add(key, optionType, default, data)
     --             ["spanish"] = "Spanish"
     --         }
     --     end
-    ix.option.stored[key] = {
-        key = key,
-        phrase = "opt" .. upperName,
-        description = "optd" .. upperName,
-        type = optionType,
-        default = default,
-        min = data.min or 0,
-        max = data.max or 10,
-        decimals = data.decimals or 0,
-        category = data.category or "misc",
-        bNetworked = data.bNetworked and true or false,
-        hidden = data.hidden or nil,
-        populate = data.populate or nil,
-        OnChanged = data.OnChanged or nil
-    }
 end
 
 --- Creates a more simple option that doesn't require language phrases.
