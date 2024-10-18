@@ -19,36 +19,58 @@ CAMI.RegisterPrivilege({
     MinAccess = "user"
 })
 
---- Registers a sequence as a performable animation.
+--- Registers a sequence as a performable animation (or "act") for a specific model class or multiple model classes.
+-- Acts allow players to perform custom animations, enhancing the roleplay experience. 
+-- This function ties an animation (or a series of animations) to a model class, which can then be triggered using commands.
+--
 -- @realm shared
--- @string name Name of the animation (in CamelCase)
--- @string modelClass Model class to add this animation to
--- @tab data An `ActInfoStructure` table describing the animation
+-- @string name The name of the act (in CamelCase). This name will be used as the identifier for the act and in the commands (e.g., `ActWave`).
+-- @string modelClass The model class or list of model classes that this act applies to. For example, "citizen" or `{"citizen", "metrocop"}`. 
+-- Acts will only be available for the specified model(s).
+-- @tab data The data table that defines the act. This table must contain a `sequence` field, which is the main sequence that the act will perform.
+-- This is explained in more detail in the `ActInfoStructure` table.
+-- @usage
+-- -- Register a simple "Wave" animation for the "citizen" model class
+-- ix.act.Register("Wave", "citizen", {
+--     sequence = "wave"
+-- })
+--
+-- -- Register a more complex "Salute" animation for multiple model classes with start and finish sequences
+-- ix.act.Register("Salute", {"citizen", "metrocop"}, {
+--     sequence = {"salute_idle1", "salute_idle2"},  -- Main sequence
+--     start = {"salute_start1", "salute_start2"},   -- Starting sequence
+--     finish = {"salute_finish1", "salute_finish2"} -- Finishing sequence
+-- })
 function ix.act.Register(name, modelClass, data)
     ix.act.stored[name] = ix.act.stored[name] or {} -- might be adding onto an existing act
 
+    -- Ensure that a valid sequence is provided
     if (!data.sequence) then
         return ErrorNoHalt(string.format(
             "Act '%s' for '%s' tried to register without a provided sequence\n", name, modelClass
         ))
     end
 
+    -- Convert single sequence to table format if needed
     if (!istable(data.sequence)) then
         data.sequence = {data.sequence}
     end
 
+    -- Check if the number of start sequences matches the number of main sequences
     if (data.start and istable(data.start) and #data.start != #data.sequence) then
         return ErrorNoHalt(string.format(
-            "Act '%s' tried to register without matching number of enter sequences\n", name
+            "Act '%s' tried to register without matching number of start sequences\n", name
         ))
     end
 
+    -- Check if the number of finish sequences matches the number of main sequences
     if (data.finish and istable(data.finish) and #data.finish != #data.sequence) then
         return ErrorNoHalt(string.format(
-            "Act '%s' tried to register without matching number of exit sequences\n", name
+            "Act '%s' tried to register without matching number of finish sequences\n", name
         ))
     end
 
+    -- If modelClass is a table, register the act for all specified models
     if (istable(modelClass)) then
         for _, v in ipairs(modelClass) do
             ix.act.stored[name][v] = data
@@ -56,11 +78,39 @@ function ix.act.Register(name, modelClass, data)
     else
         ix.act.stored[name][modelClass] = data
     end
+
+    --- The `data` table passed into `ix.act.Register` defines the structure of the act, including the main sequence
+    -- as well as optional starting and finishing sequences. This table allows you to control the animation performed by
+    -- the player, including preparation and cool down sequences for more immersive animations.
+    -- 
+    -- @table ActInfoStructure
+    -- @realm shared
+    -- @field[type=string|table] sequence The main sequence(s) that the act will perform. This is required, and can be either a single sequence (as a string) or multiple sequences (as a table). If multiple sequences are provided, one will be chosen at random.
+    -- @field[type=string|table,opt] start An optional starting sequence (or sequences) that plays before the main sequence. If provided, this must match the number of main sequences, or an error will be thrown.
+    -- @field[type=string|table,opt] finish An optional finishing sequence (or sequences) that plays after the main sequence. If provided, this must match the number of main sequences, or an error will be thrown.
+    -- @usage
+    -- -- Simple example with a single sequence
+    -- ix.act.Register("Wave", "citizen", {
+    --     sequence = "wave"
+    -- })
+    --
+    -- -- Complex example with start and finish sequences for multiple model classes
+    -- ix.act.Register("Salute", {"citizen", "metrocop"}, {
+    --     sequence = {"salute_idle1", "salute_idle2"},
+    --     start = {"salute_start1", "salute_start2"},
+    --     finish = {"salute_finish1", "salute_finish2"}
+    -- })
 end
 
 --- Removes a sequence from being performable if it has been previously registered.
+-- This function unregisters an act, making it unavailable for players. 
+-- It also removes the associated command that allows players to trigger the act.
+--
 -- @realm shared
--- @string name Name of the animation
+-- @string name The name of the act to remove.
+-- @usage
+-- -- Remove the "Wave" animation from being available for any model
+-- ix.act.Remove("Wave")
 function ix.act.Remove(name)
     ix.act.stored[name] = nil
     ix.command.list["Act" .. name] = nil
