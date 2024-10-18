@@ -75,8 +75,8 @@ end)
 
 -- On player uneqipped the item, Removes a weapon from the player and keep the ammo in the item.
 ITEM.functions.EquipUn = { -- sorry, for name order.
-	name = "Unequip",
-	tip = "equipTip",
+	name = "unequip",
+	tip = "unequipTip",
 	icon = "icon16/cross.png",
 	OnRun = function(item)
 		item:Unequip(item.player, true)
@@ -92,7 +92,7 @@ ITEM.functions.EquipUn = { -- sorry, for name order.
 
 -- On player eqipped the item, Gives a weapon to player and load the ammo data from the item.
 ITEM.functions.Equip = {
-	name = "Equip",
+	name = "equip",
 	tip = "equipTip",
 	icon = "icon16/tick.png",
 	OnRun = function(item)

@@ -240,8 +240,8 @@ ITEM:Hook("drop", function(item)
 end)
 
 ITEM.functions.EquipUn = { -- sorry, for name order.
-	name = "Unequip",
-	tip = "equipTip",
+	name = "unequip",
+	tip = "unequipTip",
 	icon = "icon16/cross.png",
 	OnRun = function(item)
 		item:RemoveOutfit(item.player)
@@ -256,7 +256,7 @@ ITEM.functions.EquipUn = { -- sorry, for name order.
 }
 
 ITEM.functions.Equip = {
-	name = "Equip",
+	name = "equip",
 	tip = "equipTip",
 	icon = "icon16/tick.png",
 	OnRun = function(item)

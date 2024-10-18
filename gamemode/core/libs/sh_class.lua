@@ -178,7 +178,11 @@ if (SERVER) then
 			end
 		end
 
-		if (!goClass) then return end
+		if (!goClass) then
+			ErrorNoHaltWithStack("[Helix] No default class set for faction '" .. team.GetName(client:Team()) .. "'")
+
+			return
+		end
 
 		self:JoinClass(goClass)
 
