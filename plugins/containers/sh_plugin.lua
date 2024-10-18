@@ -1,4 +1,10 @@
 
+--[[--
+Provides characters the ability to store items in containers placed by server administrators.
+
+]]
+-- @module ix.container
+
 local PLUGIN = PLUGIN
 
 PLUGIN.name = "Containers"
@@ -17,8 +23,79 @@ ix.config.Add("containerOpenTime", 0.7, "How long it takes to open a container."
     category = "Containers"
 })
 
+--- Registers a model as a container in the Helix framework.
+-- Containers are objects in the game that allow players to store and retrieve items. Each container can have its own size, 
+-- optional sounds, and custom behaviors when interacting with it (e.g., animations or sound effects). Containers are registered
+-- based on their model, and the container’s properties are defined through the `data` table.
+--
+-- @realm shared
+-- @string model The path to the model used for the container (e.g., `"models/props_junk/trashbin01a.mdl"`). The model path is automatically converted to lowercase for consistency.
+-- @tparam table data The container's properties and optional behavior.
+-- @usage
+-- -- Register a small trash bin with a 2x2 inventory grid.
+-- ix.container.Register("models/props_junk/trashbin01a.mdl", {
+--     name = "Trash Bin",
+--     description = "What do you expect to find in here?",
+--     width = 2,
+--     height = 2
+-- })
 function ix.container.Register(model, data)
+    -- Register the container's data under the model path, converting the path to lowercase.
+    -- This ensures that lookups are consistent, regardless of the case of the model path.
     ix.container.stored[model:lower()] = data
+
+    --- The `data` table defines the properties and optional behaviors of the container.
+    -- This structure allows for customizations like the container's name, description, size, sounds, and custom behavior on opening and closing.
+    -- 
+    -- @table ContainerInfoStructure
+    -- @realm shared
+    -- @field[type=string] name The name displayed to the player when interacting with the container.
+    -- @field[type=string] description A short description that gives context or a hint about the container's contents or purpose.
+    -- @field[type=number] width The number of inventory slots horizontally in the container.
+    -- @field[type=number] height The number of inventory slots vertically in the container.
+    -- @field[type=function,opt] OnOpen A function executed when the container is opened. This can be used to trigger actions like playing an animation or sound when a player interacts with the container.
+    -- @field[type=function,opt] OnClose A function executed when the container is closed. It allows for custom behavior when the container is no longer being accessed.
+    -- @field[type=string,opt] locksound The sound played when the container is locked or accessed. This provides auditory feedback when interacting with locked containers.
+    -- 
+    -- @usage
+    -- -- Registering a trash bin container with a simple inventory.
+    -- ix.container.Register("models/props_junk/trashbin01a.mdl", {
+    --     name = "Trash Bin",
+    --     description = "What do you expect to find in here?",
+    --     width = 2,
+    --     height = 2
+    -- })
+    -- 
+    -- -- Registering a dumpster with a larger inventory.
+    -- ix.container.Register("models/props_junk/trashdumpster01a.mdl", {
+    --     name = "Dumpster",
+    --     description = "A dumpster meant to stow away trash. It emanates an unpleasant smell.",
+    --     width = 6,
+    --     height = 3
+    -- })
+    -- @usage
+    -- -- Registering an ammo crate with a custom OnOpen function to play animations and sounds.
+    -- ix.container.Register("models/items/ammocrate_smg1.mdl", {
+    --     name = "Ammo Crate",
+    --     description = "A heavy crate that stores ammo.",
+    --     width = 5,
+    --     height = 3,
+    --     locksound = "items/ammocrate_close.wav",
+    --     OnOpen = function(entity, activator)
+    --         local closeSeq = entity:LookupSequence("Close")
+    --         entity:ResetSequence(closeSeq)
+    -- 
+    --         timer.Simple(2, function()
+    --             if (IsValid(entity)) then
+    --                 local openSeq = entity:LookupSequence("Open")
+    --                 entity:ResetSequence(openSeq)
+    --             end
+    --         end)
+    --     end,
+    --     OnClose = function(entity)
+    --         -- Play a close sound or reset container state here
+    --     end
+    -- })
 end
 
 ix.util.Include("sh_definitions.lua")

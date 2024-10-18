@@ -20,26 +20,56 @@ CAMI.RegisterPrivilege({
 })
 
 --- Registers a sequence as a performable animation (or "act") for a specific model class or multiple model classes.
--- Acts allow players to perform custom animations, enhancing the roleplay experience. 
--- This function ties an animation (or a series of animations) to a model class, which can then be triggered using commands.
+-- Acts allow players to perform immersive animations that enhance roleplay scenarios. This function ties an animation or a sequence
+-- of animations to a model class or multiple model classes, and allows them to be triggered in-game via commands.
+--
+-- Acts can have various properties, including main animation sequences, optional start and finish sequences, custom duration, 
+-- checks for certain conditions (e.g., proximity to a wall), and more.
 --
 -- @realm shared
--- @string name The name of the act (in CamelCase). This name will be used as the identifier for the act and in the commands (e.g., `ActWave`).
--- @string modelClass The model class or list of model classes that this act applies to. For example, "citizen" or `{"citizen", "metrocop"}`. 
--- Acts will only be available for the specified model(s).
--- @tab data The data table that defines the act. This table must contain a `sequence` field, which is the main sequence that the act will perform.
--- This is explained in more detail in the `ActInfoStructure` table.
+-- @string name The name of the act (in CamelCase), which will also serve as the identifier for the act when called in a command (e.g., `/ActWave`).
+-- @string modelClass The model class or classes to which this act applies. Acts will only be available for the specified model(s). Can be a single model (e.g., `"citizen_male"`) or a table of models (e.g., `{"citizen_male", "citizen_female"}`).
+-- @tab data A table that describes the act's sequences and optional properties such as start/finish sequences, custom checks, and durations.
 -- @usage
--- -- Register a simple "Wave" animation for the "citizen" model class
--- ix.act.Register("Wave", "citizen", {
---     sequence = "wave"
+-- -- Registers a simple act for sitting for "citizen_male" and "citizen_female" models.
+-- ix.act.Register("Sit", {"citizen_male", "citizen_female"}, {
+--     start = {"idle_to_sit_ground", "idle_to_sit_chair"},
+--     sequence = {"sit_ground", "sit_chair"},
+--     finish = {{"sit_ground_to_idle", duration = 2.1}, ""},
+--     untimed = true, -- This act will continue until the player moves or cancels it
+--     idle = true -- The act is considered an idle animation
 -- })
+-- @usage
+-- -- Prepare the function for checking if the player is facing away from a wall for future acts
+-- local function FacingWallBack(client)
+--     local data = {}
+--     data.start = client:LocalToWorld(client:OBBCenter())
+--     data.endpos = data.start - client:GetForward() * 20
+--     data.filter = client
+-- 
+--     if (!util.TraceLine(data).Hit) then
+--         return "@faceWallBack"
+--     end
+-- end
 --
--- -- Register a more complex "Salute" animation for multiple model classes with start and finish sequences
--- ix.act.Register("Salute", {"citizen", "metrocop"}, {
---     sequence = {"salute_idle1", "salute_idle2"},  -- Main sequence
---     start = {"salute_start1", "salute_start2"},   -- Starting sequence
---     finish = {"salute_finish1", "salute_finish2"} -- Finishing sequence
+-- -- Registers a wall-based act where players need to be facing away from the wall
+-- ix.act.Register("SitWall", {"citizen_male", "citizen_female"}, {
+--     sequence = {
+--         -- Only perform this sequence if the player is facing away from the wall
+--         {"plazaidle4", check = FacingWallBack},
+--         {"injured1", check = FacingWallBack, offset = function(client)
+--             -- Adjust the player's position before the animation starts
+--             return client:GetForward() * 14
+--         end}
+--     },
+--     untimed = true,
+--     idle = true
+-- })
+-- @usage
+-- -- Registers a cheering act with custom durations for "citizen_male"
+-- ix.act.Register("Cheer", "citizen_male", {
+--     -- Sequence with duration for the first animation
+--     sequence = {{"cheer1", duration = 1.6}, "cheer2", "wave_smg1"}
 -- })
 function ix.act.Register(name, modelClass, data)
     ix.act.stored[name] = ix.act.stored[name] or {} -- might be adding onto an existing act
@@ -79,26 +109,38 @@ function ix.act.Register(name, modelClass, data)
         ix.act.stored[name][modelClass] = data
     end
 
-    --- The `data` table passed into `ix.act.Register` defines the structure of the act, including the main sequence
-    -- as well as optional starting and finishing sequences. This table allows you to control the animation performed by
-    -- the player, including preparation and cool down sequences for more immersive animations.
+    --- The `data` table passed into `ix.act.Register` defines the structure of the act, including the main sequence, optional start and finish sequences, 
+    -- and other properties such as duration, checks, or offsets. This structure allows developers to create custom animations
+    -- and provide more immersive roleplay features.
     -- 
     -- @table ActInfoStructure
     -- @realm shared
-    -- @field[type=string|table] sequence The main sequence(s) that the act will perform. This is required, and can be either a single sequence (as a string) or multiple sequences (as a table). If multiple sequences are provided, one will be chosen at random.
-    -- @field[type=string|table,opt] start An optional starting sequence (or sequences) that plays before the main sequence. If provided, this must match the number of main sequences, or an error will be thrown.
-    -- @field[type=string|table,opt] finish An optional finishing sequence (or sequences) that plays after the main sequence. If provided, this must match the number of main sequences, or an error will be thrown.
+    -- @field[type=string|table] sequence The main sequence(s) that the act will perform. Can be a single sequence or a table of sequences. Sequences may have additional properties like `duration` or `check`.
+    -- @field[type=string|table,opt] start An optional starting sequence (or sequences) that plays before the main animation. Used to "prepare" for the act.
+    -- @field[type=string|table,opt] finish An optional finishing sequence (or sequences) that plays after the main animation.
+    -- @field[type=boolean,opt] untimed If true, the act continues indefinitely until manually stopped (e.g., sitting).
+    -- @field[type=boolean,opt] idle If true, the act is considered an idle animation.
+    -- @field[type=function,opt] check An optional function to check specific conditions (e.g., proximity to a wall) before performing the act.
+    -- @field[type=function,opt] offset An optional function to adjust the player's position relative to an object before performing the act.
     -- @usage
-    -- -- Simple example with a single sequence
-    -- ix.act.Register("Wave", "citizen", {
-    --     sequence = "wave"
-    -- })
+    -- -- Prepare the function for checking if the player is facing away from a wall for future acts
+    -- local function FacingWallBack(client)
+    --     local data = {}
+    --     data.start = client:LocalToWorld(client:OBBCenter())
+    --     data.endpos = data.start - client:GetForward() * 20
+    --     data.filter = client
+    -- 
+    --     if (!util.TraceLine(data).Hit) then
+    --         return "@faceWallBack"
+    --     end
+    -- end
     --
-    -- -- Complex example with start and finish sequences for multiple model classes
-    -- ix.act.Register("Salute", {"citizen", "metrocop"}, {
-    --     sequence = {"salute_idle1", "salute_idle2"},
-    --     start = {"salute_start1", "salute_start2"},
-    --     finish = {"salute_finish1", "salute_finish2"}
+    -- -- Registers a "Lean" act that adjusts the player's position relative to the wall
+    -- ix.act.Register("Lean", {"citizen_male", "citizen_female"}, {
+    --     start = {"idle_to_lean_back"},
+    --     sequence = {{"lean_back", check = FacingWallBack}},
+    --     untimed = true,
+    --     idle = true
     -- })
 end
 
