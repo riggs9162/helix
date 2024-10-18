@@ -666,7 +666,7 @@ end
 function meta:NotifyAdmin(message)
     for _, ply in player.Iterator() do
         if ply:IsAdmin() then
-            ply:ChatPrint("[Admin Notice] " .. message)
+            ply:Notify(message)
         end
     end
 end
@@ -679,38 +679,28 @@ end
 -- @usage if Entity(1):IsNearPosition(Vector(0, 0, 0), 100) then
 --     print("Player is near the origin.")
 -- end
+-- > Player is near the origin.
 function meta:IsNearPosition(position, radius)
-    return self:GetPos():DistToSqr(position) <= radius * radius
+    return self:GetPos():DistToSqr(position) <= radius ^ 2
 end
 
 --- Gets the player's ping level.
 -- @realm shared
--- @treturn string Returns "low", "medium", or "high" based on the player's ping.
--- @usage print(Entity(1):GetPingLevel()) -- "low", "medium", or "high"
+-- @treturn string Returns the player's ping level. Can be "low", "medium", "high" or "very high".
+-- @usage print(Entity(1):GetPingLevel())
+-- > low
 function meta:GetPingLevel()
     local ping = self:Ping()
     
-    if ping < 100 then
+    if ping < 50 then
         return "low"
-    elseif ping < 200 then
+    elseif ping < 100 then
         return "medium"
-    else
+    elseif ping < 200 then
         return "high"
+    else
+        return "very high"
     end
-end
-
---- Freezes the player for a specific duration.
--- @realm server
--- @tparam number duration The duration to freeze the player in seconds.
--- @usage Entity(1):FreezeFor(5) -- Freezes the player for 5 seconds
-function meta:FreezeFor(duration)
-    self:Lock()
-    
-    timer.Simple(duration, function()
-        if IsValid(self) then
-            self:UnLock()
-        end
-    end)
 end
 
 --- Checks if the player is in combat (recent damage dealt or received).
@@ -719,13 +709,30 @@ end
 -- @usage if Entity(1):IsInCombat() then
 --     print("Player is in combat!")
 -- end
+-- > Player is in combat!
 function meta:IsInCombat()
     return self:SetNetVar("lastCombatTime", 0) + 10 > CurTime()
 end
 
---- Marks the player as being in combat.
--- @realm server
--- @usage Entity(1):MarkCombat() -- Marks the player as in combat.
-function meta:MarkCombat()
-    self:SetNetVar("lastCombatTime", CurTime())
+if (SERVER) then
+    --- Freezes the player for a specific duration.
+    -- @realm server
+    -- @tparam number duration The duration to freeze the player in seconds.
+    -- @usage Entity(1):FreezeFor(5) -- Freezes the player for 5 seconds
+    function meta:FreezeFor(duration)
+        self:Lock()
+        
+        timer.Simple(duration, function()
+            if IsValid(self) then
+                self:UnLock()
+            end
+        end)
+    end
+
+    --- Marks the player as being in combat.
+    -- @realm server
+    -- @usage Entity(1):MarkCombat() -- Marks the player as in combat.
+    function meta:MarkCombat()
+        self:SetNetVar("lastCombatTime", CurTime())
+    end
 end
