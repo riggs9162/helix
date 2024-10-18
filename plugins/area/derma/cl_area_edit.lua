@@ -3,8 +3,6 @@ local PLUGIN = PLUGIN
 local PANEL = {}
 local padding = ScreenScale(16)
 
-DEFINE_BASECLASS("DPanel")
-
 function PANEL:Init()
     if (IsValid(ix.gui.areaEdit)) then
         ix.gui.areaEdit:Remove()
@@ -244,6 +242,8 @@ function PANEL:OnKeyCodePressed(key)
         self:Remove()
     end
 end
+
+DEFINE_BASECLASS("DFrame")
 
 function PANEL:RemoveOld()
     BaseClass.Remove(self)
