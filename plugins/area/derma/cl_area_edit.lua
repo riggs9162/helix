@@ -245,6 +245,10 @@ function PANEL:OnKeyCodePressed(key)
     end
 end
 
+function PANEL:RemoveOld()
+    BaseClass.Remove(self)
+end
+
 function PANEL:Remove()
     self:CreateAnimation(0.25, {
         index = 1,
@@ -256,7 +260,7 @@ function PANEL:Remove()
         end,
 
         OnComplete = function(animation, panel)
-            BaseClass.Remove(panel)
+            panel:RemoveOld()
         end
     })
 
@@ -274,5 +278,5 @@ end
 vgui.Register("ixAreaEdit", PANEL, "DFrame")
 
 if (IsValid(ix.gui.areaEdit)) then
-    BaseClass.Remove(ix.gui.areaEdit)
+    ix.gui.areaEdit:RemoveOld()
 end
