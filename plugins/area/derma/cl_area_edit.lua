@@ -54,80 +54,6 @@ function PANEL:Init()
 
     -- properties
     for k, v in pairs(ix.area.properties) do
-        /*
-        local panel
-
-        if (v.type == ix.type.string or v.type == ix.type.number) then
-            panel = vgui.Create("ixTextEntry")
-            panel:SetFont("ixMenuButtonFont")
-            panel:SetText(tostring(v.default))
-            panel:RequestFocus()
-
-            if (v.type == ix.type.number) then
-                panel.realGetValue = panel.GetValue
-                panel.GetValue = function()
-                    return tonumber(panel:realGetValue()) or v.default
-                end
-            end
-        elseif (v.type == ix.type.bool) then
-            panel = vgui.Create("ixCheckBox")
-            panel:SetChecked(v.default, true)
-            panel:SetTall(ScreenScale(14))
-        elseif (v.type == ix.type.color) then
-            panel = vgui.Create("ixMenuButton")
-            panel.value = v.default
-            panel:SetText("")
-            panel:SetSize(64, 64)
-
-            panel.picker = vgui.Create("DColorCombo")
-            panel.picker:SetColor(panel.value)
-            panel.picker:SetVisible(false)
-            panel.picker.OnValueChanged = function(_, newColor)
-                panel.value = newColor
-            end
-
-            panel.Paint = function(_, width, height)
-                surface.SetDrawColor(panel.value)
-                surface.DrawRect(0, 0, width, height)
-            end
-
-            panel.DoClick = function()
-                if (!panel.picker:IsVisible()) then
-                    local x, y = panel:LocalToScreen(0, 0)
-
-                    panel.picker:SetPos(x, y + 32)
-                    panel.picker:SetColor(panel.value)
-                    panel.picker:SetVisible(true)
-                    panel.picker:MakePopup()
-                    panel.picker.OnFocusChanged = function(_, b)
-                        if (!b) then
-                            panel.picker:SetVisible(false)
-                        end
-                    end
-                else
-                    panel.picker:SetVisible(false)
-                end
-            end
-
-            panel.OnRemove = function()
-                panel.picker:Remove()
-            end
-
-            panel.GetValue = function()
-                return panel.picker:GetColor()
-            end
-        end
-
-        if (IsValid(panel)) then
-            local row = self.canvas:Add("ixListRow")
-            row:SetList(self.list)
-            row:SetLabelText(L(k))
-            row:SetRightPanel(panel)
-            row:Dock(TOP)
-            row:SizeToContents()
-        end
-        */
-
         local panel
 
         if (v.type == ix.type.string or v.type == ix.type.number) then
@@ -216,7 +142,7 @@ function PANEL:Submit()
     net.SendToServer()
 
     PLUGIN.editStart = nil
-    self:Remove()
+    self:Close()
 end
 
 function PANEL:OnRemove()
@@ -239,17 +165,11 @@ end
 
 function PANEL:OnKeyCodePressed(key)
     if (key == KEY_TAB) then
-        self:Remove()
+        self:Close()
     end
 end
 
-DEFINE_BASECLASS("DFrame")
-
-function PANEL:RemoveOld()
-    BaseClass.Remove(self)
-end
-
-function PANEL:Remove()
+function PANEL:Close()
     self:CreateAnimation(0.25, {
         index = 1,
         target = {currentAlpha = 0},
@@ -260,7 +180,7 @@ function PANEL:Remove()
         end,
 
         OnComplete = function(animation, panel)
-            panel:RemoveOld()
+            panel:Remove()
         end
     })
 
@@ -278,5 +198,5 @@ end
 vgui.Register("ixAreaEdit", PANEL, "DFrame")
 
 if (IsValid(ix.gui.areaEdit)) then
-    ix.gui.areaEdit:RemoveOld()
+    ix.gui.areaEdit:Remove()
 end
