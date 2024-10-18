@@ -231,7 +231,7 @@ end
 -- if you aren't locally storing a `Material()` call.
 -- @realm shared
 -- @string materialPath Path to the material
--- @string[opt] materialParameters 
+-- @string[opt] materialParameters
 -- @treturn[1] material The cached material
 -- @treturn[2] nil If the material doesn't exist in the filesystem
 function ix.util.GetMaterial(materialPath, materialParameters)
@@ -304,7 +304,7 @@ function ix.util.StringMatchesTable(a, b)
     if (a and b) then
         a = tostring(a)
         b = tostring(b)
-        
+
         local a2, b2 = a:utf8lower(), b:utf8lower()
 
         -- Check if the actual letters match.
@@ -1305,10 +1305,10 @@ function ix.util.FindInCrosshair(ply, target, range)
     range = math.Clamp(range, 0, 1)
 
     local origin, originVector = ply:EyePos(), ply:GetAimVector()
-    
+
     local targetOrigin = target.EyePos and target:EyePos() or target:WorldSpaceCenter()
     local direction = targetOrigin - origin
-    
+
     if ( originVector:Dot(direction:GetNormalized()) > range ) then
         return true
     end
@@ -1510,14 +1510,14 @@ function ix.util.FindNearestEntity(pos, radius, entClass)
     local nearestEnt = nil
     local nearestDist = math.huge
 
+    table.sort(entities, function(a, b)
+        return a:GetPos():Distance(pos) < b:GetPos():Distance(pos)
+    end)
+
     for _, ent in ipairs(entities) do
         if (ent:GetClass() == entClass) then
-            local dist = ent:GetPos():Distance(pos)
-
-            if (dist < nearestDist) then
-                nearestEnt = ent
-                nearestDist = dist
-            end
+            nearestEnt = ent
+            break
         end
     end
 
