@@ -633,3 +633,99 @@ if (SERVER) then
         end
     end
 end
+
+meta.cooldowns = meta.cooldowns or {}
+
+--- Checks if the player is on cooldown for a specific action.
+-- @realm shared
+-- @tparam string action The name of the action to check.
+-- @treturn boolean Returns true if the player is on cooldown.
+-- @usage
+-- if !Entity(1):HasCooldown("use_ability") then
+--     Entity(1):SetCooldown("use_ability", 10) -- 10 second cooldown
+-- end
+function meta:HasCooldown(action)
+    return self.cooldowns[action] and self.cooldowns[action] > CurTime()
+end
+
+--- Sets a cooldown for a specific action.
+-- @realm shared
+-- @tparam string action The name of the action to set a cooldown for.
+-- @tparam number time The time (in seconds) for the cooldown.
+-- @usage if !Entity(1):HasCooldown("use_ability") then
+--     Entity(1):SetCooldown("use_ability", 10) -- 10 second cooldown
+-- end
+function meta:SetCooldown(action, time)
+    self.cooldowns[action] = CurTime() + time
+end
+
+--- Sends a message to all admins about a player's action.
+-- @realm server
+-- @tparam string message The message to send to admins.
+-- @usage Entity(1):NotifyAdmin("This player did something suspicious.")
+function meta:NotifyAdmin(message)
+    for _, ply in player.Iterator() do
+        if ply:IsAdmin() then
+            ply:ChatPrint("[Admin Notice] " .. message)
+        end
+    end
+end
+
+--- Checks if the player is near a specific position within a radius.
+-- @realm shared
+-- @tparam Vector position The position to check against.
+-- @tparam number radius The radius to check.
+-- @treturn boolean Returns true if the player is within the radius.
+-- @usage if Entity(1):IsNearPosition(Vector(0, 0, 0), 100) then
+--     print("Player is near the origin.")
+-- end
+function meta:IsNearPosition(position, radius)
+    return self:GetPos():DistToSqr(position) <= radius * radius
+end
+
+--- Gets the player's ping level.
+-- @realm shared
+-- @treturn string Returns "low", "medium", or "high" based on the player's ping.
+-- @usage print(Entity(1):GetPingLevel()) -- "low", "medium", or "high"
+function meta:GetPingLevel()
+    local ping = self:Ping()
+    
+    if ping < 100 then
+        return "low"
+    elseif ping < 200 then
+        return "medium"
+    else
+        return "high"
+    end
+end
+
+--- Freezes the player for a specific duration.
+-- @realm server
+-- @tparam number duration The duration to freeze the player in seconds.
+-- @usage Entity(1):FreezeFor(5) -- Freezes the player for 5 seconds
+function meta:FreezeFor(duration)
+    self:Lock()
+    
+    timer.Simple(duration, function()
+        if IsValid(self) then
+            self:UnLock()
+        end
+    end)
+end
+
+--- Checks if the player is in combat (recent damage dealt or received).
+-- @realm shared
+-- @treturn boolean Returns true if the player is in combat.
+-- @usage if Entity(1):IsInCombat() then
+--     print("Player is in combat!")
+-- end
+function meta:IsInCombat()
+    return self:SetNetVar("lastCombatTime", 0) + 10 > CurTime()
+end
+
+--- Marks the player as being in combat.
+-- @realm server
+-- @usage Entity(1):MarkCombat() -- Marks the player as in combat.
+function meta:MarkCombat()
+    self:SetNetVar("lastCombatTime", CurTime())
+end
