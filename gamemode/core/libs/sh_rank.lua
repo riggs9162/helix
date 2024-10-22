@@ -1,9 +1,10 @@
+
 --[[--
 Helper library for loading/getting rank information.
 
-Ranks are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
-in your schema, and have "police recruit" and "police chief" as different ranks in your faction. Anyone can join a rank in
-their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
+Ranks in Minerva's Helix are similar to classes, but serve a different purpose, which is to provide a hierarchy within a faction.
+For example, you may have a police faction in your schema, and have "police recruit" and "police chief" as different ranks in your faction.
+Anyone can join a rank in their faction by default, but you can restrict this as you need with `RANK.CanSwitchTo`.
 ]]
 -- @module ix.rank
 
@@ -11,10 +12,6 @@ ix.rank = ix.rank or {}
 ix.rank.list = {}
 
 local charMeta = ix.meta.character
-
-ix.char.RegisterVar("rank", {
-    bNoDisplay = true,
-})
 
 --- Loads ranks from a directory.
 -- @realm shared
@@ -176,6 +173,7 @@ if (SERVER) then
 
     --- Kicks this character out of the rank they are currently in.
     -- @realm server
+    -- @usage character:KickRank()
     function charMeta:KickRank()
         local client = self:GetPlayer()
         if ( !IsValid(client) ) then return end
@@ -202,6 +200,8 @@ if (SERVER) then
 
     --- Promotes the character to the next rank in order.
     -- @realm server
+    -- @treturn bool Whether or not the character has been promoted
+    -- @usage character:RankPromote() -- returns true if the character has been promoted
     function charMeta:RankPromote()
         if ( !self ) then return false end
 
@@ -232,6 +232,8 @@ if (SERVER) then
 
     --- Demotes the character to the previous rank in order.
     -- @realm server
+    -- @treturn bool Whether or not the character has been demoted
+    -- @usage character:RankDemote() -- returns true if the character has been demoted
     function charMeta:RankDemote()
         if ( !self ) then return end
 
@@ -276,53 +278,3 @@ if (SERVER) then
         end
     end
 end
-
-ix.lang.AddTable("english", {
-    cmdCharSetRank = "Forcefully makes someone become part of the specified rank in their current faction.",
-    rank = "Rank",
-    ranks = "Ranks",
-    becomeRankFail = "You cannot become a %s!",
-    becomeRank = "You have become a %s.",
-    setRank = "You have set %s's rank to %s.",
-    invalidRank = "That is not a valid rank!",
-    invalidRankFaction = "That is not a valid rank for that faction!",
-})
-
-ix.command.Add("CharSetRank", {
-    description = "@cmdCharSetRank",
-    adminOnly = true,
-    arguments = {
-        ix.type.character,
-        ix.type.text
-    },
-    OnRun = function(self, client, target, rank)
-        local rankTable
-
-        for _, v in ipairs(ix.rank.list) do
-            if (ix.util.StringMatches(v.uniqueID, rank) or ix.util.StringMatches(v.name, rank)) then
-                rankTable = v
-            end
-        end
-
-        if (rankTable) then
-            local oldRank = target:GetRank()
-            local targetPlayer = target:GetPlayer()
-
-            if (targetPlayer:Team() == rankTable.faction) then
-                target:SetRank(rankTable.index)
-                hook.Run("PlayerJoinedRank", targetPlayer, rankTable.index, oldRank)
-
-                targetPlayer:NotifyLocalized("becomeRank", L(rankTable.name, targetPlayer))
-
-                -- only send second notification if the character isn't setting their own rank
-                if (client != targetPlayer) then
-                    return "@setRank", target:GetName(), L(rankTable.name, client)
-                end
-            else
-                return "@invalidRankFaction"
-            end
-        else
-            return "@invalidRank"
-        end
-    end
-})

@@ -2,9 +2,9 @@
 --[[--
 Helper library for loading/getting class information.
 
-Classes are temporary assignments for characters - analogous to a "job" in a faction. For example, you may have a police faction
-in your schema, and have "police recruit" and "police chief" as different classes in your faction. Anyone can join a class in
-their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
+Classes are temporary assignments for characters - analogous to a "job" in a faction.
+For example, you may have a police faction in your schema, and have "police officer" and "police medic" as different classes in your faction.
+Anyone can join a class in their faction by default, but you can restrict this as you need with `CLASS.CanSwitchTo`.
 ]]
 -- @module ix.class
 

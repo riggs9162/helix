@@ -531,6 +531,16 @@ do
         bNoDisplay = true,
     })
 
+    -- SetRank shouldn't be used here, character:JoinRank should be used instead
+
+    --- Returns this character's current rank.
+    -- @realm shared
+    -- @treturn number Index of the rank this character is in
+    -- @function GetRank
+    ix.char.RegisterVar("rank", {
+        bNoDisplay = true,
+    })
+
     --- Sets this character's faction. Note that this doesn't do the initial setup for the player after the faction has been
     -- changed, so you'll have to update some character vars manually.
     -- @realm server

@@ -123,6 +123,12 @@ function PANEL:Init()
             self.class:Dock(TOP)
         end
 
+        if (!suppress.rank) then
+            self.rank = self.characterInfo:Add("ixListRow")
+            self.rank:SetList(self.characterInfo.list)
+            self.rank:Dock(TOP)
+        end
+
         if (!suppress.money) then
             self.money = self.characterInfo:Add("ixListRow")
             self.money:SetList(self.characterInfo.list)
@@ -197,6 +203,7 @@ function PANEL:Update(character)
 
     local faction = ix.faction.indices[character:GetFaction()]
     local class = ix.class.list[character:GetClass()]
+    local rank = ix.rank.list[character:GetRank()]
 
     if (self.name) then
         self.name:SetText(character:GetName())
@@ -228,6 +235,12 @@ function PANEL:Update(character)
         else
             self.class:SetVisible(false)
         end
+    end
+
+    if (self.rank) then
+        self.rank:SetLabelText(L("rank"))
+        self.rank:SetText(L(rank.name))
+        self.rank:SizeToContents()
     end
 
     if (self.money) then

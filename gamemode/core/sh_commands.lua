@@ -761,6 +761,42 @@ ix.command.Add("BecomeClass", {
     end
 })
 
+ix.command.Add("BecomeRank", {
+    description = "@cmdBecomeRank",
+    arguments = ix.type.text,
+    OnRun = function(self, client, rank)
+        local character = client:GetCharacter()
+
+        if (character) then
+            local num = isnumber(tonumber(rank)) and tonumber(rank) or -1
+
+            if (ix.rank.list[num]) then
+                local v = ix.rank.list[num]
+
+                if (character:JoinRank(num)) then
+                    return "@becomeRank", L(v.name, client)
+                else
+                    return "@becomeRankFail", L(v.name, client)
+                end
+            else
+                for k, v in ipairs(ix.rank.list) do
+                    if (ix.util.StringMatches(v.uniqueID, rank) or ix.util.StringMatches(L(v.name, client), rank)) then
+                        if (character:JoinRank(k)) then
+                            return "@becomeRank", L(v.name, client)
+                        else
+                            return "@becomeRankFail", L(v.name, client)
+                        end
+                    end
+                end
+            end
+
+            return "@invalid", L("rank", client)
+        else
+            return "@illegalAccess"
+        end
+    end
+})
+
 ix.command.Add("CharDesc", {
     description = "@cmdCharDesc",
     arguments = bit.bor(ix.type.text, ix.type.optional),
@@ -864,6 +900,36 @@ ix.command.Add("CharSetClass", {
             end
         else
             return "@invalidClass"
+        end
+    end
+})
+
+ix.command.Add("CharSetRank", {
+    description = "@cmdCharSetRank",
+    adminOnly = true,
+    arguments = {
+        ix.type.character,
+        ix.type.text
+    },
+    OnRun = function(self, client, target, rank)
+        local rankTable
+
+        for _, v in ipairs(ix.rank.list) do
+            if (ix.util.StringMatches(v.uniqueID, rank) or ix.util.StringMatches(v.name, rank)) then
+                rankTable = v
+                break
+            end
+        end
+
+        if (rankTable) then
+            target:SetRank(rankTable.index)
+            target:GetPlayer():NotifyLocalized("becomeRank", L(rankTable.name, target:GetPlayer()))
+
+            if (client != target:GetPlayer()) then
+                return "@setRank", target:GetName(), L(rankTable.name, client)
+            end
+        else
+            return "@invalidRank"
         end
     end
 })

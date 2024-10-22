@@ -270,6 +270,14 @@ function GM:PlayerLoadedCharacter(client, character, lastChar)
                 break
             end
         end
+
+        for _, v in pairs(ix.rank.list) do
+            if (v.faction == client:Team() and v.isDefault) then
+                character:SetRank(v.index)
+
+                break
+            end
+        end
     end
 
     if (IsValid(client.ixRagdoll)) then
