@@ -1363,7 +1363,7 @@ function ix.util.GetClosestEntity(pos, distance, entities, bEntitiesIsIgnored)
     local closestEntity
     local closestDistance = distance
 
-    if not ( entities ) then
+    if ( !entities ) then
         entities = {}
 
         for _, entity in ipairs(ents.FindInSphere(pos, distance)) do
