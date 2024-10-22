@@ -792,7 +792,7 @@ function GM:PlayerBindPress(client, bind, pressed)
         if (IsValid(entity)) then
             ix.command.Send("CharGetUp")
         end
-    elseif (bind:find("speed") and client:KeyDown(IN_WALK) and pressed) then
+    elseif (bind:find("speed") and client:KeyDown(IN_WALK) and pressed and !client:InVehicle()) then
         if (LocalPlayer():Crouching()) then
             RunConsoleCommand("-duck")
         else
