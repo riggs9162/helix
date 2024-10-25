@@ -157,11 +157,6 @@ function ix.db.WipeTables(callback)
     query:Execute()
 end
 
-/// Transmit data to another connected server using the same database.
-// @realm server
-function ix.db.Transmit()
-end
-
 hook.Add("InitPostEntity", "ixDatabaseConnect", function()
     -- Connect to the database using SQLite, mysqoo, or tmysql4.
     ix.db.Connect()
