@@ -263,7 +263,7 @@ function GM:PlayerLoadedCharacter(client, character, lastChar)
     end
 
     if (character) then
-        for _, v in pairs(ix.class.list) do
+        for _, v in ipairs(ix.class.list) do
             if (v.faction == client:Team() and v.isDefault) then
                 character:SetClass(v.index)
 
@@ -271,7 +271,7 @@ function GM:PlayerLoadedCharacter(client, character, lastChar)
             end
         end
 
-        for _, v in pairs(ix.rank.list) do
+        for _, v in ipairs(ix.rank.list) do
             if (v.faction == client:Team() and v.isDefault) then
                 character:SetRank(v.index)
 
