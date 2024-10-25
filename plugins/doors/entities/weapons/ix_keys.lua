@@ -48,9 +48,7 @@ ACT_VM_FISTS_DRAW = 2
 ACT_VM_FISTS_HOLSTER = 1
 
 function SWEP:Holster()
-    if (!IsValid(self.Owner)) then
-        return
-    end
+    if (!IsValid(self.Owner)) then return end
 
     local viewModel = self.Owner:GetViewModel()
 
@@ -76,13 +74,9 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
 
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
-    if (CLIENT) then
-        return
-    end
+    if (CLIENT) then return end
 
     local data = {}
         data.start = self.Owner:GetShootPos()
@@ -110,9 +104,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:ToggleLock(door, state)
-    if (IsValid(self.Owner) and self.Owner:GetPos():Distance(door:GetPos()) > 96) then
-        return
-    end
+    if (IsValid(self.Owner) and self.Owner:GetPos():Distance(door:GetPos()) > 96) then return end
 
     if (door:IsDoor()) then
         local partner = door:GetDoorPartner()
@@ -166,13 +158,9 @@ function SWEP:SecondaryAttack()
     self:SetNextPrimaryFire(CurTime() + time2)
     self:SetNextSecondaryFire(CurTime() + time2)
 
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
-    if (CLIENT) then
-        return
-    end
+    if (CLIENT) then return end
 
     local data = {}
         data.start = self.Owner:GetShootPos()

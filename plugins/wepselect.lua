@@ -125,17 +125,13 @@ if (CLIENT) then
         bind = bind:lower()
 
         if (!pressed or !bind:find("invprev") and !bind:find("invnext")
-        and !bind:find("slot") and !bind:find("attack")) then
-            return
-        end
+        and !bind:find("slot") and !bind:find("attack")) then return end
 
         local currentWeapon = client:GetActiveWeapon()
         local bValid = IsValid(currentWeapon)
         local bTool
 
-        if (client:InVehicle() or (bValid and currentWeapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK))) then
-            return
-        end
+        if (client:InVehicle() or (bValid and currentWeapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK))) then return end
 
         if (bValid and currentWeapon:GetClass() == "gmod_tool") then
             local tool = client:GetTool()

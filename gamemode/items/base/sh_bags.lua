@@ -79,9 +79,7 @@ if (CLIENT) then
     function ITEM:PaintOver(item, width, height)
         local panel = ix.gui["inv" .. item:GetData("id", "")]
 
-        if (!IsValid(panel)) then
-            return
-        end
+        if (!IsValid(panel)) then return end
 
         if (vgui.GetHoveredPanel() == self) then
             panel:SetHighlighted(true)

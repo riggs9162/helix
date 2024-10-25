@@ -108,9 +108,7 @@ if (SERVER) then
         local itemTable = ix.item.instances[self.ixItemID]
 
         if (itemTable.OnEntityTakeDamage
-        and itemTable:OnEntityTakeDamage(self, damageInfo) == false) then
-            return
-        end
+        and itemTable:OnEntityTakeDamage(self, damageInfo) == false) then return end
 
         local damage = damageInfo:GetDamage()
         self:SetHealth(self:Health() - damage)
@@ -186,9 +184,7 @@ else
     function ENT:OnPopulateEntityInfo(tooltip)
         local item = self:GetItemTable()
 
-        if (!item) then
-            return
-        end
+        if (!item) then return end
 
         local oldData = item.data
 
@@ -278,13 +274,9 @@ function ENT:GetEntityMenu(client)
     itemTable.entity = self
 
     for k, v in SortedPairs(itemTable.functions) do
-        if (k == "take" or k == "combine") then
-            continue
-        end
+        if (k == "take" or k == "combine") then continue end
 
-        if (v.OnCanRun and v.OnCanRun(itemTable) == false) then
-            continue
-        end
+        if (v.OnCanRun and v.OnCanRun(itemTable) == false) then continue end
 
         -- we keep the localized phrase since we aren't using the callbacks - the name won't matter in this case
         options[L(v.name or k)] = function()

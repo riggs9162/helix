@@ -281,39 +281,29 @@ if (SERVER) then
     end)
 
     net.Receive("ixStorageMoneyTake", function(length, client)
-        if (CurTime() < (client.ixStorageMoneyTimer or 0)) then
-            return
-        end
+        if (CurTime() < (client.ixStorageMoneyTimer or 0)) then return end
 
         local character = client:GetCharacter()
 
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
         local storageID = net.ReadUInt(32)
         local amount = net.ReadUInt(32)
 
         local inventory = client.ixOpenStorage
 
-        if (!inventory or !inventory.storageInfo or storageID != inventory:GetID()) then
-            return
-        end
+        if (!inventory or !inventory.storageInfo or storageID != inventory:GetID()) then return end
 
         local entity = inventory.storageInfo.entity
 
         if (!IsValid(entity) or
             (!entity:IsPlayer() and (!isfunction(entity.GetMoney) or !isfunction(entity.SetMoney))) or
-            (entity:IsPlayer() and !entity:GetCharacter())) then
-            return
-        end
+            (entity:IsPlayer() and !entity:GetCharacter())) then return end
 
         entity = entity:IsPlayer() and entity:GetCharacter() or entity
         amount = math.Clamp(math.Round(tonumber(amount) or 0), 0, entity:GetMoney())
 
-        if (amount == 0) then
-            return
-        end
+        if (amount == 0) then return end
 
         character:SetMoney(character:GetMoney() + amount)
 
@@ -331,39 +321,29 @@ if (SERVER) then
     end)
 
     net.Receive("ixStorageMoneyGive", function(length, client)
-        if (CurTime() < (client.ixStorageMoneyTimer or 0)) then
-            return
-        end
+        if (CurTime() < (client.ixStorageMoneyTimer or 0)) then return end
 
         local character = client:GetCharacter()
 
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
         local storageID = net.ReadUInt(32)
         local amount = net.ReadUInt(32)
 
         local inventory = client.ixOpenStorage
 
-        if (!inventory or !inventory.storageInfo or storageID != inventory:GetID()) then
-            return
-        end
+        if (!inventory or !inventory.storageInfo or storageID != inventory:GetID()) then return end
 
         local entity = inventory.storageInfo.entity
 
         if (!IsValid(entity) or
             (!entity:IsPlayer() and (!isfunction(entity.GetMoney) or !isfunction(entity.SetMoney))) or
-            (entity:IsPlayer() and !entity:GetCharacter())) then
-            return
-        end
+            (entity:IsPlayer() and !entity:GetCharacter())) then return end
 
         entity = entity:IsPlayer() and entity:GetCharacter() or entity
         amount = math.Clamp(math.Round(tonumber(amount) or 0), 0, character:GetMoney())
 
-        if (amount == 0) then
-            return
-        end
+        if (amount == 0) then return end
 
         character:SetMoney(character:GetMoney() - amount)
 
@@ -434,9 +414,7 @@ else
 
         local panel = ix.gui.openedStorage
 
-        if (!IsValid(panel) or panel:GetStorageID() != storageID) then
-            return
-        end
+        if (!IsValid(panel) or panel:GetStorageID() != storageID) then return end
 
         panel:SetStorageMoney(amount)
         panel:SetLocalMoney(LocalPlayer():GetCharacter():GetMoney())

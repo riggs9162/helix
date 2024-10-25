@@ -358,9 +358,7 @@ function ix.command.ExtractArgs(text)
             arguments[#arguments + 1] = curString
             curString = ""
         else
-            if (c == " " and curString == "") then
-                continue
-            end
+            if (c == " " and curString == "") then continue end
 
             curString = curString..c
         end
@@ -460,15 +458,11 @@ if (SERVER) then
     -- @tab arguments Array of arguments to be passed to the command
     -- @usage ix.command.Run(player.GetByID(1), "Roll", {10})
     function ix.command.Run(client, command, arguments)
-        if ((client.ixCommandCooldown or 0) > RealTime()) then
-            return
-        end
+        if ((client.ixCommandCooldown or 0) > RealTime()) then return end
 
         command = ix.command.list[tostring(command):lower()]
 
-        if (!command) then
-            return
-        end
+        if (!command) then return end
 
         -- we throw it into a table since arguments get unpacked and only
         -- the arguments table gets passed in by default
@@ -628,9 +622,7 @@ else
         local command = string.Explode(" ", arguments)[1]
 
         for _, v in pairs(ix.command.FindAll(command, true, true)) do
-            if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then
-                continue
-            end
+            if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then continue end
 
             if (arguments:find(v.uniqueID, 1, true) == 1) then
                 return {

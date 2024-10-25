@@ -271,9 +271,7 @@ if (SERVER) then
     end)
 
     net.Receive("ixConfigRequestUnloadedList", function(length, client)
-        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Config", nil)) then
-            return
-        end
+        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Config", nil)) then return end
 
         net.Start("ixConfigUnloadedList")
             net.WriteTable(ix.plugin.unloaded)
@@ -281,9 +279,7 @@ if (SERVER) then
     end)
 
     net.Receive("ixConfigPluginToggle", function(length, client)
-        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Config", nil)) then
-            return
-        end
+        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Config", nil)) then return end
 
         local uniqueID = net.ReadString()
         local bUnloaded = !!ix.plugin.unloaded[uniqueID]
@@ -367,9 +363,7 @@ else
     end)
 
     hook.Add("CreateMenuButtons", "ixConfig", function(tabs)
-        if (!CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Config", nil)) then
-            return
-        end
+        if (!CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Config", nil)) then return end
 
         tabs["config"] = {
             Create = function(info, container)

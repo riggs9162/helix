@@ -97,9 +97,7 @@ function PANEL:Paint(width, height)
 end
 
 function PANEL:Remove()
-    if (self.bRemoving) then
-        return
-    end
+    if (self.bRemoving) then return end
 
     self:CreateAnimation(self.animationTime, {
         target = {currentAlpha = 0},

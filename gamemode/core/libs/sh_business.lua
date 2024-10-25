@@ -14,9 +14,7 @@ if (SERVER) then
 
         local char = client:GetCharacter()
 
-        if (!char) then
-            return
-        end
+        if (!char) then return end
 
         local indicies = net.ReadUInt(8)
         local items = {}
@@ -25,9 +23,7 @@ if (SERVER) then
             items[net.ReadString()] = net.ReadUInt(8)
         end
 
-        if (table.IsEmpty(items)) then
-            return
-        end
+        if (table.IsEmpty(items)) then return end
 
         local cost = 0
 
@@ -48,9 +44,7 @@ if (SERVER) then
             end
         end
 
-        if (table.IsEmpty(items)) then
-            return
-        end
+        if (table.IsEmpty(items)) then return end
 
         if (char:HasMoney(cost)) then
             char:TakeMoney(cost)

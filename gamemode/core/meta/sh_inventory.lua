@@ -103,9 +103,7 @@ end
 -- @realm shared
 function META:FindError()
     for _, v in pairs(self:GetItems()) do
-        if (v.width == 1 and v.height == 1) then
-            continue
-        end
+        if (v.width == 1 and v.height == 1) then continue end
 
         print("Finding error: " .. v.name)
         print("Item Position: " .. v.gridX, v.gridY)
@@ -164,9 +162,7 @@ end
 function META:SetOwner(owner, fullUpdate)
     if (type(owner) == "Player" and owner:GetNetVar("char")) then
         owner = owner:GetNetVar("char")
-    elseif (!isnumber(owner)) then
-        return
-    end
+    elseif (!isnumber(owner)) then return end
 
     if (SERVER) then
         if (fullUpdate) then
@@ -301,9 +297,7 @@ function META:FindEmptySlot(w, h, onlyMain)
     w = w or 1
     h = h or 1
 
-    if (w > self.w or h > self.h) then
-        return
-    end
+    if (w > self.w or h > self.h) then return end
 
     for y = 1, self.h - (h - 1) do
         for x = 1, self.w - (w - 1) do

@@ -240,9 +240,7 @@ if (SERVER) then
     end
 
     net.Receive("ixContainerPassword", function(length, client)
-        if ((client.ixNextContainerPassword or 0) > RealTime()) then
-            return
-        end
+        if ((client.ixNextContainerPassword or 0) > RealTime()) then return end
 
         local entity = net.ReadEntity()
         local steamID = client:SteamID()

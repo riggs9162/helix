@@ -42,9 +42,7 @@ function PANEL:SetItem(itemTable)
     end)
     self.icon.itemTable = itemTable
     self.icon.DoClick = function(this)
-        if (IsValid(ix.gui.checkout)) then
-            return
-        end
+        if (IsValid(ix.gui.checkout)) then return end
 
         local parent = ix.gui.business
         local bAdded = parent:BuyItem(itemTable.uniqueID)
@@ -145,9 +143,7 @@ function PANEL:Init()
     local first = true
 
     for k, v in pairs(ix.item.list) do
-        if (hook.Run("CanPlayerUseBusiness", LocalPlayer(), k) == false) then
-            continue
-        end
+        if (hook.Run("CanPlayerUseBusiness", LocalPlayer(), k) == false) then continue end
 
         if (!self.categoryPanels[L(v.category)]) then
             self.categoryPanels[L(v.category)] = v.category
@@ -225,14 +221,10 @@ function PANEL:LoadItems(category, search)
     self.itemList:InvalidateLayout(true)
 
     for uniqueID, itemTable in SortedPairsByMemberValue(items, "name") do
-        if (hook.Run("CanPlayerUseBusiness", LocalPlayer(), uniqueID) == false) then
-            continue
-        end
+        if (hook.Run("CanPlayerUseBusiness", LocalPlayer(), uniqueID) == false) then continue end
 
         if (itemTable.category == category) then
-            if (search and search != "" and !L(itemTable.name):lower():find(search, 1, true)) then
-                continue
-            end
+            if (search and search != "" and !L(itemTable.name):lower():find(search, 1, true)) then continue end
 
             self.itemList:Add("ixBusinessItem"):SetItem(itemTable)
         end

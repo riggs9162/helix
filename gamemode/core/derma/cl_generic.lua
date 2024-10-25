@@ -518,9 +518,7 @@ function PANEL:OnMouseReleased(key)
 end
 
 function PANEL:OnCursorMoved(x, y)
-    if (!self.bDragging) then
-        return
-    end
+    if (!self.bDragging) then return end
 
     x = math.Clamp(x, 0, self:GetWide())
     local oldValue = self.value

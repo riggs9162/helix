@@ -197,9 +197,7 @@ function PANEL:Init()
 end
 
 function PANEL:Update(character)
-    if (!character) then
-        return
-    end
+    if (!character) then return end
 
     local faction = ix.faction.indices[character:GetFaction()]
     local class = ix.class.list[character:GetClass()]

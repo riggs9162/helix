@@ -83,9 +83,7 @@ function PANEL:DoRightClick()
         end
 
         for k, v in SortedPairs(itemTable.functions) do
-            if (k == "drop" or k == "combine" or (v.OnCanRun and v.OnCanRun(itemTable) == false)) then
-                continue
-            end
+            if (k == "drop" or k == "combine" or (v.OnCanRun and v.OnCanRun(itemTable) == false)) then continue end
 
             -- is Multi-Option Function
             if (v.isMulti) then
@@ -183,9 +181,7 @@ end
 function PANEL:OnDrop(bDragging, inventoryPanel, inventory, gridX, gridY)
     local item = self.itemTable
 
-    if (!item or !bDragging) then
-        return
-    end
+    if (!item or !bDragging) then return end
 
     if (!IsValid(inventoryPanel)) then
         local inventoryID = self.inventoryID
@@ -220,9 +216,7 @@ function PANEL:Move(newX, newY, givenInventory, bNoSend)
     local oldX, oldY = self.gridX, self.gridY
     local oldParent = self:GetParent()
 
-    if (givenInventory:OnTransfer(oldX, oldY, newX, newY, oldParent, bNoSend) == false) then
-        return
-    end
+    if (givenInventory:OnTransfer(oldX, oldY, newX, newY, oldParent, bNoSend) == false) then return end
 
     local x = (newX - 1) * iconSize + 4
     local y = (newY - 1) * iconSize + givenInventory:GetPadding(2)
@@ -320,9 +314,7 @@ end
 function PANEL:FitParent(invWidth, invHeight)
     local parent = self:GetParent()
 
-    if (!IsValid(parent)) then
-        return
-    end
+    if (!IsValid(parent)) then return end
 
     local width, height = parent:GetSize()
     local padding = 4
@@ -650,9 +642,7 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
 
         local inventory = ix.item.inventories[self.invID]
 
-        if (!inventory) then
-            return
-        end
+        if (!inventory) then return end
 
         local itemTable = inventory:GetItemAt(panel.gridX, panel.gridY)
 
@@ -740,9 +730,7 @@ end
 vgui.Register("ixInventory", PANEL, "DFrame")
 
 hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
-    if (hook.Run("CanPlayerViewInventory") == false) then
-        return
-    end
+    if (hook.Run("CanPlayerViewInventory") == false) then return end
 
     tabs["inv"] = {
         bDefault = true,

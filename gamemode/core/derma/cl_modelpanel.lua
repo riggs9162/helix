@@ -15,15 +15,11 @@ function PANEL:SetModel(model, skin, bodygroups)
         self.Entity = nil
     end
 
-    if (!ClientsideModel) then
-        return
-    end
+    if (!ClientsideModel) then return end
 
     local entity = ClientsideModel(model, RENDERGROUP_OPAQUE)
 
-    if (!IsValid(entity)) then
-        return
-    end
+    if (!IsValid(entity)) then return end
 
     entity:SetNoDraw(true)
     entity:SetIK(false)

@@ -87,9 +87,7 @@ function GM:PlayerInitialSpawn(client)
     client:SyncVars()
 
     timer.Simple(1, function()
-        if (!IsValid(client)) then
-            return
-        end
+        if (!IsValid(client)) then return end
 
         client:KillSilent()
         client:StripAmmo()
@@ -454,9 +452,7 @@ end
 
 local voiceDistance = 360000
 local function CalcPlayerCanHearPlayersVoice(listener)
-    if (!IsValid(listener)) then
-        return
-    end
+    if (!IsValid(listener)) then return end
 
     listener.ixVoiceHear = listener.ixVoiceHear or {}
 
@@ -772,14 +768,10 @@ function GM:PlayerDisconnected(client)
 
     client:ClearNetVars()
 
-    if (!client.ixVoiceHear) then
-        return
-    end
+    if (!client.ixVoiceHear) then return end
 
     for _, v in player.Iterator() do
-        if (!v.ixVoiceHear) then
-            continue
-        end
+        if (!v.ixVoiceHear) then continue end
 
         v.ixVoiceHear[client] = nil
     end

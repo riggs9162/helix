@@ -89,9 +89,7 @@ if (SERVER) then
     -- @treturn[1] Entity The physics prop created for the door
     -- @treturn nil If the entity is not a door
     function meta:BlastDoor(velocity, lifeTime, bIgnorePartner)
-        if (!self:IsDoor()) then
-            return
-        end
+        if (!self:IsDoor()) then return end
 
         if (IsValid(self.ixDummy)) then
             self.ixDummy:Remove()

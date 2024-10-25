@@ -79,9 +79,7 @@ function PANEL:SetDisabled(bValue)
 end
 
 function PANEL:OnCursorEntered()
-    if (self:GetDisabled()) then
-        return
-    end
+    if (self:GetDisabled()) then return end
 
     local color = self:GetTextColor()
     self:SetTextColorInternal(Color(math.max(color.r - 25, 0), math.max(color.g - 25, 0), math.max(color.b - 25, 0)))
@@ -94,9 +92,7 @@ function PANEL:OnCursorEntered()
 end
 
 function PANEL:OnCursorExited()
-    if (self:GetDisabled()) then
-        return
-    end
+    if (self:GetDisabled()) then return end
 
     if (self.color) then
         self:SetTextColor(self.color)
@@ -110,9 +106,7 @@ function PANEL:OnCursorExited()
 end
 
 function PANEL:OnMousePressed(code)
-    if (self:GetDisabled()) then
-        return
-    end
+    if (self:GetDisabled()) then return end
 
     if (self.color) then
         self:SetTextColor(self.color)
@@ -130,9 +124,7 @@ function PANEL:OnMousePressed(code)
 end
 
 function PANEL:OnMouseReleased(key)
-    if (self:GetDisabled()) then
-        return
-    end
+    if (self:GetDisabled()) then return end
 
     if (self.color) then
         self:SetTextColor(self.color)

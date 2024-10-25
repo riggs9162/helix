@@ -36,9 +36,7 @@ function PLUGIN:ChatboxCreated()
 end
 
 function PLUGIN:ChatboxPositionChanged(x, y, width, height)
-    if (!IsValid(self.panel)) then
-        return
-    end
+    if (!IsValid(self.panel)) then return end
 
     self.panel:SetSize(width, y)
     self.panel:SetPos(32, 0)
@@ -51,9 +49,7 @@ function PLUGIN:ShouldDrawCrosshair()
 end
 
 function PLUGIN:PlayerBindPress(client, bind, bPressed)
-    if (!ix.area.bEditing) then
-        return
-    end
+    if (!ix.area.bEditing) then return end
 
     if ((bind:find("invnext") or bind:find("invprev")) and bPressed) then
         return true
@@ -70,9 +66,7 @@ function PLUGIN:PlayerBindPress(client, bind, bPressed)
 end
 
 function PLUGIN:HUDPaint()
-    if (!ix.area.bEditing) then
-        return
-    end
+    if (!ix.area.bEditing) then return end
 
     local id = LocalPlayer():GetArea()
     local area = ix.area.stored[id]
@@ -97,9 +91,7 @@ function PLUGIN:HUDPaint()
 end
 
 function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
-    if (bSkybox or !ix.area.bEditing) then
-        return
-    end
+    if (bSkybox or !ix.area.bEditing) then return end
 
     -- draw all areas
     for k, v in pairs(ix.area.stored) do
@@ -168,16 +160,12 @@ function PLUGIN:EditClick()
 end
 
 function PLUGIN:EditReload()
-    if (self.editStart) then
-        return
-    end
+    if (self.editStart) then return end
 
     local id = LocalPlayer():GetArea()
     local area = ix.area.stored[id]
 
-    if (!area) then
-        return
-    end
+    if (!area) then return end
 
     Derma_Query(L("areaDeleteConfirm", id), L("areaDelete"),
         L("no"), nil,
@@ -207,9 +195,7 @@ function PLUGIN:OnAreaChanged(oldID, newID)
 
     client.ixInArea = true
 
-    if (hook.Run("ShouldDisplayArea", newID) == false or !area.properties.display) then
-        return
-    end
+    if (hook.Run("ShouldDisplayArea", newID) == false or !area.properties.display) then return end
 
     local format = newID .. (ix.option.Get("24hourTime", false) and ", %H:%M." or ", %I:%M %p.")
     format = ix.date.GetFormatted(format)

@@ -36,9 +36,7 @@ cvars.AddChangeCallback("sbox_persist", function(name, old, new)
     timer.Create("sbox_persist_change_timer", 1, 1, function()
         hook.Run("PersistenceSave", old)
 
-        if (new == "") then
-            return
-        end
+        if (new == "") then return end
 
         hook.Run("PersistenceLoad", new)
     end)

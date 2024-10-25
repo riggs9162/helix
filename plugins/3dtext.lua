@@ -59,9 +59,7 @@ if (SERVER) then
         local textDeleted = {}
 
         for k, v in pairs(self.list) do
-            if (k == 0) then
-                continue
-            end
+            if (k == 0) then continue end
 
             if (v[1]:Distance(position) <= radius) then
                 textDeleted[#textDeleted + 1] = k
@@ -183,9 +181,7 @@ else
         PLUGIN.list[0] = #PLUGIN.list
 
         for k, v in pairs(PLUGIN.list) do
-            if (k == 0) then
-                continue
-            end
+            if (k == 0) then continue end
 
             local object = ix.markup.Parse("<font=ix3D2DFont>"..v[3]:gsub("\\n", "\n"))
 
@@ -213,9 +209,7 @@ else
     end
 
     function PLUGIN:HUDPaint()
-        if (ix.chat.currentCommand != "textremove") then
-            return
-        end
+        if (ix.chat.currentCommand != "textremove") then return end
 
         local radius = tonumber(ix.chat.currentArguments[1]) or 100
 
@@ -226,9 +220,7 @@ else
         local i = 0
 
         for k, v in pairs(self.list) do
-            if (k == 0) then
-                continue
-            end
+            if (k == 0) then continue end
 
             if (v[1]:Distance(LocalPlayer():GetEyeTraceNoCursor().HitPos) <= radius) then
                 local screen = v[1]:ToScreen()
@@ -251,9 +243,7 @@ else
     end
 
     function PLUGIN:PostDrawTranslucentRenderables(bDrawingDepth, bDrawingSkybox)
-        if (bDrawingDepth or bDrawingSkybox) then
-            return
-        end
+        if (bDrawingDepth or bDrawingSkybox) then return end
 
         -- preview for textadd command
         if (ix.chat.currentCommand == "textadd") then
@@ -286,9 +276,7 @@ else
         for i = 1, texts[0] do
             local distance = texts[i][1]:DistToSqr(position)
 
-            if (distance > 1048576) then
-                continue
-            end
+            if (distance > 1048576) then continue end
 
             cam.Start3D2D(texts[i][1], texts[i][2], texts[i][4] or 0.1)
                 local alpha = (1 - ((distance - 65536) / 768432)) * 255

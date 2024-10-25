@@ -174,15 +174,11 @@ if (SERVER) then
     end
 
     net.Receive("ixVendorEdit", function(length, client)
-        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)) then
-            return
-        end
+        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)) then return end
 
         local entity = client.ixVendor
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -336,13 +332,9 @@ if (SERVER) then
 
         local entity = client.ixVendor
 
-        if (!IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192) then
-            return
-        end
+        if (!IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192) then return end
 
-        if (!entity:CanAccess(client)) then
-            return
-        end
+        if (!entity:CanAccess(client)) then return end
 
         local uniqueID = net.ReadString()
         local isSellingToVendor = net.ReadBool()
@@ -442,9 +434,7 @@ else
     net.Receive("ixVendorOpen", function()
         local entity = net.ReadEntity()
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         entity.money = net.ReadUInt(16)
         entity.items = net.ReadTable()
@@ -458,9 +448,7 @@ else
     net.Receive("ixVendorEditor", function()
         local entity = net.ReadEntity()
 
-        if (!IsValid(entity) or !CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Vendors", nil)) then
-            return
-        end
+        if (!IsValid(entity) or !CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Vendors", nil)) then return end
 
         entity.money = net.ReadUInt(16)
         entity.items = net.ReadTable()
@@ -478,15 +466,11 @@ else
     net.Receive("ixVendorEdit", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then
-            return
-        end
+        if (!IsValid(panel)) then return end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -540,15 +524,11 @@ else
         local panel = ix.gui.vendor
         local editor = ix.gui.vendorEditor
 
-        if (!IsValid(panel) or !IsValid(editor)) then
-            return
-        end
+        if (!IsValid(panel) or !IsValid(editor)) then return end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -607,15 +587,11 @@ else
     net.Receive("ixVendorMoney", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then
-            return
-        end
+        if (!IsValid(panel)) then return end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         local value = net.ReadUInt(16)
         value = value != -1 and value or nil
@@ -636,15 +612,11 @@ else
     net.Receive("ixVendorStock", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then
-            return
-        end
+        if (!IsValid(panel)) then return end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then
-            return
-        end
+        if (!IsValid(entity)) then return end
 
         local uniqueID = net.ReadString()
         local amount = net.ReadUInt(16)

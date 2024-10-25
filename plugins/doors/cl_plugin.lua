@@ -49,15 +49,11 @@ end
 function PLUGIN:DrawDoorInfo(door, width, position, angles, scale, clientPosition)
     local alpha = math.max((1 - clientPosition:DistToSqr(door:GetPos()) / 65536) * 255, 0)
 
-    if (alpha < 1) then
-        return
-    end
+    if (alpha < 1) then return end
 
     local info = hook.Run("GetDoorInfo", door) or self:GetDefaultDoorInfo(door)
 
-    if (!istable(info) or table.IsEmpty(info)) then
-        return
-    end
+    if (!istable(info) or table.IsEmpty(info)) then return end
 
     -- title + background
     surface.SetFont("ix3D2DMediumFont")
@@ -94,23 +90,17 @@ function PLUGIN:DrawDoorInfo(door, width, position, angles, scale, clientPositio
 end
 
 function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
-    if (bDepth or bSkybox or !LocalPlayer():GetCharacter()) then
-        return
-    end
+    if (bDepth or bSkybox or !LocalPlayer():GetCharacter()) then return end
 
     local entities = ents.FindInSphere(EyePos(), 256)
     local clientPosition = LocalPlayer():GetPos()
 
     for _, v in ipairs(entities) do
-        if (!IsValid(v) or !v:IsDoor() or !v:GetNetVar("visible")) then
-            continue
-        end
+        if (!IsValid(v) or !v:IsDoor() or !v:GetNetVar("visible")) then continue end
 
         local color = v:GetColor()
 
-        if (v:IsEffectActive(EF_NODRAW) or color.a <= 0) then
-            continue
-        end
+        if (v:IsEffectActive(EF_NODRAW) or color.a <= 0) then continue end
 
         local position = v:LocalToWorld(v:OBBCenter())
         local mins, maxs = v:GetCollisionBounds()
@@ -180,9 +170,7 @@ end)
 net.Receive("ixDoorPermission", function()
     local door = net.ReadEntity()
 
-    if (!IsValid(door)) then
-        return
-    end
+    if (!IsValid(door)) then return end
 
     local target = net.ReadPlayer()
     local access = net.ReadUInt(4)

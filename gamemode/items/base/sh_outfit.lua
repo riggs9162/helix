@@ -102,9 +102,7 @@ function ITEM:AddOutfit(client)
 
     if (!table.IsEmpty(materials) and self:ShouldRestoreSubMaterials()) then
         for k, v in pairs(materials) do
-            if (!isnumber(k) or !isstring(v)) then
-                continue
-            end
+            if (!isnumber(k) or !isstring(v)) then continue end
 
             client:SetSubMaterial(k - 1, v)
         end

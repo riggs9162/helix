@@ -60,9 +60,7 @@ if (SERVER) then
     -- > done! -- after a moment
     function CHAR:Save(callback)
         -- Do not save if the character is for a bot.
-        if (self.isBot) then
-            return
-        end
+        if (self.isBot) then return end
 
         -- Let plugins/schema determine if the character should be saved.
         local shouldSave = hook.Run("CharacterPreSave", self)

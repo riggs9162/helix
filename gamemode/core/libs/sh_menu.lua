@@ -74,9 +74,7 @@ else
 
         if (!IsValid(entity) or !isstring(option) or
             hook.Run("CanPlayerInteractEntity", client, entity, option, data) == false or
-            entity:GetPos():Distance(client:GetPos()) > 96) then
-            return
-        end
+            entity:GetPos():Distance(client:GetPos()) > 96) then return end
 
         hook.Run("PlayerInteractEntity", client, entity, option, data)
 

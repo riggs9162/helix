@@ -279,9 +279,7 @@ function GM:PlayerWeaponChanged(client, weapon)
     UpdatePlayerHoldType(client, weapon)
     UpdateAnimationTable(client)
 
-    if (CLIENT) then
-        return
-    end
+    if (CLIENT) then return end
 
     -- update weapon raise state
     if (weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()]) then
@@ -308,9 +306,7 @@ function GM:PlayerWeaponChanged(client, weapon)
 end
 
 function GM:PlayerSwitchWeapon(client, oldWeapon, weapon)
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
     -- the player switched weapon themself (i.e not through SelectWeapon), so we have to network it here
     if (SERVER) then
@@ -324,9 +320,7 @@ function GM:PlayerSwitchWeapon(client, oldWeapon, weapon)
 end
 
 function GM:PlayerModelChanged(client, model)
-    if (!model) then
-        return
-    end
+    if (!model) then return end
 
     client.ixAnimModelClass = ix.anim.GetModelClass(model)
 
@@ -618,9 +612,7 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
     end
 
     -- we can transfer anything that isn't a bag
-    if (!itemObject or !itemObject.isBag) then
-        return
-    end
+    if (!itemObject or !itemObject.isBag) then return end
 
     -- don't allow bags to be put inside bags
     if (inventory.id != 0 and curInv.id != inventory.id) then
@@ -667,9 +659,7 @@ end
 function GM:OnItemTransferred(item, curInv, inventory)
     local bagInventory = item.GetInventory and item:GetInventory()
 
-    if (!bagInventory) then
-        return
-    end
+    if (!bagInventory) then return end
 
     -- we need to retain the receiver if the owner changed while viewing as storage
     if (inventory.storageInfo and isfunction(curInv.GetOwner)) then

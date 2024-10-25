@@ -2,9 +2,7 @@
 function ix.util.InstallAnimationMethods(meta)
     local function TweenAnimationThink(object)
         for k, v in pairs(object.tweenAnimations) do
-            if (!v.bShouldPlay) then
-                continue
-            end
+            if (!v.bShouldPlay) then continue end
 
             local bComplete = v:update(FrameTime())
 

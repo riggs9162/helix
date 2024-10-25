@@ -181,26 +181,18 @@ if (SERVER) then
             item = ix.item.instances[item]
         end
 
-        if (!item) then
-            return
-        end
+        if (!item) then return end
 
         ix.log.Add(client, "itemAction", action, item)
     end
 
     function PLUGIN:InventoryItemAdded(oldInv, inventory, item)
-        if (!inventory.owner or (oldInv and oldInv.owner == inventory.owner)) then
-            return
-        end
+        if (!inventory.owner or (oldInv and oldInv.owner == inventory.owner)) then return end
 
         local character = ix.char.loaded[inventory.owner]
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
-        if (!item) then
-            return
-        end
+        if (!item) then return end
 
         ix.log.Add(character:GetPlayer(), "inventoryAdd", character:GetName(), item:GetName(), item:GetID())
 
@@ -218,18 +210,12 @@ if (SERVER) then
     end
 
     function PLUGIN:InventoryItemRemoved(inventory, item)
-        if (!inventory.owner) then
-            return
-        end
+        if (!inventory.owner) then return end
 
         local character = ix.char.loaded[inventory.owner]
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
-        if (!item) then
-            return
-        end
+        if (!item) then return end
 
         ix.log.Add(character:GetPlayer(), "inventoryRemove", character:GetName(), item:GetName(), item:GetID())
 

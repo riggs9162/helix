@@ -125,9 +125,7 @@ end
 function PANEL:OnCategorySelected(name)
     local panel = self.categorySubpanels[name]
 
-    if (!IsValid(panel)) then
-        return
-    end
+    if (!IsValid(panel)) then return end
 
     if (!panel.bPopulated) then
         self.categories[name](panel)
@@ -197,9 +195,7 @@ hook.Add("PopulateHelpMenu", "ixHelpMenu", function(tabs)
 
         -- commands
         for uniqueID, command in SortedPairs(ix.command.list) do
-            if (command.OnCheckAccess and !command:OnCheckAccess(LocalPlayer())) then
-                continue
-            end
+            if (command.OnCheckAccess and !command:OnCheckAccess(LocalPlayer())) then continue end
 
             local bIsAlias = false
             local aliasText = ""

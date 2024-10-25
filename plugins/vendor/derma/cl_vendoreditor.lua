@@ -56,9 +56,7 @@ function PANEL:Init()
     self.money.OnEnter = function(this)
         local value = tonumber(this:GetText()) or entity.money
 
-        if (value == entity.money) then
-            return
-        end
+        if (value == entity.money) then return end
 
         self:updateVendor("money", value)
     end
@@ -247,9 +245,7 @@ function PANEL:ReloadItemList(filter)
     for k, v in SortedPairs(ix.item.list) do
         local itemName = v.GetName and v:GetName() or L(v.name)
 
-        if (filter and !itemName:lower():find(filter:lower(), 1, false)) then
-            continue
-        end
+        if (filter and !itemName:lower():find(filter:lower(), 1, false)) then continue end
 
         local mode = entity.items[k] and entity.items[k][VENDOR_MODE]
         local current, max = entity:GetStock(k)

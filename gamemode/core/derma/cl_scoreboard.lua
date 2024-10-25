@@ -69,9 +69,7 @@ function PANEL:SetModel(model, skin, bodygroups)
 end
 
 function PANEL:SetBodygroup(k, v)
-    if (k < 0 or k > 8 or v < 0 or v > 9) then
-        return
-    end
+    if (k < 0 or k > 8 or v < 0 or v > 9) then return end
 
     self.bodygroups = self.bodygroups:SetChar(k + 1, v)
 end
@@ -99,9 +97,7 @@ function PANEL:OnMouseReleased(key)
 end
 
 function PANEL:Paint(width, height)
-    if (!self.material) then
-        return
-    end
+    if (!self.material) then return end
 
     surface.SetMaterial(self.material)
     surface.SetDrawColor(self.bHidden and color_black or color_white)
@@ -129,9 +125,7 @@ function PANEL:Init()
     self.icon.DoRightClick = function()
         local client = self.player
 
-        if (!IsValid(client)) then
-            return
-        end
+        if (!IsValid(client)) then return end
 
         local menu = DermaMenu()
 

@@ -18,9 +18,7 @@ function PANEL:DoClick()
     local parent = ix.menu.panel
     local entity = parent:GetEntity()
 
-    if (parent.bClosing) then
-        return
-    end
+    if (parent.bClosing) then return end
 
     if (isfunction(self.callback)) then
         bStatus = self.callback()
@@ -248,9 +246,7 @@ function PANEL:OnMousePressed(code)
 end
 
 function PANEL:Remove()
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self.bClosing = true
 

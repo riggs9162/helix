@@ -145,9 +145,7 @@ function PANEL:OnValueUpdated()
 end
 
 function PANEL:Remove()
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self:OnValueChanged()
 
@@ -320,9 +318,7 @@ function PANEL:OnValueUpdated()
 end
 
 function PANEL:Remove()
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self:OnValueChanged()
 

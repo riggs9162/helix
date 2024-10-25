@@ -4,9 +4,7 @@ ix.hud = {}
 function ix.hud.DrawItemPickup()
     local pickupTime = ix.config.Get("itemPickupTime", 0.5)
 
-    if (pickupTime == 0) then
-        return
-    end
+    if (pickupTime == 0) then return end
 
     local client = LocalPlayer()
     local entity = client.ixInteractionTarget

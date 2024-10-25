@@ -66,16 +66,12 @@ end
 -- Called after the player's loadout has been set.
 function PLUGIN:PlayerLoadedCharacter(client)
     timer.Simple(0.25, function()
-        if (!IsValid(client)) then
-            return
-        end
+        if (!IsValid(client)) then return end
 
         -- Get the saved ammo table from the character data.
         local character = client:GetCharacter()
 
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
         local ammoTable = character:GetData("ammo")
 

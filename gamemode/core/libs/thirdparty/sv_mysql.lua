@@ -254,9 +254,7 @@ local function BuildInsertQuery(queryObj, bIgnore)
         valueList[#valueList + 1] = queryObj.insertList[i][2]
     end
 
-    if (#keyList == 0) then
-        return
-    end
+    if (#keyList == 0) then return end
 
     queryString[#queryString + 1] = " ("..table.concat(keyList, ", ")..")"
     queryString[#queryString + 1] = " VALUES ("..table.concat(valueList, ", ")..")"

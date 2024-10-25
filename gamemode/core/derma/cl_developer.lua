@@ -74,9 +74,7 @@ function PANEL:TransitionSubpanel(id)
     local lastSubpanel = self:GetActiveSubpanel()
 
     -- don't transition to the same panel
-    if (IsValid(lastSubpanel) and lastSubpanel.subpanelID == id) then
-        return
-    end
+    if (IsValid(lastSubpanel) and lastSubpanel.subpanelID == id) then return end
 
     local subpanel = self:GetSubpanel(id)
 

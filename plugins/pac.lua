@@ -318,9 +318,7 @@ else
     end
 
     function PLUGIN:DrawCharacterOverview()
-        if (!pac) then
-            return
-        end
+        if (!pac) then return end
 
         if (LocalPlayer().pac_outfits) then
             pac.RenderOverride(LocalPlayer(), "opaque")
@@ -329,9 +327,7 @@ else
     end
 
     function PLUGIN:DrawHelixModelView(panel, ent)
-        if (!pac) then
-            return
-        end
+        if (!pac) then return end
 
         if (LocalPlayer():GetCharacter()) then
             pac.RenderOverride(ent, "opaque")

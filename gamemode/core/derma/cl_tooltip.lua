@@ -418,9 +418,7 @@ function PANEL:SizeToContents()
 end
 
 function PANEL:Remove()
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self.bClosing = true
     self:CreateAnimation(animationTime * 0.5, {
@@ -552,9 +550,7 @@ end
 
 DEFINE_BASECLASS("Panel")
 function PANEL:Remove()
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self.bClosing = true
 

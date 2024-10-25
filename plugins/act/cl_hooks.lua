@@ -20,9 +20,7 @@ local function GetHeadBone(client)
 end
 
 function PLUGIN:PlayerBindPress(client, bind, bPressed)
-    if (!client:GetNetVar("actEnterAngle")) then
-        return
-    end
+    if (!client:GetNetVar("actEnterAngle")) then return end
 
     if (bind:find("+jump") and bPressed) then
         ix.command.Send("ExitAct")

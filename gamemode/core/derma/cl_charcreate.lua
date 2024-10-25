@@ -197,9 +197,7 @@ function PANEL:Init()
 
         self:SlideDown()
 
-        if (!IsValid(self) or !IsValid(parent)) then
-            return
-        end
+        if (!IsValid(self) or !IsValid(parent)) then return end
 
         if (LocalPlayer():GetCharacter()) then
             parent.mainPanel:Undim()
@@ -230,9 +228,7 @@ function PANEL:Init()
 end
 
 function PANEL:SendPayload()
-    if (self.awaitingResponse or !self:VerifyProgression()) then
-        return
-    end
+    if (self.awaitingResponse or !self:VerifyProgression()) then return end
 
     self.awaitingResponse = true
 
@@ -401,9 +397,7 @@ function PANEL:Populate()
         if (!v.bNoDisplay and k != "__SortedIndex") then
             local container = self:GetContainerPanel(v.category or "description")
 
-            if (v.ShouldDisplay and v:ShouldDisplay(container, self.payload) == false) then
-                continue
-            end
+            if (v.ShouldDisplay and v:ShouldDisplay(container, self.payload) == false) then continue end
 
             local panel
 
@@ -468,9 +462,7 @@ end
 
 function PANEL:VerifyProgression(name)
     for k, v in SortedPairsByMemberValue(ix.char.vars, "index") do
-        if (name ~= nil and (v.category or "description") != name) then
-            continue
-        end
+        if (name ~= nil and (v.category or "description") != name) then continue end
 
         local value = self.payload[k]
 

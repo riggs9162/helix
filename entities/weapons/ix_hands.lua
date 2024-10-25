@@ -83,9 +83,7 @@ if (CLIENT) then
 end
 
 function SWEP:Deploy()
-    if (!IsValid(self:GetOwner())) then
-        return
-    end
+    if (!IsValid(self:GetOwner())) then return end
 
     local viewModel = self:GetOwner():GetViewModel()
 
@@ -118,9 +116,7 @@ function SWEP:OnReloaded()
 end
 
 function SWEP:Holster()
-    if (!IsValid(self:GetOwner())) then
-        return
-    end
+    if (!IsValid(self:GetOwner())) then return end
 
     local viewModel = self:GetOwner():GetViewModel()
 
@@ -136,9 +132,7 @@ function SWEP:Holster()
 end
 
 function SWEP:Think()
-    if (!IsValid(self:GetOwner())) then
-        return
-    end
+    if (!IsValid(self:GetOwner())) then return end
 
     if (CLIENT) then
         local viewModel = self:GetOwner():GetViewModel()
@@ -228,9 +222,7 @@ end
 function SWEP:PickupObject(entity)
     if (self:IsHoldingObject() or
         !IsValid(entity) or
-        !IsValid(entity:GetPhysicsObject())) then
-        return
-    end
+        !IsValid(entity:GetPhysicsObject())) then return end
 
     local physics = entity:GetPhysicsObject()
     physics:EnableGravity(false)
@@ -278,9 +270,7 @@ function SWEP:PickupObject(entity)
 end
 
 function SWEP:DropObject(bThrow)
-    if (!IsValid(self.heldEntity) or self.heldEntity.ixHeldOwner != self:GetOwner()) then
-        return
-    end
+    if (!IsValid(self.heldEntity) or self.heldEntity.ixHeldOwner != self:GetOwner()) then return end
 
     self.lastPlayerAngles = nil
     self:GetOwner():SetLocalVar("bIsHoldingObject", false)
@@ -326,9 +316,7 @@ function SWEP:PlayPickupSound(surfaceProperty)
 end
 
 function SWEP:Holster()
-    if (!IsFirstTimePredicted() or CLIENT) then
-        return
-    end
+    if (!IsFirstTimePredicted() or CLIENT) then return end
 
     self:DropObject()
     return true
@@ -362,9 +350,7 @@ function SWEP:DoPunchAnimation()
 end
 
 function SWEP:PrimaryAttack()
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
     if (SERVER and self:IsHoldingObject()) then
         self:DropObject(true)
@@ -373,9 +359,7 @@ function SWEP:PrimaryAttack()
 
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
-    if (hook.Run("CanPlayerThrowPunch", self:GetOwner()) == false) then
-        return
-    end
+    if (hook.Run("CanPlayerThrowPunch", self:GetOwner()) == false) then return end
 
     if (ix.plugin.Get("stamina")) then
         local staminaUse = ix.config.Get("punchStamina")
@@ -443,9 +427,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
     local data = {}
         data.start = self:GetOwner():GetShootPos()
@@ -496,9 +478,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Reload()
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
     if (SERVER and IsValid(self.heldEntity)) then
         self:DropObject()

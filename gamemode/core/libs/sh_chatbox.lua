@@ -254,9 +254,7 @@ function ix.chat.Parse(client, message, bNoSend)
         end
     end
 
-    if (!message:find("%S")) then
-        return
-    end
+    if (!message:find("%S")) then return end
 
     -- Only send if needed.
     if (SERVER and !bNoSend) then
@@ -301,16 +299,12 @@ if (SERVER) then
     -- @tab[opt=nil] receivers The players to replicate send the message to
     -- @tab[opt=nil] data Additional data for this chat message
     function ix.chat.Send(speaker, chatType, text, bAnonymous, receivers, data)
-        if (!chatType) then
-            return
-        end
+        if (!chatType) then return end
 
         data = data or {}
         chatType = string.lower(chatType)
 
-        if (IsValid(speaker) and hook.Run("PrePlayerMessageSend", speaker, chatType, text, bAnonymous) == false) then
-            return
-        end
+        if (IsValid(speaker) and hook.Run("PrePlayerMessageSend", speaker, chatType, text, bAnonymous) == false) then return end
 
         local class = ix.chat.classes[chatType]
 

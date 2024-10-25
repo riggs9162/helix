@@ -331,9 +331,7 @@ function PANEL:Remove(bForce)
         return
     end
 
-    if (self.bClosing) then
-        return
-    end
+    if (self.bClosing) then return end
 
     self.bClosing = true
     self.bBackground = nil

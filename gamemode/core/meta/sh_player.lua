@@ -222,9 +222,7 @@ if (SERVER) then
 
         if (!IsValid(weapon) or
             weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] or
-            weapon.IsAlwaysLowered or weapon.NeverRaised) then
-            return
-        end
+            weapon.IsAlwaysLowered or weapon.NeverRaised) then return end
 
         self:SetWepRaised(!self:IsWepRaised(), weapon)
 
@@ -243,9 +241,7 @@ if (SERVER) then
     -- @func callback Function to run when the timer completes. It will be ran right away if `time` is `0`. Returning `false` in
     -- the callback will not mark this interaction as dirty if you're managing the interaction state manually.
     function meta:PerformInteraction(time, entity, callback)
-        if (!IsValid(entity) or entity.ixInteractionDirty) then
-            return
-        end
+        if (!IsValid(entity) or entity.ixInteractionDirty) then return end
 
         if (time > 0) then
             self.ixInteractionTarget = entity
@@ -461,9 +457,7 @@ if (SERVER) then
     -- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
     -- the same number as `time` to disable getting up manually entirely
     function meta:SetRagdolled(bState, time, getUpGrace)
-        if (!self:Alive()) then
-            return
-        end
+        if (!self:Alive()) then return end
 
         getUpGrace = getUpGrace or time or 5
 

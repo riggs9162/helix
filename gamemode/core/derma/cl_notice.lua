@@ -29,9 +29,7 @@ function PANEL:Clear()
 end
 
 function PANEL:AddNotice(text, bError)
-    if (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu.bClosing) then
-        return
-    end
+    if (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu.bClosing) then return end
 
     local textLength = text:utf8len()
 

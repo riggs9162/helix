@@ -192,9 +192,7 @@ function ix.option.GetAllByCategories(bRemoveHidden)
         for k2, _ in pairs(v) do
             local option = ix.option.stored[k2]
 
-            if (bRemoveHidden and isfunction(option.hidden) and option.hidden()) then
-                continue
-            end
+            if (bRemoveHidden and isfunction(option.hidden) and option.hidden()) then continue end
 
             -- we create the category table here because it could contain all hidden options which makes the table empty
             result[k] = result[k] or {}

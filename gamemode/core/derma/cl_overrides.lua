@@ -8,9 +8,7 @@ local OVERRIDES = {}
 local function OverridePanel(name, func)
     PANEL = vgui.GetControlTable(name)
 
-    if (!istable(PANEL)) then
-        return
-    end
+    if (!istable(PANEL)) then return end
 
     OVERRIDES = {}
     func()
@@ -31,9 +29,7 @@ local function Override(name)
     local oldMethod = "ix" .. name
     OVERRIDES[name] = true
 
-    if (PANEL[oldMethod]) then
-        return
-    end
+    if (PANEL[oldMethod]) then return end
 
     PANEL[oldMethod] = PANEL[name]
 end
@@ -134,9 +130,7 @@ OverridePanel("DMenu", function()
         self.ixX, self.ixY, self.ixOwnerPanel = x, y, ownerPanel
         self:ixOpen(x, y, bSkipAnimation, ownerPanel)
 
-        if (ix.option.Get("disableAnimations")) then
-            return
-        end
+        if (ix.option.Get("disableAnimations")) then return end
 
         -- remove pac3 derma menu hooks since animations don't play nicely
         hook.Remove("CloseDermaMenus", self)
@@ -185,9 +179,7 @@ OverridePanel("DMenu", function()
 
     Override("Remove")
     function PANEL:Remove()
-        if (self.ixRemoving) then
-            return
-        end
+        if (self.ixRemoving) then return end
 
         if (ix.option.Get("disableAnimations")) then
             self:ixRemove()

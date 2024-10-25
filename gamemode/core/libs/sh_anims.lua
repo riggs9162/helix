@@ -412,9 +412,7 @@ end
 -- @usage ix.anim.GetModelClass("models/police.mdl")
 -- > metrocop
 function ix.anim.GetModelClass(model)
-    if (!model) then
-        return
-    end
+    if (!model) then return end
 
     model = string.lower(model)
     local class = translations[model]

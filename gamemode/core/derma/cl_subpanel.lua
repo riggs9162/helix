@@ -138,9 +138,7 @@ end
 function PANEL:SetSubpanelPos(id, x)
     local currentPanel = self.subpanels[id]
 
-    if (!currentPanel) then
-        return
-    end
+    if (!currentPanel) then return end
 
     local _, oldY = currentPanel:GetPos()
     currentPanel:SetPos(x, oldY)
@@ -288,9 +286,7 @@ end
 
 function PANEL:Paint(width, height)
     for i = 1, #self.childPanels do
-        if not (IsValid(self.childPanels[i])) then
-            continue
-        end
+        if not (IsValid(self.childPanels[i])) then continue end
 
         self.childPanels[i]:PaintManual()
     end
@@ -298,9 +294,7 @@ end
 
 function PANEL:PaintSubpanels(width, height)
     for i = 1, #self.subpanels do
-        if not (IsValid(self.subpanels[i])) then
-            continue
-        end
+        if not (IsValid(self.subpanels[i])) then continue end
 
         self.subpanels[i]:PaintManual()
     end

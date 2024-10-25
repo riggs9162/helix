@@ -32,9 +32,7 @@ end
 ITEM:Hook("drop", function(item)
     local inventory = ix.item.inventories[item.invID]
 
-    if (!inventory) then
-        return
-    end
+    if (!inventory) then return end
 
     -- the item could have been dropped by someone else (i.e someone searching this player), so we find the real owner
     local owner
@@ -46,9 +44,7 @@ ITEM:Hook("drop", function(item)
         end
     end
 
-    if (!IsValid(owner)) then
-        return
-    end
+    if (!IsValid(owner)) then return end
 
     if (item:GetData("equip")) then
         item:SetData("equip", nil)

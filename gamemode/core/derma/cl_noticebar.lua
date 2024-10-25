@@ -70,9 +70,7 @@ function PANEL:Show(bRemove)
     self:Slide("down")
 
     timer.Create("ixNoticeBarAnimation", self.length - 0.5, 1, function()
-        if (!IsValid(self)) then
-            return
-        end
+        if (!IsValid(self)) then return end
 
         self:Slide("up")
     end)

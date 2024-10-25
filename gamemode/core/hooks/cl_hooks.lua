@@ -295,9 +295,7 @@ end
 LOWERED_ANGLES = Angle(30, 0, -25)
 
 function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
-    if (!IsValid(weapon)) then
-        return
-    end
+    if (!IsValid(weapon)) then return end
 
     local client = LocalPlayer()
     local bWepRaised = client:IsWepRaised()
@@ -505,15 +503,11 @@ do
         local client = LocalPlayer()
         local time = SysTime()
 
-        if (!IsValid(client)) then
-            return
-        end
+        if (!IsValid(client)) then return end
 
         local character = client:GetCharacter()
 
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
         lastTrace.start = client:GetShootPos()
         lastTrace.endpos = lastTrace.start + client:GetAimVector(client) * 160
@@ -565,9 +559,7 @@ local surface = surface
 function GM:HUDPaintBackground()
     local client = LocalPlayer()
 
-    if (!client:GetCharacter()) then
-        return
-    end
+    if (!client:GetCharacter()) then return end
 
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
@@ -634,9 +626,7 @@ function GM:HUDPaintBackground()
 end
 
 function GM:PostDrawOpaqueRenderables(bDepth, bSkybox)
-    if (bDepth or bSkybox or #ix.blurRenderQueue == 0) then
-        return
-    end
+    if (bDepth or bSkybox or #ix.blurRenderQueue == 0) then return end
 
     ix.util.ResetStencilValues()
     render.SetStencilEnable(true)
@@ -738,9 +728,7 @@ function GM:PopulateCharacterInfo(client, character, container)
 end
 
 function GM:KeyRelease(client, key)
-    if (!IsFirstTimePredicted()) then
-        return
-    end
+    if (!IsFirstTimePredicted()) then return end
 
     if (key == IN_USE) then
         if (!ix.menu.IsOpen()) then

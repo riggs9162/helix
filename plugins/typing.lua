@@ -27,15 +27,11 @@ if (CLIENT) then
     end
 
     function PLUGIN:ChatTextChanged(text)
-        if (!IsValid(LocalPlayer())) then
-            return
-        end
+        if (!IsValid(LocalPlayer())) then return end
 
         local character = LocalPlayer():GetCharacter()
 
-        if (!character) then
-            return
-        end
+        if (!character) then return end
 
         if (text == "") then
             currentClass = nil
@@ -116,9 +112,7 @@ if (CLIENT) then
         local position = client:GetPos()
 
         for _, v in player.Iterator() do
-            if (v == client) then
-                continue
-            end
+            if (v == client) then continue end
 
             local distance = v:GetPos():DistToSqr(position)
             local moveType = v:GetMoveType()
@@ -126,9 +120,7 @@ if (CLIENT) then
             if (!IsValid(v) or !v:Alive() or
                 (moveType != MOVETYPE_WALK and moveType != MOVETYPE_NONE) or
                 !v.ixChatClassText or
-                distance >= v.ixChatClassRange) then
-                continue
-            end
+                distance >= v.ixChatClassRange) then continue end
 
             local text = v.ixChatClassText
             local range = v.ixChatClassRange
@@ -175,9 +167,7 @@ if (CLIENT) then
     net.Receive("ixTypeClass", function()
         local client = net.ReadPlayer()
 
-        if (!IsValid(client) or client == LocalPlayer()) then
-            return
-        end
+        if (!IsValid(client) or client == LocalPlayer()) then return end
 
         local newClass = net.ReadString()
         local chatClass = ix.chat.classes[newClass]
@@ -221,9 +211,7 @@ else
     end
 
     net.Receive("ixTypeClass", function(length, client)
-        if ((client.ixNextTypeClass or 0) > RealTime()) then
-            return
-        end
+        if ((client.ixNextTypeClass or 0) > RealTime()) then return end
 
         local newClass = net.ReadString()
 

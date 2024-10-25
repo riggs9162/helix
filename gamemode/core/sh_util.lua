@@ -708,15 +708,11 @@ if (CLIENT) then
     function derma.SkinFunc(name, panel, a, b, c, d, e, f, g)
         local skin = (ispanel(panel) and IsValid(panel)) and panel:GetSkin() or derma.GetDefaultSkin()
 
-        if (!skin) then
-            return
-        end
+        if (!skin) then return end
 
         local func = skin[name]
 
-        if (!func) then
-            return
-        end
+        if (!func) then return end
 
         return func(skin, panel, a, b, c, d, e, f, g)
     end
@@ -868,9 +864,7 @@ do
         end
 
         for _, v in pairs(ents.FindInSphere(searchCenter, 80)) do
-            if (!ix.util.IsUseableEntity(v, FCAP_USE_IN_RADIUS)) then
-                continue
-            end
+            if (!ix.util.IsUseableEntity(v, FCAP_USE_IN_RADIUS)) then continue end
 
             -- see if it's more roughly in front of the player than previous guess
             local point = v:NearestPoint(searchCenter)
@@ -880,9 +874,7 @@ do
             local dot = dir:Dot(forward)
 
             -- Need to be looking at the object more or less
-            if (dot < 0.8) then
-                continue
-            end
+            if (dot < 0.8) then continue end
 
             local dist = util.DistanceToLine(searchCenter, forward, point)
 
@@ -923,9 +915,7 @@ function ix.util.FindEmptySpace(variable, filter, spacing, size, height, toleran
     tolerance = tolerance or 5
 
     local position = isvector(variable) and variable or isentity(variable) and variable:GetPos()
-    if (!position) then
-        return
-    end
+    if (!position) then return end
 
     local mins, maxs = Vector(-spacing * 0.5, -spacing * 0.5, 0), Vector(spacing * 0.5, spacing * 0.5, height)
     local output = {}
@@ -945,9 +935,7 @@ function ix.util.FindEmptySpace(variable, filter, spacing, size, height, toleran
 
             local trace2 = util.TraceLine(data)
 
-            if (trace.StartSolid or trace.Hit or trace2.StartSolid or trace2.Hit or !util.IsInWorld(origin)) then
-                continue
-            end
+            if (trace.StartSolid or trace.Hit or trace2.StartSolid or trace2.Hit or !util.IsInWorld(origin)) then continue end
 
             output[#output + 1] = origin
         end
@@ -1290,13 +1278,9 @@ end
 -- print(ix.util.FindInCrosshair(Entity(1), Entity(2), 0.1))
 -- > false
 function ix.util.FindInCrosshair(ply, target, range)
-    if ( !IsValid(ply) and !IsValid(target) ) then
-        return
-    end
+    if ( !IsValid(ply) and !IsValid(target) ) then return end
 
-    if ( !IsValid(target) ) then
-        return
-    end
+    if ( !IsValid(target) ) then return end
 
     if ( !range ) then
         range = 0.9
@@ -1371,9 +1355,7 @@ function ix.util.GetClosestEntity(pos, distance, entities, bEntitiesIsIgnored)
         end
     elseif ( !bEntitiesIsIgnored ) then
         for _, entity in ipairs(ents.FindInSphere(pos, distance)) do
-            if ( table.HasValue(entities, entity) ) then
-                continue
-            end
+            if ( table.HasValue(entities, entity) ) then continue end
 
             table.insert(entities, entity)
         end

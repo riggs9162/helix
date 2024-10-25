@@ -37,9 +37,7 @@ function PANEL:Populate()
 
         -- we can use sortedpairs since configs don't have phrases to account for
         for k, v in SortedPairs(categories[category]) do
-            if (isfunction(v.hidden) and v.hidden()) then
-                continue
-            end
+            if (isfunction(v.hidden) and v.hidden()) then continue end
 
             local data = v.data.data
             local type = v.type

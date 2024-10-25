@@ -61,9 +61,7 @@ function PLUGIN:LoadData()
     -- Restore the saved door information.
     local data = self:GetData()
 
-    if (!data) then
-        return
-    end
+    if (!data) then return end
 
     -- Loop through all of the saved doors.
     for k, v in pairs(data) do
@@ -260,9 +258,7 @@ net.Receive("ixDoorPermission", function(length, client)
     if (IsValid(target) and target:GetCharacter() and door.ixAccess and door:GetDTEntity(0) == client and target != client) then
         access = math.Clamp(access or 0, DOOR_NONE, DOOR_TENANT)
 
-        if (access == door.ixAccess[target]) then
-            return
-        end
+        if (access == door.ixAccess[target]) then return end
 
         door.ixAccess[target] = access
 

@@ -138,9 +138,7 @@ function PANEL:Think()
 end
 
 function PANEL:DoChange()
-    if ((self.value == 0 and self.pressing == -1) or (self.value == self.max and self.pressing == 1)) then
-        return
-    end
+    if ((self.value == 0 and self.pressing == -1) or (self.value == self.max and self.pressing == 1)) then return end
 
     self.nextPress = CurTime() + 0.2
 

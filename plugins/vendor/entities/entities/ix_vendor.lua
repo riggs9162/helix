@@ -236,9 +236,7 @@ if (SERVER) then
     end
 
     function ENT:SetStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
-            return
-        end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
 
         self.items[uniqueID] = self.items[uniqueID] or {}
         self.items[uniqueID][VENDOR_STOCK] = math.min(value, self.items[uniqueID][VENDOR_MAXSTOCK])
@@ -250,17 +248,13 @@ if (SERVER) then
     end
 
     function ENT:AddStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
-            return
-        end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
 
         self:SetStock(uniqueID, self:GetStock(uniqueID) + (value or 1))
     end
 
     function ENT:TakeStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
-            return
-        end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
 
         self:AddStock(uniqueID, -(value or 1))
     end

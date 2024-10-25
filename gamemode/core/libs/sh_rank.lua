@@ -32,9 +32,7 @@ function ix.rank.LoadFromDir(directory)
             end
         end
 
-        if (halt == true) then
-            continue
-        end
+        if (halt == true) then continue end
 
         -- Set up a global table so the file has access to the rank table.
         RANK = {index = index, uniqueID = niceName}

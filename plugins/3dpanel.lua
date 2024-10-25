@@ -64,9 +64,7 @@ if (SERVER) then
 
         -- Loop through all of the panels.
         for k, v in pairs(self.list) do
-            if (k == 0) then
-                continue
-            end
+            if (k == 0) then continue end
 
             -- Check if the distance from our specified position to the panel is less than the radius.
             if (v[1]:Distance(position) <= radius) then
@@ -116,9 +114,7 @@ else
     local cachedPreview = {}
 
     local function CacheMaterial(index)
-        if (index < 1) then
-            return
-        end
+        if (index < 1) then return end
 
         local info = PLUGIN.list[index]
         local exploded = string.Explode("/", info[6])
@@ -235,16 +231,12 @@ else
 
         -- Loop through the list of panels.
         for k, _ in pairs(PLUGIN.list) do
-            if (k == 0) then
-                continue
-            end
+            if (k == 0) then continue end
 
             CacheQueue[#CacheQueue + 1] = k
         end
 
-        if (#CacheQueue == 0) then
-            return
-        end
+        if (#CacheQueue == 0) then return end
 
         timer.Create("ixCache3DPanels", 1, #CacheQueue, function()
             if (#CacheQueue > 0) then
@@ -259,9 +251,7 @@ else
 
     -- Called after all translucent objects are drawn.
     function PLUGIN:PostDrawTranslucentRenderables(bDrawingDepth, bDrawingSkybox)
-        if (bDrawingDepth or bDrawingSkybox) then
-            return
-        end
+        if (bDrawingDepth or bDrawingSkybox) then return end
 
         -- Panel preview
         if (ix.chat.currentCommand == "paneladd") then
@@ -313,9 +303,7 @@ else
         local arguments = ix.chat.currentArguments
 
         -- if there's no URL, then no preview.
-        if (!arguments[1]) then
-            return
-        end
+        if (!arguments[1]) then return end
 
         -- If the material is valid, preview the panel
         if (cachedPreview[2] and !cachedPreview[2]:IsError()) then

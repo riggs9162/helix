@@ -118,9 +118,7 @@ local lightPositions = {
 function ikon:renderHook()
     local entity = ikon.renderEntity
 
-    if (halo.RenderedEntity() == entity) then
-        return
-    end
+    if (halo.RenderedEntity() == entity) then return end
 
     local w, h = ikon.curWidth * 64, ikon.curHeight * 64
     local x, y = 0, 0

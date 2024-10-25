@@ -270,9 +270,7 @@ function ix.item.LoadFromDir(directory)
     files, folders = file.Find(directory.."/*", "LUA")
 
     for _, v in ipairs(folders) do
-        if (v == "base") then
-            continue
-        end
+        if (v == "base") then continue end
 
         for _, v2 in ipairs(file.Find(directory.."/"..v.."/*.lua", "LUA")) do
             ix.item.Load(directory.."/"..v .. "/".. v2, "base_"..v)

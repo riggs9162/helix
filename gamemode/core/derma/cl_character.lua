@@ -394,9 +394,7 @@ function PANEL:PlayMusic()
     path = url and url or path
 
     play(path, "noplay", function(channel, error, message)
-        if (!IsValid(self) or !IsValid(channel)) then
-            return
-        end
+        if (!IsValid(self) or !IsValid(channel)) then return end
 
         channel:SetVolume(self.volume or 0)
         channel:Play()
@@ -415,14 +413,10 @@ function PANEL:PlayMusic()
         })
 
         -- if the timer exists, then we're already looping the music, so don't create another timer
-        if (timer.Exists("ixCharacterMusic")) then
-            return
-        end
+        if (timer.Exists("ixCharacterMusic")) then return end
     
         -- don't loop the music if the config is false
-        if (!ix.config.Get("musicLoop", false)) then
-            return
-        end
+        if (!ix.config.Get("musicLoop", false)) then return end
     
         -- loop the music
         local length = channel:GetLength()

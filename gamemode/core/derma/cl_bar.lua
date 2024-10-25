@@ -81,9 +81,7 @@ function PANEL:Organize()
     local currentY = 0
 
     for _, v in ipairs(self.bars) do
-        if (!v:IsVisible()) then
-            continue
-        end
+        if (!v:IsVisible()) then continue end
 
         v:SetPos(0, currentY)
 
@@ -101,9 +99,7 @@ function PANEL:Think()
     self:SetAlpha(255 * fraction)
 
     -- don't update bars when not visible
-    if (fraction == 0) then
-        return
-    end
+    if (fraction == 0) then return end
 
     local curTime = CurTime()
     local bShouldHide = hook.Run("ShouldHideBars")

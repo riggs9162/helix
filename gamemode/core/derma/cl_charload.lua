@@ -409,9 +409,7 @@ function PANEL:Populate(ignoreID)
         local id = ix.characters[i]
         local character = ix.char.loaded[id]
 
-        if (!character or character:GetID() == ignoreID) then
-            continue
-        end
+        if (!character or character:GetID() == ignoreID) then continue end
 
         local index = character:GetFaction()
         local faction = ix.faction.indices[index]
