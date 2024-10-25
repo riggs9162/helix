@@ -691,6 +691,12 @@ function GM:PostGamemodeLoaded()
     baseclass.Set("ix_item", ix.meta.item)
 end
 
+function widgets.PlayerTick()
+end
+
+hook.Remove( "PlayerTick", "TickWidgets" )
+hook.Remove( "PostDrawEffects", "RenderWidgets" )
+
 if (SERVER) then
     util.AddNetworkString("PlayerVehicle")
 
