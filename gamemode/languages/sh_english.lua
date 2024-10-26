@@ -42,7 +42,6 @@ LANGUAGE = {
     type = "Type",
     display = "Display",
     loading = "Loading",
-    dbError = "Database connection failed",
     unknown = "Unknown",
     noDesc = "No description available",
     create = "Create",

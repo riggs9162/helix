@@ -45,7 +45,6 @@ LANGUAGE = {
     type = "Type",
     display = "Afficher",
     loading = "Chargement",
-    dbError = "La connexion à la base de données a échouée",
     unknown = "Inconnu",
     noDesc = "Aucune description disponible",
     create = "Créer",

@@ -610,9 +610,7 @@ do
         OnDisplay = function(self, container, payload)
             local maximum = hook.Run("GetDefaultAttributePoints", LocalPlayer(), payload) or 10
 
-            if (maximum < 1) then
-                return
-            end
+            if (maximum < 1) then return end
 
             local attributes = container:Add("DPanel")
             attributes:Dock(TOP)
@@ -924,9 +922,7 @@ do
         end)
 
         net.Receive("ixCharacterCreate", function(length, client)
-            if ((client.ixNextCharacterCreate or 0) > RealTime()) then
-                return
-            end
+            if ((client.ixNextCharacterCreate or 0) > RealTime()) then return end
 
             local maxChars = hook.Run("GetMaxPlayerCharacter", client) or ix.config.Get("maxCharacters", 5)
             local charList = client.ixCharList

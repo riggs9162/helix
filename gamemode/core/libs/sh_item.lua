@@ -338,9 +338,7 @@ do
             local owner = net.ReadType()
             local vars = net.ReadTable()
 
-            if (!LocalPlayer():GetCharacter()) then
-                return
-            end
+            if (!LocalPlayer():GetCharacter()) then return end
 
             local character = owner and ix.char.loaded[owner]
             local inventory = ix.inventory.Create(w, h, id)
@@ -458,9 +456,7 @@ do
             local invID = net.ReadUInt(32)
             local inventory = ix.item.inventories[invID]
 
-            if (!inventory) then
-                return
-            end
+            if (!inventory) then return end
 
             local itemID = net.ReadUInt(32)
             local oldX = net.ReadUInt(6)
@@ -497,9 +493,7 @@ do
 
             local inventory = ix.item.inventories[invID]
 
-            if (!inventory) then
-                return
-            end
+            if (!inventory) then return end
 
             inventory:Remove(id)
 
@@ -522,9 +516,7 @@ do
 
             local item = ix.item.instances[id]
 
-            if (!item) then
-                return
-            end
+            if (!item) then return end
 
             -- we need to close any bag windows that are open because of this item
             if (item.isBag) then
@@ -582,19 +574,13 @@ do
         function ix.item.PerformInventoryAction(client, action, item, invID, data)
             local character = client:GetCharacter()
 
-            if (!character) then
-                return
-            end
+            if (!character) then return end
 
             local inventory = ix.item.inventories[invID or 0]
 
-            if (hook.Run("CanPlayerInteractItem", client, action, item, data) == false) then
-                return
-            end
+            if (hook.Run("CanPlayerInteractItem", client, action, item, data) == false) then return end
 
-            if (!inventory:OnCheckAccess(client)) then
-                return
-            end
+            if (!inventory:OnCheckAccess(client)) then return end
 
             if (isentity(item)) then
                 if (IsValid(item)) then
@@ -625,9 +611,7 @@ do
                 if (item.entity:GetPos():Distance(client:GetPos()) > 96) then
                     return
                 end
-            elseif (!inventory:GetItemByID(item.id)) then
-                return
-            end
+            elseif (!inventory:GetItemByID(item.id)) then return end
 
             if (!item.bAllowMultiCharacterInteraction and IsValid(client) and client:GetCharacter()) then
                 local itemPlayerID = item:GetPlayerID()

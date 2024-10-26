@@ -41,7 +41,6 @@ LANGUAGE = {
     type = "Typ",
     display = "Wyświetlanie",
     loading = "Ładowanie",
-    dbError = "Połączenie z bazą danych nie powiodło się",
     unknown = "Nieznane",
     noDesc = "Opis niedostępny",
     create = "Stwórz",

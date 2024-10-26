@@ -449,9 +449,7 @@ function SWEP:SecondaryAttack()
 
     if (SERVER and IsValid(entity)) then
         if (entity:IsDoor()) then
-            if (hook.Run("CanPlayerKnock", self:GetOwner(), entity) == false) then
-                return
-            end
+            if (hook.Run("CanPlayerKnock", self:GetOwner(), entity) == false) then return end
 
             self:GetOwner():ViewPunch(self.KnockViewPunchAngle)
             self:GetOwner():EmitSound("physics/wood/wood_crate_impact_hard"..math.random(2, 3)..".wav")

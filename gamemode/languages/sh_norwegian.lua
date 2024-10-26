@@ -3,7 +3,6 @@ NAME = "Norwegian"
 
 LANGUAGE = {
     loading = "Laster",
-    dbError = "Database tilkobling feilet",
     unknown = "Ukjent",
     noDesc = "Ingen beskrivelse tilgjengelig",
     create = "Lag",

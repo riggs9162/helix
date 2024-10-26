@@ -514,9 +514,7 @@ function PANEL:PaintDragPreview(width, height, mouseX, mouseY, itemPanel)
 
             if (dropX < 1 or dropY < 1 or
                 dropX + itemPanel.gridW - 1 > invWidth or
-                dropY + itemPanel.gridH - 1 > invHeight) then
-                return
-            end
+                dropY + itemPanel.gridH - 1 > invHeight) then return end
         end
 
         local bEmpty = true

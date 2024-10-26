@@ -684,9 +684,7 @@ hook.Add("CreateMenuButtons", "ixSettings", function(tabs)
         PopulateTabButton = function(info, button)
             local menu = ix.gui.menu
 
-            if (!IsValid(menu)) then
-                return
-            end
+            if (!IsValid(menu)) then return end
 
             DEFINE_BASECLASS("ixMenuButton")
             button:SetZPos(9999)

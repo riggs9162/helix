@@ -4,7 +4,6 @@ NAME = "Nederlands"
 
 LANGUAGE = {
     loading = "Laden",
-    dbError = "Database verbinding gefaald",
     unknown = "Onbekend",
     noDesc = "Geen beschrijving beschikbaar",
     create = "Creëer",

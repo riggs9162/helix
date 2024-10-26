@@ -199,9 +199,7 @@ if (SERVER) then
         if (item.isBag) then
             local bagInventory = item:GetInventory()
 
-            if (!bagInventory) then
-                return
-            end
+            if (!bagInventory) then return end
 
             for _, v in pairs(bagInventory:GetItems()) do
                 ix.log.Add(character:GetPlayer(), "inventoryAdd", character:GetName(), v:GetName(), v:GetID())

@@ -120,9 +120,7 @@ function ix.db.LoadTables()
     -- load schema from database
     query = mysql:Select("ix_schema")
         query:Callback(function(result)
-            if (!istable(result)) then
-                return
-            end
+            if (!istable(result)) then return end
 
             for _, v in pairs(result) do
                 ix.db.schema[v.table] = util.JSONToTable(v.columns)
@@ -178,10 +176,15 @@ concommand.Add("ix_wipedb", function(client, cmd, arguments)
             MsgC(Color(255, 0, 0), "[Helix] DATABASE WIPE IN PROGRESS...\n")
 
             hook.Run("OnWipeTables")
+
             ix.db.WipeTables(function()
                 MsgC(Color(255, 255, 0), "[Helix] DATABASE WIPE COMPLETED!\n")
                 RunConsoleCommand("changelevel", game.GetMap())
             end)
         end
     end
+end)
+
+hook.Add("DatabaseConnectionFailed", "ixDatabaseConnectionFailed", function()
+    SetNetVar("fatalError", "Database connection failed")
 end)

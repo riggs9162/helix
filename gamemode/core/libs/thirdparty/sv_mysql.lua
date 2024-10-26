@@ -491,9 +491,7 @@ function mysql:Connect(host, username, password, database, port, socket, flags)
         end
 
         if (mysqloo) then
-            if (self.connection and self.connection:ping()) then
-                return
-            end
+            if (self.connection and self.connection:ping()) then return end
 
             local clientFlag = flags or 0
 

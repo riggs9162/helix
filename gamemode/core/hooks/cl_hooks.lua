@@ -297,22 +297,22 @@ LOWERED_ANGLES = Angle(30, 0, -25)
 function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos, eyeAngles)
     if (!IsValid(weapon)) then return end
 
-    local client = LocalPlayer()
-    local bWepRaised = client:IsWepRaised()
+    local ply = LocalPlayer()
+    local bWepRaised = ply:IsWepRaised()
 
     -- update tween if the raised state is out of date
-    if (client.ixWasWeaponRaised != bWepRaised) then
+    if (ply.ixWasWeaponRaised != bWepRaised) then
         local fraction = bWepRaised and 0 or 1
 
-        client.ixRaisedFraction = 1 - fraction
-        client.ixRaisedTween = ix.tween.new(0.75, client, {
+        ply.ixRaisedFraction = 1 - fraction
+        ply.ixRaisedTween = ix.tween.new(0.75, ply, {
             ixRaisedFraction = fraction
         }, LOWER_EASE_INOUT or "outQuint")
 
-        client.ixWasWeaponRaised = bWepRaised
+        ply.ixWasWeaponRaised = bWepRaised
     end
 
-    local fraction = client.ixRaisedFraction
+    local fraction = ply.ixRaisedFraction
     local lowerPos = weapon.LowerPosition or Vector(0, 0, 0)
     local rotation = weapon.LowerAngles or LOWERED_ANGLES
 
@@ -364,27 +364,23 @@ function GM:InitializedConfig()
         end
 
         local statusLabel = loader:Add("DLabel")
-        statusLabel:Dock(FILL)
         statusLabel:SetText(L"loading")
         statusLabel:SetFont("ixTitleFont")
-        statusLabel:SetContentAlignment(5)
         statusLabel:SetTextColor(color_white)
+        statusLabel:SizeToContents()
+        statusLabel:Center()
 
         timer.Simple(5, function()
             if (IsValid(ix.gui.loading)) then
-                local fault = GetNetVar("dbError")
-
-                if (fault) then
-                    statusLabel:SetText(fault and L"dbError" or L"loading")
-
+                local fatalError = GetNetVar("fatalError")
+                if (fatalError and fatalError != "") then
                     local label = loader:Add("DLabel")
-                    label:DockMargin(0, 64, 0, 0)
-                    label:Dock(TOP)
                     label:SetFont("ixSubTitleFont")
                     label:SetText(fault)
-                    label:SetContentAlignment(5)
-                    label:SizeToContentsY()
                     label:SetTextColor(Color(255, 50, 50))
+                    label:SizeToContents()
+                    label:Center()
+                    label:SetY(statusLabel:GetTall() + 8)
                 end
             end
         end)
@@ -433,13 +429,13 @@ local blurDelta = 0
 local hasVignetteMaterial = !vignette:IsError()
 
 timer.Create("ixVignetteChecker", 1, 0, function()
-    local client = LocalPlayer()
+    local ply = LocalPlayer()
 
-    if (IsValid(client)) then
+    if (IsValid(ply)) then
         local data = {}
-            data.start = client:GetPos()
+            data.start = ply:GetPos()
             data.endpos = data.start + vignetteTraceHeight
-            data.filter = client
+            data.filter = ply
         local trace = util.TraceLine(data)
 
         -- this timer could run before InitPostEntity is called, so we have to check for the validity of the trace table
@@ -451,12 +447,12 @@ timer.Create("ixVignetteChecker", 1, 0, function()
     end
 end)
 
-function GM:CalcView(client, origin, angles, fov)
-    local view = self.BaseClass:CalcView(client, origin, angles, fov) or {}
-    local entity = Entity(client:GetLocalVar("ragdoll", 0))
-    local ragdoll = IsValid(client:GetRagdollEntity()) and client:GetRagdollEntity() or entity
+function GM:CalcView(ply, origin, angles, fov)
+    local view = self.BaseClass:CalcView(ply, origin, angles, fov) or {}
+    local entity = Entity(ply:GetLocalVar("ragdoll", 0))
+    local ragdoll = IsValid(ply:GetRagdollEntity()) and ply:GetRagdollEntity() or entity
 
-    if ((!client:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll())
+    if ((!ply:ShouldDrawLocalPlayer() and IsValid(entity) and entity:IsRagdoll())
     or (!LocalPlayer():Alive() and IsValid(ragdoll))) then
         local ent = LocalPlayer():Alive() and entity or ragdoll
         local index = ent:LookupAttachment("eyes")
@@ -500,18 +496,17 @@ do
     local lastTrace = {}
 
     timer.Create("ixCheckTargetEntity", 0.1, 0, function()
-        local client = LocalPlayer()
+        local ply = LocalPlayer()
         local time = SysTime()
 
-        if (!IsValid(client)) then return end
+        if (!IsValid(ply)) then return end
 
-        local character = client:GetCharacter()
+        local char = ply:GetCharacter()
+        if (!char) then return end
 
-        if (!character) then return end
-
-        lastTrace.start = client:GetShootPos()
-        lastTrace.endpos = lastTrace.start + client:GetAimVector(client) * 160
-        lastTrace.filter = client
+        lastTrace.start = ply:GetShootPos()
+        lastTrace.endpos = lastTrace.start + ply:GetAimVector(ply) * 160
+        lastTrace.filter = ply
         lastTrace.mask = MASK_SHOT_HULL
 
         lastEntity = util.TraceHull(lastTrace).Entity
@@ -557,9 +552,9 @@ local mathApproach = math.Approach
 local surface = surface
 
 function GM:HUDPaintBackground()
-    local client = LocalPlayer()
+    local ply = LocalPlayer()
 
-    if (!client:GetCharacter()) then return end
+    if (!ply:GetCharacter()) then return end
 
     local frameTime = FrameTime()
     local scrW, scrH = ScrW(), ScrH()
@@ -574,25 +569,25 @@ function GM:HUDPaintBackground()
         hook.Run("DrawVignette", vignetteAlphaDelta)
     end
 
-    blurGoal = client:GetLocalVar("blur", 0) + (hookRun("AdjustBlurAmount", blurGoal) or 0)
+    blurGoal = ply:GetLocalVar("blur", 0) + (hookRun("AdjustBlurAmount", blurGoal) or 0)
 
     if (blurDelta != blurGoal) then
         blurDelta = mathApproach(blurDelta, blurGoal, frameTime * 20)
     end
 
-    if (blurDelta > 0 and !client:ShouldDrawLocalPlayer()) then
+    if (blurDelta > 0 and !ply:ShouldDrawLocalPlayer()) then
         ix.util.DrawBlurAt(0, 0, scrW, scrH, blurDelta)
     end
 
     self.BaseClass:PaintWorldTips()
 
-    local weapon = client:GetActiveWeapon()
+    local weapon = ply:GetActiveWeapon()
 
     if (IsValid(weapon) and hook.Run("CanDrawAmmoHUD", weapon) != false and weapon.DrawAmmo != false) then
         local clip = weapon:Clip1()
         local clipMax = weapon:GetMaxClip1()
-        local count = client:GetAmmoCount(weapon:GetPrimaryAmmoType())
-        local secondary = client:GetAmmoCount(weapon:GetSecondaryAmmoType())
+        local count = ply:GetAmmoCount(weapon:GetPrimaryAmmoType())
+        local secondary = ply:GetAmmoCount(weapon:GetSecondaryAmmoType())
         local x, y = scrW - 80, scrH - 80
 
         if (secondary > 0) then
@@ -620,7 +615,7 @@ function GM:HUDPaintBackground()
         end
     end
 
-    if (client:GetLocalVar("restricted") and !client:GetLocalVar("restrictNoMsg")) then
+    if (ply:GetLocalVar("restricted") and !ply:GetLocalVar("restrictNoMsg")) then
         ix.util.DrawText(L"restricted", scrW * 0.5, scrH * 0.33, nil, 1, 1, "ixBigFont")
     end
 end
@@ -666,41 +661,41 @@ function GM:PostDrawHUD()
 end
 
 function GM:ShouldPopulateEntityInfo(entity)
-    local client = LocalPlayer()
-    local ragdoll = Entity(client:GetLocalVar("ragdoll", 0))
+    local ply = LocalPlayer()
+    local ragdoll = Entity(ply:GetLocalVar("ragdoll", 0))
     local entityPlayer = entity:GetNetVar("player")
 
-    if (vgui.CursorVisible() or !client:Alive() or IsValid(ragdoll) or entity == client or entityPlayer == client) then return false end
+    if (vgui.CursorVisible() or !ply:Alive() or IsValid(ragdoll) or entity == ply or entityPlayer == ply) then return false end
 end
 
 local injTextTable = {
-    [.3] = {"injMajor", Color(192, 57, 43)},
-    [.6] = {"injLittle", Color(231, 76, 60)},
+    [0.3] = {"injMajor", Color(192, 57, 43)},
+    [0.6] = {"injLittle", Color(231, 76, 60)},
 }
 
-function GM:GetInjuredText(client)
-    local health = client:Health()
+function GM:GetInjuredText(ply)
+    local health = ply:Health()
 
     for k, v in pairs(injTextTable) do
-        if ((health / client:GetMaxHealth()) < k) then
+        if ((health / ply:GetMaxHealth()) < k) then
             return v[1], v[2]
         end
     end
 end
 
-function GM:PopulateImportantCharacterInfo(client, character, container)
-    local color = team.GetColor(client:Team())
+function GM:PopulateImportantCharacterInfo(ply, char, container)
+    local color = team.GetColor(ply:Team())
     container:SetArrowColor(color)
 
     -- name
     local name = container:AddRow("name")
     name:SetImportant()
-    name:SetText(hookRun("GetCharacterName", client) or character:GetName())
+    name:SetText(hookRun("GetCharacterName", ply) or char:GetName())
     name:SetBackgroundColor(color)
     name:SizeToContents()
 
     -- injured text
-    local injureText, injureTextColor = hookRun("GetInjuredText", client)
+    local injureText, injureTextColor = hookRun("GetInjuredText", ply)
 
     if (injureText) then
         local injure = container:AddRow("injureText")
@@ -711,9 +706,9 @@ function GM:PopulateImportantCharacterInfo(client, character, container)
     end
 end
 
-function GM:PopulateCharacterInfo(client, character, container)
+function GM:PopulateCharacterInfo(ply, char, container)
     -- description
-    local descriptionText = character:GetDescription()
+    local descriptionText = char:GetDescription()
     descriptionText = (descriptionText:utf8len() > 128 and
         string.format("%s...", descriptionText:utf8sub(1, 125)) or
         descriptionText)
@@ -725,15 +720,15 @@ function GM:PopulateCharacterInfo(client, character, container)
     end
 end
 
-function GM:KeyRelease(client, key)
+function GM:KeyRelease(ply, key)
     if (!IsFirstTimePredicted()) then return end
 
     if (key == IN_USE) then
         if (!ix.menu.IsOpen()) then
             local data = {}
-            data.start = client:GetShootPos()
-            data.endpos = data.start + client:GetAimVector() * 96
-            data.filter = client
+            data.start = ply:GetShootPos()
+            data.endpos = data.start + ply:GetAimVector() * 96
+            data.filter = ply
 
             local entity = util.TraceLine(data).Entity
 
@@ -744,12 +739,12 @@ function GM:KeyRelease(client, key)
 
         timer.Remove("ixItemUse")
 
-        client.ixInteractionTarget = nil
-        client.ixInteractionStartTime = nil
+        ply.ixInteractionTarget = nil
+        ply.ixInteractionStartTime = nil
     end
 end
 
-function GM:PlayerBindPress(client, bind, pressed)
+function GM:PlayerBindPress(ply, bind, pressed)
     bind = bind:lower()
 
     if (bind:find("use") and pressed) then
@@ -757,28 +752,28 @@ function GM:PlayerBindPress(client, bind, pressed)
 
         if (pickupTime > 0) then
             local data = {}
-                data.start = client:GetShootPos()
-                data.endpos = data.start + client:GetAimVector() * 96
-                data.filter = client
+                data.start = ply:GetShootPos()
+                data.endpos = data.start + ply:GetAimVector() * 96
+                data.filter = ply
             local entity = util.TraceLine(data).Entity
 
             if (IsValid(entity) and entity.ShowPlayerInteraction and !ix.menu.IsOpen()) then
-                client.ixInteractionTarget = entity
-                client.ixInteractionStartTime = SysTime()
+                ply.ixInteractionTarget = entity
+                ply.ixInteractionStartTime = SysTime()
 
                 timer.Create("ixItemUse", pickupTime, 1, function()
-                    client.ixInteractionTarget = nil
-                    client.ixInteractionStartTime = nil
+                    ply.ixInteractionTarget = nil
+                    ply.ixInteractionStartTime = nil
                 end)
             end
         end
     elseif (bind:find("jump")) then
-        local entity = Entity(client:GetLocalVar("ragdoll", 0))
+        local entity = Entity(ply:GetLocalVar("ragdoll", 0))
 
         if (IsValid(entity)) then
             ix.command.Send("CharGetUp")
         end
-    elseif (bind:find("speed") and client:KeyDown(IN_WALK) and pressed and !client:InVehicle()) then
+    elseif (bind:find("speed") and ply:KeyDown(IN_WALK) and pressed and !ply:InVehicle()) then
         if (LocalPlayer():Crouching()) then
             RunConsoleCommand("-duck")
         else
@@ -821,7 +816,7 @@ function GM:HUDShouldDraw(element)
     return true
 end
 
-function GM:ShouldDrawLocalPlayer(client)
+function GM:ShouldDrawLocalPlayer(ply)
     if (IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsVisible()) then return false end
 end
 
@@ -833,9 +828,9 @@ function GM:RenderScreenspaceEffects()
     local menu = ix.gui.menu
 
     if (IsValid(menu) and menu:GetCharacterOverview()) then
-        local client = LocalPlayer()
-        local target = client:GetObserverTarget()
-        local weapon = client:GetActiveWeapon()
+        local ply = LocalPlayer()
+        local target = ply:GetObserverTarget()
+        local weapon = ply:GetActiveWeapon()
 
         cam.Start3D()
             ix.util.ResetStencilValues()
@@ -855,7 +850,7 @@ function GM:RenderScreenspaceEffects()
                 if (IsValid(target)) then
                     target:DrawModel()
                 else
-                    client:DrawModel()
+                    ply:DrawModel()
                 end
 
                 if (IsValid(weapon)) then
@@ -877,15 +872,16 @@ function GM:RenderScreenspaceEffects()
     end
 end
 
-function GM:ShowPlayerOptions(client, options)
+function GM:ShowPlayerOptions(ply, options)
     options["viewProfile"] = {"icon16/user.png", function()
-        if (IsValid(client)) then
-            client:ShowProfile()
+        if (IsValid(ply)) then
+            ply:ShowProfile()
         end
     end}
+
     options["Copy Steam ID"] = {"icon16/user.png", function()
-        if (IsValid(client)) then
-            SetClipboardText(client:SteamID())
+        if (IsValid(ply)) then
+            SetClipboardText(ply:SteamID())
         end
     end}
 end
@@ -926,10 +922,10 @@ net.Receive("ixPlayerDeath", function()
 end)
 
 function GM:Think()
-    local client = LocalPlayer()
+    local ply = LocalPlayer()
 
-    if (IsValid(client) and client:Alive() and client.ixRaisedTween) then
-        client.ixRaisedTween:update(FrameTime())
+    if (IsValid(ply) and ply:Alive() and ply.ixRaisedTween) then
+        ply.ixRaisedTween:update(FrameTime())
     end
 end
 
@@ -965,14 +961,14 @@ end
 
 gameevent.Listen("player_spawn")
 hook.Add("player_spawn", "ixPlayerSpawn", function(data)
-    local client = Player(data.userid)
+    local ply = Player(data.userid)
 
-    if (IsValid(client)) then
+    if (IsValid(ply)) then
         -- GetBoneName returns __INVALIDBONE__ for everything the first time you use it, so we'll force an update to make them valid
-        client:SetupBones()
-        client:SetIK(false)
+        ply:SetupBones()
+        ply:SetIK(false)
 
-        if (client == LocalPlayer() and (IsValid(ix.gui.deathScreen) and !ix.gui.deathScreen:IsClosing())) then
+        if (ply == LocalPlayer() and (IsValid(ix.gui.deathScreen) and !ix.gui.deathScreen:IsClosing())) then
             ix.gui.deathScreen:Close()
         end
     end

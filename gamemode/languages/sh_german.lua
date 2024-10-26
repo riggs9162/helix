@@ -44,7 +44,6 @@ LANGUAGE = {
     type = "Typ",
     display = "Anzeige",
     loading = "Am Laden",
-    dbError = "Datenbankverbindung fehlgeschlagen",
     unknown = "Unbekannt",
     noDesc = "Keine Beschreibung verfügbar",
     create = "Erstellen",

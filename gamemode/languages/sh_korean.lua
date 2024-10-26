@@ -3,7 +3,6 @@ NAME = "한국어"
 
 LANGUAGE = {
     loading = "불러오는 중",
-    dbError = "DB 서버 연결 실패",
     unknown = "알 수 없음",
     noDesc = "정보가 존재하지 않습니다.",
     create = "생성",

@@ -28,9 +28,7 @@ do
         RemoveTooltip()
 
         timer.Create("ixTooltip", 0.1, 1, function()
-            if (!IsValid(panel) or lastHover != panel) then
-                return
-            end
+            if (!IsValid(panel) or lastHover != panel) then return end
 
             tooltip = vgui.Create("ixTooltip")
             panel.ixTooltip(tooltip)
