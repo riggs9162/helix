@@ -60,7 +60,7 @@ if (SERVER) then
     end, FLAG_NORMAL)
 
     ix.log.AddType("itemDestroy", function(client, itemName, itemID)
-        local name = client:GetName() ~= "" and client:GetName() or client:GetClass()
+        local name = client:GetName() != "" and client:GetName() or client:GetClass()
         return L("%s destroyed a '%s' #%d.", name, itemName, itemID)
     end, FLAG_WARNING)
 

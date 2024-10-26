@@ -1,4 +1,3 @@
-
 function GM:ForceDermaSkin()
     return "helix"
 end
@@ -355,12 +354,15 @@ function GM:InitializedConfig()
     hook.Run("ColorSchemeChanged", color)
 
     if (!ix.config.loaded and !IsValid(ix.gui.loading)) then
-        local loader = vgui.Create("EditablePanel")
-        loader:ParentToHUD()
+        local loader = vgui.Create("DPanel")
         loader:Dock(FILL)
-        loader.Paint = function(this, w, h)
-            surface.SetDrawColor(0, 0, 0)
-            surface.DrawRect(0, 0, w, h)
+        loader:MakePopup()
+        loader.Think = function(this)
+            this:MoveToFront()
+        end
+        loader.Paint = function(this, width, height)
+            surface.SetDrawColor(color_black)
+            surface.DrawRect(0, 0, width, height)
         end
 
         local statusLabel = loader:Add("DLabel")
@@ -624,6 +626,7 @@ function GM:PostDrawOpaqueRenderables(bDepth, bSkybox)
     if (bDepth or bSkybox or #ix.blurRenderQueue == 0) then return end
 
     ix.util.ResetStencilValues()
+
     render.SetStencilEnable(true)
         render.SetStencilWriteMask(27)
         render.SetStencilTestMask(27)
@@ -675,9 +678,8 @@ local injTextTable = {
 
 function GM:GetInjuredText(ply)
     local health = ply:Health()
-
     for k, v in pairs(injTextTable) do
-        if ((health / ply:GetMaxHealth()) < k) then
+        if ( ( health / ply:GetMaxHealth() ) < k ) then
             return v[1], v[2]
         end
     end
@@ -769,7 +771,6 @@ function GM:PlayerBindPress(ply, bind, pressed)
         end
     elseif (bind:find("jump")) then
         local entity = Entity(ply:GetLocalVar("ragdoll", 0))
-
         if (IsValid(entity)) then
             ix.command.Send("CharGetUp")
         end
@@ -783,8 +784,7 @@ function GM:PlayerBindPress(ply, bind, pressed)
 end
 
 function GM:CreateMove(command)
-    if ((IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu.bClosing) or
-        (IsValid(ix.gui.menu) and !ix.gui.menu.bClosing and ix.gui.menu:GetActiveTab() == "you")) then
+    if ((IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu.bClosing) or (IsValid(ix.gui.menu) and !ix.gui.menu.bClosing and ix.gui.menu:GetActiveTab() == "you")) then
         command:ClearButtons()
         command:ClearMovement()
     end
@@ -834,8 +834,10 @@ function GM:RenderScreenspaceEffects()
 
         cam.Start3D()
             ix.util.ResetStencilValues()
+
             render.SetStencilEnable(true)
             render.SuppressEngineLighting(true)
+
             cam.IgnoreZ(true)
                 render.SetColorModulation(1, 1, 1)
                 render.SetStencilWriteMask(28)
@@ -866,6 +868,7 @@ function GM:RenderScreenspaceEffects()
                     derma.SkinFunc("DrawCharacterStatusBackground", menu, menu.overviewFraction)
                 cam.End2D()
             cam.IgnoreZ(false)
+
             render.SuppressEngineLighting(false)
             render.SetStencilEnable(false)
         cam.End3D()
@@ -923,7 +926,6 @@ end)
 
 function GM:Think()
     local ply = LocalPlayer()
-
     if (IsValid(ply) and ply:Alive() and ply.ixRaisedTween) then
         ply.ixRaisedTween:update(FrameTime())
     end

@@ -184,7 +184,3 @@ concommand.Add("ix_wipedb", function(client, cmd, arguments)
         end
     end
 end)
-
-hook.Add("DatabaseConnectionFailed", "ixDatabaseConnectionFailed", function()
-    SetNetVar("fatalError", "Database connection failed")
-end)

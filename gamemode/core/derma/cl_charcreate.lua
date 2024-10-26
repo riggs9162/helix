@@ -462,7 +462,7 @@ end
 
 function PANEL:VerifyProgression(name)
     for k, v in SortedPairsByMemberValue(ix.char.vars, "index") do
-        if (name ~= nil and (v.category or "description") != name) then continue end
+        if (name != nil and (v.category or "description") != name) then continue end
 
         local value = self.payload[k]
 

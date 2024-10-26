@@ -131,7 +131,7 @@ THE SOFTWARE.
   end
   -- is year y leap year?
   local function isleapyear(y) -- y must be int!
-    return (mod(y, 4) == 0 and (mod(y, 100) ~= 0 or mod(y, 400) == 0))
+    return (mod(y, 4) == 0 and (mod(y, 100) != 0 or mod(y, 400) == 0))
   end
   -- day since year 0
   local function dayfromyear(y) -- y must be int!
@@ -348,7 +348,7 @@ THE SOFTWARE.
     local function sets(q) s = s and error_dup() or tonumber(q) end
     local function adds(q) s = s + tonumber(q) end
     local function setj(q) j = (m or w or j) and error_dup() or tonumber(q); end
-    local function setz(q) z = (z ~= 0 and z) and error_dup() or q end
+    local function setz(q) z = (z != 0 and z) and error_dup() or q end
     local function setzn(zs,zn) zn = tonumber(zn); setz( ((zn<24) and (zn*60) or (mod(zn,100) + floor(zn/100) * 60))*( zs=='+' and -1 or 1) ) end
     local function setzc(zs,zh,zm) setz( ((tonumber(zh)*60) + tonumber(zm))*( zs=='+' and -1 or 1) ) end
 
@@ -375,7 +375,7 @@ THE SOFTWARE.
             setm(mod(sw[0],12)+1)
           elseif inlist(x, sl_timezone, 2, sw) then
             c = fix(sw[0]) -- ignore gmt and utc
-            if c ~= 0 then setz(c, x) end
+            if c != 0 then setz(c, x) end
           elseif inlist(x, sl_weekdays, 2, sw) then
             k = sw[0]
           else
@@ -389,7 +389,7 @@ THE SOFTWARE.
               x = lwr(sw[1]) -- there should be hour and it must be correct
               if (not h) or (h > 12) or (h < 0) then return error_inv() end
               if x == 'a' and h == 12 then h = 0 end -- am
-              if x == 'p' and h ~= 12 then h = h + 12 end -- pm
+              if x == 'p' and h != 12 then h = h + 12 end -- pm
             else error_syn() end
           end
         elseif not(sw("^([+-])(%d%d?):(%d%d)",setzc) or sw("^([+-])(%d+)",setzn) or sw("^[Zz]%s*$")) then -- sw{"([+-])",{"(%d%d?):(%d%d)","(%d+)"}}

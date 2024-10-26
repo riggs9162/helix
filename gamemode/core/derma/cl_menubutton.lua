@@ -227,7 +227,7 @@ end
 
 function PANEL:AddButton(name, buttonList)
     assert(IsValid(self.parent), "attempted to add button to ixMenuSelectionList without a ParentButton")
-    assert(buttonList ~= nil, "attempted to add button to ixMenuSelectionList without a buttonList")
+    assert(buttonList != nil, "attempted to add button to ixMenuSelectionList without a buttonList")
 
     local button = self:Add("ixMenuSelectionButton")
     button.sectionParent = self.parent
