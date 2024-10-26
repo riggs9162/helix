@@ -86,9 +86,7 @@ end
 function PANEL:CheckAccess(access)
     access = access or DOOR_GUEST
 
-    if ((self.accessData[LocalPlayer()] or 0) >= access) then
-        return true
-    end
+    if ((self.accessData[LocalPlayer()] or 0) >= access) then return true end
 
     return false
 end

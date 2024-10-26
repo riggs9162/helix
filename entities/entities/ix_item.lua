@@ -266,9 +266,7 @@ function ENT:GetEntityMenu(client)
     local itemTable = self:GetItemTable()
     local options = {}
 
-    if (!itemTable) then
-        return false
-    end
+    if (!itemTable) then return false end
 
     itemTable.player = client
     itemTable.entity = self

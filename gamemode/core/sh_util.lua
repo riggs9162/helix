@@ -1293,9 +1293,7 @@ function ix.util.FindInCrosshair(ply, target, range)
     local targetOrigin = target.EyePos and target:EyePos() or target:WorldSpaceCenter()
     local direction = targetOrigin - origin
 
-    if ( originVector:Dot(direction:GetNormalized()) > range ) then
-        return true
-    end
+    if ( originVector:Dot(direction:GetNormalized()) > range ) then return true end
 
     return false
 end

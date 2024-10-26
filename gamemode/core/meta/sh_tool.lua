@@ -64,9 +64,7 @@ function TOOL:GetClientNumber(property, default)
 end
 
 function TOOL:Allowed()
-    if (CLIENT) then
-        return true
-    end
+    if (CLIENT) then return true end
 
     return self.AllowedCVar:GetBool()
 end

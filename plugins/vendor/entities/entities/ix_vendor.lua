@@ -91,21 +91,13 @@ end
 function ENT:CanSellToPlayer(client, uniqueID)
     local data = self.items[uniqueID]
 
-    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then
-        return false
-    end
+    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then return false end
 
-    if (data[VENDOR_MODE] == VENDOR_BUYONLY) then
-        return false
-    end
+    if (data[VENDOR_MODE] == VENDOR_BUYONLY) then return false end
 
-    if (!client:GetCharacter():HasMoney(self:GetPrice(uniqueID))) then
-        return false
-    end
+    if (!client:GetCharacter():HasMoney(self:GetPrice(uniqueID))) then return false end
 
-    if (data[VENDOR_STOCK] and data[VENDOR_STOCK] < 1) then
-        return false
-    end
+    if (data[VENDOR_STOCK] and data[VENDOR_STOCK] < 1) then return false end
 
     return true
 end
@@ -113,26 +105,18 @@ end
 function ENT:CanBuyFromPlayer(client, uniqueID)
     local data = self.items[uniqueID]
 
-    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then
-        return false
-    end
+    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then return false end
 
-    if (data[VENDOR_MODE] != VENDOR_SELLONLY) then
-        return false
-    end
+    if (data[VENDOR_MODE] != VENDOR_SELLONLY) then return false end
 
-    if (!self:HasMoney(data[VENDOR_PRICE] or ix.item.list[uniqueID].price or 0)) then
-        return false
-    end
+    if (!self:HasMoney(data[VENDOR_PRICE] or ix.item.list[uniqueID].price or 0)) then return false end
 
     return true
 end
 
 function ENT:HasMoney(amount)
     -- Vendor not using money system so they can always afford it.
-    if (!self.money) then
-        return true
-    end
+    if (!self.money) then return true end
 
     return self.money >= amount
 end

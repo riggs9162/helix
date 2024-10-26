@@ -95,9 +95,7 @@ function GM:PlayerInitialSpawn(client)
 end
 
 function GM:PlayerUse(client, entity)
-    if (client:IsRestricted() or (isfunction(entity.GetEntityMenu) and entity:GetClass() != "ix_item")) then
-        return false
-    end
+    if (client:IsRestricted() or (isfunction(entity.GetEntityMenu) and entity:GetClass() != "ix_item")) then return false end
 
     return true
 end
@@ -137,22 +135,16 @@ function GM:KeyRelease(client, key)
 end
 
 function GM:CanPlayerInteractItem(client, action, item, data)
-    if (client:IsRestricted()) then
-        return false
-    end
+    if (client:IsRestricted()) then return false end
 
     if (IsValid(client.ixRagdoll)) then
         client:NotifyLocalized("notNow")
         return false
     end
 
-    if (action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false) then
-        return false
-    end
+    if (action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false) then return false end
 
-    if (action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false) then
-        return false
-    end
+    if (action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false) then return false end
 
     if (action == "combine") then
         local other = data[1]
@@ -377,17 +369,13 @@ function GM:PlayerSpawnSWEP(client, weapon, info)
 end
 
 function GM:PlayerSpawnProp(client)
-    if (client:GetCharacter() and client:GetCharacter():HasFlags("e")) then
-        return true
-    end
+    if (client:GetCharacter() and client:GetCharacter():HasFlags("e")) then return true end
 
     return false
 end
 
 function GM:PlayerSpawnRagdoll(client)
-    if (client:GetCharacter() and client:GetCharacter():HasFlags("r")) then
-        return true
-    end
+    if (client:GetCharacter() and client:GetCharacter():HasFlags("r")) then return true end
 
     return false
 end
@@ -445,9 +433,7 @@ ix.allowedHoldableClasses = {
 }
 
 function GM:CanPlayerHoldObject(client, entity)
-    if (ix.allowedHoldableClasses[entity:GetClass()]) then
-        return true
-    end
+    if (ix.allowedHoldableClasses[entity:GetClass()]) then return true end
 end
 
 local voiceDistance = 360000
@@ -885,9 +871,7 @@ function GM:InitializedSchema()
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, speaker)
-    if (!speaker:Alive()) then
-        return false
-    end
+    if (!speaker:Alive()) then return false end
 
     local bCanHear = listener.ixVoiceHear and listener.ixVoiceHear[speaker]
     return bCanHear, true
@@ -900,9 +884,7 @@ function GM:PlayerCanPickupWeapon(client, weapon)
         data.filter = client
     local trace = util.TraceLine(data)
 
-    if (trace.Entity == weapon and client:KeyDown(IN_USE)) then
-        return true
-    end
+    if (trace.Entity == weapon and client:KeyDown(IN_USE)) then return true end
 
     return client.ixWeaponGive
 end

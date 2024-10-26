@@ -203,9 +203,7 @@ end
 function PANEL:BuyItem(uniqueID)
     local currentCount = self.cart[uniqueID] or 0
 
-    if (currentCount >= 10) then
-        return false
-    end
+    if (currentCount >= 10) then return false end
 
     self.cart[uniqueID] = currentCount + 1
     self.checkout:SetText(L("checkout", self:GetCartCount()))

@@ -670,9 +670,7 @@ function GM:ShouldPopulateEntityInfo(entity)
     local ragdoll = Entity(client:GetLocalVar("ragdoll", 0))
     local entityPlayer = entity:GetNetVar("player")
 
-    if (vgui.CursorVisible() or !client:Alive() or IsValid(ragdoll) or entity == client or entityPlayer == client) then
-        return false
-    end
+    if (vgui.CursorVisible() or !client:Alive() or IsValid(ragdoll) or entity == client or entityPlayer == client) then return false end
 end
 
 local injTextTable = {
@@ -818,17 +816,13 @@ hidden["CHudSquadStatus"] = true
 hidden["CHUDQuickInfo"] = true
 
 function GM:HUDShouldDraw(element)
-    if (hidden[element]) then
-        return false
-    end
+    if (hidden[element]) then return false end
 
     return true
 end
 
 function GM:ShouldDrawLocalPlayer(client)
-    if (IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsVisible()) then
-        return false
-    end
+    if (IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsVisible()) then return false end
 end
 
 function GM:PostProcessPermitted(class)

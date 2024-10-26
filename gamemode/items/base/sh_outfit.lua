@@ -285,9 +285,7 @@ ITEM.functions.Equip = {
 }
 
 function ITEM:CanTransfer(oldInventory, newInventory)
-    if (newInventory and self:GetData("equip")) then
-        return false
-    end
+    if (newInventory and self:GetData("equip")) then return false end
 
     return true
 end

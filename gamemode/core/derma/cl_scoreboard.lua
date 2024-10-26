@@ -246,9 +246,7 @@ function PANEL:Init()
 end
 
 function PANEL:AddPlayer(client, index)
-    if (!IsValid(client) or !client:GetCharacter() or hook.Run("ShouldShowPlayerOnScoreboard", client) == false) then
-        return false
-    end
+    if (!IsValid(client) or !client:GetCharacter() or hook.Run("ShouldShowPlayerOnScoreboard", client) == false) then return false end
 
     local id = index % 2 == 0 and 1 or 2
     local panel = self:Add("ixScoreboardRow")

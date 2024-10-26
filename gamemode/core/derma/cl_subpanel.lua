@@ -180,9 +180,7 @@ function PANEL:SetActiveSubpanel(id, length)
 
     local activePanel = self.subpanels[id]
 
-    if (!activePanel) then
-        return false
-    end
+    if (!activePanel) then return false end
 
     if (length == 0 or !self.activeSubpanel) then
         self:SetSubpanelPos(id, self.padding + self.leftOffset)

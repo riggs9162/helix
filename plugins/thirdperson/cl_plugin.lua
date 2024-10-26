@@ -49,13 +49,9 @@ local traceMax = Vector(10, 10, 10)
 function playerMeta:CanOverrideView()
     local entity = Entity(self:GetLocalVar("ragdoll", 0))
 
-    if (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing() and ix.gui.characterMenu:IsVisible()) then
-        return false
-    end
+    if (IsValid(ix.gui.characterMenu) and !ix.gui.characterMenu:IsClosing() and ix.gui.characterMenu:IsVisible()) then return false end
 
-    if (IsValid(ix.gui.menu) and ix.gui.menu:GetCharacterOverview()) then
-        return false
-    end
+    if (IsValid(ix.gui.menu) and ix.gui.menu:GetCharacterOverview()) then return false end
 
     if (ix.option.Get("thirdpersonEnabled", false) and
         !IsValid(self:GetVehicle()) and
@@ -65,9 +61,7 @@ function playerMeta:CanOverrideView()
         !self:GetNetVar("actEnterAngle") and
         !IsValid(entity) and
         LocalPlayer():Alive()
-        ) then
-        return true
-    end
+        ) then return true end
 end
 
 local view, traceData, traceData2, aimOrigin, crouchFactor, ft, curAng, owner
@@ -151,9 +145,7 @@ function PLUGIN:InputMouseApply(cmd, x, y, ang)
     owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
     owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
 
-    if (owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
-        return true
-    end
+    if (owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then return true end
 end
 
 function PLUGIN:ShouldDrawLocalPlayer()

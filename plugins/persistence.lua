@@ -81,9 +81,7 @@ properties.Add("persist_end", {
 })
 
 function PLUGIN:PhysgunPickup(client, entity)
-    if (entity:GetNetVar("Persistent", false)) then
-        return false
-    end
+    if (entity:GetNetVar("Persistent", false)) then return false end
 end
 
 if (SERVER) then

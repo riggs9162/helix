@@ -47,9 +47,7 @@ if (CLIENT) then
 end
 
 function PLUGIN:pac_CanWearParts(client)
-    if (!CAMI.PlayerHasAccess(client, "Helix - Manage PAC", nil)) then
-        return false
-    end
+    if (!CAMI.PlayerHasAccess(client, "Helix - Manage PAC", nil)) then return false end
 end
 
 local meta = FindMetaTable("Player")

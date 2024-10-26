@@ -149,9 +149,7 @@ function PLUGIN:SaveDoorData()
 end
 
 function PLUGIN:CanPlayerUseDoor(client, entity)
-    if (entity:GetNetVar("disabled")) then
-        return false
-    end
+    if (entity:GetNetVar("disabled")) then return false end
 end
 
 -- Whether or not a player a player has any abilities over the door, such as locking.
@@ -159,9 +157,7 @@ function PLUGIN:CanPlayerAccessDoor(client, door, access)
     local faction = door:GetNetVar("faction")
 
     -- If the door has a faction set which the client is a member of, allow access.
-    if (faction and client:Team() == faction) then
-        return true
-    end
+    if (faction and client:Team() == faction) then return true end
 
     local class = door:GetNetVar("class")
 

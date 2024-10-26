@@ -43,9 +43,7 @@ function PLUGIN:ChatboxPositionChanged(x, y, width, height)
 end
 
 function PLUGIN:ShouldDrawCrosshair()
-    if (ix.area.bEditing) then
-        return true
-    end
+    if (ix.area.bEditing) then return true end
 end
 
 function PLUGIN:PlayerBindPress(client, bind, bPressed)
@@ -178,9 +176,7 @@ function PLUGIN:EditReload()
 end
 
 function PLUGIN:ShouldDisplayArea(id)
-    if (ix.area.bEditing) then
-        return false
-    end
+    if (ix.area.bEditing) then return false end
 end
 
 function PLUGIN:OnAreaChanged(oldID, newID)

@@ -31,9 +31,7 @@ end
 function PLUGIN:ShouldDrawLocalPlayer(client)
     if (client:GetNetVar("actEnterAngle") and self.cameraFraction > 0.25) then
         return true
-    elseif (self.cameraFraction > 0.25) then
-        return true
-    end
+    elseif (self.cameraFraction > 0.25) then return true end
 end
 
 local forwardOffset = 16
