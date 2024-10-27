@@ -469,7 +469,7 @@ function GM:VoiceToggled(bAllowVoice)
 end
 
 function GM:VoiceDistanceChanged(distance)
-    voiceDistance = distance * distance
+    voiceDistance = distance ^ 2
 end
 
 -- Called when weapons should be given to a player.
@@ -599,6 +599,10 @@ function GM:PostPlayerLoadout(ply)
     end
 
     if (ix.config.Get("allowVoice")) then
+        if ( timer.Exists(ply:SteamID64() .. "ixCanHearPlayersVoice") ) then
+            timer.Remove(ply:SteamID64() .. "ixCanHearPlayersVoice")
+        end
+
         timer.Create(ply:SteamID64() .. "ixCanHearPlayersVoice", 0.5, 0, function()
             CalcPlayerCanHearPlayersVoice(ply)
         end)
@@ -748,7 +752,9 @@ function GM:PlayerDisconnected(ply)
         v.ixVoiceHear[ply] = nil
     end
 
-    timer.Remove(ply:SteamID64() .. "ixCanHearPlayersVoice")
+    if ( timer.Exists(ply:SteamID64() .. "ixCanHearPlayersVoice") ) then
+        timer.Remove(ply:SteamID64() .. "ixCanHearPlayersVoice")
+    end
 end
 
 function GM:InitPostEntity()
