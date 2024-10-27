@@ -624,6 +624,20 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
     end
 end
 
+function GM:CanPlayerTransferNestedBags(itemObject, curInv, inventory)
+    -- If the character is transferring a bag to the same bag, then restrict it.
+    if ( itemObject:GetInventory() == inventory ) then
+        local owner = itemObject:GetOwner()
+        if ( IsValid(owner) ) then
+            owner:NotifyLocalized("nestedBags")
+        end
+
+        return false
+    end
+
+    return true
+end
+
 function GM:CanPlayerEquipItem(ply, item)
     return item.invID == ply:GetCharacter():GetInventory():GetID()
 end
