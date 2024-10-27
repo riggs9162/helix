@@ -593,10 +593,8 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
     -- don't allow bags to be put inside bags
     if ( inventory.id != 0 and curInv.id != inventory.id ) then
         if ( inventory.vars and inventory.vars.isBag and hook.Run("CanPlayerTransferNestedBags", itemObject, curInv, inventory) != true ) then
-            local owner = itemObject:GetOwner()
-
-            if ( IsValid(owner) ) then
-                owner:NotifyLocalized("nestedBags")
+            if ( CLIENT ) then
+                ix.util.NotifyLocalized("nestedBags")
             end
 
             return false
@@ -612,10 +610,8 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
     if ( inventory ) then
         for _, v in pairs(inventory:GetItems()) do
             if ( v:GetData("equip") == true ) then
-                local owner = itemObject:GetOwner()
-
-                if ( owner and IsValid(owner) ) then
-                    owner:NotifyLocalized("equippedBag")
+                if ( CLIENT ) then
+                    ix.util.NotifyLocalized("equippedBag")
                 end
 
                 return false
@@ -627,9 +623,8 @@ end
 function GM:CanPlayerTransferNestedBags(itemObject, curInv, inventory)
     -- If the character is transferring a bag to the same bag, then restrict it.
     if ( itemObject:GetInventory() == inventory ) then
-        local owner = itemObject:GetOwner()
-        if ( IsValid(owner) ) then
-            owner:NotifyLocalized("nestedBags")
+        if ( CLIENT ) then
+            ix.util.NotifyLocalized("nestedBags")
         end
 
         return false
