@@ -4,9 +4,9 @@ If you are here, you probably want to be converting your code from another frame
 
 This tutorial assumes basic to intermediate knowledge and experience with Garry's Mod Lua.
 
-**Before you start!** You will notice that Helix uses client for the variable that represents a player. Clockwork uses player for the variable instead, but this will conflict with the player library. So if you see `_player` being used in Clockwork, it means the Garry's Mod player library. This is just a preference and does not affect anything besides appear. So keep in mind throughout the tutorial, you may see player being used for Clockwork code and client being used for Helix code. They represent the same thing, just with a different name.
+**Before you start!** You will notice that Helix uses ply for the variable that represents a player. Clockwork uses player for the variable instead, but this will conflict with the player library. So if you see `_player` being used in Clockwork, it means the Garry's Mod player library. This is just a preference and does not affect anything besides appear. So keep in mind throughout the tutorial, you may see player being used for Clockwork code and ply being used for Helix code. They represent the same thing, just with a different name.
 
-If you are converting Clockwork code to Helix, keep in mind that `_player` is not defined so you will need to either define `_player` yourself or switch it to player instead and change the variable name to client for player objects.
+If you are converting Clockwork code to Helix, keep in mind that `_player` is not defined so you will need to either define `_player` yourself or switch it to player instead and change the variable name to ply for player objects.
 
 # Basics of Conversion
 
@@ -26,7 +26,7 @@ This is pretty important. If you want to use Helix as the base, you need to set 
 Inside of the `schema` folder of the actual schema, you should see a file named `sh_schema.lua`. This is the main schema file in both Clockwork and Helix. Most of your changes may actually be within this file.
 
 ## Including Files
-Both frameworks come with a utility function to include a file without worrying about sending them to the client and stuff. In Clockwork, this function is `Clockwork.kernel:IncludePrefixed("sh_myfile.lua")`. Change this to `ix.util.Include("sh_myfile.lua") `and save.
+Both frameworks come with a utility function to include a file without worrying about sending them to the ply and stuff. In Clockwork, this function is `Clockwork.kernel:IncludePrefixed("sh_myfile.lua")`. Change this to `ix.util.Include("sh_myfile.lua") `and save.
 
 # The Plugin
 
@@ -51,7 +51,7 @@ If the plugin uses a special variable (e.g. `cwPluginName`) for the plugin, chan
 - You can see if a global variable is defined for it by looking for `PLUGIN:SetGlobalAlias("cwMyPlugin")`. So, one would change `cwMyPlugin` to `PLUGIN`.
 
 # The `Character` Object
-One main thing that is very notable is how the character is referenced using `client:GetCharacter()` which returns a character object. The way the object works is just like an entity you spawn. It has its own properties like the model, color, etc. that makes it unique. You can access all the characters in a table which stores loaded characters with `ix.char.loaded`.
+One main thing that is very notable is how the character is referenced using `ply:GetCharacter()` which returns a character object. The way the object works is just like an entity you spawn. It has its own properties like the model, color, etc. that makes it unique. You can access all the characters in a table which stores loaded characters with `ix.char.loaded`.
 
 The character object comes with many predefined methods. You can look at how they are defined [by clicking here](https://github.com/NebulousCloud/helix/blob/master/gamemode/core/meta/sh_character.lua). The character object makes it very simple to manager character information.
 
@@ -64,7 +64,7 @@ In Clockwork, there is no use of an object. Instead, the character information i
 player:SetCharacterData("foo", "bar")
 
 -- in Helix
-client:GetCharacter():SetData("foo", "bar")
+ply:GetCharacter():SetData("foo", "bar")
 ```
 
 The use of the character object allows you to access other characters a player might own without needing to have them be the active character, or even access them when the player is not on the server. Overall, the use of the character object may seem like a complex concept, but will simplify a lot of things once you get the hang of the idea.
@@ -85,7 +85,7 @@ ix.anim.SetModelClass("models/mymodel.mdl", "metrocop")
 ## Attributes (`ix.attributes`)
 Attributes allow the player to boost certain abilities over time. Both frameworks require one to register attributes, but they are done differently. In Clockwork, the `ATTRIBUTE` table needs to be defined and registered manually. In Helix, the `ATTRIBUTE` table is automatically defined and registered for you. All you need to do is have `ATTRIBUTE.value = "value"`. The basic parts of the attribute needed is `ATTRIBUTE.name` and `ATTRIBUTE.description`.
 
-One extra feature for attributes in Helix is `ATTRIBUTE:OnSetup(client, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
+One extra feature for attributes in Helix is `ATTRIBUTE:OnSetup(ply, value)` which is a function that gets called on spawn to apply any effects. For example, the stamina attribute changes the player's run speed by adding the amount of stamina points the player has.
 
 You can find an example at [https://github.com/NebulousCloud/helix/blob/master/plugins/stamina/attributes/sh_stm.lua](https://github.com/NebulousCloud/helix/blob/master/plugins/stamina/attributes/sh_stm.lua)
 
@@ -172,7 +172,7 @@ Clockwork.datastream:Hook("MessageName", function(player, data)
 end);
 
 -- after
-netstream.Hook("MessageName", function(client, a, b, c)
+netstream.Hook("MessageName", function(ply, a, b, c)
 	print(a, b, c)
 end)
 ```
@@ -209,15 +209,15 @@ Clockwork.player:TakeFlags(player, flags)
 Clockwork.player:HasFlags(player, flags)
 
 -- after
-client:GetCharacter():GiveFlags(flags)
-client:GetCharacter():TakeFlags(flags)
-client:GetCharacter():HasFlags(flags)
+ply:GetCharacter():GiveFlags(flags)
+ply:GetCharacter():TakeFlags(flags)
+ply:GetCharacter():HasFlags(flags)
 ```
 
 ## Inventories (`Inventory`)
 Inventories have also had a change in the way they work that may seem very different than Clockwork. Similar to how characters are their own objects, inventories become their own objects as well. These inventory objects belong to character objects, which belongs to players. So, this creates a chain of objects which is neat. The use of inventories as objects makes it very simple to attach inventories to anything.
 
-To access a player's inventory, you need to use `client:GetCharacter():GetInventory()` which returns the main inventory object for the player's character. You can also access all loaded inventories with `ix.item.inventories` but that is not important right now.
+To access a player's inventory, you need to use `ply:GetCharacter():GetInventory()` which returns the main inventory object for the player's character. You can also access all loaded inventories with `ix.item.inventories` but that is not important right now.
 
 ## Items (`Item`)
 As discussed above, inventories contain items. Items are still used in inventories and world entities, use default class data, have callback functions, and can contain unique item data per instance.
@@ -301,7 +301,7 @@ The equivalent in Helix would be:
 ix.item.Spawn("item", Vector(1, 2, 3))
 
 -- giving a player an item
-client:GetCharacter():GetInventory():Add("test")
+ply:GetCharacter():GetInventory():Add("test")
 ```
 
 So in these two examples, the whole deal of instancing items is done for you in Helix!
@@ -316,7 +316,7 @@ function Schema:PlayerPlayPainSound(player, gender, damageInfo, hitGroup)
 end
 
 -- after
-function Schema:GetPlayerPainSound(client)
+function Schema:GetPlayerPainSound(ply)
 	-- ...
 end
 ```

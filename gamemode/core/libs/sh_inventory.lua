@@ -16,6 +16,13 @@ function ix.inventory.Get(invID)
     return ix.item.inventories[invID]
 end
 
+--- Creates a new inventory table, and adds it to the global inventories table.
+-- @realm server
+-- @number width Width of inventory
+-- @number height Height of inventory
+-- @number id Index of the inventory
+-- @treturn Inventory Inventory table
+-- @usage ix.inventory.Create(5, 5, 10) -- creates a 5x5 inventory with ID 10
 function ix.inventory.Create(width, height, id)
     local inventory = ix.meta.inventory:New(id, width, height)
         ix.item.inventories[id] = inventory
@@ -130,12 +137,20 @@ function ix.inventory.Restore(invID, width, height, callback)
     query:Execute()
 end
 
-function ix.inventory.New(owner, invType, callback)
+--- Creates a new inventory for a character or player.
+-- @realm server
+-- @number characterID The character ID to create the inventory for, character IDs can be retrived by character:GetID()
+-- @string invType Inventory type
+-- @func callback Function to call when inventory is created
+-- @usage ix.inventory.New(Entity(1):GetCharacter():GetID(), "safebox", function(inventory)
+--     print("Created inventory with ID: " .. inventory:GetID())
+-- end)
+function ix.inventory.New(characterID, invType, callback)
     local invData = ix.item.inventoryTypes[invType] or {w = 1, h = 1}
 
     local query = mysql:Insert("ix_inventories")
         query:Insert("inventory_type", invType)
-        query:Insert("character_id", owner)
+        query:Insert("character_id", characterID)
         query:Callback(function(result, status, lastID)
             local inventory = ix.inventory.Create(invData.w, invData.h, lastID)
 
@@ -143,11 +158,11 @@ function ix.inventory.New(owner, invType, callback)
                 inventory.vars.isBag = invType
             end
 
-            if (isnumber(owner) and owner > 0) then
-                local character = ix.char.loaded[owner]
+            if (isnumber(characterID) and characterID > 0) then
+                local character = ix.char.loaded[characterID]
                 local client = character:GetPlayer()
 
-                inventory:SetOwner(owner)
+                inventory:SetOwner(characterID)
 
                 if (IsValid(client)) then
                     inventory:Sync(client)
@@ -161,6 +176,16 @@ function ix.inventory.New(owner, invType, callback)
     query:Execute()
 end
 
+--- Registers a new inventory type.
+-- @realm shared
+-- @string invType Inventory type
+-- @number w Width of inventory
+-- @number h Height of inventory
+-- @bool[opt=false] isBag Whether or not the inventory is a bag
+-- @treturn table Inventory type table
+-- @usage local inventoryType = ix.inventory.Register("safebox", 5, 5)
+-- print(inventoryType.w, inventoryType.h)
+-- > 5 5
 function ix.inventory.Register(invType, w, h, isBag)
     ix.item.inventoryTypes[invType] = {w = w, h = h}
 

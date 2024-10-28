@@ -1,31 +1,32 @@
 
 :root {
-	--content-width: 1200px;
-	--sidebar-width: 330px;
+	--content-width: 100%;
+	--sidebar-width: 400px;
 
-	--padding-big: 48px;
-	--padding-normal: 24px;
+	--padding-big: 64px;
+	--padding-normal: 32px;
 	--padding-small: 16px;
-	--padding-tiny: 10px;
+	--padding-tiny: 8px;
+	--padding-micro: 4px;
 
-	--font-massive: 32px;
-	--font-huge: 24px;
-	--font-big: 18px;
+	--font-massive: 64px;
+	--font-huge: 32px;
+	--font-big: 24px;
 	--font-normal: 16px;
-	--font-tiny: 12px;
+	--font-tiny: 8px;
 
-	--font-style-normal: Segoe UI, Helvetica, Arial, sans-serif;
-	--font-style-code: Consolas, monospace;
+	--font-style-normal: 'Inter', 'Roboto', 'Arial', sans-serif; /* Clean, modern, and highly readable */
+	--font-style-code: 'Fira Code', 'Courier New', monospace; /* Stylish monospace with good readability */	
 
-	--color-accent: rgb(255, 100, 0);
-	--color-accent-dark: rgb(200, 50, 0);
-	--color-white: rgb(255, 255, 255);
-	--color-offwhite: rgb(200, 200, 200);
-	--color-white-accent: rgb(203, 190, 209);
-	--color-black: rgb(0, 0, 0);
-	--color-lightgrey: rgb(160, 160, 160);
-	--color-background-light: rgb(240, 240, 240);
-	--color-background-dark: rgb(33, 33, 33);
+	--color-accent: rgb(255, 130, 20); /* Bright orange accent */
+	--color-accent-dark: rgb(220, 90, 20); /* Deeper orange for contrast */
+	--color-white: rgb(255, 255, 255); /* Pure white */
+	--color-offwhite: rgb(235, 235, 230); /* Soft, warmer off-white */
+	--color-white-accent: rgb(245, 225, 200); /* Light orange tint for highlights */
+	--color-black: rgb(10, 10, 10); /* Near-black with a touch of warmth */
+	--color-lightgrey: rgb(180, 180, 175); /* Subtle grey for a softer look */
+	--color-background-light: rgb(250, 245, 235); /* Warm light background */
+	--color-background-dark: rgb(40, 40, 30); /* Darker tone with a slight warmth */	
 }
 
 * {
@@ -60,7 +61,7 @@ ul li {
 	background-color: var(--color-accent);
 	color: var(--color-white);
 
-	padding: 128px 0 128px 0;
+	padding: 32px 0 32px 0;
 }
 
 .landing h1 {
@@ -285,6 +286,7 @@ article header h1 {
 	padding-bottom: 8px;
 	font-family: var(--font-style-code);
 	margin: 0;
+	text-transform: none;
 }
 
 article header h2 {
@@ -292,6 +294,7 @@ article header h2 {
 	margin: 0;
 	font-size: var(--font-normal);
 	font-weight: normal;
+	text-transform: none;
 }
 
 article header.module a {
@@ -311,25 +314,28 @@ article h1 {
 	font-size: 28px;
 	font-weight: 600;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-	margin-top: 24px;
-	margin-bottom: 16px;
-	padding-bottom: 8px;
+	margin-top: var(--padding-big);
+	margin-bottom: 8px;
+	text-transform: uppercase;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 article h2 {
 	font-size: 20px;
 	font-weight: 600;
-	margin-top: 12px;
+	margin-top: var(--padding-normal);
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 article h3 {
 	color: var(--color-accent);
-	margin-top: var(--padding-tiny);
+	margin-top: var(--padding-normal);
 	text-transform: uppercase;
+	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 article p {
-	margin-top: var(--padding-small);
+	margin-top: var(--padding-micro);
 }
 
 article p a,
@@ -366,12 +372,12 @@ a.reference {
 	--color-notice-background: var(--color-accent);
 	--color-notice-text: var(--color-notice-background);
 
-	margin-top: var(--padding-tiny);
+	margin: var(--padding-small);
 	border: 2px solid var(--color-notice-background);
 }
 
 .notice.error {
-	--color-notice-background: rgb(194, 52, 130);
+	--color-notice-background: rgb(224, 112, 112);
 }
 
 .notice.warning {
@@ -388,6 +394,7 @@ a.reference {
 
 	text-transform: uppercase;
 	letter-spacing: 2px;
+	font-weight: 600;
 }
 
 .notice p {
@@ -402,7 +409,7 @@ a.reference {
 	display: flex;
 	flex-flow: column;
 	background-color: rgb(230, 230, 230);
-	padding: var(--padding-tiny);
+	padding: var(--padding-small);
 	margin-top: var(--padding-small);
 }
 

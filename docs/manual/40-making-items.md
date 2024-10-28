@@ -1,4 +1,4 @@
-# Creating Items
+# Making Items
 
 Items in Helix are versatile objects that players can pick up, use, and interact with. Whether it’s weapons, consumables, or even junk, creating items in Helix is straightforward and allows you to expand your schema with unique content.
 
@@ -6,11 +6,11 @@ Items in Helix are versatile objects that players can pick up, use, and interact
 
 Items are defined within Lua files and can have various attributes and functions that determine their behavior. They can be stored in different categories, from weapons to consumables, and can also include specific interactions or properties.
 
-# Item Structure
+## Item Structure
 
 Items are typically defined in Lua files within your schema’s `items` directory. Here’s a breakdown of a basic item structure:
 
-## Example: Weapon Item (SPAS-12 Shotgun)
+### Example: Weapon Item (SPAS-12 Shotgun)
 
 Here’s an example of a weapon item for a SPAS-12 shotgun located in `gamemodes/myschema/schema/items/weapons/sh_spas12.lua`:
 
@@ -26,7 +26,7 @@ ITEM.width = 3
 ITEM.height = 1
 ```
 
-## Example: Basic Item (Empty Mug)
+### Example: Basic Item (Empty Mug)
 
 Here’s an example of a basic item for an empty mug located in `gamemodes/myschema/schema/items/sh_empty_mug.lua`:
 
@@ -97,9 +97,9 @@ ITEM.width = 3
 ITEM.height = 1
 ```
 
-## Additional Attributes (for the Basic Item)
+# Additional Attributes (for the Basic Item)
 
-**ITEM.category**
+## ITEM.category
 
 This categorizes the item within the inventory, helping with organization.
 
@@ -107,7 +107,7 @@ This categorizes the item within the inventory, helping with organization.
 ITEM.category = "Junk"
 ```
 
-**ITEM.iconCam**
+## ITEM.iconCam
 
 The `iconCam` table controls how the item’s icon is displayed in the inventory. It includes settings for position (`pos`), angle (`ang`), and field of view (`fov`). Adjust these values to ensure the item’s icon looks good in the inventory.
 
@@ -147,7 +147,7 @@ garrysmod/gamemodes/myschema/schema/items/weapons/
 
 Paste the item code into the file, modifying the attributes as needed. For example:
 
-**SPAS-12 Shotgun:**
+### SPAS-12 Shotgun
 
 ```
 ITEM.name = "SPAS-12"
@@ -161,7 +161,7 @@ ITEM.width = 3
 ITEM.height = 1
 ```
 
-**Empty Mug:**
+### Empty Mug
 
 ```
 ITEM.name = "Empty Mug"

@@ -1,4 +1,4 @@
-# Creating Plugins
+# Making Plugins
 
 Creating plugins for the Helix Framework allows you to extend the core functionality of your schema with custom features. Whether you’re adding simple enhancements or complex systems, plugins provide a modular way to organize your code.
 

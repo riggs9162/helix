@@ -1,5 +1,10 @@
+--[[--
+Networking library for sending and receiving networked variables.
 
--- @module ix.net
+This library is used to send and receive networked variables between the server and clients. It is used to synchronize data between the server and clients, such as player data, entity data, and global data. See `Player:SetLocalVar`, `Player:GetLocalVar`, `Entity:SetNetVar`, `Entity:GetNetVar`, `Entity:SendNetVar`, `Entity:ClearNetVars`, `SetNetVar`, and `GetNetVar` for more information.
+
+@module ix.net
+]]
 
 local entityMeta = FindMetaTable("Entity")
 local playerMeta = FindMetaTable("Player")
@@ -30,12 +35,25 @@ local function CheckBadType(name, object)
     end
 end
 
+--- Retrieves a global networked variable. If it is not set, it'll return the default that you've specified.
+-- @realm shared
+-- @string key Identifier of the global variable
+-- @param default Default value to return if the global variable is not set
+-- @return Value associated with the key, or the default that was given if it doesn't exist
+-- @usage print(GetNetVar("example", "Hello World!"))
+-- > Hello World!
 function GetNetVar(key, default) -- luacheck: globals GetNetVar
     local value = ix.net.globals[key]
 
     return value != nil and value or default
 end
 
+--- Sets the value of a global networked variable.
+-- @realm server
+-- @string key Identifier of the global variable
+-- @param value New value to assign to the global variable
+-- @tab[opt=nil] receiver The players to send the networked variable to
+-- @usage SetNetVar("example", "Hello World!")
 function SetNetVar(key, value, receiver) -- luacheck: globals SetNetVar
     if (CheckBadType(key, value)) then return end
     if (GetNetVar(key) == value) then return end

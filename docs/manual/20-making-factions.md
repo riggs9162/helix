@@ -1,4 +1,4 @@
-# Creating Factions
+# Making Factions
 
 Factions in Helix represent different groups or organizations that players can belong to. For example, in a Half-Life 2 roleplay schema, you might have factions like the "Citizens" or the "[Overwatch Transhuman Arm](https://github.com/NebulousCloud/helix-hl2rp/blob/master/schema/factions/sh_ota.lua), a Combine faction from the [default Half-Life 2 schema](https://github.com/NebulousCloud/helix-hl2rp/tree/master)". This guide will show you how to create a new faction for your schema.
 

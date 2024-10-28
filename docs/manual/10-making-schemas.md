@@ -1,4 +1,4 @@
-# Creating Schemas
+# Making Schemas
 
 A schema in Helix is the backbone of your roleplaying server. It defines everything from the game’s setting to the specific gameplay mechanics available to your players. This guide will walk you through creating a schema from scratch, using the [Skeleton Schema](https://github.com/NebulousCloud/helix-skeleton/tree/master) and the [Half-Life 2 Roleplay](https://github.com/NebulousCloud/helix-hl2rp/tree/master) Schema as examples.
 
