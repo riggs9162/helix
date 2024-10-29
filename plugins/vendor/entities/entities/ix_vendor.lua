@@ -63,9 +63,7 @@ function ENT:CanAccess(client)
         local class = ix.class.list[client:GetCharacter():GetClass()]
         local classID = class and class.uniqueID
 
-        if (classID and !self.classes[classID]) then
-            return false
-        end
+        if (classID and !self.classes[classID]) then return false end
     end
 
     return true

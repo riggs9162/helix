@@ -19,9 +19,7 @@ do
     local entityMeta = FindMetaTable("Entity")
 
     function entityMeta:CheckDoorAccess(client, access)
-        if (!self:IsDoor()) then
-            return false
-        end
+        if (!self:IsDoor()) then return false end
 
         access = access or DOOR_GUEST
 

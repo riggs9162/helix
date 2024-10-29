@@ -23,9 +23,7 @@ if (CLIENT) then
     end
 
     function PLUGIN:HUDShouldDraw(name)
-        if (name == "CHudWeaponSelection") then
-            return false
-        end
+        if (name == "CHudWeaponSelection") then return false end
     end
 
     function PLUGIN:HUDPaint()
@@ -189,8 +187,6 @@ if (CLIENT) then
     end
 
     function PLUGIN:ShouldPopulateEntityInfo(entity)
-        if (self.alpha > 0) then
-            return false
-        end
+        if (self.alpha > 0) then return false end
     end
 end

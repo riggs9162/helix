@@ -71,18 +71,14 @@ if (SERVER) then
             return false
         end
 
-        if (!client:IsAdmin() and PROP_BLACKLIST[model:lower()]) then
-            return false
-        end
+        if (!client:IsAdmin() and PROP_BLACKLIST[model:lower()]) then return false end
     end
 
     function PLUGIN:PhysgunPickup(client, entity)
         local characterID = client:GetCharacter():GetID()
 
         if (entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:OnPhysgunReload(weapon, client)
@@ -90,18 +86,14 @@ if (SERVER) then
         local trace = client:GetEyeTrace()
 
         if (IsValid(trace.Entity) and trace.Entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:CanProperty(client, property, entity)
         local characterID = client:GetCharacter():GetID()
 
         if (entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:CanTool(client, trace, tool)
@@ -109,9 +101,7 @@ if (SERVER) then
         local characterID = client:GetCharacter():GetID()
 
         if (IsValid(entity) and entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:PlayerSpawnedProp(client, model, entity)
@@ -131,18 +121,14 @@ if (SERVER) then
 else
     function PLUGIN:PhysgunPickup(client, entity)
         if (entity:GetNetVar("owner", 0) != client:GetCharacter():GetID()
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:CanProperty(client, property, entity)
         local characterID = client:GetCharacter():GetID()
 
         if (entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 
     function PLUGIN:CanTool(client, trace, tool)
@@ -150,8 +136,6 @@ else
         local characterID = client:GetCharacter():GetID()
 
         if (IsValid(entity) and entity:GetNetVar("owner", 0) != characterID
-        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then
-            return false
-        end
+        and !CAMI.PlayerHasAccess(client, "Helix - Bypass Prop Protection", nil)) then return false end
     end
 end

@@ -585,18 +585,14 @@ function PANEL:OnTransfer(oldX, oldY, x, y, oldInventory, noSend)
     if (inventory) then
         item = inventory:GetItemAt(oldX, oldY)
 
-        if (!item) then
-            return false
-        end
+        if (!item) then return false end
 
         if (hook.Run("CanTransferItem", item, inventories[oldInventory.invID], inventories[self.invID]) == false) then
             return false, "notAllowed"
         end
 
         if (item.CanTransfer and
-            item:CanTransfer(inventory, inventory != inventory2 and inventory2 or nil) == false) then
-            return false
-        end
+            item:CanTransfer(inventory, inventory != inventory2 and inventory2 or nil) == false) then return false end
     end
 
     if (!noSend) then

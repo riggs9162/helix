@@ -146,9 +146,7 @@ function GM:CanPlayerInteractItem(ply, action, item, data)
     if (action == "combine") then
         local other = data[1]
 
-        if (hook.Run("CanPlayerCombineItem", ply, item, other) == false) then
-            return false
-        end
+        if (hook.Run("CanPlayerCombineItem", ply, item, other) == false) then return false end
 
         local combineItem = ix.item.instances[other]
 

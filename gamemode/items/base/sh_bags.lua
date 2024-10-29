@@ -196,15 +196,11 @@ function ITEM:CanTransfer(oldInventory, newInventory)
     local index = self:GetData("id")
 
     if (newInventory) then
-        if (newInventory.vars and newInventory.vars.isBag) then
-            return false
-        end
+        if (newInventory.vars and newInventory.vars.isBag) then return false end
 
         local index2 = newInventory:GetID()
 
-        if (index == index2) then
-            return false
-        end
+        if (index == index2) then return false end
 
         for _, v in pairs(self:GetInventory():GetItems()) do
             if (v:GetData("id") == index2) then

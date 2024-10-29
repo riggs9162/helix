@@ -40,9 +40,7 @@ if (CLIENT) then
 
     -- you need the proper permission to open the editor
     function PLUGIN:PrePACEditorOpen()
-        if (!CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage PAC", nil)) then
-            return false
-        end
+        if (!CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage PAC", nil)) then return false end
     end
 end
 

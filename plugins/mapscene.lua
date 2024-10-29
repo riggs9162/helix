@@ -61,22 +61,14 @@ if (CLIENT) then
     end
 
     local function ShouldRenderMapScene()
-        if ( !IsValid(ix.gui.characterMenu) ) then
-            return false
-        end
+        if ( !IsValid(ix.gui.characterMenu) ) then return false end
 
-        if ( IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsClosing() ) then
-            return false
-        end
+        if ( IsValid(ix.gui.characterMenu) and ix.gui.characterMenu:IsClosing() ) then return false end
 
-        if ( table.IsEmpty(PLUGIN.scenes) ) then
-            return false
-        end
+        if ( table.IsEmpty(PLUGIN.scenes) ) then return false end
 
         local can = hook.Run("ShouldRenderMapScene")
-        if (can == false) then
-            return false
-        end
+        if (can == false) then return false end
 
         return true
     end

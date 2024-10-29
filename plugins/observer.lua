@@ -100,9 +100,7 @@ if (CLIENT) then
     end
 
     function PLUGIN:DrawPhysgunBeam(client, physgun, enabled, target, bone, hitPos)
-        if (client != LocalPlayer() and client:GetMoveType() == MOVETYPE_NOCLIP) then
-            return false
-        end
+        if (client != LocalPlayer() and client:GetMoveType() == MOVETYPE_NOCLIP) then return false end
     end
 
     function PLUGIN:PrePlayerDraw(client)
@@ -130,9 +128,7 @@ else
     end
 
     function PLUGIN:CanPlayerEnterVehicle(client, vehicle, role)
-        if (client:GetMoveType() == MOVETYPE_NOCLIP) then
-            return false
-        end
+        if (client:GetMoveType() == MOVETYPE_NOCLIP) then return false end
     end
 
     function PLUGIN:PlayerNoClip(client, state)

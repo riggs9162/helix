@@ -139,9 +139,7 @@ function GM:CanPlayerUseBusiness(ply, uniqueID)
             allowed = false
         end
 
-        if ( !allowed ) then
-            return false
-        end
+        if ( !allowed ) then return false end
     end
 
     if ( itemTable.classes ) then
@@ -159,15 +157,11 @@ function GM:CanPlayerUseBusiness(ply, uniqueID)
             allowed = true
         end
 
-        if ( !allowed ) then
-            return false
-        end
+        if ( !allowed ) then return false end
     end
 
     if ( itemTable.flag ) then
-        if ( !char:HasFlags(itemTable.flag) ) then
-            return false
-        end
+        if ( !char:HasFlags(itemTable.flag) ) then return false end
     end
 
     return true

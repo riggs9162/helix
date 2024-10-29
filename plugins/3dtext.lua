@@ -87,9 +87,7 @@ if (SERVER) then
     function PLUGIN:RemoveTextByID(id)
         local info = self.list[id]
 
-        if (!info) then
-            return false
-        end
+        if (!info) then return false end
 
         net.Start("ixTextRemove")
             net.WriteUInt(id, 32)
