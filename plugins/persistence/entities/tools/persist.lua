@@ -20,10 +20,6 @@ TOOL.Information = {
     { name = "right" }
 }
 
-local function GetRealModel(entity)
-    return entity:GetClass() == "prop_effect" and entity.AttachedEntity:GetModel() or entity:GetModel()
-end
-
 function TOOL:LeftClick(trace)
     local ply = self:GetOwner()
     local entity = trace.Entity
