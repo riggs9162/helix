@@ -50,8 +50,6 @@ function TOOL:LeftClick(trace)
 
     ply:NotifyLocalized("persist_entity")
 
-    print("persisted", entity, entity:GetModel())
-
     ix.log.Add(ply, "persist", GetRealModel(entity), true)
 
     return true
