@@ -1,14 +1,16 @@
 local PLUGIN = PLUGIN
 
-TOOL.Category = "Helix"
 TOOL.Name = "#tool.persist.name"
+TOOL.Category = "Helix"
+TOOL.Desc = "#tool.persist.desc"
 
 TOOL.ClientConVar["persist"] = "1"
 
 if ( CLIENT ) then
     language.Add("tool.persist.name", "Persist")
     language.Add("tool.persist.desc", "Persist entities so they are saved on the map.")
-    language.Add("tool.persist.0", "Left click to persist an entity. Right click to unpersist an entity.")
+    language.Add("tool.persist.left", "Left click to persist an entity.")
+    language.Add("tool.persist.right", "Right click to unpersist an entity.")
     language.Add("tool.persist.persist", "Persist")
     language.Add("tool.persist.persist.help", "Persist entities so they are saved on the map.")
 end
@@ -48,6 +50,8 @@ function TOOL:LeftClick(trace)
 
     ply:NotifyLocalized("persist_entity")
 
+    print("persisted", entity, entity:GetModel())
+
     ix.log.Add(ply, "persist", GetRealModel(entity), true)
 
     return true
@@ -80,4 +84,19 @@ function TOOL:RightClick(trace)
     ix.log.Add(ply, "persist", GetRealModel(entity), false)
 
     return true
+end
+
+function TOOL:ReleaseGhostEntity()
+end
+
+function TOOL:FreezeMovement()
+end
+
+function TOOL:DrawHUD()
+end
+
+function TOOL:GetHelpText()
+end
+
+function TOOL:UpdateData()
 end
