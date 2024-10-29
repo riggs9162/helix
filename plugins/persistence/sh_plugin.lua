@@ -6,7 +6,7 @@ PLUGIN.author = "alexgrist, Riggs"
 
 PLUGIN.stored = PLUGIN.stored or {}
 
-local function GetRealModel(entity)
+function PLUGIN:GetRealModel(entity)
     return entity:GetClass() == "prop_effect" and entity.AttachedEntity:GetModel() or entity:GetModel()
 end
 
@@ -38,7 +38,7 @@ properties.Add("persist", {
 
         entity:SetNetVar("Persistent", true)
 
-        ix.log.Add(client, "persist", GetRealModel(entity), true)
+        ix.log.Add(client, "persist", self:GetRealModel(entity), true)
     end
 })
 
@@ -76,7 +76,7 @@ properties.Add("persist_end", {
 
         entity:SetNetVar("Persistent", false)
 
-        ix.log.Add(client, "persist", GetRealModel(entity), false)
+        ix.log.Add(client, "persist", self:GetRealModel(entity), false)
     end
 })
 
