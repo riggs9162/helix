@@ -171,7 +171,7 @@ end
 function meta:ResetBoneMatrix()
     for i = 0, self:GetBoneCount() - 1 do
         self:ManipulateBoneScale(i, Vector(1, 1, 1))
-        self:ManipulateBoneAngles(i, Angle(0, 0, 0))
+        self:ManipulateBoneAngles(i, angle_zero)
         self:ManipulateBonePosition(i, vector_origin)
     end
 end
@@ -695,7 +695,7 @@ end
 -- > low
 function meta:GetPingLevel()
     local ping = self:Ping()
-    
+
     if ping < 50 then
         return "low"
     elseif ping < 100 then
@@ -725,7 +725,7 @@ if (SERVER) then
     -- @usage Entity(1):FreezeFor(5) -- Freezes the player for 5 seconds
     function meta:FreezeFor(duration)
         self:Lock()
-        
+
         timer.Simple(duration, function()
             if IsValid(self) then
                 self:UnLock()
