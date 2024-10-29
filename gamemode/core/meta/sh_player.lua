@@ -166,6 +166,16 @@ function meta:ResetBodygroups()
     end
 end
 
+--- Resets all bone manipulations this player's model has to their defaults.
+-- @realm shared
+function meta:ResetBoneMatrix()
+    for i = 0, self:GetBoneCount() - 1 do
+        self:ManipulateBoneScale(i, Vector(1, 1, 1))
+        self:ManipulateBoneAngles(i, Angle(0, 0, 0))
+        self:ManipulateBonePosition(i, vector_origin)
+    end
+end
+
 --- Sets the bodygroup of this player's model by its name.
 -- @realm shared
 -- @string name Name of the bodygroup
