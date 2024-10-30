@@ -127,6 +127,44 @@ function ix.faction.GetPlayers(faction)
     return players
 end
 
+--- Retrieves the classes in a faction
+-- @realm shared
+-- @number faction Index of the faction
+-- @treturn table Table of classes in the faction
+-- @usage for _, v in ipairs(ix.faction.GetClasses(ix.faction.Get("Citizen").index) do
+--     print(v.name)
+-- end
+function ix.faction.GetClasses(faction)
+    local classes = {}
+
+    for _, v in ipairs(ix.class.list) do
+        if (v.faction == faction) then
+            table.insert(classes, v)
+        end
+    end
+
+    return classes
+end
+
+--- Retrieves the ranks in a faction
+-- @realm shared
+-- @number faction Index of the faction
+-- @treturn table Table of ranks in the faction
+-- @usage for _, v in ipairs(ix.faction.GetRanks(ix.faction.Get("Citizen").index) do
+--     print(v.name)
+-- end
+function ix.faction.GetRanks(faction)
+    local ranks = {}
+
+    for _, v in ipairs(ix.rank.list) do
+        if (v.faction == faction) then
+            table.insert(ranks, v)
+        end
+    end
+
+    return ranks
+end
+
 if (CLIENT) then
     --- Returns true if a faction requires a whitelist.
     -- @realm client
