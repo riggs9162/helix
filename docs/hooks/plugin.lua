@@ -1248,7 +1248,13 @@ end
 function SaveData()
 end
 
---- @realm client
+--- Called whenever the client changed their screen resolution.
+-- @realm client
+-- @number width New screen width
+-- @number height New screen height
+-- @usage function PLUGIN:ScreenResolutionChanged(width, height)
+-- 	print("Screen resolution changed to "..width.."x"..height)
+-- end
 function ScreenResolutionChanged(width, height)
 end
 
@@ -1393,7 +1399,13 @@ end
 function ShowEntityMenu(entity)
 end
 
---- @realm client
+--- Called whenever thirdperson has either been enabled or disabled.
+-- @realm client
+-- @bool oldValue Old value of thirdperson
+-- @bool value New value of thirdperson
+-- @usage function PLUGIN:ThirdPersonToggled(oldValue, value)
+-- 	print("Thirdperson has been toggled from "..tostring(oldValue).." to "..tostring(value))
+-- end
 function ThirdPersonToggled(oldValue, value)
 end
 
@@ -1411,10 +1423,23 @@ end
 function VoiceDistanceChanged(newValue)
 end
 
---- @realm client
+--- Able to return a new sound to play when cycling weapons.
+-- @realm client
+-- @treturn string Sound to play when cycling weapons
+-- @usage function PLUGIN:WeaponCycleSound()
+-- 	return "weapons/357/357_spin1.wav" -- Play the 357 spin sound when cycling weapons.
+-- end
 function WeaponCycleSound()
 end
 
---- @realm client
+--- Able to return a new sound to play when selecting weapons.
+-- @realm client
+-- @entity weapon Weapon that is being selected
+-- @treturn string Sound to play when selecting weapons
+-- @usage function PLUGIN:WeaponSelectSound(weapon)
+-- 	if (weapon:GetClass() == "weapon_physgun") then
+-- 		return "weapons/physcannon/physcannon_charge.wav" -- Play the physgun charge sound when selecting the physgun.
+-- 	end
+-- end
 function WeaponSelectSound(weapon)
 end
