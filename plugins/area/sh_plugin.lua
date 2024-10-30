@@ -127,6 +127,16 @@ function ix.area.GetNearestArea(position, distance)
     return "unknown location"
 end
 
+-- returns whether or not the specified position is inside the area
+function ix.area.IsInArea(position, area)
+    if (area and ix.area.stored[area]) then
+        local info = ix.area.stored[area]
+        return position:WithinAABox(info.startPosition, info.endPosition), info
+    end
+
+    return 
+end
+
 function PLUGIN:SetupAreaProperties()
     ix.area.AddType("area")
 
