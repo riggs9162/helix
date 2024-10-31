@@ -81,31 +81,19 @@ function PLUGIN:CalcView(client, origin)
             filter = client
         })
 
-        bFirstPerson = data.Hit
-
-        if (!bFirstPerson) then
-            view.origin = data.HitPos
-        end
+        view.origin = data.HitPos
     end
 
     if (bFirstPerson) then
         if (head) then
-            local position = client:GetBonePosition(head) + forward * offset + height
-            local data = {
-                start = (client:GetBonePosition(head) or Vector(0, 0, 64)) + forward * 8,
-                endpos = position + forward * offset,
-                mins = traceMin,
-                maxs = traceMax,
-                filter = client
-            }
+            client:ManipulateBoneScale(head, Vector(0.01, 0.01, 0.01))
 
-            data = util.TraceHull(data)
+            local pos, ang = client:GetBonePosition(head)
+            ang:RotateAroundAxis(ang:Right(), 270)
+            ang:RotateAroundAxis(ang:Up(), 270)
 
-            if (data.Hit) then
-                view.origin = data.HitPos
-            else
-                view.origin = position
-            end
+            view.origin = pos + ang:Up() * 4
+            view.angles = ang
         else
             view.origin = origin + forward * forwardOffset + height
         end
@@ -126,10 +114,14 @@ net.Receive("ixActEnter", function()
     PLUGIN.cameraTween = ix.tween.new(animationTime, PLUGIN, {
         cameraFraction = 1
     }, "outQuint")
+
+    LocalPlayer():ResetBoneMatrix()
 end)
 
 net.Receive("ixActLeave", function()
     PLUGIN.cameraTween = ix.tween.new(animationTime * 0.5, PLUGIN, {
         cameraFraction = 0
     }, "outQuint")
+
+    LocalPlayer():ResetBoneMatrix()
 end)
