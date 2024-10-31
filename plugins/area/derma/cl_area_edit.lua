@@ -93,6 +93,15 @@ function PANEL:Init()
         self:Submit()
     end
 
+    -- cancel button
+    self.cancelButton = self:Add("ixMenuButton")
+    self.cancelButton:SetText(L("cancel"))
+    self.cancelButton:SizeToContents()
+    self.cancelButton:Dock(BOTTOM)
+    self.cancelButton.DoClick = function()
+        self:Close()
+    end
+
     self:CreateAnimation(0.25, {
         index = 1,
         target = {currentAlpha = 255},
