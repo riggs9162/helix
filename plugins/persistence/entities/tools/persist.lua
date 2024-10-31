@@ -46,7 +46,7 @@ function TOOL:LeftClick(trace)
 
     ply:NotifyLocalized("persist_entity")
 
-    ix.log.Add(ply, "persist", GetRealModel(entity), true)
+    ix.log.Add(ply, "persist", PLUGIN:GetRealModel(entity), true)
 
     return true
 end
@@ -75,7 +75,7 @@ function TOOL:RightClick(trace)
 
     ply:NotifyLocalized("persist_unpersisted")
 
-    ix.log.Add(ply, "persist", GetRealModel(entity), false)
+    ix.log.Add(ply, "persist", PLUGIN:GetRealModel(entity), false)
 
     return true
 end
