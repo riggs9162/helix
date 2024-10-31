@@ -1,5 +1,3 @@
-local PLUGIN = PLUGIN
-
 TOOL.Name = "#tool.persist.name"
 TOOL.Category = "Helix"
 TOOL.Desc = "#tool.persist.desc"
@@ -20,11 +18,24 @@ TOOL.Information = {
     { name = "right" }
 }
 
+function TOOL:CanPersist(entity)
+    if ( entity:IsPlayer() or entity:IsVehicle() or entity.bNoPersist ) then return false end
+    if ( entity:MapCreationID() != -1 ) then return false end
+
+    return true
+end
+
 function TOOL:LeftClick(trace)
     local ply = self:GetOwner()
     local entity = trace.Entity
-    if ( !IsValid(entity) or entity:IsPlayer() or entity:IsVehicle() or entity.bNoPersist ) then return false end
-    if ( !gamemode.Call("CanProperty", ply, "persist", entity) ) then return false end
+
+    if ( !self:CanPersist(entity) ) then
+        if ( CLIENT and IsValid(entity) ) then
+            ix.util.NotifyLocalized("persist_cant_persist")
+        end
+
+        return false
+    end
 
     if ( CLIENT ) then return true end
 
@@ -33,20 +44,20 @@ function TOOL:LeftClick(trace)
         return false
     end
 
-    for k, v in ipairs(PLUGIN.stored) do
+    for k, v in ipairs(ix.persist.stored) do
         if ( v == entity ) then
             ply:NotifyLocalized("persist_already_persisted")
             return false
         end
     end
 
-    PLUGIN.stored[#PLUGIN.stored + 1] = entity
+    ix.persist.stored[#ix.persist.stored + 1] = entity
 
     entity:SetNetVar("Persistent", true)
 
     ply:NotifyLocalized("persist_entity")
 
-    ix.log.Add(ply, "persist", PLUGIN:GetRealModel(entity), true)
+    ix.log.Add(ply, "persist", ix.persist:GetRealModel(entity), true)
 
     return true
 end
@@ -54,8 +65,14 @@ end
 function TOOL:RightClick(trace)
     local ply = self:GetOwner()
     local entity = trace.Entity
-    if ( !IsValid(entity) or entity:IsPlayer() ) then return false end
-    if ( !gamemode.Call("CanProperty", ply, "persist", entity) ) then return false end
+
+    if ( !self:CanPersist(entity) ) then
+        if ( CLIENT and IsValid(entity) ) then
+            ix.util.NotifyLocalized("persist_cant_persist")
+        end
+
+        return false
+    end
 
     if ( CLIENT ) then return true end
 
@@ -64,9 +81,9 @@ function TOOL:RightClick(trace)
         return false
     end
 
-    for k, v in ipairs(PLUGIN.stored) do
+    for k, v in ipairs(ix.persist.stored) do
         if ( v == entity ) then
-            table.remove(PLUGIN.stored, k)
+            table.remove(ix.persist.stored, k)
             break
         end
     end
@@ -75,7 +92,7 @@ function TOOL:RightClick(trace)
 
     ply:NotifyLocalized("persist_unpersisted")
 
-    ix.log.Add(ply, "persist", PLUGIN:GetRealModel(entity), false)
+    ix.log.Add(ply, "persist", ix.persist:GetRealModel(entity), false)
 
     return true
 end

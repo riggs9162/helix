@@ -18,6 +18,7 @@ properties.Add("persist", {
     Filter = function(self, entity, client)
         if (entity:IsPlayer() or entity:IsVehicle() or entity.bNoPersist) then return false end
         if (!gamemode.Call("CanProperty", client, "persist", entity)) then return false end
+        if (entity:MapCreationID() == -1) then return false end
 
         return !entity:GetNetVar("Persistent", false)
     end,
@@ -38,7 +39,7 @@ properties.Add("persist", {
 
         entity:SetNetVar("Persistent", true)
 
-        ix.log.Add(client, "persist", self:GetRealModel(entity), true)
+        ix.log.Add(client, "persist", PLUGIN:GetRealModel(entity), true)
     end
 })
 
@@ -50,6 +51,7 @@ properties.Add("persist_end", {
     Filter = function(self, entity, client)
         if (entity:IsPlayer()) then return false end
         if (!gamemode.Call("CanProperty", client, "persist", entity)) then return false end
+        if (entity:MapCreationID() == -1) then return false end
 
         return entity:GetNetVar("Persistent", false)
     end,
@@ -76,7 +78,7 @@ properties.Add("persist_end", {
 
         entity:SetNetVar("Persistent", false)
 
-        ix.log.Add(client, "persist", self:GetRealModel(entity), false)
+        ix.log.Add(client, "persist", PLUGIN:GetRealModel(entity), false)
     end
 })
 
@@ -86,3 +88,5 @@ end
 
 ix.util.Include("sv_plugin.lua")
 ix.util.Include("sv_hooks.lua")
+
+ix.persist = PLUGIN
