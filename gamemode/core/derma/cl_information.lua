@@ -236,9 +236,14 @@ function PANEL:Update(character)
     end
 
     if (self.rank) then
-        self.rank:SetLabelText(L("rank"))
-        self.rank:SetText(L(rank.name))
-        self.rank:SizeToContents()
+
+        if (rank and rank.name != faction.name) then
+            self.rank:SetLabelText(L("rank"))
+            self.rank:SetText(L(rank.name))
+            self.rank:SizeToContents()
+        else
+            self.rank:SetVisible(false)
+        end
     end
 
     if (self.money) then
