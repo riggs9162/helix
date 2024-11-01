@@ -133,6 +133,51 @@ ix.command.Add("CharTakeFlag", {
     end
 })
 
+ix.command.Add("CharGiveAllFlags", {
+    description = "@cmdCharGiveAllFlags",
+    privilege = "Manage Character Flags",
+    superAdminOnly = true,
+    arguments = ix.type.character,
+    OnRun = function(self, client, target)
+        for k, _ in SortedPairs(ix.flag.list) do
+            if (!target:HasFlags(k)) then
+                available = available .. k
+            end
+        end
+
+        target:GiveFlags(available)
+
+        for _, v in player.Iterator() do
+            if (self:OnCheckAccess(v) or v == target:GetPlayer()) then
+                v:NotifyLocalized("flagGiveAll", client:GetName(), target:GetName())
+            end
+        end
+    end
+})
+
+ix.command.Add("CharTakeAllFlags", {
+    description = "@cmdCharTakeAllFlags",
+    privilege = "Manage Character Flags",
+    superAdminOnly = true,
+    arguments = ix.type.character,
+    OnRun = function(self, client, target)
+        for k, _ in SortedPairs(ix.flag.list) do
+            if (target:HasFlags(k)) then
+                available = available .. k
+            end
+        end
+
+        target:TakeFlags(available)
+
+        for _, v in player.Iterator() do
+            if (self:OnCheckAccess(v) or v == target:GetPlayer()) then
+                v:NotifyLocalized("flagTakeAll", client:GetName(), target:GetName())
+            end
+        end
+    end
+})
+
+
 ix.command.Add("ToggleRaise", {
     description = "@cmdToggleRaise",
     OnRun = function(self, client, arguments)
