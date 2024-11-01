@@ -236,7 +236,6 @@ function PANEL:Update(character)
     end
 
     if (self.rank) then
-
         if (rank and rank.name != faction.name) then
             self.rank:SetLabelText(L("rank"))
             self.rank:SetText(L(rank.name))
