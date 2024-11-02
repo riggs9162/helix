@@ -1558,7 +1558,7 @@ function ix.util.IsValidModel(model)
     local files, directories = file.Find("models/*", "GAME")
 
     for _, found in ipairs(files) do
-        if ( self.StringMatches(found, model) ) then
+        if ( ix.util.StringMatches(found, model) ) then
             return true
         end
     end
@@ -1567,7 +1567,7 @@ function ix.util.IsValidModel(model)
         local files = file.Find("models/" .. directory .. "/*", "GAME")
 
         for _, found in ipairs(files) do
-            if ( self.StringMatches(found, model) ) then
+            if ( ix.util.StringMatches(found, model) ) then
                 return true
             end
         end
