@@ -315,13 +315,29 @@ function GM:PlayerModelChanged(ply, model)
     UpdateAnimationTable(ply)
 end
 
+function GM:HandlePlayerDucking(ply, velocity, plyTable)
+    if ( !plyTable ) then
+        plyTable = ply:GetTable()
+    end
+
+    if ( !ply:IsFlagSet(FL_DUCKING) ) then
+        return false
+    end
+
+    if ( velocity:Length2DSqr() > 0.25 ) then
+        plyTable.CalcIdeal = ACT_MP_CROUCHWALK
+    else
+        plyTable.CalcIdeal = ACT_MP_CROUCH_IDLE
+    end
+
+    return true
+end
+
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
 
 function GM:CalcMainActivity(ply, velocity)
-    local plyInfo = ply:GetTable()
     local forcedSequence = ply:GetNetVar("forcedSequence")
-
     if ( forcedSequence ) then
         if ( ply:GetSequence() != forcedSequence ) then
             ply:SetCycle(0)
@@ -332,6 +348,7 @@ function GM:CalcMainActivity(ply, velocity)
 
     ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - ply:EyeAngles()[2]))
 
+    local plyInfo = ply:GetTable()
     plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
 
     -- we could call the baseclass function, but it's faster to do it this way
@@ -346,8 +363,8 @@ function GM:CalcMainActivity(ply, velocity)
     else
         local len2D = velocity:Length2DSqr()
 
-        if ( velocity[3] != 0 ) then
-            plyInfo.CalcIdeal = ACT_MP_SWIM
+        if ( velocity[3] != 0 and len2D <= 16 ^ 2 ) then
+            plyInfo.CalcIdeal = ACT_GLIDE
         elseif ( len2D <= 0.25 ) then
             plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
         elseif ( len2D > 100 ^ 2 ) then
@@ -363,58 +380,56 @@ function GM:CalcMainActivity(ply, velocity)
     plyInfo.CalcSeqOverride = -1
 
     plyInfo.m_bWasOnGround = ply:OnGround()
-    plyInfo.m_bWasNoclipping = (ply:GetMoveType() == MOVETYPE_NOCLIP and !ply:InVehicle())
+    plyInfo.m_bWasNoclipping = ( ply:GetMoveType() == MOVETYPE_NOCLIP and !ply:InVehicle() )
 
     return plyInfo.CalcIdeal, sequenceOverride or plyInfo.CalcSeqOverride or -1
 end
 
 function GM:UpdateAnimation(ply, velocity, maxSeqGroundSpeed)
-	if ( ply:GetNetVar("forcedSequence") ) then
-		ply:SetPlaybackRate(ply:GetNetVar("sequenceSpeed", 1))
-	else
-		local len = velocity:Length()
-		local movement = 1.0
+    if ( ply:GetNetVar("forcedSequence") ) then
+        ply:SetPlaybackRate(ply:GetNetVar("sequenceSpeed", 1))
+    else
+        local len = velocity:Length()
+        local movement = 1.0
 
-		if ( len > 0.2 ) then
-			movement = (len / maxSeqGroundSpeed)
-		end
+        if ( len > 0.2 ) then
+            movement = (len / maxSeqGroundSpeed)
+        end
 
-		local rate = math.min(movement, 2)
+        local rate = math.min(movement, 2)
 
-		-- if we're under water we want to constantly be swimming..
-		if ( ply:WaterLevel() >= 2 ) then
-			rate = math.max(rate, 0.5)
-		elseif ( !ply:IsOnGround() and len >= 1000 ) then
-			rate = 0.1
-		end
+        -- if we're under water we want to constantly be swimming..
+        if ( ply:WaterLevel() >= 2 ) then
+            rate = math.max(rate, 0.5)
+        elseif ( !ply:IsOnGround() and len >= 1000 ) then
+            rate = 0.1
+        end
 
-		ply:SetPlaybackRate(rate)
-	end
+        ply:SetPlaybackRate(rate)
+    end
 
-	-- We only need to do this clientside..
-	if ( CLIENT ) then
-		if ( ply:InVehicle() ) then
-			--
-			-- This is used for the 'rollercoaster' arms
-			--
-			local Vehicle = ply:GetVehicle()
-			local Velocity = Vehicle:GetVelocity()
-			local fwd = Vehicle:GetUp()
-			local dp = fwd:Dot(Vector(0, 0, 1))
+    -- We only need to do this clientside..
+    if ( CLIENT ) then
+        if ( ply:InVehicle() ) then
+            -- This is used for the 'rollercoaster' arms
+            local Vehicle = ply:GetVehicle()
+            local Velocity = Vehicle:GetVelocity()
+            local fwd = Vehicle:GetUp()
+            local dp = fwd:Dot(Vector(0, 0, 1))
 
-			ply:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
+            ply:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
 
-			-- Pass the vehicles steer param down to the player
-			local steer = Vehicle:GetPoseParameter("vehicle_steer")
-			steer = steer * 2 - 1 -- convert from 0..1 to -1..1
-			if ( Vehicle:GetClass() == "prop_vehicle_prisoner_pod" ) then steer = 0 ply:SetPoseParameter("aim_yaw", math.NormalizeAngle(ply:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
-			ply:SetPoseParameter("vehicle_steer", steer)
+            -- Pass the vehicles steer param down to the player
+            local steer = Vehicle:GetPoseParameter("vehicle_steer")
+            steer = steer * 2 - 1 -- convert from 0..1 to -1..1
+            if ( Vehicle:GetClass() == "prop_vehicle_prisoner_pod" ) then steer = 0 ply:SetPoseParameter("aim_yaw", math.NormalizeAngle(ply:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
+            ply:SetPoseParameter("vehicle_steer", steer)
 
-		end
+        end
 
-		GAMEMODE:GrabEarAnimation(ply)
-		GAMEMODE:MouthMoveAnimation(ply)
-	end
+        GAMEMODE:GrabEarAnimation(ply)
+        GAMEMODE:MouthMoveAnimation(ply)
+    end
 end
 
 local KEY_BLACKLIST = IN_ATTACK + IN_ATTACK2
