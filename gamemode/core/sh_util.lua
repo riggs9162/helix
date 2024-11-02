@@ -1548,5 +1548,33 @@ function ix.util.FindFilesRecursive(dir)
     return results
 end
 
+--- Searches through the game's mounted content for the given model.
+-- @realm shared
+-- @string model The model to search for.
+-- @treturn bool Whether or not the model is valid.
+-- @usage print(ix.util.IsValidModel("models/props_c17/oildrum001.mdl"))
+-- > true
+function ix.util.IsValidModel(model)
+    local files, directories = file.Find("models/*", "GAME")
+
+    for _, found in ipairs(files) do
+        if ( self.StringMatches(found, model) ) then
+            return true
+        end
+    end
+
+    for _, directory in ipairs(directories) do
+        local files = file.Find("models/" .. directory .. "/*", "GAME")
+
+        for _, found in ipairs(files) do
+            if ( self.StringMatches(found, model) ) then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 ix.util.Include("helix/gamemode/core/meta/sh_entity.lua")
 ix.util.Include("helix/gamemode/core/meta/sh_player.lua")
