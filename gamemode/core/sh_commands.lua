@@ -139,6 +139,8 @@ ix.command.Add("CharGiveAllFlags", {
     superAdminOnly = true,
     arguments = ix.type.character,
     OnRun = function(self, client, target)
+        local available = ""
+
         for k, _ in SortedPairs(ix.flag.list) do
             if (!target:HasFlags(k)) then
                 available = available .. k
@@ -161,6 +163,8 @@ ix.command.Add("CharTakeAllFlags", {
     superAdminOnly = true,
     arguments = ix.type.character,
     OnRun = function(self, client, target)
+        local available = ""
+
         for k, _ in SortedPairs(ix.flag.list) do
             if (target:HasFlags(k)) then
                 available = available .. k
