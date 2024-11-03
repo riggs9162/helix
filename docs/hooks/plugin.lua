@@ -695,6 +695,18 @@ end
 function GetSalaryAmount(client, faction)
 end
 
+--- Called whenever a player gets his salary.
+-- @realm server
+-- @player client Player that is receiving salary
+-- @tab faction Faction of the player's character
+-- @number salary Salary amount
+-- @see GetSalaryAmount CanPlayerEarnSalary
+-- @usage function PLUGIN:OnPlayerEarnSalary(client, faction, salary)
+-- 	client:Notify("You have received a salary of "..salary..".")
+-- end
+function OnPlayerEarnSalary(client, faction, salary)
+end
+
 --- @realm client
 function GetTypingIndicator(character, text)
 end
