@@ -700,7 +700,7 @@ end
 -- @player client Player that is receiving salary
 -- @tab faction Faction of the player's character
 -- @number salary Salary amount
--- @see GetSalaryAmount CanPlayerEarnSalary
+-- @see CanPlayerEarnSalary
 -- @usage function PLUGIN:OnPlayerEarnSalary(client, faction, salary)
 -- 	client:Notify("You have received a salary of "..salary..".")
 -- end
