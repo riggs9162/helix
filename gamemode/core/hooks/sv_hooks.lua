@@ -280,6 +280,7 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
 
                     char:GiveMoney(pay)
                     ply:NotifyLocalized("salary", ix.currency.Get(pay))
+                    hook.Run("OnPlayerEarnSalary", ply, faction, pay)
                 end
             else
                 timer.Remove(uniqueID)
