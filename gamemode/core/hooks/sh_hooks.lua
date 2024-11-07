@@ -228,7 +228,7 @@ end
 
 local function UpdatePlayerHoldType(ply, weapon)
     if ( !IsValid(ply) ) then return end
-    
+
     local plyInfo = ply:GetTable()
 
     weapon = weapon or ply:GetActiveWeapon()
@@ -670,9 +670,6 @@ end
 
 function widgets.PlayerTick()
 end
-
-hook.Remove("PlayerTick", "TickWidgets")
-hook.Remove("PostDrawEffects", "RenderWidgets")
 
 if ( SERVER ) then
     util.AddNetworkString("PlayerVehicle")
