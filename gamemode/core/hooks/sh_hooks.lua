@@ -83,6 +83,10 @@ function GM:TranslateActivity(ply, act)
 
     if ( plyInfo.ixAnimTable ) then
         local glide = plyInfo.ixAnimGlide
+        local ladderIdle = plyInfo.ixAnimLadderIdle
+        local ladderMove = plyInfo.ixAnimLadderMove
+        local ladderUp = plyInfo.ixAnimLadderUp
+        local ladderDown = plyInfo.ixAnimLadderDown
 
         if ( ply:InVehicle() ) then
             act = plyInfo.ixAnimTable[1]
@@ -105,6 +109,62 @@ function GM:TranslateActivity(ply, act)
                     plyInfo.CalcSeqOverride = ply:LookupSequence(act2)
                 else
                     return act2
+                end
+            end
+        elseif ( ply:GetMoveType() == MOVETYPE_LADDER and ladderIdle ) then
+            local velocity = ply:GetVelocity()
+            local len2D = velocity:Length2DSqr()
+
+            -- Check if we are moving up or down the ladder
+            ply.ixLadderVelocity = ply.ixLadderVelocity or Vector(0, 0, 0)
+            ply.ixLadderNextCheck = ply.ixLadderNextCheck or CurTime()
+            ply.ixLadderDir = ply.ixLadderDir or "idle"
+
+            if ( CurTime() >= ply.ixLadderNextCheck ) then
+                ply.ixLadderNextCheck = CurTime() + 0.1
+
+                if ( velocity.z > 10 ) then
+                    ply.ixLadderDir = "up"
+                elseif ( velocity.z < -10 ) then
+                    ply.ixLadderDir = "down"
+                else
+                    ply.ixLadderDir = "idle"
+                end
+            end
+
+            if ( len2D <= 0.25 ) then
+                if ( ply.ixLadderDir == "up" ) then
+                    if ( ladderUp ) then
+                        if ( isstring(ladderUp) ) then
+                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderUp)
+                        else
+                            return ladderUp
+                        end
+                    end
+                elseif ( ply.ixLadderDir == "down" ) then
+                    if ( ladderDown ) then
+                        if ( isstring(ladderDown) ) then
+                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderDown)
+                        else
+                            return ladderDown
+                        end
+                    end
+                else
+                    if ( ladderIdle ) then
+                        if ( isstring(ladderIdle) ) then
+                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderIdle)
+                        else
+                            return ladderIdle
+                        end
+                    end
+                end
+            else
+                if ( ladderMove ) then
+                    if ( isstring(ladderMove) ) then
+                        plyInfo.CalcSeqOverride = ply:LookupSequence(ladderMove)
+                    else
+                        return ladderMove
+                    end
                 end
             end
         elseif ( glide ) then
@@ -261,6 +321,10 @@ local function UpdateAnimationTable(ply, vehicle)
     end
 
     plyInfo.ixAnimGlide = baseTable["glide"]
+    plyInfo.ixAnimLadderIdle = baseTable["ladder_idle"]
+    plyInfo.ixAnimLadderMove = baseTable["ladder_move"]
+    plyInfo.ixAnimLadderUp = baseTable["ladder_up"]
+    plyInfo.ixAnimLadderDown = baseTable["ladder_down"]
 end
 
 function GM:PlayerWeaponChanged(ply, weapon)
@@ -367,7 +431,7 @@ function GM:CalcMainActivity(ply, velocity)
             plyInfo.CalcIdeal = ACT_GLIDE
         elseif ( len2D <= 0.25 ) then
             plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
-        elseif ( len2D > 100 ^ 2 ) then
+        elseif ( len2D > ( ix.config.Get("walkSpeed") * 1.1 ) ^ 2 ) then
             plyInfo.CalcIdeal = ACT_MP_RUN
         else
             plyInfo.CalcIdeal = ACT_MP_WALK
