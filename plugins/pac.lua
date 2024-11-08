@@ -207,8 +207,9 @@ else
                 local character = v:GetCharacter()
 
                 if (character) then
-                    local parts = v:GetParts()
+                    if ( v:GetNoDraw() ) then continue end
 
+                    local parts = v:GetParts()
                     for k2, _ in pairs(parts) do
                         AttachPart(v, k2)
                     end
