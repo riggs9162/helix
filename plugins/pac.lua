@@ -196,19 +196,23 @@ else
         end
     end
 
+    local nextRun = 0
     hook.Add("Think", "ix_pacupdate", function()
         if (!pac) then
             hook.Remove("Think", "ix_pacupdate")
             return
         end
 
+        if ( nextRun > CurTime() ) then return end
+
         if (IsValid(pac.LocalPlayer)) then
             for _, v in player.Iterator() do
                 local character = v:GetCharacter()
 
                 if (character) then
-                    local parts = v:GetParts()
+                    if ( v:GetNoDraw() ) then continue end
 
+                    local parts = v:GetParts()
                     for k2, _ in pairs(parts) do
                         AttachPart(v, k2)
                     end
@@ -217,6 +221,8 @@ else
 
             hook.Remove("Think", "ix_pacupdate")
         end
+
+        nextRun = CurTime() + 0.1
     end)
 
     net.Receive("ixPartWear", function(length)
