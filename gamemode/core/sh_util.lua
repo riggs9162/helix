@@ -62,6 +62,13 @@ function ix.util.Include(fileName, realm)
         else
             return include(fileName)
         end
+    -- If we don't specify a realm, we include it on both.
+    else
+        if (SERVER) then
+            AddCSLuaFile(fileName)
+        end
+
+        return include(fileName)
     end
 end
 
