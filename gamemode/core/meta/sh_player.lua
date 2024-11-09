@@ -718,6 +718,14 @@ function meta:IsInCombat()
     return self:SetNetVar("lastCombatTime", 0) + 10 > CurTime()
 end
 
+function meta:ResetSubMaterials()
+    for k in ipairs(self:GetMaterials()) do
+        if (self:GetSubMaterial(k - 1) != "") then
+            self:SetSubMaterial(k - 1)
+        end
+    end
+end
+
 if (SERVER) then
     --- Freezes the player for a specific duration.
     -- @realm server

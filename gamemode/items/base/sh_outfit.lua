@@ -117,14 +117,6 @@ function ITEM:AddOutfit(client)
     self:OnEquipped()
 end
 
-local function ResetSubMaterials(client)
-    for k, _ in ipairs(client:GetMaterials()) do
-        if (client:GetSubMaterial(k - 1) != "") then
-            client:SetSubMaterial(k - 1)
-        end
-    end
-end
-
 function ITEM:RemoveOutfit(client)
     local character = client:GetCharacter()
 
@@ -144,7 +136,7 @@ function ITEM:RemoveOutfit(client)
     end
 
     -- remove outfit submaterials
-    ResetSubMaterials(client)
+    client:ResetSubMaterials()
 
     local groups = {}
 
