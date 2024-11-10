@@ -61,6 +61,20 @@ function meta:IsLocked()
     return false
 end
 
+function meta:InheritBodygroups(entity)
+    for _, v in ipairs(entity:GetBodyGroups() or {}) do
+        self:SetBodygroup(v.id, entity:GetBodygroup(v.id))
+    end
+end
+
+function meta:InheritMaterials(entity)
+    self:SetMaterial(entity:GetMaterial())
+
+    for k, v in ipairs(entity:GetMaterials()) do
+        self:SetSubMaterial(k - 1, entity:GetSubMaterial(k - 1))
+    end
+end
+
 if (SERVER) then
     --- Returns the neighbouring door entity for double doors.
     -- @realm shared
