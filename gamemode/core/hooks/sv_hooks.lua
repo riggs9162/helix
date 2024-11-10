@@ -2,6 +2,7 @@ util.AddNetworkString("ixPlayerDeath")
 util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixPlayerEndVoice")
 util.AddNetworkString("ixStartChat")
+util.AddNetworkString("ixFinishChat")
 
 function GM:PlayerInitialSpawn(ply)
     ply.ixJoinTime = RealTime()
