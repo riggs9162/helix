@@ -973,6 +973,17 @@ function GM:PlayerEndVoice(target)
     net.SendToServer()
 end
 
+function GM:StartChat(bTeamChat)
+    net.Start("ixStartChat")
+        net.WriteBool(bTeamChat)
+    net.SendToServer()
+end
+
+function GM:FinishChat()
+    net.Start("ixFinishChat")
+    net.SendToServer()
+end
+
 gameevent.Listen("player_spawn")
 hook.Add("player_spawn", "ixPlayerSpawn", function(data)
     local ply = Player(data.userid)

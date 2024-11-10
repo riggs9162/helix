@@ -1,6 +1,7 @@
 util.AddNetworkString("ixPlayerDeath")
 util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixPlayerEndVoice")
+util.AddNetworkString("ixStartChat")
 
 function GM:PlayerInitialSpawn(ply)
     ply.ixJoinTime = RealTime()
@@ -1045,4 +1046,24 @@ net.Receive("ixPlayerEndVoice", function(len)
     if ( !target:Alive() ) then return end
 
     hook.Run("PlayerEndVoice", target)
+end)
+
+net.Receive("ixStartChat", function(len, ply)
+    if ( !IsValid(ply) ) then return end
+
+    local character = ply:GetCharacter()
+    if ( !character ) then return end
+
+    local bTeamChat = net.ReadBool()
+
+    hook.Run("StartChat", ply, bTeamChat)
+end)
+
+net.Receive("ixFinishChat", function(len, ply)
+    if ( !IsValid(ply) ) then return end
+
+    local character = ply:GetCharacter()
+    if ( !character ) then return end
+
+    hook.Run("FinishChat", ply)
 end)
