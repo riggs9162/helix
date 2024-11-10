@@ -961,6 +961,18 @@ function GM:HUDDrawTargetID()
     return false
 end
 
+function GM:PlayerStartVoice(target)
+    net.Start("ixPlayerStartVoice")
+        net.WritePlayer(target)
+    net.SendToServer()
+end
+
+function GM:PlayerEndVoice(target)
+    net.Start("ixPlayerEndVoice")
+        net.WritePlayer(target)
+    net.SendToServer()
+end
+
 gameevent.Listen("player_spawn")
 hook.Add("player_spawn", "ixPlayerSpawn", function(data)
     local ply = Player(data.userid)

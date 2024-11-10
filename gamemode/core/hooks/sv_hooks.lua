@@ -1,4 +1,6 @@
 util.AddNetworkString("ixPlayerDeath")
+util.AddNetworkString("ixPlayerStartVoice")
+util.AddNetworkString("ixPlayerEndVoice")
 
 function GM:PlayerInitialSpawn(ply)
     ply.ixJoinTime = RealTime()
@@ -1020,3 +1022,31 @@ function GM:DatabaseConnectionFailed()
     -- Set a net var so the client knows that the database connection failed.
     SetNetVar("fatalError", "Database connection failed")
 end
+
+net.Receive("ixPlayerStartVoice", function(len)
+    if ( !ix.config.Get("allowVoice") ) then return end
+
+    local target = net.ReadPlayer()
+    if ( !IsValid(target) ) then return end
+
+    local char_target = target:GetCharacter()
+    if ( !char_target ) then return end
+
+    if ( !target:Alive() ) then return end
+
+    hook.Run("PlayerStartVoice", target)
+end)
+
+net.Receive("ixPlayerEndVoice", function(len)
+    if ( !ix.config.Get("allowVoice") ) then return end
+
+    local target = net.ReadPlayer()
+    if ( !IsValid(target) ) then return end
+
+    local char_target = target:GetCharacter()
+    if ( !char_target ) then return end
+
+    if ( !target:Alive() ) then return end
+
+    hook.Run("PlayerEndVoice", target)
+end)
