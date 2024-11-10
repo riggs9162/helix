@@ -1024,8 +1024,6 @@ function GM:DatabaseConnectionFailed()
 end
 
 net.Receive("ixPlayerStartVoice", function(len)
-    if ( !ix.config.Get("allowVoice") ) then return end
-
     local target = net.ReadPlayer()
     if ( !IsValid(target) ) then return end
 
@@ -1038,8 +1036,6 @@ net.Receive("ixPlayerStartVoice", function(len)
 end)
 
 net.Receive("ixPlayerEndVoice", function(len)
-    if ( !ix.config.Get("allowVoice") ) then return end
-
     local target = net.ReadPlayer()
     if ( !IsValid(target) ) then return end
 
