@@ -31,8 +31,8 @@ end
 --- Removes the specified Spawnflags from the Entity.
 -- @realm shared
 -- @param All spawn flags you want to remove from the entity.
--- @usage entity:RemoveSpawnFlag(256, 512) // Can be found for 'npc_turret_floor' here: https://developer.valvesoftware.com/wiki/Npc_turret_floor#Flags
-function meta:RemoveSpawnFlag(...)
+-- @usage entity:RemoveSpawnFlags(256, 512) // Can be found for 'npc_turret_floor' here: https://developer.valvesoftware.com/wiki/Npc_turret_floor#Flags
+function meta:RemoveSpawnFlags(...)
     self:SetKeyValue("spawnflags", bit.band(self:GetSpawnFlags(), bit.bnot(...)))
 end
 
