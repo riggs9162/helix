@@ -621,7 +621,7 @@ else
         local autocomplete = {}
         local command = string.Explode(" ", arguments)[1]
 
-        for _, v in pairs(ix.command.FindAll(command, true, true)) do
+        for _, v in ipairs(ix.command.FindAll(command, true, true)) do
             if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then continue end
 
             if (arguments:find(v.uniqueID, 1, true) == 1) then
