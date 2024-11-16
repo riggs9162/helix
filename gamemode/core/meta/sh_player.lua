@@ -466,10 +466,11 @@ if (SERVER) then
     -- get back up manually
     -- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
     -- the same number as `time` to disable getting up manually entirely
-    function meta:SetRagdolled(bState, time, getUpGrace)
+    function meta:SetRagdolled(bState, time, getUpGrace, actionText)
         if (!self:Alive()) then return end
 
         getUpGrace = getUpGrace or time or 5
+        actionText = actionText or "@wakingUp"
 
         if (bState) then
             if (IsValid(self.ixRagdoll)) then
@@ -554,7 +555,7 @@ if (SERVER) then
                 entity.ixStart = CurTime()
                 entity.ixFinish = entity.ixStart + time
 
-                self:SetAction("@wakingUp", nil, nil, entity.ixStart, entity.ixFinish)
+                self:SetAction(actionText, nil, nil, entity.ixStart, entity.ixFinish)
             end
 
             if (IsValid(self:GetActiveWeapon())) then
@@ -605,7 +606,7 @@ if (SERVER) then
 
                             return
                         elseif (entity.ixPausing) then
-                            self:SetAction("@wakingUp", time)
+                            self:SetAction(actionText, time)
                             entity.ixPausing = false
                         end
 
