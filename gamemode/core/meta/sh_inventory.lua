@@ -541,26 +541,22 @@ end
 -- @treturn table The items this `Inventory` has.
 function META:GetItems(onlyMain)
     local items = {}
-    local slots = self.slots
 
-    for _, v in ipairs(slots) do
-        for _, v2 in ipairs(v) do
+    for _, v in pairs(self.slots) do
+        for _, v2 in pairs(v) do
             if (istable(v2) and !items[v2.id]) then
                 items[v2.id] = v2
+
                 v2.data = v2.data or {}
-
-                if ( onlyMain ) then continue end
-
                 local isBag = (((v2.base == "base_bags") or v2.isBag) and v2.data.id)
-                if (isBag and isBag != self:GetID() ) then
+
+                if (isBag and isBag != self:GetID() and onlyMain != true) then
                     local bagInv = ix.item.inventories[isBag]
 
                     if (bagInv) then
-                        for bagItemID, bagItem in pairs(bagInv:GetItems()) do
-                            if not items[bagItemID] then
-                                items[bagItemID] = bagItem
-                            end
-                        end
+                        local bagItems = bagInv:GetItems()
+
+                        table.Merge(items, bagItems)
                     end
                 end
             end
