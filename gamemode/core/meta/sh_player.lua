@@ -466,10 +466,11 @@ if (SERVER) then
     -- get back up manually
     -- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
     -- the same number as `time` to disable getting up manually entirely
-    function meta:SetRagdolled(bState, time, getUpGrace, actionText)
+    function meta:SetRagdolled(bState, time, getUpGrace, bAction, actionText)
         if (!self:Alive()) then return end
 
         getUpGrace = getUpGrace or time or 5
+        bAction = bAction or true
         actionText = actionText or "@wakingUp"
 
         if (bState) then
@@ -551,7 +552,7 @@ if (SERVER) then
                 entity.ixGrace = CurTime() + getUpGrace
             end
 
-            if (time and time > 0) then
+            if (time and time > 0 and bAction) then
                 entity.ixStart = CurTime()
                 entity.ixFinish = entity.ixStart + time
 
@@ -598,16 +599,18 @@ if (SERVER) then
 
                         self:SetPos(entity:GetPos())
 
-                        if (velocity:Length2D() >= 8) then
-                            if (!entity.ixPausing) then
-                                self:SetAction()
-                                entity.ixPausing = true
-                            end
+                        if ( bAction ) then
+                            if (velocity:Length2D() >= 8) then
+                                if (!entity.ixPausing) then
+                                    self:SetAction()
+                                    entity.ixPausing = true
+                                end
 
-                            return
-                        elseif (entity.ixPausing) then
-                            self:SetAction(actionText, time)
-                            entity.ixPausing = false
+                                return
+                            elseif (entity.ixPausing) then
+                                self:SetAction(actionText, time)
+                                entity.ixPausing = false
+                            end
                         end
 
                         time = time - 0.33
