@@ -15,7 +15,10 @@ ix.db = ix.db or {
 
 ix.db.config = ix.config.server.database or {}
 
-function ix.db.Connect()
+function ix.db.Connect(folder)
+    ix.config.server = folder and ix.yaml.Read("gamemodes/" .. folder.. "/config.yml") or ix.config.server
+    ix.db.config = ix.config.server.database or ix.db.config
+
     ix.db.config.adapter = ix.db.config.adapter or "sqlite"
 
     local dbmodule = ix.db.config.adapter
@@ -157,7 +160,7 @@ end
 
 hook.Add("InitPostEntity", "ixDatabaseConnect", function()
     -- Connect to the database using SQLite, mysqoo, or tmysql4.
-    ix.db.Connect()
+    ix.db.Connect(Schema.folder)
 end)
 
 local resetCalled = 0
