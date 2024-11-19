@@ -470,7 +470,7 @@ if (SERVER) then
         if (!self:Alive()) then return end
 
         getUpGrace = getUpGrace or time or 5
-        bAction = bAction or true
+        if ( bAction == nil ) then bAction = true end
         actionText = actionText or "@wakingUp"
 
         if (bState) then
