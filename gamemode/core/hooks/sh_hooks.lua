@@ -83,24 +83,6 @@ function GM:TranslateActivity(ply, act)
 
     if ( plyInfo.ixAnimTable ) then
         local glide = plyInfo.ixAnimGlide
-        local ladderIdle = plyInfo.ixAnimLadderIdle
-        local ladderMove = plyInfo.ixAnimLadderMove
-        local ladderUp = plyInfo.ixAnimLadderUp
-        local ladderDown = plyInfo.ixAnimLadderDown
-
-        local pos = ply:WorldSpaceCenter()
-        local ang = ply:EyeAngles()
-        ang.p = 0
-
-        local trace = util.TraceLine({
-            start = pos,
-            endpos = pos + ang:Forward() * 48,
-            filter = ply,
-            mask = MASK_PLAYERSOLID
-        })
-
-        debugoverlay.Line(trace.StartPos, trace.HitPos, 0.1, Color(255, 0, 0), true)
-        debugoverlay.Cross(trace.HitPos, 5, 0.1, trace.Hit and Color(0, 255, 0) or Color(255, 0, 0), true)
 
         if ( ply:InVehicle() ) then
             act = plyInfo.ixAnimTable[1]
@@ -125,7 +107,36 @@ function GM:TranslateActivity(ply, act)
                     return act2
                 end
             end
-        elseif ( ply:GetMoveType() == MOVETYPE_LADDER and trace.Hit ) then
+        elseif ( ply:GetMoveType() == MOVETYPE_LADDER ) then
+            local ladderIdle = plyInfo.ixAnimLadderIdle
+            local ladderMove = plyInfo.ixAnimLadderMove
+            local ladderUp = plyInfo.ixAnimLadderUp
+            local ladderDown = plyInfo.ixAnimLadderDown
+    
+            local pos = ply:WorldSpaceCenter()
+            local ang = ply:EyeAngles()
+            ang.p = 0
+    
+            local trace = util.TraceLine({
+                start = pos,
+                endpos = pos + ang:Forward() * 48,
+                filter = ply,
+                mask = MASK_PLAYERSOLID
+            })
+    
+            debugoverlay.Line(trace.StartPos, trace.HitPos, 0.1, Color(255, 0, 0), true)
+            debugoverlay.Cross(trace.HitPos, 5, 0.1, trace.Hit and Color(0, 255, 0) or Color(255, 0, 0), true)
+
+            if ( !trace.Hit ) then
+                if ( glide ) then
+                    if ( isstring(glide) ) then
+                        plyInfo.CalcSeqOverride = ply:LookupSequence(glide)
+                    else
+                        return glide
+                    end
+                end
+            end
+
             local velocity = ply:GetVelocity()
             local len2D = velocity:Length2DSqr()
 
