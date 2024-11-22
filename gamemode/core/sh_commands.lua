@@ -933,6 +933,7 @@ ix.command.Add("CharSetClass", {
         if (classTable) then
             local oldClass = target:GetClass()
             local targetPlayer = target:GetPlayer()
+            if ( !IsValid(targetPlayer) ) then return end
 
             if (targetPlayer:Team() == classTable.faction) then
                 target:SetClass(classTable.index)
@@ -973,6 +974,7 @@ ix.command.Add("CharSetRank", {
         if (rankTable) then
             local oldRank = target:GetRank()
             local targetPlayer = target:GetPlayer()
+            if ( !IsValid(targetPlayer) ) then return end
 
             if ( targetPlayer:Team() == rankTable.faction ) then
                 target:SetRank(rankTable.index)
