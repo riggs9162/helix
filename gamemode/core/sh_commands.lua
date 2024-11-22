@@ -971,11 +971,17 @@ ix.command.Add("CharSetRank", {
         end
 
         if (rankTable) then
-            target:SetRank(rankTable.index)
-            target:GetPlayer():NotifyLocalized("becomeRank", L(rankTable.name, target:GetPlayer()))
+            local oldRank = target:GetRank()
+            local targetPlayer = target:GetPlayer()
 
-            if (client != target:GetPlayer()) then
-                return "@setRank", target:GetName(), L(rankTable.name, client)
+            if ( targetPlayer:Team() == rankTable.faction ) then
+                target:SetRank(rankTable.index)
+                target:GetPlayer():NotifyLocalized("becomeRank", L(rankTable.name, target:GetPlayer()))
+                hook.Run("PlayerJoinedRank", target:GetPlayer(), rankTable.index, target:GetRank())
+
+                if (client != target:GetPlayer()) then
+                    return "@setRank", target:GetName(), L(rankTable.name, client)
+                end
             end
         else
             return "@invalidRank"
