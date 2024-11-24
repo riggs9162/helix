@@ -98,9 +98,7 @@ if (CLIENT) then
     end
 
     function PLUGIN:OnPauseMenuShow()
-        if (!IsValid(ix.gui.chat) or !ix.gui.chat:GetActive()) then
-            return
-        end
+        if (!IsValid(ix.gui.chat) or !ix.gui.chat:GetActive()) then return end
 
         ix.gui.chat:SetActive(false)
 

@@ -409,9 +409,7 @@ function GM:HandlePlayerDucking(ply, velocity, plyTable)
         plyTable = ply:GetTable()
     end
 
-    if ( !ply:IsFlagSet(FL_DUCKING) ) then
-        return false
-    end
+    if ( !ply:IsFlagSet(FL_DUCKING) ) then return false end
 
     if ( velocity:Length2DSqr() > 0.25 ) then
         plyTable.CalcIdeal = ACT_MP_CROUCHWALK

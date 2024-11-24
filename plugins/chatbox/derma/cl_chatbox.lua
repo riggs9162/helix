@@ -49,9 +49,7 @@ function PANEL:SetMarkup(text)
     self:SetTall(self.markup:GetHeight())
 
     timer.Simple(self.fadeDelay, function()
-        if (!IsValid(self)) then
-            return
-        end
+        if (!IsValid(self)) then return end
 
         self:CreateAnimation(self.fadeDuration, {
             index = 3,
@@ -61,9 +59,7 @@ function PANEL:SetMarkup(text)
 end
 
 function PANEL:PerformLayout(width, height)
-    if ((IsValid(ix.gui.chat) and ix.gui.chat.bSizing) or width == self.markup:GetWidth()) then
-        return
-    end
+    if ((IsValid(ix.gui.chat) and ix.gui.chat.bSizing) or width == self.markup:GetWidth()) then return end
 
     self.markup = ix.markup.Parse(self.text, width)
     self.markup.onDrawText = PaintMarkupOverride
@@ -85,9 +81,7 @@ function PANEL:Paint(width, height)
         newAlpha = self.alpha
     end
 
-    if (newAlpha < 1) then
-        return
-    end
+    if (newAlpha < 1) then return end
 
     self.markup:draw(0, 0, nil, nil, newAlpha)
 end
@@ -180,9 +174,7 @@ end
 function PANEL:RemoveTab(id)
     local tab = self.tabs[id]
 
-    if (!tab) then
-        return
-    end
+    if (!tab) then return end
 
     tab:GetButton():Remove()
     tab:Remove()
@@ -202,9 +194,7 @@ end
 function PANEL:RenameTab(id, newID)
     local tab = self.tabs[id]
 
-    if (!tab) then
-        return
-    end
+    if (!tab) then return end
 
     tab:GetButton():SetText(newID)
     tab:GetButton():SizeToContents()
@@ -525,9 +515,7 @@ function PANEL:SetCommand(command)
 
     local commandTable = ix.command.list[command]
 
-    if (!commandTable) then
-        return
-    end
+    if (!commandTable) then return end
 
     self.command = command
     self.commandTable = commandTable
@@ -598,9 +586,7 @@ end
 function PANEL:Paint(width, height)
     local command = self.commandTable
 
-    if (!command) then
-        return
-    end
+    if (!command) then return end
 
     local color = ix.config.Get("color")
     surface.SetFont("ixChatFont")
@@ -703,9 +689,7 @@ function PANEL:Update(text)
 
     for _, v in ipairs(commands) do
         -- @todo chat classes aren't checked since they're done through the class's OnCanSay callback
-        if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then
-            continue
-        end
+        if (v.OnCheckAccess and !v:OnCheckAccess(LocalPlayer())) then continue end
 
         local panel = self:Add("ixChatboxAutocompleteEntry")
         panel:SetCommand(v)
@@ -1041,9 +1025,7 @@ function PANEL:OnMousePressed(key)
         return
     end
 
-    if (key != MOUSE_LEFT) then
-        return
-    end
+    if (key != MOUSE_LEFT) then return end
 
     -- capture the mouse if we're in bounds for sizing this panel
     if (self:SizingInBounds()) then
@@ -1080,9 +1062,7 @@ function PANEL:OnMouseReleased()
 end
 
 function PANEL:Think()
-    if (!self.bActive) then
-        return
-    end
+    if (!self.bActive) then return end
 
     local mouseX = math.Clamp(gui.MouseX(), 0, ScrW())
     local mouseY = math.Clamp(gui.MouseY(), 0, ScrH())
@@ -1262,9 +1242,7 @@ end
 function PANEL:OnTabUpdated(id, filter, newID)
     local tab = self.tabs:GetTabs()[id]
 
-    if (!tab) then
-        return
-    end
+    if (!tab) then return end
 
     tab:SetFilter(filter)
     self.tabs:RenameTab(id, newID)
