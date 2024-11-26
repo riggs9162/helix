@@ -233,3 +233,6 @@ ix.config.Add("animMaxRate", 1.5, "The maximum rate that animations can be playe
     data = {min = 0.1, max = 4, decimals = 1},
     category = "characters"
 })
+ix.config.Add("itemOwnership", true, "Whether or not items have ownership, this prevent's players from dropping items on character A and picking them up on character B.", nil, {
+    category = "characters"
+})

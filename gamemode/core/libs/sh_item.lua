@@ -623,7 +623,7 @@ do
                 local playerID = client:SteamID64()
                 local characterID = client:GetCharacter():GetID()
 
-                if (itemPlayerID and itemCharacterID and itemPlayerID == playerID and itemCharacterID != characterID) then
+                if (itemPlayerID and itemCharacterID and itemPlayerID == playerID and itemCharacterID != characterID and ix.config.Get("itemOwnership", false)) then
                     client:NotifyLocalized("itemOwned")
 
                     item.player = nil

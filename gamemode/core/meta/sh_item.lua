@@ -582,7 +582,7 @@ if (SERVER) then
             local characterID = client:GetCharacter():GetID()
 
             if (itemPlayerID and itemCharacterID) then
-                if (itemPlayerID == playerID and itemCharacterID != characterID) then
+                if (itemPlayerID == playerID and itemCharacterID != characterID and ix.config.Get("itemOwnership", false)) then
                     return false, "itemOwned"
                 end
             else

@@ -165,7 +165,7 @@ function GM:CanPlayerInteractItem(ply, action, item, data)
         end
     end
 
-    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == ply:SteamID() and item.ixCharID != ply:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction) then
+    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == ply:SteamID() and item.ixCharID != ply:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction and ix.config.Get("itemOwnership", false)) then
         ply:NotifyLocalized("itemOwned")
         return false
     end
