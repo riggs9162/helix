@@ -72,7 +72,7 @@ CAMI.RegisterPrivilege({
 --     sequence = {{"cheer1", duration = 1.6}, "cheer2", "wave_smg1"}
 -- })
 function ix.act.Register(name, modelClass, data)
-    ix.act.stored[name] = {}
+    ix.act.stored[name] = ix.act.stored[name] or {} -- might be adding onto an existing act
 
     -- Ensure that a valid sequence is provided
     if (!data.sequence) then
