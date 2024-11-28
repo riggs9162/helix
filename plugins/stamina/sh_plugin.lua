@@ -26,7 +26,7 @@ ix.config.Add("punchStamina", 10, "How much stamina punches use up.", nil, {
 local function CalcStaminaChange(client)
     local character = client:GetCharacter()
 
-    if (!character or client:GetMoveType() == MOVETYPE_NOCLIP) then
+    if (!character or client:GetMoveType() == MOVETYPE_NOCLIP or !client:OnGround()) then
         return 0
     end
 
