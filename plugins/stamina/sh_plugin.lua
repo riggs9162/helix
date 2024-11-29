@@ -1,3 +1,14 @@
+
+--[[--
+Physical representation of connected player.
+
+`Player`s are a type of `Entity`. They are a physical representation of a `Character` - and can possess at most one `Character`
+object at a time that you can interface with.
+
+See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
+]]
+-- @classmod Player
+
 PLUGIN.name = "Stamina"
 PLUGIN.author = "Chessnut"
 PLUGIN.description = "Adds a stamina system to limit running."
@@ -109,24 +120,36 @@ if (SERVER) then
         end)
     end
 
-    local playerMeta = FindMetaTable("Player")
+    local meta = FindMetaTable("Player")
 
-    function playerMeta:RestoreStamina(amount)
+    --- Restores the player's stamina by an amount.
+    -- @realm server
+    -- @player client Player to restore stamina for
+    -- @number amount Amount of stamina to restore
+    -- @treturn number New stamina value
+    function meta:RestoreStamina(amount)
         local current = self:GetLocalVar("stm", 0)
         local value = math.Clamp(current + amount, 0, 100)
 
         self:SetLocalVar("stm", value)
+
+        return value
     end
 
-    function playerMeta:ConsumeStamina(amount)
+    --- Consumes the player's stamina by an amount.
+    -- @realm server
+    -- @player client Player to consume stamina for
+    -- @number amount Amount of stamina to consume
+    -- @treturn number New stamina value
+    function meta:ConsumeStamina(amount)
         local current = self:GetLocalVar("stm", 0)
         local value = math.Clamp(current - amount, 0, 100)
 
         self:SetLocalVar("stm", value)
+
+        return value
     end
-
 else
-
     local predictedStamina = 100
 
     function PLUGIN:Think()
