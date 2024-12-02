@@ -1,4 +1,11 @@
 
+--[[--
+Allows administrators of the server to define areas that can be used for various purposes.
+
+Areas are defined by a start and end position, and can have properties that can be used to define what the area is used for. For example, an area could be used to define a safezone, a restricted area, or a roleplay area if you are experienced with Lua.
+]]
+-- @module ix.area
+
 local PLUGIN = PLUGIN
 
 PLUGIN.name = "Areas"
@@ -84,6 +91,12 @@ function ix.area.AddProperty(name, type, default, data)
     }
 end
 
+--- Adds a new area type.
+-- @realm shared
+-- @string type The type of the area
+-- @string[opt=type] name The name of the area
+-- @usage ix.area.AddType("safezone", "Safezone")
+-- @usage ix.area.AddType("restricted")
 function ix.area.AddType(type, name)
     name = name or type
 
@@ -91,7 +104,18 @@ function ix.area.AddType(type, name)
     ix.area.types[type] = CLIENT and name or true
 end
 
--- returns the nearest and closest area from the specified position
+--- Returns the nearest area to the specified position within the specified distance.
+-- @realm shared
+-- @vector position The position to check
+-- @number distance The distance to check
+-- @treturn string The area's unique identifier
+-- @treturn table The area's information, if found
+-- @usage local area, info = ix.area.GetNearestArea(Vector(0, 0, 0), 128)
+-- if (area) then
+--     print("The nearest area is", info.name)
+-- else
+--     print("No area found.")
+-- end
 function ix.area.GetNearestArea(position, distance)
     local found = {}
     for id, info in pairs(ix.area.stored) do
@@ -127,7 +151,18 @@ function ix.area.GetNearestArea(position, distance)
     return "unknown location"
 end
 
--- returns whether or not the specified position is inside the area
+--- Returns whether or not the specified position is within the specified area.
+-- @realm shared
+-- @vector position The position to check
+-- @string area The area's unique identifier
+-- @treturn boolean Whether or not the position is within the area
+-- @treturn table The area's information, if found
+-- @usage local isInArea, info = ix.area.IsInArea(Vector(0, 0, 0), "example")
+-- if (isInArea) then
+--     print("The position is within the area", info.name)
+-- else
+--     print("The position is not within the area.")
+-- end
 function ix.area.IsInArea(position, area)
     if (area and ix.area.stored[area]) then
         local info = ix.area.stored[area]
@@ -135,6 +170,25 @@ function ix.area.IsInArea(position, area)
     end
 
     return 
+end
+
+--- Returns an area if the specified position is within one.
+-- @realm shared
+-- @vector position The position to check
+-- @treturn string The area's unique identifier
+-- @treturn table The area's information, if found
+-- @usage local area, info = ix.area.GetArea(Vector(0, 0, 0))
+-- if (area) then
+--     print("The position is within the area", info.name)
+-- else
+--     print("The position is not within any area.")
+-- end
+function ix.area.GetArea(position)
+    for id, info in pairs(ix.area.stored) do
+        if (position:WithinAABox(info.startPosition, info.endPosition)) then
+            return id, info
+        end
+    end
 end
 
 function PLUGIN:SetupAreaProperties()
