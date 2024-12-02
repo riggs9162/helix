@@ -8,7 +8,7 @@ CAMI.RegisterPrivilege({
     MinAccess = "admin"
 })
 
-ix.option.Add("observerTeleportBack", ix.type.bool, true, {
+ix.option.Add("observerTeleportBack", ix.type.bool, false, {
     bNetworked = true,
     category = "observer",
     hidden = function()
