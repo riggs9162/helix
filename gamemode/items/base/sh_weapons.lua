@@ -62,7 +62,7 @@ ITEM:Hook("drop", function(item)
 
             owner:StripWeapon(item.class)
             owner.carryWeapons[item.weaponCategory] = nil
-            owner:EmitSound(item.useSound, 80)
+            owner:EmitSound(item.useSound, 60)
         end
 
         item:RemovePAC(owner)
@@ -154,7 +154,7 @@ function ITEM:Equip(client, bNoSelect, bNoSound)
         end
 
         if (!bNoSound) then
-            client:EmitSound(self.useSound, 80)
+            client:EmitSound(self.useSound, 60)
         end
 
         -- Remove default given ammo.
@@ -206,7 +206,7 @@ function ITEM:Unequip(client, bPlaySound, bRemoveItem)
     end
 
     if (bPlaySound) then
-        client:EmitSound(self.useSound, 80)
+        client:EmitSound(self.useSound, 60)
     end
 
     client.carryWeapons[self.weaponCategory] = nil

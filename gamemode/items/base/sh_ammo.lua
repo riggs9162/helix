@@ -32,7 +32,7 @@ ITEM.functions.use = {
         local rounds = item:GetData("rounds", item.ammoAmount)
 
         item.player:GiveAmmo(rounds, item.ammo)
-        item.player:EmitSound(item.useSound, 110)
+        item.player:EmitSound(item.useSound, 60)
 
         return true
     end,
