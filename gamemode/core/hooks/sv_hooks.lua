@@ -218,6 +218,8 @@ function GM:EntityTakeDamage(entity, dmgInfo)
             end
         end
 
+        dmgInfo:ScaleDamage(dmgInfo:GetDamage() * 0.25 * dmgInfo:GetDamagePosition():Distance(entity:GetPos()) / 1024)
+
         entity.ixPlayer:TakeDamageInfo(dmgInfo)
     end
 end
