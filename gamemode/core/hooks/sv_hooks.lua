@@ -346,6 +346,7 @@ function GM:CanAutoFormatMessage(ply, chatType, message)
 end
 
 function GM:PlayerSpawn(ply)
+    ply:ResetBoneMatrix()
     ply:SetNoDraw(false)
     ply:UnLock()
     ply:SetNotSolid(false)
