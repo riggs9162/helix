@@ -216,9 +216,15 @@ function GM:EntityTakeDamage(entity, dmgInfo)
             else
                 return
             end
+
+            local add = entity:GetVelocity():Length() / 32
+            dmgInfo:AddDamage(add)
         end
 
-        dmgInfo:ScaleDamage(dmgInfo:GetDamage() * 0.25 * dmgInfo:GetDamagePosition():Distance(entity:GetPos()) / 1024)
+        debugoverlay.Axis(dmgInfo:GetDamagePosition(), Angle(0, 0, 0), 5, 5, true)
+
+        -- Scale the damage to be more realistic
+        dmgInfo:ScaleDamage(dmgInfo:GetDamageForce():Length() / 1024)
 
         entity.ixPlayer:TakeDamageInfo(dmgInfo)
     end
