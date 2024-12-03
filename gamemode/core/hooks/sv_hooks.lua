@@ -212,7 +212,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
                     dmgInfo:SetDamage(0)
                 end
 
-                entity.ixFallGrace = CurTime() + 0.5
+                entity.ixFallGrace = CurTime() + 0.1
             else
                 return
             end
