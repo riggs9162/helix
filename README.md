@@ -1,50 +1,30 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/NebulousCloud/helix/master/docs/banner.gif" alt="Helix" />
+    <img src="https://minerva-servers.com/resources/logo_transparent.png" alt="Minerva Servers" />
 </p>
 
 <p align="center">
-    <a href="https://discord.gg/2AutUcF">
+    <a href="https://discord.gg/PayC7BpwQE">
         <img src="https://img.shields.io/discord/505957257125691423.svg" alt="Discord" />
     </a>
-    <a href="https://github.com/NebulousCloud/helix/actions">
-        <img src="https://img.shields.io/github/workflow/status/NebulousCloud/helix/CI" alt="Build Status" />
+    <a href="https://github.com/Minerva-Servers/helix/actions">
+        <img src="https://img.shields.io/github/workflow/status/Minerva-Servers/helix/CI" alt="Build Status" />
     </a>
 </p>
 
-Helix is a framework for roleplay gamemodes in [Garry's Mod](https://gmod.facepunch.com/), based off of [NutScript 1.1](https://github.com/rebel1324/NutScript). Helix provides a stable, feature-filled, open-source, and DRM-free base so you can focus more on the things you want: making gameplay.
+### Key Enhancements
+Curious about the differences between the default Helix and Minerva’s edited version? Our framework offers enhanced customization for developers, including a new "ranks" feature, which simplifies class management. Additionally, we’ve expanded configuration options and added unique features not found in the default Helix version. For a complete list of changes, please visit the [Differences](https://minerva-servers.com/helix/manual/70-differences/) page in our documentation.
 
-## Getting Started
-Visit the getting started guide in the [documentation](https://docs.gethelix.co/manual/getting-started/) for an in-depth guide.
+### Comprehensive Documentation
+Explore the full range of documentation through the sidebar. Whether you’re looking for libraries, functions, or more, everything is searchable using the search bar. If you're transitioning from Clockwork, don’t miss our [conversion guide](https://minerva-servers.com/helix/manual/60-converting-from-clockwork/).
 
-If you know what you're doing, a quick start for bootstrapping your own schema is forking/copying the skeleton schema at https://github.com/nebulouscloud/helix-skeleton. The skeleton contains all the important elements you need to have a functioning schema so you can get to coding right away.
+### Server Setup
+Ready to launch your Helix server? Check out our step-by-step [Getting Started](https://minerva-servers.com/helix/manual/00-getting-started/) guide to get your server up and running quickly.
 
-You can also use our HL2 RP schema at https://github.com/nebulouscloud/helix-hl2rp as a base to work off of if you need something more fleshed out.
+### Join Our Community
+Have questions, want to showcase your work, or release a new plugin? Join the conversation on our [Discord server](https://discord.minerva-servers.com/).
 
-## Plugins
-If you'd like to enhance your gamemode, you can use any of the freely provided plugins available at the [Helix Plugin Center](https://plugins.gethelix.co). It is also encouraged to submit your own plugins for others to find and use at https://github.com/nebulouscloud/helix-plugins
+### Contribute to the Project
+We're always looking for contributions to improve the project, from enhancing documentation to fixing typos. Check out the `ix.storage` library's [source code](https://github.com/Minerva-Servers/helix/blob/Minerva-Servers/gamemode/core/libs/sh_storage.lua) for an example of how to document code. Familiarity with [Markdown](https://guides.github.com/features/mastering-markdown/) is essential as it’s widely used in our documentation process. If you’d like to contribute code, head over to our [GitHub repository](https://github.com/Minerva-Servers/helix/tree/Minerva-Servers) and submit a pull request.
 
-## Documentation
-Up-to-date documentation can be found at https://docs.gethelix.co. This is automatically updated when commits are pushed to the master branch.
-
-If you'd like to ask some questions or integrate with the community, you can always join our [Discord](https://discord.gg/2AutUcF) server. We highly encourage you to search through the documentation before posting a question - the docs contain a good deal of information about how the various systems in Helix work, and it might explain what you're looking for.
-
-### Building documentation
-If you're planning on contributing to the documentation, you'll probably want to preview your changes before you commit. The documentation can be built using [LDoc](https://github.com/impulsh/ldoc) - note that we use a forked version to add some functionality. You'll need [LuaRocks](https://luarocks.org/) installed in order to get started.
-
-```shell
-# installing ldoc
-git clone https://github.com/impulsh/ldoc
-cd ldoc
-luarocks make
-
-# navigate to the helix repo folder and run
-ldoc .
-```
-
-You may not see the syntax highlighting work on your local copy - you'll need to copy the files in `docs/js` and `docs/css` over into the `docs/html` folder after it's done building.
-
-## Contributing
-Feel free to submit a pull request with any fixes/changes that you might find beneficial. Currently, there are no solid contributing guidelines other than keeping your code consistent with the rest of the framework.
-
-## Acknowledgements
-Helix is a fork of NutScript 1.1 by [Chessnut](https://github.com/brianhang) and [rebel1324](https://github.com/rebel1324).
+### Learning Resources
+To develop with the Helix framework, a solid understanding of Garry's Mod Lua is required. For those new to Lua, we recommend starting with the basics on the [Garry's Mod Wiki](https://wiki.facepunch.com/gmod/) before diving into schema development.
