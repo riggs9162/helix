@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://minerva-servers.com/resources/logo_transparent.png" alt="Minerva Servers" />
+    <img src="https://minerva-servers.com/resources/logo_transparent.png" alt="Minerva Servers" style="max-width:50%;" />
 </p>
 
 <p align="center">
