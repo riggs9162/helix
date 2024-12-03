@@ -467,6 +467,7 @@ LANGUAGE = {
     cmdOOC = "Sends a message in global out-of-character chat.",
     cmdLOOC = "Sends a message in local out-of-character chat.",
 
+    -- Icon Editor
     iconEditor = "Icon Editor",
     iconEditorAlignBest = "Best Guess",
     iconEditorAlignBestDesc = "Aligns the model to the best of its ability.",
@@ -487,4 +488,8 @@ LANGUAGE = {
     iconEditorAlignRightDesc = "Aligns the model from the right.",
     iconEditorAlignCenter = "Align from Center",
     iconEditorAlignCenterDesc = "Aligns the model from the center.",
+
+    -- Area Editor
+    areaEditor = "Area Editor",
+    areaEditorUpdated = "You have updated the \"%s\" area.",
 }

@@ -76,6 +76,10 @@ function PANEL:Init()
             panel:SetText(L(k))
         end
 
+        if (!IsValid(panel)) then
+            continue
+        end
+
         panel:Dock(TOP)
         panel:DockMargin(0, 0, 0, 8)
 

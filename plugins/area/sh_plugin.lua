@@ -84,6 +84,14 @@ ix.option.Add("areaEditSnap", ix.type.number, 8, {
     decimals = 0
 })
 
+--- Adds a new area property.
+-- @realm shared
+-- @string name The name of the property
+-- @string type The type of the property
+-- @param default The default value of the property
+-- @param[opt] data Additional data for the property
+-- @usage ix.area.AddProperty("color", ix.type.color, ix.config.Get("color"))
+-- @usage ix.area.AddProperty("display", ix.type.bool, true)
 function ix.area.AddProperty(name, type, default, data)
     ix.area.properties[name] = {
         type = type,
