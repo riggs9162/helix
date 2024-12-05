@@ -80,9 +80,9 @@ if (SERVER) then
         return text, info.flag
     end
 
-    function ix.log.AddRaw(logString, bNoSave)
+    function ix.log.AddRaw(logString, bNoSave, flag)
         CAMI.GetPlayersWithAccess("Helix - Logs", function(receivers)
-            ix.log.Send(receivers, logString)
+            ix.log.Send(receivers, logString, flag or FLAG_NORMAL)
         end)
 
         Msg("[LOG] ", logString .. "\n")
