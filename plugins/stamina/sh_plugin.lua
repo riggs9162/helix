@@ -74,7 +74,6 @@ local function CalcStaminaChange(client)
             client:SetLocalVar("stm", value)
 
             if (value == 0 and !client:GetNetVar("brth", false)) then
-                client:SetRunSpeed(walkSpeed)
                 client:SetNetVar("brth", true)
 
                 character:UpdateAttrib("end", 0.1)
@@ -82,13 +81,18 @@ local function CalcStaminaChange(client)
 
                 hook.Run("PlayerStaminaLost", client)
             elseif (value >= 50 and client:GetNetVar("brth", false)) then
-                client:SetRunSpeed(runSpeed)
                 client:SetNetVar("brth", nil)
 
                 hook.Run("PlayerStaminaGained", client)
             end
         end
     end
+end
+
+function PLUGIN:SetupMove(client, mv, cmd)
+	if (client:GetNetVar("brth", false)) then
+		mv:SetMaxClientSpeed(client:GetWalkSpeed())
+	end
 end
 
 
