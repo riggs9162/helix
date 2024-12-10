@@ -95,7 +95,6 @@ function PLUGIN:SetupMove(client, mv, cmd)
 	end
 end
 
-
 if (SERVER) then
     function PLUGIN:PostPlayerLoadout(client)
         local uniqueID = "ixStam" .. client:SteamID()
