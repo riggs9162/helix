@@ -355,7 +355,8 @@ function GM:InitializedConfig()
 
     if (!ix.config.loaded and !IsValid(ix.gui.loading)) then
         local loader = vgui.Create("DPanel")
-        loader:Dock(FILL)
+        loader:SetDrawOnTop(true)
+        loader:SetSize(ScrW(), ScrH())
         loader:MakePopup()
         loader.Think = function(this)
             this:MoveToFront()
@@ -374,7 +375,7 @@ function GM:InitializedConfig()
 
         timer.Simple(5, function()
             if (IsValid(ix.gui.loading)) then
-                local fatalError = GetNetVar("fatalError")
+                local fatalError = GetGlobalString("fatalError")
                 if (fatalError and fatalError != "") then
                     local label = loader:Add("DLabel")
                     label:SetFont("ixSubTitleFont")
@@ -887,6 +888,12 @@ function GM:ShowPlayerOptions(ply, options)
             SetClipboardText(ply:SteamID())
         end
     end}
+
+    options["Copy Steam ID64"] = {"icon16/user.png", function()
+        if (IsValid(ply)) then
+            SetClipboardText(ply:SteamID64())
+        end
+    end}
 end
 
 function GM:DrawHelixModelView(panel, ent)
@@ -963,13 +970,13 @@ end
 
 function GM:PlayerStartVoice(target)
     net.Start("ixPlayerStartVoice")
-        net.WritePlayer(target)
+        net.WriteUInt(target:EntIndex(), 16)
     net.SendToServer()
 end
 
 function GM:PlayerEndVoice(target)
     net.Start("ixPlayerEndVoice")
-        net.WritePlayer(target)
+        net.WriteUInt(target:EntIndex(), 16)
     net.SendToServer()
 end
 
