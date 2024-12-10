@@ -92,7 +92,7 @@ ITEM.functions.Equip = {
     tip = "equipTip",
     icon = "icon16/tick.png",
     OnRun = function(item)
-        item:Equip(item.player)
+        item:Equip(item.player, true)
         return false
     end,
     OnCanRun = function(item)
