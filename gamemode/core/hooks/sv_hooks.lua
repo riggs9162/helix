@@ -1031,29 +1031,21 @@ end
 
 function GM:DatabaseConnectionFailed()
     -- Set a net var so the client knows that the database connection failed.
-    SetNetVar("fatalError", "Database connection failed")
+    SetGlobalString("fatalError", "Database connection failed")
 end
 
 net.Receive("ixPlayerStartVoice", function(len)
-    local target = net.ReadPlayer()
-    if ( !IsValid(target) ) then return end
-
-    local char_target = target:GetCharacter()
-    if ( !char_target ) then return end
-
-    if ( !target:Alive() ) then return end
+    local index = net.ReadUInt(16) or 0
+    local target = Entity(index)
+    if ( !IsValid(target) or !target:Alive() ) then return end
 
     hook.Run("PlayerStartVoice", target)
 end)
 
 net.Receive("ixPlayerEndVoice", function(len)
-    local target = net.ReadPlayer()
-    if ( !IsValid(target) ) then return end
-
-    local char_target = target:GetCharacter()
-    if ( !char_target ) then return end
-
-    if ( !target:Alive() ) then return end
+    local index = net.ReadUInt(16) or 0
+    local target = Entity(index)
+    if ( !IsValid(target) or !target:Alive() ) then return end
 
     hook.Run("PlayerEndVoice", target)
 end)
@@ -1061,8 +1053,8 @@ end)
 net.Receive("ixStartChat", function(len, ply)
     if ( !IsValid(ply) ) then return end
 
-    local character = ply:GetCharacter()
-    if ( !character ) then return end
+    local char = ply:GetCharacter()
+    if ( !char ) then return end
 
     local bTeamChat = net.ReadBool()
 
@@ -1072,8 +1064,8 @@ end)
 net.Receive("ixFinishChat", function(len, ply)
     if ( !IsValid(ply) ) then return end
 
-    local character = ply:GetCharacter()
-    if ( !character ) then return end
+    local char = ply:GetCharacter()
+    if ( !char ) then return end
 
     hook.Run("FinishChat", ply)
 end)
