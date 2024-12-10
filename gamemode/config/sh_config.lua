@@ -15,7 +15,7 @@ ix.config.Add("maxCharacters", 5, "The maximum number of characters a player can
     data = {min = 1, max = 50},
     category = "characters"
 })
-ix.config.Add("color", Color(75, 119, 190, 255), "The main color theme for the framework.", function(oldValue, newValue)
+ix.config.Add("color", Color(115, 53, 142, 255), "The main color theme for the framework.", function(oldValue, newValue)
     if (newValue.a != 255) then
         ix.config.Set("color", ColorAlpha(newValue, 255))
         return
