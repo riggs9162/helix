@@ -5,6 +5,13 @@ do
     util.AddNetworkString("ixData")
     util.AddNetworkString("ixDataSync")
 
+    --- Loads all of the player's data from the database.
+    -- @realm server
+    -- @internal
+    -- @func callback Callback function to run after the data has been loaded
+    -- @usage player:LoadData(function(data)
+    --     print(data.money) --Prints the player's money from the database
+    -- end)
     function playerMeta:LoadData(callback)
         hook.Run("PrePlayerDataLoaded", self)
 
@@ -53,6 +60,9 @@ do
         hook.Run("PlayerDataLoaded", self)
     end
 
+    --- Saves all of the player's data to the database.
+    -- @realm server
+    -- @usage player:SaveData() -- Saves the player's data to the database, must be called after setting data
     function playerMeta:SaveData()
         if (self:IsBot()) then return end
 
@@ -69,6 +79,13 @@ do
         hook.Run("PlayerDataSaved", self)
     end
 
+    --- Sets a piece of data for the player.
+    -- @realm server
+    -- @string key Key to store the data under
+    -- @param value Value to store
+    -- @bool[opt=false] bNoNetworking Whether or not to network the data to the player
+    -- @usage player:SetData("customData", "hello") -- Sets the player's custom data to "hello"
+    -- player:SaveData() -- Saves the player's data to the database
     function playerMeta:SetData(key, value, bNoNetworking)
         self.ixData = self.ixData or {}
         self.ixData[key] = value
@@ -86,6 +103,11 @@ end
 
 -- Whitelisting information for the player.
 do
+    --- Sets whether or not the player is whitelisted for a certain faction.
+    -- @realm server
+    -- @string faction Unique ID of the faction
+    -- @bool whitelisted Whether or not the player is whitelisted
+    -- @return boolean Whether or not the player was successfully whitelisted
     function playerMeta:SetWhitelisted(faction, whitelisted)
         if (!whitelisted) then
             whitelisted = nil
