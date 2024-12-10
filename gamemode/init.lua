@@ -25,7 +25,7 @@ RunConsoleCommand("sv_allowcslua", "0")
 
 if ( engine.ActiveGamemode() == "helix" ) then
     local gs = ""
-    for k, v in pairs(engine.GetGamemodes()) do
+    for k, v in ipairs(engine.GetGamemodes()) do
         if ( v.name:find("ix") and v.name != "helix" ) then
             gs = gs .. v.name .. "\n"
         end
@@ -39,13 +39,13 @@ local function IncludeFolder(dir)
     local total = 0
 
     local files, folders = file.Find(dir .. "*", "GAME")
-    for k, v in pairs(files) do
+    for k, v in ipairs(files) do
         total = total + 1
 
         resource.AddFile(dir .. v)
     end
 
-    for k, v in pairs(folders) do
+    for k, v in ipairs(folders) do
         total = total + IncludeFolder(dir .. v .. "/")
     end
 
@@ -71,7 +71,7 @@ local function IncludeWorkshopAddons()
     local total = 0
     local addons = engine.GetAddons()
 
-    for k, v in pairs(addons) do
+    for k, v in ipairs(addons) do
         if ( v.mounted and v.wsid != "0" ) then
             total = total + 1
 
