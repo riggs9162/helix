@@ -787,6 +787,11 @@ do
         end)
 
         net.Receive("ixInventoryAction", function(length, client)
+            if ( !client.ixNextInvAction ) then client.ixNextInvAction = 0 end
+
+            if ( client.ixNextInvAction > CurTime() ) then return end
+            client.ixNextInvAction = CurTime() + 0.5
+
             ix.item.PerformInventoryAction(client, net.ReadString(), net.ReadUInt(32), net.ReadUInt(32), net.ReadTable())
         end)
     end
