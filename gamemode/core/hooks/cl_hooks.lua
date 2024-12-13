@@ -970,13 +970,13 @@ end
 
 function GM:PlayerStartVoice(target)
     net.Start("ixPlayerStartVoice")
-        net.WriteUInt(target:EntIndex(), 16)
+        net.WritePlayer(target)
     net.SendToServer()
 end
 
 function GM:PlayerEndVoice(target)
     net.Start("ixPlayerEndVoice")
-        net.WriteUInt(target:EntIndex(), 16)
+        net.WritePlayer(target)
     net.SendToServer()
 end
 

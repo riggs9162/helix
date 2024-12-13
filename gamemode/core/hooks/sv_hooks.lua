@@ -1035,16 +1035,14 @@ function GM:DatabaseConnectionFailed()
 end
 
 net.Receive("ixPlayerStartVoice", function(len)
-    local index = net.ReadUInt(16) or 0
-    local target = Entity(index)
+    local target = net.ReadPlayer()
     if ( !IsValid(target) or !target:Alive() ) then return end
 
     hook.Run("PlayerStartVoice", target)
 end)
 
 net.Receive("ixPlayerEndVoice", function(len)
-    local index = net.ReadUInt(16) or 0
-    local target = Entity(index)
+    local target = net.ReadPlayer()
     if ( !IsValid(target) or !target:Alive() ) then return end
 
     hook.Run("PlayerEndVoice", target)
