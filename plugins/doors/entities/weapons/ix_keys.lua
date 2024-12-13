@@ -48,9 +48,9 @@ ACT_VM_FISTS_DRAW = 2
 ACT_VM_FISTS_HOLSTER = 1
 
 function SWEP:Holster()
-    if (!IsValid(self.Owner)) then return end
+    if (!IsValid(self:GetOwner())) then return end
 
-    local viewModel = self.Owner:GetViewModel()
+    local viewModel = self:GetOwner():GetViewModel()
 
     if (IsValid(viewModel)) then
         viewModel:SetPlaybackRate(1)
@@ -79,10 +79,13 @@ function SWEP:PrimaryAttack()
     if (CLIENT) then return end
 
     local data = {}
-        data.start = self.Owner:GetShootPos()
-        data.endpos = data.start + self.Owner:GetAimVector()*96
-        data.filter = self.Owner
+    data.start = self:GetOwner():GetShootPos()
+    data.endpos = data.start + self:GetOwner():GetAimVector()*96
+    data.filter = self:GetOwner()
+
+    self:GetOwner():LagCompensation(true)
     local entity = util.TraceLine(data).Entity
+    self:GetOwner():LagCompensation(false)
 
     --[[
         Locks the entity if the contiditon fits:
@@ -91,11 +94,11 @@ function SWEP:PrimaryAttack()
     --]]
     if (IsValid(entity) and
         (
-            (entity:IsDoor() and entity:CheckDoorAccess(self.Owner)) or
-            (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self.Owner)
+            (entity:IsDoor() and entity:CheckDoorAccess(self:GetOwner())) or
+            (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self:GetOwner())
         )
     ) then
-        self.Owner:SetAction("@locking", time, function()
+        self:GetOwner():SetAction("@locking", time, function()
             self:ToggleLock(entity, true)
         end)
 
@@ -104,7 +107,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:ToggleLock(door, state)
-    if (IsValid(self.Owner) and self.Owner:GetPos():Distance(door:GetPos()) > 96) then return end
+    if (IsValid(self:GetOwner()) and self:GetOwner():GetPos():Distance(door:GetPos()) > 96) then return end
 
     if (door:IsDoor()) then
         local partner = door:GetDoorPartner()
@@ -115,18 +118,18 @@ function SWEP:ToggleLock(door, state)
             end
 
             door:Fire("lock")
-            self.Owner:EmitSound("doors/door_latch3.wav")
+            self:GetOwner():EmitSound("doors/door_latch3.wav")
 
-            hook.Run("PlayerLockedDoor", self.Owner, door, partner)
+            hook.Run("PlayerLockedDoor", self:GetOwner(), door, partner)
         else
             if (IsValid(partner)) then
                 partner:Fire("unlock")
             end
 
             door:Fire("unlock")
-            self.Owner:EmitSound("doors/door_latch1.wav")
+            self:GetOwner():EmitSound("doors/door_latch1.wav")
 
-            hook.Run("PlayerUnlockedDoor", self.Owner, door, partner)
+            hook.Run("PlayerUnlockedDoor", self:GetOwner(), door, partner)
         end
     elseif (door:IsVehicle()) then
         if (state) then
@@ -136,8 +139,8 @@ function SWEP:ToggleLock(door, state)
                 door.IsLocked = true
             end
 
-            self.Owner:EmitSound("doors/door_latch3.wav")
-            hook.Run("PlayerLockedVehicle", self.Owner, door)
+            self:GetOwner():EmitSound("doors/door_latch3.wav")
+            hook.Run("PlayerLockedVehicle", self:GetOwner(), door)
         else
             door:Fire("unlock")
 
@@ -145,8 +148,8 @@ function SWEP:ToggleLock(door, state)
                 door.IsLocked = nil
             end
 
-            self.Owner:EmitSound("doors/door_latch1.wav")
-            hook.Run("PlayerUnlockedVehicle", self.Owner, door)
+            self:GetOwner():EmitSound("doors/door_latch1.wav")
+            hook.Run("PlayerUnlockedVehicle", self:GetOwner(), door)
         end
     end
 end
@@ -163,10 +166,13 @@ function SWEP:SecondaryAttack()
     if (CLIENT) then return end
 
     local data = {}
-        data.start = self.Owner:GetShootPos()
-        data.endpos = data.start + self.Owner:GetAimVector()*96
-        data.filter = self.Owner
+    data.start = self:GetOwner():GetShootPos()
+    data.endpos = data.start + self:GetOwner():GetAimVector()*96
+    data.filter = self:GetOwner()
+
+    self:GetOwner():LagCompensation(true)
     local entity = util.TraceLine(data).Entity
+    self:GetOwner():LagCompensation(false)
 
 
     --[[
@@ -176,11 +182,11 @@ function SWEP:SecondaryAttack()
     ]]--
     if (IsValid(entity) and
         (
-            (entity:IsDoor() and entity:CheckDoorAccess(self.Owner)) or
-            (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self.Owner)
+            (entity:IsDoor() and entity:CheckDoorAccess(self:GetOwner())) or
+            (entity:IsVehicle() and entity.CPPIGetOwner and entity:CPPIGetOwner() == self:GetOwner())
         )
     ) then
-        self.Owner:SetAction("@unlocking", time, function()
+        self:GetOwner():SetAction("@unlocking", time, function()
             self:ToggleLock(entity, false)
         end)
 

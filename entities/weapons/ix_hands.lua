@@ -430,10 +430,12 @@ function SWEP:SecondaryAttack()
     if (!IsFirstTimePredicted()) then return end
 
     local data = {}
-        data.start = self:GetOwner():GetShootPos()
-        data.endpos = data.start + self:GetOwner():GetAimVector() * 84
-        data.filter = {self, self:GetOwner()}
+    data.start = self:GetOwner():GetShootPos()
+    data.endpos = data.start + self:GetOwner():GetAimVector() * 84
+    data.filter = {self, self:GetOwner()}
+    self:GetOwner():LagCompensation(true)
     local trace = util.TraceLine(data)
+    self:GetOwner():LagCompensation(false)
     local entity = trace.Entity
 
     if CLIENT then
