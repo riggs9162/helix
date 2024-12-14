@@ -12,30 +12,6 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Entity) for 
 local meta = FindMetaTable("Entity")
 local CHAIR_CACHE = {}
 
---- Sets the Spawnflags of the Entity.
--- @realm shared
--- @param All spawn flags you want set on the entity.
--- @usage entity:SetSpawnFlags(256, 512) // Can be found for 'npc_turret_floor' here: https://developer.valvesoftware.com/wiki/Npc_turret_floor#Flags
-function meta:SetSpawnFlags(flag)
-    self:SetKeyValue("spawnflags", flag)
-end
-
---- Adds the specified Spawnflags to the Entity.
--- @realm shared
--- @param All spawn flags you want to add on the entity.
--- @usage entity:AddSpawnFlags(256, 512) // Can be found for 'npc_turret_floor' here: https://developer.valvesoftware.com/wiki/Npc_turret_floor#Flags
-function meta:AddSpawnFlags(flag)
-    self:SetKeyValue("spawnflags", bit.bor(self:GetSpawnFlags(), flag))
-end
-
---- Removes the specified Spawnflags from the Entity.
--- @realm shared
--- @param All spawn flags you want to remove from the entity.
--- @usage entity:RemoveSpawnFlags(256, 512) // Can be found for 'npc_turret_floor' here: https://developer.valvesoftware.com/wiki/Npc_turret_floor#Flags
-function meta:RemoveSpawnFlags(flag)
-    self:SetKeyValue("spawnflags", bit.band(self:GetSpawnFlags(), bit.bnot(flag)))
-end
-
 -- Add chair models to the cache by checking if its vehicle category is a class.
 for _, v in pairs(list.Get("Vehicles")) do
     if (v.Category == "Chairs") then
