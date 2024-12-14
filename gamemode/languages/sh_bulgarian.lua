@@ -35,8 +35,8 @@ LANGUAGE = {
     chatMarkRead = "Маркирай всички като прочетени",
 
     community = "Общност",
-    checkAll = "Провери всички",
-    uncheckAll = "Отбележи всички",
+    checkAll = "Зачеркни всички",
+    uncheckAll = "Отчеркни всички",
     color = "Цвят",
     type = "Тип",
     display = "Дисплей",
