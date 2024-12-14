@@ -303,7 +303,7 @@ LANGUAGE = {
     vendorMaxStock = "Този продавач има пълна наличност от този артикул!",
     contentTitle = "Липсващо съдържание на спиралата",
     contentWarning = "Нямате монтирано съдържание на Helix. Това може да доведе до липса на определени функции.\nЖелаете ли да отворите страницата на работилницата за съдържанието на Helix?",
-    flags = "Flags",
+    flags = "Флагове",
     mapRestarting = "Картата ще се рестартира след %d секунди!",
     chooseTip = "Изберете този герой, за да играете с него.",
     deleteTip = "Изтрий този герой.",
@@ -328,9 +328,9 @@ LANGUAGE = {
     mapRepeat = "Сега добавете вторичната точка.",
 
     scoreboard = "Scoreboard",
-    ping = "Ping: %d",
-    viewProfile = "View Steam Profile",
-    copySteamID = "Copy Steam ID",
+    ping = "Пинг: %d",
+    viewProfile = "Виж профил в Steam",
+    copySteamID = "Копирай Steam ID",
 
     money = "Пари",
     moneyLeft = "Вашите пари: ",
@@ -343,7 +343,7 @@ LANGUAGE = {
     invalidRankFaction = "Това не е валиден ранг за тази фракция!",
 
     miscellaneous = "Разни",
-    general = "General",
+    general = "Главни",
     observer = "Наблюдател",
     performance = "Performance",
     thirdperson = "Third Person",
