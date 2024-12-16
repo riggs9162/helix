@@ -30,4 +30,4 @@ We're always looking for contributions to improve the project, from enhancing do
 To develop with the Helix framework, a solid understanding of Garry's Mod Lua is required. For those new to Lua, we recommend starting with the basics on the [Garry's Mod Wiki](https://wiki.facepunch.com/gmod/) before diving into schema development.
 
 ### Framework Support
-We do not provide support for our Framework Edit. However, if there are errors that you are CERTAIN are our mistake, you can [open an issue](https://github.com/Minerva-Servers/helix/issues) describing the issue and providing reproduction steps.
+We do not provide support for your own Framework Changes. However, if there are errors that you are CERTAIN are our mistake, you can [open an issue](https://github.com/Minerva-Servers/helix/issues) describing the issue and providing reproduction steps.
