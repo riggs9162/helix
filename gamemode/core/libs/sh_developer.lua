@@ -8,23 +8,25 @@ if ( SERVER ) then
     util.AddNetworkString("ixDeveloperAreaEditName")
     net.Receive("ixDeveloperAreaEditName", function(_, ply)
         if ( CAMI.PlayerHasAccess(ply, "Helix - Developer", nil) and CAMI.PlayerHasAccess(ply, "Helix - AreaEdit", nil) ) then
-            local areaID = net.ReadString()
+            local previousName = net.ReadString()
             local name = net.ReadString()
 
-            local area = ix.area.stored[areaID]
+            local area = ix.area.stored[previousName]
             if ( !area ) then return end
 
-            ix.area.stored[areaID] = nil
+            ix.area.stored[previousName] = nil
             ix.area.stored[name] = area
 
-            local json = util.TableToJSON(ix.area.stored)
-            local compressed = util.Compress(json)
-            local length = compressed:len()
+            timer.Simple(1, function()
+                local json = util.TableToJSON(ix.area.stored)
+                local compressed = util.Compress(json)
+                local length = compressed:len()
 
-            net.Start("ixAreaSync")
-                net.WriteUInt(length, 32)
-                net.WriteData(compressed, length)
-            net.Send(ply)
+                net.Start("ixAreaSync")
+                    net.WriteUInt(length, 32)
+                    net.WriteData(compressed, length)
+                net.Send(ply)
+            end)
 
             ply:NotifyLocalized("areaEditorUpdated", L(areaID))
         end
@@ -45,14 +47,16 @@ if ( SERVER ) then
 
             areaProperties[key] = value
 
-            local json = util.TableToJSON(ix.area.stored)
-            local compressed = util.Compress(json)
-            local length = compressed:len()
+            timer.Simple(1, function()
+                local json = util.TableToJSON(ix.area.stored)
+                local compressed = util.Compress(json)
+                local length = compressed:len()
 
-            net.Start("ixAreaSync")
-                net.WriteUInt(length, 32)
-                net.WriteData(compressed, length)
-            net.Send(ply)
+                net.Start("ixAreaSync")
+                    net.WriteUInt(length, 32)
+                    net.WriteData(compressed, length)
+                net.Send(ply)
+            end)
 
             ply:NotifyLocalized("areaEditorUpdated", L(areaID))
         end

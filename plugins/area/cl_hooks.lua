@@ -229,6 +229,8 @@ net.Receive("ixAreaRemove", function()
     if (ix.area.stored[name]) then
         ix.area.stored[name] = nil
     end
+
+    hook.Run("OnAreaRemove", name)
 end)
 
 net.Receive("ixAreaSync", function()
@@ -243,6 +245,12 @@ net.Receive("ixAreaSync", function()
 
     -- Set the list of texts to the ones provided by the server.
     ix.area.stored = util.JSONToTable(uncompressed)
+
+    if ( IsValid(ix.gui.developerMenu) ) then
+        ix.gui.developerMenu:PopulateTabs()
+    end
+
+    hook.Run("OnAreaSync")
 end)
 
 net.Receive("ixAreaChanged", function()

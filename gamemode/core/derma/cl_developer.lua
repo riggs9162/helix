@@ -214,6 +214,9 @@ function PANEL:SetupTab(name, info, sectionParent)
 end
 
 function PANEL:PopulateTabs()
+    -- remove previous tabs
+    self.tabs:Clear()
+
     local default
     local tabs = {}
 

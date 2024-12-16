@@ -5,7 +5,9 @@ hook.Add("CreateDeveloperMenuButtons", "ixDeveloperAreaEditor", function(tabs)
         Sections = {}
     }
 
-    for k, v in SortedPairs(ix.area.stored) do
+    -- sort by key
+    local areas = table.Copy(ix.area.stored)
+    for k, v in SortedPairs(areas) do
         tabs["areaEditor"].Sections[L(k)] = {
             Create = function(info, container)
                 local buttons = container:Add("DPanel")
