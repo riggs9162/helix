@@ -1455,3 +1455,28 @@ end
 -- end
 function WeaponSelectSound(weapon)
 end
+
+--- Runs when a player tries to create a character and checks if the character name is valid.
+-- @realm shared
+-- @string name Name of the character
+-- @treturn bool Whether or not the character name is valid
+-- @treturn string|nil Error message if the character name is invalid
+-- @usage function PLUGIN:CharacterNameValid(name)
+-- 	if (string.find(name, "badword")) then
+-- 		return false, "Your character name contains a bad word."
+-- 	end
+-- end
+function IsCharacterNameValid(name)
+end
+
+--- Runs when a player tries to create a character and checks if the character description is valid.
+-- @realm shared
+-- @string description Description of the character
+-- @treturn bool Whether or not the character description is valid
+-- @usage function PLUGIN:IsCharacterDescriptionValid(description)
+-- 	if (string.find(description, "badword")) then
+-- 		return false
+-- 	end
+-- end
+function IsCharacterDescriptionValid(description)
+end

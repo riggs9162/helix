@@ -343,6 +343,8 @@ do
                 return false, "invalid", "name"
             elseif (value:gsub("%s", ""):utf8len() > maxLength) then
                 return false, "nameMaxLen", maxLength
+            elseif (hook.Run("IsCharacterNameValid", value) == false) then
+                return false, "charErrInvalid"
             end
 
             return hook.Run("GetDefaultCharacterName", client, payload.faction) or value:utf8sub(1, 70)
@@ -387,6 +389,8 @@ do
                 return false, "descMinLen", minLength
             elseif (!value:find("%s+") or !value:find("%S")) then
                 return false, "invalid", "description"
+            elseif (hook.Run("IsCharacterDescriptionValid", value) == false) then
+                return false, "charErrInvalid"
             end
 
             return value
