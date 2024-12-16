@@ -1455,25 +1455,3 @@ end
 -- end
 function WeaponSelectSound(weapon)
 end
-
---- Called before an item is being registered.
--- @realm shared
--- @tab itemTable Item table that is being registered
--- @usage function PLUGIN:PreItemRegistered(itemTable)
--- 	if (itemTable.uniqueID == "pistol") then
--- 		return false -- Prevent the pistol item from being registered.
--- 	end
--- end
-function PreItemRegistered(itemTable)
-end
-
---- Called before after an item got registered.
--- @realm shared
--- @tab itemTable Item table that was registered
--- @usage function PLUGIN:PostItemRegistered(itemTable)
--- 	if (itemTable.uniqueID == "suitcase") then
--- 		itemTable.name = "Briefcase" -- Change the name of the suitcase item to "Briefcase".
--- 	end
--- end
-function PostItemRegistered(itemTable)
-end

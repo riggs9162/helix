@@ -127,8 +127,6 @@ function ix.item.Register(uniqueID, baseID, isBaseItem, path, luaGenerated)
 
     if (uniqueID) then
         ITEM = (isBaseItem and ix.item.base or ix.item.list)[uniqueID] or setmetatable({}, meta)
-            hook.Run("PreItemRegistered", ITEM)
-
             ITEM.uniqueID = uniqueID
             ITEM.base = baseID or ITEM.base
             ITEM.isBase = isBaseItem or false
@@ -250,8 +248,6 @@ function ix.item.Register(uniqueID, baseID, isBaseItem, path, luaGenerated)
                     end
                 end
             end
-
-            hook.Run("PostItemRegistered", ITEM)
         if (luaGenerated) then
             return ITEM
         else
