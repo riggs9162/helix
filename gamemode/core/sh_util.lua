@@ -1578,7 +1578,9 @@ end
 
 local color_fallback = Color(115, 53, 142)
 function ix.util.Log(...)
-    MsgC(color_fallback, "[Helix] ", ..., "\n")
+    local comp = {...}
+    table.insert(comp, "\n")
+    MsgC(color_fallback, "[Helix] ", unpack(comp))
 end
 
 ix.util.Include("helix/gamemode/core/meta/sh_entity.lua")
