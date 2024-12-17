@@ -53,7 +53,7 @@ local function IncludeFolder(dir)
 end
 
 local function IncludeContent()
-    MsgC(Color(115, 53, 142), "[Helix] Loading content...\n")
+    ix.util.Log("[Helix] Loading content...")
 
     local total = 0
 
@@ -61,12 +61,12 @@ local function IncludeContent()
     total = total + IncludeFolder("resource/fonts/")
     total = total + IncludeFolder("sound/helix/")
 
-    MsgC(Color(0, 255, 0), "[Helix] Completed content load (" .. total .. " files)...\n")
+    ix.util.Log(Color(0, 255, 0), "Completed content load (" .. total .. " files)...")
 end
 
 -- Include all workshop addons
 local function IncludeWorkshopAddons()
-    MsgC(Color(115, 53, 142), "[Helix] Loading workshop addons...\n")
+    ix.util.Log("Loading workshop addons...")
 
     local total = 0
     local addons = engine.GetAddons()
@@ -76,11 +76,11 @@ local function IncludeWorkshopAddons()
             total = total + 1
 
             resource.AddWorkshop(v.wsid)
-            MsgC(Color(115, 53, 142), "[Helix] Added workshop addon: " .. v.title .. "\n")
+            ix.util.Log("Added workshop addon: " .. v.title)
         end
     end
 
-    MsgC(Color(0, 255, 0), "[Helix] Completed workshop addon load (" .. total .. " addons)...\n")
+    ix.util.Log(Color(0, 255, 0), "Completed workshop addon load (" .. total .. " addons)...")
 end
 
 IncludeContent()

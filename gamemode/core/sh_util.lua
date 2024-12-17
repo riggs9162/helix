@@ -1576,5 +1576,10 @@ function ix.util.IsValidModel(model)
     return false
 end
 
+local color_fallback = Color(115, 53, 142)
+function ix.util.Log(...)
+    MsgC(color_fallback, "[Helix] ", ..., "\n")
+end
+
 ix.util.Include("helix/gamemode/core/meta/sh_entity.lua")
 ix.util.Include("helix/gamemode/core/meta/sh_player.lua")
