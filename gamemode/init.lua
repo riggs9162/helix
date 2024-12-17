@@ -53,7 +53,7 @@ local function IncludeFolder(dir)
 end
 
 local function IncludeContent()
-    ix.util.Log("[Helix] Loading content...")
+    ix.util.Log("Loading content...")
 
     local total = 0
 
