@@ -798,7 +798,7 @@ end
 function GM:SaveData()
     ix.date.Save()
 
-    // Go through all doors and set their networked vars wether or not they are locked
+    -- Go through all doors and set their networked vars wether or not they are locked
     local doors = {}
     for _, v in ents.Iterator() do
         if (v:IsDoor()) then
@@ -821,7 +821,7 @@ function GM:SaveData()
         end
     end
 
-    // Do the same for vehicles .. .
+    -- Do the same for vehicles .. .
     local vehicles = {}
     for _, v in ents.Iterator() do
         if (v:IsVehicle()) then
