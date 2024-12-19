@@ -127,13 +127,13 @@ end
 function ix.area.GetNearestArea(position, distance)
     local found = {}
     for id, info in pairs(ix.area.stored) do
-        // First check if the position is inside the area's bounding box
+        -- First check if the position is inside the area's bounding box
         if (position:WithinAABox(info.startPosition, info.endPosition)) then
             found[#found + 1] = {id, 0}
             continue
         end
 
-        // If it isn't, we check if we are near the area
+        -- If it isn't, we check if we are near the area
         local center, startPos, endPos = PLUGIN:GetLocalAreaPosition(info.startPosition, info.endPosition)
         local areaDistance = center:Distance(position)
 

@@ -934,8 +934,8 @@ properties.Add("vendor_preset_load", {
         if (data) then
             entity:SetDisplayName(data.name)
             entity:SetDescription(data.description)
-            // entity:SetPos(data.pos)
-            // entity:SetAngles(data.angles)
+            -- entity:SetPos(data.pos)
+            -- entity:SetAngles(data.angles)
             entity:SetModel(data.model)
             entity:SetSkin(data.skin or 0)
             entity:SetNoBubble(data.bubble)
