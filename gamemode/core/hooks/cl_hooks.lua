@@ -375,7 +375,7 @@ function GM:InitializedConfig()
 
         timer.Simple(5, function()
             if (IsValid(ix.gui.loading)) then
-                local fatalError = GetGlobalString("fatalError")
+                local fatalError = GetGlobalString("fatalError", "")
                 if (fatalError and fatalError != "") then
                     local label = loader:Add("DLabel")
                     label:SetFont("ixSubTitleFont")
@@ -395,6 +395,10 @@ function GM:InitializedConfig()
             hook.Run("LoadIntro")
         end
     end
+end
+
+if (IsValid(ix.gui.loading)) then
+    ix.gui.loading:Remove()
 end
 
 function GM:InitPostEntity()
