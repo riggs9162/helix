@@ -612,18 +612,6 @@ function GM:PhysgunDrop(ply, entity)
     end
 end
 
-local TOOL_DANGEROUS = {}
-TOOL_DANGEROUS["dynamite"] = true
-TOOL_DANGEROUS["duplicator"] = true
-
-function GM:CanTool(ply, trace, tool)
-    if ( ply:IsAdmin() ) then return true end
-
-    if ( TOOL_DANGEROUS[tool] or hook.Run("CanPlayerUseTool", ply, tool, trace) == false ) then return false end
-
-    return self.BaseClass:CanTool(ply, trace, tool)
-end
-
 function GM:Move(ply, moveData)
     local char = ply:GetCharacter()
     if ( char ) then
