@@ -61,4 +61,26 @@ if ( SERVER ) then
             ply:NotifyLocalized("areaEditorUpdated", L(areaID))
         end
     end)
+
+    util.AddNetworkString("ixDeveloperAreaDelete")
+    net.Receive("ixDeveloperAreaDelete", function(_, ply)
+        if ( CAMI.PlayerHasAccess(ply, "Helix - Developer", nil) and CAMI.PlayerHasAccess(ply, "Helix - AreaEdit", nil) ) then
+            local areaID = net.ReadString()
+
+            ix.area.stored[areaID] = nil
+
+            timer.Simple(1, function()
+                local json = util.TableToJSON(ix.area.stored)
+                local compressed = util.Compress(json)
+                local length = compressed:len()
+
+                net.Start("ixAreaSync")
+                    net.WriteUInt(length, 32)
+                    net.WriteData(compressed, length)
+                net.Send(ply)
+            end)
+
+            ply:NotifyLocalized("areaEditorDeleted", L(areaID))
+        end
+    end)
 end
