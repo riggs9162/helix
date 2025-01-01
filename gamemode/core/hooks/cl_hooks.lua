@@ -1009,3 +1009,9 @@ hook.Add("player_spawn", "ixPlayerSpawn", function(data)
         end
     end
 end)
+
+net.Receive("ixChatAddText", function()
+    local args = net.ReadTable()
+
+    chat.AddText(unpack(args))
+end)

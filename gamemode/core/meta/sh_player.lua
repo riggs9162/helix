@@ -58,6 +58,18 @@ function meta:IsRunning()
     return vectorLength2D(self:GetVelocity()) > (self:GetWalkSpeed() + 10)
 end
 
+function meta:ChatAddText(...)
+    local args = {...}
+
+    if ( SERVER ) then
+        net.Start("ixChatAddText")
+            net.WriteTable(args)
+        net.Send(self)
+    else
+        chat.AddText(unpack(args))
+    end
+end
+
 --- Returns `true` if the player currently has a female model. This checks if the model has `female`, `alyx` or `mossman` in its
 -- name, or if the player's model class is `citizen_female`.
 -- @realm shared
@@ -193,6 +205,7 @@ if (SERVER) then
     util.AddNetworkString("ixActionBar")
     util.AddNetworkString("ixActionBarReset")
     util.AddNetworkString("ixStringRequest")
+    util.AddNetworkString("ixChatAddText")
 
     --- Sets whether or not this player's current weapon is raised.
     -- @realm server
