@@ -58,7 +58,6 @@ function playerMeta:CanOverrideView()
         isAllowed() and
         IsValid(self) and
         self:GetCharacter() and
-        !self:GetNetVar("actEnterAngle") and
         !IsValid(entity) and
         LocalPlayer():Alive()
         ) then return true end

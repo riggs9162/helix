@@ -28,25 +28,28 @@ function PLUGIN:CanPlayerEnterAct(client, modelClass, variant, act)
 end
 
 function PLUGIN:PlayerDeath(client)
-    if (client.ixUntimedSequence) then
+    local clientTable = client:GetTable()
+    if (clientTable.ixUntimedSequence) then
         client:SetNetVar("actEnterAngle")
         client:LeaveSequence()
-        client.ixUntimedSequence = nil
+        clientTable.ixUntimedSequence = nil
     end
 end
 
 function PLUGIN:PlayerSpawn(client)
-    if (client.ixUntimedSequence) then
+    local clientTable = client:GetTable()
+    if (clientTable.ixUntimedSequence) then
         client:SetNetVar("actEnterAngle")
         client:LeaveSequence()
-        client.ixUntimedSequence = nil
+        clientTable.ixUntimedSequence = nil
     end
 end
 
 function PLUGIN:OnCharacterFallover(client)
-    if (client.ixUntimedSequence) then
+    local clientTable = client:GetTable()
+    if (clientTable.ixUntimedSequence) then
         client:SetNetVar("actEnterAngle")
         client:LeaveSequence()
-        client.ixUntimedSequence = nil
+        clientTable.ixUntimedSequence = nil
     end
 end

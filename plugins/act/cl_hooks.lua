@@ -31,7 +31,9 @@ end
 function PLUGIN:ShouldDrawLocalPlayer(client)
     if (client:GetNetVar("actEnterAngle") and self.cameraFraction > 0.25) then
         return true
-    elseif (self.cameraFraction > 0.25) then return true end
+    elseif (self.cameraFraction > 0.25) then
+        return true
+    end
 end
 
 local forwardOffset = 16
@@ -42,6 +44,11 @@ local traceMin = Vector(-4, -4, -4)
 local traceMax = Vector(4, 4, 4)
 
 function PLUGIN:CalcView(client, origin)
+    if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
+        print("We are using thirdperson, aborting act view")
+        return
+    end
+
     local enterAngle = client:GetNetVar("actEnterAngle")
     local fraction = self.cameraFraction
     local offset = self.bIdle and forwardOffset or backwardOffset
@@ -67,36 +74,17 @@ function PLUGIN:CalcView(client, origin)
     local forward = enterAngle:Forward()
     local head = GetHeadBone(client)
 
-    local bFirstPerson = true
+    if (head) then
+        client:ManipulateBoneScale(head, Vector(0.01, 0.01, 0.01))
 
-    if (ix.option.Get("thirdpersonEnabled", false)) then
-        local originPosition = head and client:GetBonePosition(head) or client:GetPos()
+        local pos, ang = client:GetBonePosition(head)
+        ang:RotateAroundAxis(ang:Right(), 270)
+        ang:RotateAroundAxis(ang:Up(), 270)
 
-        -- check if the camera will hit something
-        local data = util.TraceHull({
-            start = originPosition,
-            endpos = originPosition - client:EyeAngles():Forward() * 48,
-            mins = traceMin * 0.75,
-            maxs = traceMax * 0.75,
-            filter = client
-        })
-
-        view.origin = data.HitPos
-    end
-
-    if (bFirstPerson) then
-        if (head) then
-            client:ManipulateBoneScale(head, Vector(0.01, 0.01, 0.01))
-
-            local pos, ang = client:GetBonePosition(head)
-            ang:RotateAroundAxis(ang:Right(), 270)
-            ang:RotateAroundAxis(ang:Up(), 270)
-
-            view.origin = pos + ang:Up() * 4
-            view.angles = ang
-        else
-            view.origin = origin + forward * forwardOffset + height
-        end
+        view.origin = pos + ang:Up() * 4
+        view.angles = ang
+    else
+        view.origin = origin + forward * forwardOffset + height
     end
 
     view.origin = LerpVector(fraction, origin, view.origin)
