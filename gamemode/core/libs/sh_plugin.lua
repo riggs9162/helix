@@ -1,3 +1,10 @@
+--[[--
+Plugin library, used for loading and managing plugins.
+
+Plugins are a way to extend the functionality of the gamemode without modifying the core code. They can be used to add new items, factions, classes, and more. Plugins are loaded from the `helix/plugins` directory, as well as the `plugins` directory of the active schema and gamemode.
+
+@module ix.plugin
+]]
 
 ix.plugin = ix.plugin or {}
 ix.plugin.list = ix.plugin.list or {}
@@ -8,6 +15,13 @@ ix.util.Include("helix/gamemode/core/meta/sh_tool.lua")
 -- luacheck: globals HOOKS_CACHE
 HOOKS_CACHE = {}
 
+--- Loads a plugin from the given directory. This function is used internally by `ix.plugin.LoadFromDir` and should not be called directly.
+-- @realm shared
+-- @string uniqueID Unique ID of the plugin
+-- @string path Path to the plugin directory
+-- @bool[opt=false] isSingleFile Whether or not the plugin is a single file
+-- @string[opt="PLUGIN"] variable Name of the variable to store the plugin table in
+-- @internal
 function ix.plugin.Load(uniqueID, path, isSingleFile, variable)
     if (hook.Run("PluginShouldLoad", uniqueID) == false) then return end
 
@@ -106,6 +120,10 @@ function ix.plugin.GetHook(pluginName, hookName)
     return
 end
 
+--- Loads entities from the given directory. This function is used internally by `ix.plugin.Load` and should not be called directly.
+-- @realm shared
+-- @string path Path to the entities directory
+-- @internal
 function ix.plugin.LoadEntities(path)
     local bLoadedTools
     local files, folders
@@ -244,6 +262,9 @@ function ix.plugin.LoadEntities(path)
     end
 end
 
+--- Initializes the plugin system. This function is called internally by the framework and should not be called directly.
+-- @realm shared
+-- @internal
 function ix.plugin.Initialize()
     if SERVER then
         ix.plugin.unloaded = ix.data.Get("unloaded", {}, true, true)
@@ -258,10 +279,18 @@ function ix.plugin.Initialize()
     hook.Run("InitializedPlugins")
 end
 
+--- Returns a given plugin by its unique identifier.
+-- @realm shared
+-- @string identifier Unique identifier of the plugin
+-- @treturn table Plugin table
 function ix.plugin.Get(identifier)
     return ix.plugin.list[identifier]
 end
 
+--- Loads all plugins from the given directory. This function is used internally by `ix.plugin.Load` and should not be called directly.
+-- @realm shared
+-- @string directory Directory to load plugins from
+-- @internal
 function ix.plugin.LoadFromDir(directory)
     local files, folders = file.Find(directory.."/*", "LUA")
 
@@ -274,6 +303,12 @@ function ix.plugin.LoadFromDir(directory)
     end
 end
 
+--- Unloads a plugin by its unique identifier. This function will call the `OnUnload` hook for the plugin if it exists.
+-- @realm shared
+-- @string uniqueID Unique identifier of the plugin
+-- @bool[opt=true] bNoSave Whether or not to prevent the plugin from saving its data
+-- @treturn bool Whether or not the plugin was successfully unloaded
+-- @usage ix.plugin.Unload("logging", true) -- Unloads the logging plugin
 function ix.plugin.SetUnloaded(uniqueID, state, bNoSave)
     local plugin = ix.plugin.list[uniqueID]
 
