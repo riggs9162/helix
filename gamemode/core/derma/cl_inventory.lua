@@ -1,29 +1,6 @@
 
 local RECEIVER_NAME = "ixInventoryItem"
 
--- The queue for the rendered icons.
-ICON_RENDER_QUEUE = ICON_RENDER_QUEUE or {}
-
--- To make making inventory variant, This must be followed up.
-local function RenderNewIcon(panel, itemTable)
-    local model = itemTable:GetModel()
-
-    -- re-render icons
-    if ((itemTable.iconCam and !ICON_RENDER_QUEUE[string.lower(model)]) or itemTable.forceRender) then
-        local iconCam = itemTable.iconCam
-        iconCam = {
-            cam_pos = iconCam.pos,
-            cam_ang = iconCam.ang,
-            cam_fov = iconCam.fov,
-        }
-        ICON_RENDER_QUEUE[string.lower(model)] = true
-
-        panel.Icon:RebuildSpawnIconEx(
-            iconCam
-        )
-    end
-end
-
 local function InventoryAction(action, itemID, invID, data)
     net.Start("ixInventoryAction")
         net.WriteString(action)
@@ -34,6 +11,8 @@ local function InventoryAction(action, itemID, invID, data)
 end
 
 local PANEL = {}
+
+DEFINE_BASECLASS("DModelPanel")
 
 AccessorFunc(PANEL, "itemTable", "ItemTable")
 AccessorFunc(PANEL, "inventoryID", "InventoryID")
@@ -60,7 +39,7 @@ function PANEL:OnMouseReleased(code)
     end
 
     self:DragMouseRelease(code)
-    self:SetZPos(999)
+    self:SetZPos(9999)
     self:MouseCapture(false)
 end
 
@@ -259,13 +238,15 @@ function PANEL:ExtraPaint(width, height)
 end
 
 function PANEL:Paint(width, height)
+    BaseClass.Paint(self, width, height)
+
     surface.SetDrawColor(0, 0, 0, 85)
     surface.DrawRect(2, 2, width - 4, height - 4)
 
     self:ExtraPaint(width, height)
 end
 
-vgui.Register("ixItemIcon", PANEL, "SpawnIcon")
+vgui.Register("ixItemIcon", PANEL, "ixSpawnIcon")
 
 PANEL = {}
 DEFINE_BASECLASS("DFrame")
@@ -645,29 +626,6 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
 
         if (self.panels[itemTable:GetID()]) then
             self.panels[itemTable:GetID()]:Remove()
-        end
-
-        if (itemTable.exRender) then
-            panel.Icon:SetVisible(false)
-            panel.ExtraPaint = function(this, panelX, panelY)
-                local exIcon = ikon:GetIcon(itemTable.uniqueID)
-                if (exIcon) then
-                    surface.SetMaterial(exIcon)
-                    surface.SetDrawColor(color_white)
-                    surface.DrawTexturedRect(0, 0, panelX, panelY)
-                else
-                    ikon:renderIcon(
-                        itemTable.uniqueID,
-                        itemTable.width,
-                        itemTable.height,
-                        itemTable:GetModel(),
-                        itemTable.iconCam
-                    )
-                end
-            end
-        else
-            -- yeah..
-            RenderNewIcon(panel, itemTable)
         end
 
         panel.slots = {}
