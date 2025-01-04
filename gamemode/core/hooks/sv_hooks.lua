@@ -679,8 +679,13 @@ function GM:PlayerDeath(ply, inflictor, attacker)
         end
 
         local weapon = attacker:IsPlayer() and attacker:GetActiveWeapon()
+        local weaponText = IsValid(weapon) and weapon:GetClass()
 
-        ix.log.Add(ply, "playerDeath", attacker:GetName() != "" and attacker:GetName() or attacker:GetClass(), IsValid(weapon) and weapon:GetClass())
+        if ( attacker:IsPlayer() and attacker:InVehicle() and IsValid(attacker:GetVehicle()) ) then
+            weaponText = attacker:GetVehicle():GetClass()
+        end
+
+        ix.log.Add(ply, "playerDeath", attacker:GetName() != "" and attacker:GetName() or attacker:GetClass(), weaponText)
     end
 end
 
