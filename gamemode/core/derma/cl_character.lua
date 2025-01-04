@@ -571,6 +571,7 @@ vgui.Register("ixCharMenu", PANEL, "EditablePanel")
 if (IsValid(ix.gui.characterMenu)) then
     ix.gui.characterMenu:Remove()
 
-    --TODO: REMOVE ME
-    ix.gui.characterMenu = vgui.Create("ixCharMenu")
+    timer.Simple(0, function()
+        ix.gui.characterMenu = vgui.Create("ixCharMenu")
+    end)
 end
