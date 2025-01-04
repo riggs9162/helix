@@ -475,6 +475,35 @@ if (CLIENT) then
         end
     end
 
+    --- Draws a more performant blur on the given panel. This should be used for things like an extra-ordinay amount of panels
+    -- that need to be blurred. This will fall back to a simple darkened rectangle if the player has blurring disabled.
+    -- @realm client
+    -- @tparam panel panel Panel to draw the blur for
+    -- @number[opt=5] amount Intensity of the blur. This should be kept between 0 and 10 for performance reasons
+    -- @number[opt=255] alpha Opacity of the blur
+    -- @usage function PANEL:Paint(width, height)
+    --     ix.util.DrawPerformantBlur(self)
+    -- end
+    function ix.util.DrawPerformantBlur(panel, alpha)
+        if (ix.option.Get("cheapBlur", false)) then
+            surface.SetDrawColor(50, 50, 50, alpha or 200)
+            surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
+        else
+            surface.SetMaterial(blur)
+            surface.SetDrawColor(255, 255, 255, alpha or 255)
+
+            local x, y = panel:LocalToScreen(0, 0)
+
+            for i = 0.33, 1, 0.33 do
+                blur:SetFloat("$blur", i)
+                blur:Recompute()
+
+                render.UpdateScreenEffectTexture()
+                surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
+            end
+        end
+    end
+
     --- Draws a blurred rectangle with the given position and bounds. This shouldn't be used for panels, see `ix.util.DrawBlur`
     -- instead.
     -- @realm client
