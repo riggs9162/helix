@@ -15,7 +15,7 @@ function PANEL:Init()
     self:Center()
     self:MakePopup()
 
-    self.access = self:Add("DListView")
+    self.access = self:Add("ixListView")
     self.access:Dock(FILL)
     self.access:AddColumn(L"name").Header:SetTextColor(Color(25, 25, 25))
     self.access:AddColumn(L"access").Header:SetTextColor(Color(25, 25, 25))
