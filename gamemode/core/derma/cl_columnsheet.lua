@@ -1,17 +1,28 @@
 
 local PANEL = {}
 
+local backgroundColor = Color(0, 0, 0, 66)
+
 AccessorFunc( PANEL, "ActiveButton", "ActiveButton" )
 
 function PANEL:Init()
 
 	self.Navigation = vgui.Create( "DScrollPanel", self )
 	self.Navigation:Dock( LEFT )
+	self.Navigation:DockMargin( 0, 0, 8, 0 )
 	self.Navigation:SetWidth( 100 )
-	self.Navigation:DockMargin( 10, 10, 10, 0 )
+	self.Navigation.Paint = function( panel, w, h )
+		surface.SetDrawColor( backgroundColor )
+		surface.DrawRect( 0, 0, w, h )
+	end
 
 	self.Content = vgui.Create( "Panel", self )
 	self.Content:Dock( FILL )
+	self.Content:DockPadding( 8, 8, 8, 8 )
+	self.Content.Paint = function( panel, w, h )
+		surface.SetDrawColor( backgroundColor )
+		surface.DrawRect( 0, 0, w, h )
+	end
 
 	self.Items = {}
 
