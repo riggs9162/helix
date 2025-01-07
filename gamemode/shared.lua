@@ -167,9 +167,7 @@ ix.util.Include("core/sh_commands.lua")
 
 if (SERVER and game.IsDedicated()) then
     concommand.Remove("gm_save")
-
     concommand.Add("gm_save", function(client, command, arguments) end)
-    concommand.Add("gmod_admin_cleanup", function(client, command, arguments) end)
 end
 
 -- add entries for c_viewmodels that aren't set by default
