@@ -1142,7 +1142,7 @@ local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or ".
 -- @treturn number How long the entire sequence of sounds will take to play
 -- @usage -- Play a sequence of sounds with a delay between each sound
 -- ix.util.EmitQueuedSounds(entity, {"sound1.wav", "sound2.wav", "sound3.wav"}, 0.5)
-function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
+function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch, callback)
     -- Let there be a delay before any sound is played.
     delay = delay or 0
     spacing = spacing or 0.1
@@ -1172,6 +1172,10 @@ function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch)
 
         -- Add the delay for the next sound.
         delay = delay + length + postSet + spacing
+    end
+
+    if (callback) then
+        timer.Simple(delay, callback)
     end
 
     -- Return how long it took for the whole thing.
