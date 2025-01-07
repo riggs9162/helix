@@ -135,7 +135,7 @@ function PANEL:Init()
 
     local menu
 
-    self.items = self:Add("DListView")
+    self.items = self:Add("ixListView")
     self.items:Dock(FILL)
     self.items:DockMargin(0, 4, 0, 0)
     self.items:AddColumn(L"name").Header:SetTextColor(color_black)
