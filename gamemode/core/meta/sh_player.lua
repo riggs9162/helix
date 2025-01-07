@@ -195,10 +195,23 @@ end
 -- @usage client:SetBodygroupName("head", 1)
 function meta:SetBodygroupName(name, value)
     local index = self:FindBodygroupByName(name)
-
-    if (index > -1) then
+    if ( index > -1 ) then
         self:SetBodygroup(index, value)
     end
+end
+
+--- Returns the bodygroup value of this player's model by its name.
+-- @realm shared
+-- @string name Name of the bodygroup
+-- @treturn number Value of the bodygroup
+-- @usage local headGroup = client:GetBodygroupName("head")
+function meta:GetBodygroupName(name)
+    local index = self:FindBodygroupByName(name)
+    if ( index > -1 ) then
+        return self:GetBodygroup(index)
+    end
+
+    return -1
 end
 
 if (SERVER) then
