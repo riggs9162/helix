@@ -45,7 +45,6 @@ local traceMax = Vector(4, 4, 4)
 
 function PLUGIN:CalcView(client, origin)
     if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
-        print("We are using thirdperson, aborting act view")
         return
     end
 
