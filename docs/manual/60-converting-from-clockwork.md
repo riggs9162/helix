@@ -164,16 +164,16 @@ Receiving a datastream:
 ```
 -- before
 Clockwork.datastream:Hook("MessageName", function(player, data)
-	local a = data[1];
-	local b = data[2];
-	local c = data[3];
+    local a = data[1];
+    local b = data[2];
+    local c = data[3];
 
-	print(a, b, c);
+    print(a, b, c);
 end);
 
 -- after
 netstream.Hook("MessageName", function(ply, a, b, c)
-	print(a, b, c)
+    print(a, b, c)
 end)
 ```
 
@@ -241,14 +241,14 @@ Item functions are defined very differently than they are in Clockwork. For exam
 ```
 -- before
 function ITEM:OnUse(player, entity)
-	print("My name is: " .. player:Name(), entity)
+    print("My name is: " .. player:Name(), entity)
 end
 
 -- after
 ITEM.functions.Use = {
-	OnRun = function(item)
-		print("My name is: " .. item.player, item.entity)
-	end
+    OnRun = function(item)
+        print("My name is: " .. item.player, item.entity)
+    end
 }
 ```
 
@@ -312,12 +312,12 @@ You will need to modify the function name and arguments for your schema or plugi
 ```
 -- before
 function Schema:PlayerPlayPainSound(player, gender, damageInfo, hitGroup)
-	-- ...
+    -- ...
 end
 
 -- after
 function Schema:GetPlayerPainSound(ply)
-	-- ...
+    -- ...
 end
 ```
 

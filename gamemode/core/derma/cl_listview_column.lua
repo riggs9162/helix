@@ -6,8 +6,8 @@ Derma_Hook( PANEL, "ApplySchemeSettings", "Scheme", "ListViewHeaderLabel" )
 Derma_Hook( PANEL, "PerformLayout", "Layout", "ListViewHeaderLabel" )
 
 function PANEL:Init()
-	
-	self:SetFont( "ixSmallFont" )
+    
+    self:SetFont( "ixSmallFont" )
 
 end
 
@@ -18,31 +18,31 @@ end
 vgui.Register( "ixListViewHeaderLabel", PANEL, "DLabel" )
 
 --[[---------------------------------------------------------
-	ixListView_DraggerBar
+    ixListView_DraggerBar
 -----------------------------------------------------------]]
 
 local PANEL = {}
 
 function PANEL:Init()
 
-	self:SetCursor( "sizewe" )
+    self:SetCursor( "sizewe" )
 
 end
 
 function PANEL:Paint()
 
-	return true
+    return true
 
 end
 
 function PANEL:OnCursorMoved()
 
-	if ( self.Depressed ) then
+    if ( self.Depressed ) then
 
-		local x, y = self:GetParent():CursorPos()
+        local x, y = self:GetParent():CursorPos()
 
-		self:GetParent():ResizeColumn( x )
-	end
+        self:GetParent():ResizeColumn( x )
+    end
 
 end
 
@@ -53,7 +53,7 @@ end
 vgui.Register( "ixListView_DraggerBar", PANEL, "ixMenuButton" )
 
 --[[---------------------------------------------------------
-	ixListView_Column
+    ixListView_Column
 -----------------------------------------------------------]]
 
 local PANEL = {}
@@ -73,29 +73,29 @@ Derma_Hook( PANEL, "PerformLayout", "Layout", "ListViewColumn" )
 
 function PANEL:Init()
 
-	self.Header = vgui.Create( "ixMenuButton", self )
-	self.Header.DoClick = function() self:DoClick() end
-	self.Header.DoRightClick = function() self:DoRightClick() end
+    self.Header = vgui.Create( "ixMenuButton", self )
+    self.Header.DoClick = function() self:DoClick() end
+    self.Header.DoRightClick = function() self:DoRightClick() end
 
-	self.DraggerBar = vgui.Create( "ixListView_DraggerBar", self )
+    self.DraggerBar = vgui.Create( "ixListView_DraggerBar", self )
 
-	self:SetMinWidth( 10 )
-	self:SetMaxWidth( 19200 )
+    self:SetMinWidth( 10 )
+    self:SetMaxWidth( 19200 )
 
 end
 
 function PANEL:SetFixedWidth( iSize )
 
-	self:SetMinWidth( iSize )
-	self:SetMaxWidth( iSize )
-	self:SetWide( iSize )
+    self:SetMinWidth( iSize )
+    self:SetMaxWidth( iSize )
+    self:SetWide( iSize )
 
 end
 
 function PANEL:DoClick()
 
-	self:GetParent():SortByColumn( self:GetColumnID(), self:GetDescending() )
-	self:SetDescending( !self:GetDescending() )
+    self:GetParent():SortByColumn( self:GetColumnID(), self:GetDescending() )
+    self:SetDescending( !self:GetDescending() )
 
 end
 
@@ -105,54 +105,54 @@ end
 
 function PANEL:SetName( strName )
 
-	self.Header:SetText( strName )
+    self.Header:SetText( strName )
 
 end
 
 function PANEL:Paint()
-	return true
+    return true
 end
 
 function PANEL:PerformLayout()
 
-	if ( self:GetTextAlign() ) then
-		self.Header:SetContentAlignment( self:GetTextAlign() )
-	end
+    if ( self:GetTextAlign() ) then
+        self.Header:SetContentAlignment( self:GetTextAlign() )
+    end
 
-	self.Header:SetPos( 0, 0 )
-	self.Header:SetSize( self:GetWide(), self:GetParent():GetHeaderHeight() )
+    self.Header:SetPos( 0, 0 )
+    self.Header:SetSize( self:GetWide(), self:GetParent():GetHeaderHeight() )
 
-	self.DraggerBar:SetWide( 4 )
-	self.DraggerBar:StretchToParent( nil, 0, nil, 0 )
-	self.DraggerBar:AlignRight()
+    self.DraggerBar:SetWide( 4 )
+    self.DraggerBar:StretchToParent( nil, 0, nil, 0 )
+    self.DraggerBar:AlignRight()
 
 end
 
 function PANEL:ResizeColumn( iSize )
 
-	self:GetParent():OnRequestResize( self, iSize )
+    self:GetParent():OnRequestResize( self, iSize )
 
 end
 
 function PANEL:SetWidth( iSize )
 
-	iSize = math.Clamp( iSize, self:GetMinWidth(), math.max( self:GetMaxWidth(), 0 ) )
-	iSize = math.ceil( iSize )
+    iSize = math.Clamp( iSize, self:GetMinWidth(), math.max( self:GetMaxWidth(), 0 ) )
+    iSize = math.ceil( iSize )
 
-	-- If the column changes size we need to lay the data out too
-	if ( iSize != math.ceil( self:GetWide() ) ) then
-		self:GetParent():SetDirty( true )
-	end
+    -- If the column changes size we need to lay the data out too
+    if ( iSize != math.ceil( self:GetWide() ) ) then
+        self:GetParent():SetDirty( true )
+    end
 
-	self:SetWide( iSize )
-	return iSize
+    self:SetWide( iSize )
+    return iSize
 
 end
 
 vgui.Register( "ixListView_Column", PANEL, "Panel" )
 
 --[[---------------------------------------------------------
-	ixListView_ColumnPlain
+    ixListView_ColumnPlain
 -----------------------------------------------------------]]
 
 local PANEL = {}

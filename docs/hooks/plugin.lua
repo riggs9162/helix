@@ -15,7 +15,7 @@ Plugin hooks are regular hooks that can be used in your schema with `Schema:Hook
 -- @tab payload Table of data to be used for character creation
 -- @tab newPayload Table of data be merged with the current payload
 -- @usage function PLUGIN:AdjustCreationPayload(client, payload, newPayload)
--- 	newPayload.money = payload.attributes["stm"] -- Sets the characters initial money to the stamina attribute value.
+--     newPayload.money = payload.attributes["stm"] -- Sets the characters initial money to the stamina attribute value.
 -- end
 function AdjustCreationPayload(client, payload, newPayload)
 end
@@ -28,7 +28,7 @@ end
 -- exhausting or regaining stamina
 -- @treturn number New offset to use
 -- @usage function PLUGIN:AdjustStaminaOffset(client, baseOffset)
--- 	return baseOffset * 2 -- Drain/Regain stamina twice as fast.
+--     return baseOffset * 2 -- Drain/Regain stamina twice as fast.
 -- end
 function AdjustStaminaOffset(client, baseOffset)
 end
@@ -37,7 +37,7 @@ end
 -- @realm client
 -- @treturn bool Whether or not to create the business menu
 -- @usage function PLUGIN:BuildBusinessMenu()
--- 	return LocalPlayer():IsAdmin() -- Only builds the business menu for admins.
+--     return LocalPlayer():IsAdmin() -- Only builds the business menu for admins.
 -- end
 function BuildBusinessMenu()
 end
@@ -49,7 +49,7 @@ end
 -- @string text Unformatted text of the message
 -- @treturn bool Whether or not to allow auto formatting on the message
 -- @usage function PLUGIN:CanAutoFormatMessage(speaker, chatType, text)
--- 	return false -- Disable auto formatting outright.
+--     return false -- Disable auto formatting outright.
 -- end
 function CanAutoFormatMessage(speaker, chatType, text)
 end
@@ -70,7 +70,7 @@ end
 --
 -- Note that schemas/plugins can add additional character info panels.
 -- @usage function PLUGIN:CanCreateCharacterInfo(suppress)
--- 	suppress.attributes = true -- Hides the attributes panel from the character info tab
+--     suppress.attributes = true -- Hides the attributes panel from the character info tab
 -- end
 function CanCreateCharacterInfo(suppress)
 end
@@ -80,9 +80,9 @@ end
 -- @entity weapon Weapon the player currently is holding
 -- @treturn bool Whether or not to draw the ammo hud
 -- @usage function PLUGIN:CanDrawAmmoHUD(weapon)
--- 	if (weapon:GetClass() == "weapon_frag") then -- Hides the ammo hud when holding grenades.
--- 		return false
--- 	end
+--     if (weapon:GetClass() == "weapon_frag") then -- Hides the ammo hud when holding grenades.
+--         return false
+--     end
 -- end
 function CanDrawAmmoHUD(weapon)
 end
@@ -94,7 +94,7 @@ end
 -- @number access The access level used when called.
 -- @treturn bool Whether or not to allow the client access.
 -- @usage function PLUGIN:CanPlayerAccessDoor(client, door, access)
--- 	return true -- Always allow access.
+--     return true -- Always allow access.
 -- end
 function CanPlayerAccessDoor(client, door, access)
 end
@@ -106,12 +106,12 @@ end
 -- @number other instance ID of the item being combined into the first item, this can be invalid due to it being from clientside
 -- @treturn bool Whether or not to allow the player to combine the items
 -- @usage function PLUGIN:CanPlayerCombineItem(client, item, other)
---		local otherItem = ix.item.instances[other]
+--        local otherItem = ix.item.instances[other]
 --
---		if (otherItem and otherItem.uniqueID == "soda") then
---			return false -- disallow combining any item that has a uniqueID equal to `soda`
---		end
---	end
+--        if (otherItem and otherItem.uniqueID == "soda") then
+--            return false -- disallow combining any item that has a uniqueID equal to `soda`
+--        end
+--    end
 function CanPlayerCombineItem(client, item, other)
 end
 
@@ -125,9 +125,9 @@ end
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
 -- @usage function PLUGIN:CanPlayerCreateCharacter(client, payload)
--- 	if (!client:IsAdmin()) then
--- 		return false, "notNow" -- only allow admins to create a character
--- 	end
+--     if (!client:IsAdmin()) then
+--         return false, "notNow" -- only allow admins to create a character
+--     end
 -- end
 -- -- non-admins will see the message "You are not allowed to do this right now!"
 function CanPlayerCreateCharacter(client, payload)
@@ -139,7 +139,7 @@ end
 -- @number item instance ID of the item being dropped
 -- @treturn bool Whether or not to allow the player to drop the item
 -- @usage function PLUGIN:CanPlayerDropItem(client, item)
--- 	return false -- Never allow dropping items.
+--     return false -- Never allow dropping items.
 -- end
 function CanPlayerDropItem(client, item)
 end
@@ -151,7 +151,7 @@ end
 -- @tab faction Faction of the player's character
 -- @treturn bool Whether or not to allow the player to earn salary
 -- @usage function PLUGIN:CanPlayerEarnSalary(client, faction)
--- 	return client:IsAdmin() -- Restricts earning salary to admins only.
+--     return client:IsAdmin() -- Restricts earning salary to admins only.
 -- end
 function CanPlayerEarnSalary(client, faction)
 end
@@ -162,7 +162,7 @@ end
 -- @player client Player attempting to enter observer
 -- @treturn bool Whether or not to allow the player to enter observer
 -- @usage function PLUGIN:CanPlayerEnterObserver(client)
--- 	return true -- Always allow observer.
+--     return true -- Always allow observer.
 -- end
 function CanPlayerEnterObserver(client)
 end
@@ -175,7 +175,7 @@ end
 -- @treturn bool Whether or not to allow the player to equip the item
 -- @see CanPlayerUnequipItem
 -- @usage function PLUGIN:CanPlayerEquipItem(client, item)
--- 	return client:IsAdmin() -- Restrict equipping items to admins only.
+--     return client:IsAdmin() -- Restrict equipping items to admins only.
 -- end
 function CanPlayerEquipItem(client, item)
 end
@@ -186,7 +186,7 @@ end
 -- @entity entity Entity being held
 -- @treturn bool Whether or not to allow the player to hold the entity
 -- @usage function PLUGIN:CanPlayerHoldObject(client, entity)
--- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer holding objects.
+--     return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer holding objects.
 -- end
 function CanPlayerHoldObject(client, entity)
 end
@@ -199,7 +199,7 @@ end
 -- @param data Any data passed with the interaction option
 -- @treturn bool Whether or not to allow the player to interact with the entity
 -- @usage function PLUGIN:CanPlayerInteractEntity(client, entity, option, data)
--- 	return false -- Disallow interacting with any entity.
+--     return false -- Disallow interacting with any entity.
 -- end
 function CanPlayerInteractEntity(client, entity, option, data)
 end
@@ -214,7 +214,7 @@ end
 -- @param data Any data passed with the action
 -- @treturn bool Whether or not to allow the player to interact with the item
 -- @usage function PLUGIN:CanPlayerInteractItem(client, action, item, data)
--- 	return false -- Disallow interacting with any item.
+--     return false -- Disallow interacting with any item.
 -- end
 function CanPlayerInteractItem(client, action, item, data)
 end
@@ -226,7 +226,7 @@ end
 -- @tab info The class table
 -- @treturn bool Whether or not to allow the player to join the class
 -- @usage function PLUGIN:CanPlayerJoinClass(client, class, info)
--- 	return client:IsAdmin() -- Restrict joining classes to admins only.
+--     return client:IsAdmin() -- Restrict joining classes to admins only.
 -- end
 function CanPlayerJoinClass(client, class, info)
 end
@@ -237,7 +237,7 @@ end
 -- @entity entity Door being knocked on
 -- @treturn bool Whether or not to allow the player to knock on the door
 -- @usage function PLUGIN:CanPlayerKnock(client, entity)
--- 	return false -- Disable knocking on doors outright.
+--     return false -- Disable knocking on doors outright.
 -- end
 function CanPlayerKnock(client, entity)
 end
@@ -248,7 +248,7 @@ end
 -- @entity entity Shipment entity
 -- @treturn bool Whether or not to allow the player to open the shipment
 -- @usage function PLUGIN:CanPlayerOpenShipment(client, entity)
--- 	return client:Team() == FACTION_BMD -- Restricts opening shipments to FACTION_BMD.
+--     return client:Team() == FACTION_BMD -- Restricts opening shipments to FACTION_BMD.
 -- end
 function CanPlayerOpenShipment(client, entity)
 end
@@ -260,7 +260,7 @@ end
 -- @entity entity Container entity
 -- @treturn bool Whether or not to allow the player to spawn the container
 -- @usage function PLUGIN:CanPlayerSpawnContainer(client, model, entity)
--- 	return client:IsAdmin() -- Restrict spawning containers to admins.
+--     return client:IsAdmin() -- Restrict spawning containers to admins.
 -- end
 function CanPlayerSpawnContainer(client, model, entity)
 end
@@ -271,7 +271,7 @@ end
 -- @entity item Entity corresponding to the item
 -- @treturn bool Whether or not to allow the player to take the item
 -- @usage function PLUGIN:CanPlayerTakeItem(client, item)
--- 	return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
+--     return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
 -- end
 function CanPlayerTakeItem(client, item)
 end
@@ -281,7 +281,7 @@ end
 -- @player client Player attempting throw a punch
 -- @treturn bool Whether or not to allow the player to punch
 -- @usage function PLUGIN:CanPlayerThrowPunch(client)
--- 	return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
+--     return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
 -- end
 function CanPlayerThrowPunch(client)
 end
@@ -294,7 +294,7 @@ end
 -- @bool isSellingToVendor If the client is selling to the vendor
 -- @treturn bool Whether or not to allow the client to trade with the vendor
 -- @usage function PLUGIN:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
--- 	return false -- Disallow trading with vendors outright.
+--     return false -- Disallow trading with vendors outright.
 -- end
 function CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
 end
@@ -306,7 +306,7 @@ end
 -- @treturn bool Whether or not to allow the player to unequip the item
 -- @see CanPlayerEquipItem
 -- @usage function PLUGIN:CanPlayerUnequipItem(client, item)
--- 	return false -- Disallow unequipping items.
+--     return false -- Disallow unequipping items.
 -- end
 function CanPlayerUnequipItem(client, item)
 end
@@ -328,7 +328,7 @@ end
 -- @char character Character that a player wants to use
 -- @treturn bool Whether or not to allow the player to load a character
 -- @usage function PLUGIN:CanPlayerUseCharacter(client, character)
--- 	return false -- Disallow using any character.
+--     return false -- Disallow using any character.
 -- end
 function CanPlayerUseCharacter(client, character)
 end
@@ -339,7 +339,7 @@ end
 -- @entity entity Door that a player wants to use
 -- @treturn bool Whether or not to allow the player to use a door
 -- @usage function PLUGIN:CanPlayerUseDoor(client, character)
--- 	return false -- Disallow using any door.
+--     return false -- Disallow using any door.
 -- end
 function CanPlayerUseDoor(client, entity)
 end
@@ -356,7 +356,7 @@ end
 -- @realm client
 -- @treturn bool Whether or not to allow the player to view his inventory
 -- @usage function PLUGIN:CanPlayerViewInventory()
--- 	return false -- Prevent player from viewing his inventory.
+--     return false -- Prevent player from viewing his inventory.
 -- end
 function CanPlayerViewInventory()
 end
@@ -379,9 +379,9 @@ end
 -- @tab oldInv Old inventory
 -- @treturn bool Whether or not to allow the item to be transferred
 -- @usage function PLUGIN:CanTransferItem(item, currentInv, oldInv)
--- 	if (IsValid(item:GetOwner() and !item:GetOwner():IsAdmin()) then
--- 		return false -- Admins can transfer items.
--- 	end
+--     if (IsValid(item:GetOwner() and !item:GetOwner():IsAdmin()) then
+--         return false -- Admins can transfer items.
+--     end
 -- end
 function CanTransferItem(item, currentInv, oldInv)
 end
@@ -394,7 +394,7 @@ end
 -- @number boostID ID of the boost
 -- @number boostAmount Amount of the boost
 -- @usage function PLUGIN:CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
--- 	client:Notify("Your character's "..ix.attributes.list[attribID].name.." has been boosted by "..boostAmount..".")
+--     client:Notify("Your character's "..ix.attributes.list[attribID].name.." has been boosted by "..boostAmount..".")
 -- end
 function CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
 end
@@ -406,7 +406,7 @@ end
 -- @string key Key of the attribute being updated
 -- @number value Value of the attribute
 -- @usage function PLUGIN:CharacterAttributeUpdated(client, character, key, value)
--- 	client:Notify("Your character's "..key.." has been updated to "..value..".")
+--     client:Notify("Your character's "..key.." has been updated to "..value..".")
 -- end
 function CharacterAttributeUpdated(client, character, key, value)
 end
@@ -417,9 +417,9 @@ end
 -- @number id ID of the character being deleted
 -- @bool isCurrentChar Whether or not the character is the current character
 -- @usage function PLUGIN:CharacterDeleted(client, id, isCurrentChar)
--- 	if (CLIENT and isCurrentChar) then
--- 		client:Notify("You have deleted your current character.")
--- 	end
+--     if (CLIENT and isCurrentChar) then
+--         client:Notify("You have deleted your current character.")
+--     end
 -- end
 function CharacterDeleted(client, id, isCurrentChar)
 end
@@ -430,7 +430,7 @@ end
 -- @number flags Flags to check
 -- @treturn bool Whether or not the character has the flags
 -- @usage function PLUGIN:CharacterHasFlags(character, flags)
--- 	return {"p", "e", "t"} -- Character has the spawning, physgun and toolgun flags.
+--     return {"p", "e", "t"} -- Character has the spawning, physgun and toolgun flags.
 -- end
 function CharacterHasFlags(character, flags)
 end
@@ -439,7 +439,7 @@ end
 -- @realm shared
 -- @char character Character that is being loaded
 -- @usage function PLUGIN:CharacterLoaded(character)
--- 	print("Character "..character:GetName().." has been loaded.")
+--     print("Character "..character:GetName().." has been loaded.")
 -- end
 function CharacterLoaded(character)
 end
@@ -448,7 +448,7 @@ end
 -- @realm shared
 -- @char character that was saved
 -- @usage function PLUGIN:CharacterPostSave(character)
--- 	print("Character "..character:GetName().." has been saved.")
+--     print("Character "..character:GetName().." has been saved.")
 -- end
 function CharacterPostSave(character)
 end
@@ -457,7 +457,7 @@ end
 -- @realm shared
 -- @char character Character that is being saved
 -- @usage function PLUGIN:CharacterPreSave(character)
--- 	print("Character "..character:GetName().." is about to be saved.")
+--     print("Character "..character:GetName().." is about to be saved.")
 -- end
 function CharacterPreSave(character)
 end
@@ -516,44 +516,44 @@ end
 -- @tab tabs Table of tabs to be modified
 -- @usage -- Create a new tab in the tab menu using localizations.
 -- function PLUGIN:CreateMenuButtons(tabs)
--- 	tabs["skills"] = function(container)
--- 		local button = container:Add("DButton")
--- 		button:SetText("chooseSkills")
--- 		button:Dock(FILL)
--- 		button.DoClick = function(this)
--- 			ix.util.NotifyLocalized("noDesc")
--- 		end
--- 	end
+--     tabs["skills"] = function(container)
+--         local button = container:Add("DButton")
+--         button:SetText("chooseSkills")
+--         button:Dock(FILL)
+--         button.DoClick = function(this)
+--             ix.util.NotifyLocalized("noDesc")
+--         end
+--     end
 -- end
 --
 -- -- You can also remove tabs by setting them to nil.
 -- function PLUGIN:CreateMenuButtons(tabs)
--- 	tabs["inv"] = nil
+--     tabs["inv"] = nil
 -- end
 --
 -- -- When creating tabs, you can use it as a table instead of a function instead to provide more information for the button and the tab itself.
 -- function PLUGIN:CreateMenuButtons(tabs)
--- 	tabs["skills"] = {
--- 		buttonColor = Color(255, 0, 0), -- color of the button
--- 		bDefault = true, -- make this tab the default tab
--- 		PopulateTabButton = function(info, button) -- function to populate the tab button
--- 			print("Populating tab button for skills")
--- 		end,
--- 		Create = function(info, container) -- function to create the tab
--- 			local button = container:Add("DButton")
--- 			button:SetText("chooseSkills")
--- 			button:Dock(FILL)
--- 			button.DoClick = function(this)
--- 				ix.util.NotifyLocalized("noDesc")
--- 			end
--- 		end,
--- 		OnSelected = function(info, container) -- function to call when the tab is selected
--- 			print("Selected tab skills")
--- 		end,
--- 		OnDeselected = function(info, container) -- function to call when the tab is deselected
--- 			print("Deselected tab skills")
--- 		end
--- 	}
+--     tabs["skills"] = {
+--         buttonColor = Color(255, 0, 0), -- color of the button
+--         bDefault = true, -- make this tab the default tab
+--         PopulateTabButton = function(info, button) -- function to populate the tab button
+--             print("Populating tab button for skills")
+--         end,
+--         Create = function(info, container) -- function to create the tab
+--             local button = container:Add("DButton")
+--             button:SetText("chooseSkills")
+--             button:Dock(FILL)
+--             button.DoClick = function(this)
+--                 ix.util.NotifyLocalized("noDesc")
+--             end
+--         end,
+--         OnSelected = function(info, container) -- function to call when the tab is selected
+--             print("Selected tab skills")
+--         end,
+--         OnDeselected = function(info, container) -- function to call when the tab is deselected
+--             print("Deselected tab skills")
+--         end
+--     }
 -- end
 function CreateMenuButtons(tabs)
 end
@@ -603,9 +603,9 @@ end
 -- @treturn string Name of the character
 -- @usage -- Show the name of the character at all times to admins.
 -- function PLUGIN:GetCharacterName(speaker, chatType)
--- 	if (LocalPlayer():IsAdmin()) then
--- 		return speaker:GetCharacter():GetName()
--- 	end
+--     if (LocalPlayer():IsAdmin()) then
+--         return speaker:GetCharacter():GetName()
+--     end
 -- end
 function GetCharacterName(speaker, chatType)
 end
@@ -637,12 +637,12 @@ end
 -- @treturn[1] string Sound to play
 -- @treturn[2] bool `false` if a sound shouldn't be played at all
 -- @usage function PLUGIN:GetPlayerDeathSound(client)
--- 	-- play impact sound every time someone dies
--- 	return "physics/body/body_medium_impact_hard1.wav"
+--     -- play impact sound every time someone dies
+--     return "physics/body/body_medium_impact_hard1.wav"
 -- end
 -- @usage function PLUGIN:GetPlayerDeathSound(client)
--- 	-- don't play a sound at all
--- 	return false
+--     -- don't play a sound at all
+--     return false
 -- end
 function GetPlayerDeathSound(client)
 end
@@ -656,7 +656,7 @@ end
 -- @player speaker Player that is speaking
 -- @treturn string Icon to display
 -- @usage function PLUGIN:GetPlayerIcon(speaker)
--- 	return "icon16/user.png" -- Use the default user icon.
+--     return "icon16/user.png" -- Use the default user icon.
 -- end
 function GetPlayerIcon(speaker)
 end
@@ -666,7 +666,7 @@ end
 -- @player client Client that received damage
 -- @treturn string Sound to emit
 -- @usage function PLUGIN:GetPlayerPainSound(client)
--- 	return "NPC_MetroPolice.Pain" -- Make players emit MetroPolice pain sound.
+--     return "NPC_MetroPolice.Pain" -- Make players emit MetroPolice pain sound.
 -- end
 function GetPlayerPainSound(client)
 end
@@ -678,7 +678,7 @@ end
 -- @tab context Context of the punch
 -- @treturn number Damage to deal
 -- @usage function PLUGIN:GetPlayerPunchDamage(client, damage, context)
--- 	return (client:IsAdmin() and damage * 2) or damage -- Admins deal double damage.
+--     return (client:IsAdmin() and damage * 2) or damage -- Admins deal double damage.
 -- end
 function GetPlayerPunchDamage(client, damage, context)
 end
@@ -702,7 +702,7 @@ end
 -- @number salary Salary amount
 -- @see CanPlayerEarnSalary
 -- @usage function PLUGIN:OnPlayerEarnSalary(client, faction, salary)
--- 	client:Notify("You have received a salary of "..salary..".")
+--     client:Notify("You have received a salary of "..salary..".")
 -- end
 function OnPlayerEarnSalary(client, faction, salary)
 end
@@ -715,17 +715,17 @@ end
 -- classes in this hook - especially if you want to reference the properties of a framework chat class.
 -- @realm shared
 -- @usage function PLUGIN:InitializedChatClasses()
--- 	-- let's say you wanted to reference an existing chat class's color
--- 	ix.chat.Register("myclass", {
--- 		format = "%s says \"%s\"",
--- 		GetColor = function(self, speaker, text)
--- 			-- make the chat class slightly brighter than the "ic" chat class
--- 			local color = ix.chat.classes.ic:GetColor(speaker, text)
+--     -- let's say you wanted to reference an existing chat class's color
+--     ix.chat.Register("myclass", {
+--         format = "%s says \"%s\"",
+--         GetColor = function(self, speaker, text)
+--             -- make the chat class slightly brighter than the "ic" chat class
+--             local color = ix.chat.classes.ic:GetColor(speaker, text)
 --
--- 			return Color(color.r + 35, color.g + 35, color.b + 35)
--- 		end,
--- 		-- etc.
--- 	})
+--             return Color(color.r + 35, color.g + 35, color.b + 35)
+--         end,
+--         -- etc.
+--     })
 -- end
 -- @see ix.chat.Register
 -- @see ix.chat.classes
@@ -735,7 +735,7 @@ end
 --- Called after the config has been initialized.
 -- @realm shared
 -- @usage function PLUGIN:InitializedConfig()
--- 	ix.config.Add("myConfig", true, "Whether or not my config is enabled.")
+--     ix.config.Add("myConfig", true, "Whether or not my config is enabled.")
 -- end
 function InitializedConfig()
 end
@@ -743,7 +743,7 @@ end
 --- Called after all the plugins have been initialized.
 -- @realm shared
 -- @usage function PLUGIN:InitializedPlugins()
--- 	print("All plugins have been initialized!")
+--     print("All plugins have been initialized!")
 -- end
 function InitializedPlugins()
 end
@@ -751,7 +751,7 @@ end
 --- Called after the schema has been initialized.
 -- @realm shared
 -- @usage function PLUGIN:InitializedSchema()
--- 	print("The schema has been initialized!")
+--     print("The schema has been initialized!")
 -- end
 function InitializedSchema()
 end
@@ -786,7 +786,7 @@ end
 --- Called when server is loading data.
 -- @realm server
 -- @usage function PLUGIN:LoadData()
--- 	print("Loading data...")
+--     print("Loading data...")
 -- end
 function LoadData()
 end
@@ -796,12 +796,12 @@ end
 -- @string font Font to load from the config
 -- @string genericFont Generic font to load from the config
 -- @usage function PLUGIN:LoadFonts(font, genericFont)
--- 	surface.CreateFont("ixBigFont", {
--- 		font = font,
--- 		extended = true,
--- 		size = 32,
--- 		weight = 700
--- 	})
+--     surface.CreateFont("ixBigFont", {
+--         font = font,
+--         extended = true,
+--         size = 32,
+--         weight = 700
+--     })
 -- end
 function LoadFonts(font, genericFont)
 end
@@ -809,7 +809,7 @@ end
 --- Called when the client is loading the intro for the first time.
 -- @realm client
 -- @usage function PLUGIN:LoadIntro()
--- 	print("Loading the intro for the first time!")
+--     print("Loading the intro for the first time!")
 -- end
 function LoadIntro()
 end
@@ -861,8 +861,8 @@ end
 -- @realm server
 -- @entity entity Spawned item entity
 -- @usage function PLUGIN:OnItemSpawned(entity)
--- 	local item = entity:GetItemTable()
--- 	-- do something with the item here
+--     local item = entity:GetItemTable()
+--     -- do something with the item here
 -- end
 function OnItemSpawned(entity)
 end
@@ -873,7 +873,7 @@ end
 -- @tab curInv Current inventory
 -- @tab inventory Inventory that item was transferred to
 -- @usage function PLUGIN:OnItemTransferred(item, curInv, inventory)
--- 	print("Item "..item:GetName().." was transferred to "..inventory:GetOwner():Name())
+--     print("Item "..item:GetName().." was transferred to "..inventory:GetOwner():Name())
 -- end
 function OnItemTransferred(item, curInv, inventory)
 end
@@ -892,7 +892,7 @@ end
 -- @entity self Money entity
 -- @treturn bool Whether or not to allow the player to pick up the money
 -- @usage function PLUGIN:OnPickupMoney(client, self)
--- 	return false -- Disallow picking up money.
+--     return false -- Disallow picking up money.
 -- end
 function OnPickupMoney(client, self)
 end
@@ -903,7 +903,7 @@ end
 -- @number oldID ID of the old area
 -- @number newID ID of the new area
 -- @usage function PLUGIN:OnPlayerAreaChanged(client, oldID, newID)
--- 	client:Notify("You have moved to "..newID..".")
+--     client:Notify("You have moved to "..newID..".")
 -- end
 function OnPlayerAreaChanged(client, oldID, newID)
 end
@@ -913,7 +913,7 @@ end
 -- @player client Player that entered or exited the observer mode
 -- @bool state Previous observer state
 -- @usage function PLUGIN:OnPlayerObserve(client, state)
--- 	client:Notify(state and "You have entered observer mode." or "You have exited observer mode.")
+--     client:Notify(state and "You have entered observer mode." or "You have exited observer mode.")
 -- end
 function OnPlayerObserve(client, state)
 end
@@ -933,7 +933,7 @@ end
 -- @bool bBuying Whether or not the player is bying a door
 -- @func bCallOnDoorChild Function to call something on the door child
 -- @usage function PLUGIN:OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
--- 	client:Notify("You have "..(bBuying and "purchased" or "sold").." a door.")
+--     client:Notify("You have "..(bBuying and "purchased" or "sold").." a door.")
 -- end
 function OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
 end
@@ -942,7 +942,7 @@ end
 -- @realm server
 -- @player client Player that was restricted
 -- @usage function PLUGIN:OnPlayerRestricted(client)
--- 	client:Kick("You have been restricted.")
+--     client:Kick("You have been restricted.")
 -- end
 function OnPlayerRestricted(client)
 end
@@ -951,7 +951,7 @@ end
 -- @realm server
 -- @player client Player that was unrestricted
 -- @usage function PLUGIN:OnPlayerUnRestricted(client)
--- 	client:Notify("You have been unrestricted.")
+--     client:Notify("You have been unrestricted.")
 -- end
 function OnPlayerUnRestricted(client)
 end
@@ -975,9 +975,9 @@ end
 -- @param time Time of the sequence
 -- @param bNoFreeze Whether or not to freeze the player
 -- @usage function PLUGIN:PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
--- 	if (CLIENT) then
--- 		client:Notify("You have entered a sequence.")
--- 	end
+--     if (CLIENT) then
+--         client:Notify("You have entered a sequence.")
+--     end
 -- end
 function PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
 end
@@ -1011,7 +1011,7 @@ end
 -- @realm server
 -- @player client Player that has left a sequence
 -- @usage function PLUGIN:PlayerLeaveSequence(client)
--- 	client:Notify("You have left the sequence.")
+--     client:Notify("You have left the sequence.")
 -- end
 function PlayerLeaveSequence(client)
 end
@@ -1022,7 +1022,7 @@ end
 -- @char character Character that was loaded
 -- @char currentChar Character that player was using
 -- @usage function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
--- 	client:Notify("Welcome back, "..character:GetName().."!")
+--     client:Notify("Welcome back, "..character:GetName().."!")
 -- end
 function PlayerLoadedCharacter(client, character, currentChar)
 end
@@ -1117,7 +1117,7 @@ end
 -- @realm server
 -- @player client Player that is about to load data
 -- @usage function PLUGIN:PrePlayerDataLoaded(client)
--- 	print("Player "..client:Name().." is about to load data.")
+--     print("Player "..client:Name().." is about to load data.")
 -- end
 function PrePlayerDataLoaded(client)
 end
@@ -1126,7 +1126,7 @@ end
 -- @realm server
 -- @player client Player that is about to load data
 -- @usage function PLUGIN:PlayerDataLoaded(client)
--- 	print("Player "..client:Name().." is about to load data.")
+--     print("Player "..client:Name().." is about to load data.")
 -- end
 -- @internal
 function PlayerDataLoaded(client)
@@ -1136,7 +1136,7 @@ end
 -- @realm server
 -- @player client Player that has loaded data
 -- @usage function PLUGIN:PostPlayerDataLoaded(client)
--- 	print("Player "..client:Name().." has loaded data.")
+--     print("Player "..client:Name().." has loaded data.")
 -- end
 function PostPlayerDataLoaded(client)
 end
@@ -1192,7 +1192,7 @@ end
 --- Called when server data was loaded.
 -- @realm server
 -- @usage function PLUGIN:PostLoadData()
--- 	print("Data has been loaded.")
+--     print("Data has been loaded.")
 -- end
 function PostLoadData()
 end
@@ -1201,7 +1201,7 @@ end
 -- @realm server
 -- @player client
 -- @usage function PLUGIN:PostPlayerLoadout(client)
--- 	client:StripWeapon("ix_keys") -- Strip keys from player loadout.
+--     client:StripWeapon("ix_keys") -- Strip keys from player loadout.
 -- end
 function PostPlayerLoadout(client)
 end
@@ -1243,9 +1243,9 @@ end
 -- @bool bAnonymous Whether or not the player is sending the message anonymously
 -- @treturn bool Whether or not to prevent the message from being sent
 -- @usage function PLUGIN:PrePlayerMessageSend(client, chatType, message, bAnonymous)
--- 	if (!client:IsAdmin()) then
--- 		return false -- only allow admins to talk in chat
--- 	end
+--     if (!client:IsAdmin()) then
+--         return false -- only allow admins to talk in chat
+--     end
 -- end
 function PrePlayerMessageSend(client, chatType, message, bAnonymous)
 end
@@ -1253,9 +1253,9 @@ end
 --- Called when server is saving data.
 -- @realm server
 -- @usage function PLUGIN:SaveData()
--- 	for k, v in player.Iterator() do
--- 		ix.util.Notify(v, "The server's data has been saved.")
--- 	end
+--     for k, v in player.Iterator() do
+--         ix.util.Notify(v, "The server's data has been saved.")
+--     end
 -- end
 function SaveData()
 end
@@ -1265,7 +1265,7 @@ end
 -- @number width New screen width
 -- @number height New screen height
 -- @usage function PLUGIN:ScreenResolutionChanged(width, height)
--- 	print("Screen resolution changed to "..width.."x"..height)
+--     print("Screen resolution changed to "..width.."x"..height)
 -- end
 function ScreenResolutionChanged(width, height)
 end
@@ -1291,7 +1291,7 @@ end
 -- @number bar Bar ID
 -- @treturn bool Whether or not the bar should be drawn
 -- @usage function PLUGIN:ShouldBarDraw(bar)
--- 	return bar == "stm" -- Only draw the stamina bar.
+--     return bar == "stm" -- Only draw the stamina bar.
 -- end
 function ShouldBarDraw(bar)
 end
@@ -1310,7 +1310,7 @@ end
 -- @number newID ID of the new area
 -- @treturn bool Whether or not the area should be displayed
 -- @usage function PLUGIN:ShouldDisplayArea(newID)
--- 	return newID == 1 -- Only display area 1.
+--     return newID == 1 -- Only display area 1.
 -- end
 function ShouldDisplayArea(newID)
 end
@@ -1321,7 +1321,7 @@ end
 -- @entity weapon Weapon that the crosshair is being drawn for
 -- @treturn bool Whether or not the crosshair should be drawn
 -- @usage function PLUGIN:ShouldDrawCrosshair(client, weapon)
--- 	return client:IsAdmin() -- Only draw crosshair for admins.
+--     return client:IsAdmin() -- Only draw crosshair for admins.
 -- end
 function ShouldDrawCrosshair(client, weapon)
 end
@@ -1334,7 +1334,7 @@ end
 -- @realm client
 -- @treturn bool Whether or not the hud bars should be hidden
 -- @usage function PLUGIN:ShouldHideBars()
--- 	return true -- Hide all hud bars.
+--     return true -- Hide all hud bars.
 -- end
 function ShouldHideBars()
 end
@@ -1348,10 +1348,10 @@ end
 -- @entity attacker Other player or entity that killed the player
 -- @treturn bool `false` if the player should not be permakilled
 -- @usage function PLUGIN:ShouldPermakillCharacter(client, character, inflictor, attacker)
--- 		if (client:IsAdmin()) then
--- 			return false -- all non-admin players will have their character permakilled
--- 		end
--- 	end
+--         if (client:IsAdmin()) then
+--             return false -- all non-admin players will have their character permakilled
+--         end
+--     end
 function ShouldPermakillCharacter(client, character, inflictor, attacker)
 end
 
@@ -1416,7 +1416,7 @@ end
 -- @bool oldValue Old value of thirdperson
 -- @bool value New value of thirdperson
 -- @usage function PLUGIN:ThirdPersonToggled(oldValue, value)
--- 	print("Thirdperson has been toggled from "..tostring(oldValue).." to "..tostring(value))
+--     print("Thirdperson has been toggled from "..tostring(oldValue).." to "..tostring(value))
 -- end
 function ThirdPersonToggled(oldValue, value)
 end
@@ -1439,7 +1439,7 @@ end
 -- @realm client
 -- @treturn string Sound to play when cycling weapons
 -- @usage function PLUGIN:WeaponCycleSound()
--- 	return "weapons/357/357_spin1.wav" -- Play the 357 spin sound when cycling weapons.
+--     return "weapons/357/357_spin1.wav" -- Play the 357 spin sound when cycling weapons.
 -- end
 function WeaponCycleSound()
 end
@@ -1449,9 +1449,9 @@ end
 -- @entity weapon Weapon that is being selected
 -- @treturn string Sound to play when selecting weapons
 -- @usage function PLUGIN:WeaponSelectSound(weapon)
--- 	if (weapon:GetClass() == "weapon_physgun") then
--- 		return "weapons/physcannon/physcannon_charge.wav" -- Play the physgun charge sound when selecting the physgun.
--- 	end
+--     if (weapon:GetClass() == "weapon_physgun") then
+--         return "weapons/physcannon/physcannon_charge.wav" -- Play the physgun charge sound when selecting the physgun.
+--     end
 -- end
 function WeaponSelectSound(weapon)
 end
@@ -1462,9 +1462,9 @@ end
 -- @treturn bool Whether or not the character name is valid
 -- @treturn string|nil Error message if the character name is invalid
 -- @usage function PLUGIN:CharacterNameValid(name)
--- 	if (string.find(name, "badword")) then
--- 		return false, "Your character name contains a bad word."
--- 	end
+--     if (string.find(name, "badword")) then
+--         return false, "Your character name contains a bad word."
+--     end
 -- end
 function IsCharacterNameValid(name)
 end
@@ -1474,9 +1474,9 @@ end
 -- @string description Description of the character
 -- @treturn bool Whether or not the character description is valid
 -- @usage function PLUGIN:IsCharacterDescriptionValid(description)
--- 	if (string.find(description, "badword")) then
--- 		return false
--- 	end
+--     if (string.find(description, "badword")) then
+--         return false
+--     end
 -- end
 function IsCharacterDescriptionValid(description)
 end

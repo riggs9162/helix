@@ -14,7 +14,7 @@ valid in class tables that are created in `schema/classes/sh_classname.lua`, and
 -- @player client Client that wants to switch to this class
 -- @treturn bool True if the player is allowed to switch to this class
 -- @usage function CLASS:CanSwitchTo(client)
--- 	return client:IsAdmin() -- only admins allowed in this class!
+--     return client:IsAdmin() -- only admins allowed in this class!
 -- end
 function CanSwitchTo(client)
 end
@@ -30,7 +30,7 @@ end
 -- @realm server
 -- @player client Player who has joined this class
 -- @usage function CLASS:OnSet(client)
--- 	client:SetModel("models/police.mdl")
+--     client:SetModel("models/police.mdl")
 -- end
 function OnSet(client)
 end

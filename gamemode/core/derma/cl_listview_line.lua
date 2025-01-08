@@ -3,21 +3,21 @@ local PANEL = {}
 
 function PANEL:Init()
 
-	self:SetFont( "ixSmallFont" )
-	self:SetTextInset( 5, 0 )
+    self:SetFont( "ixSmallFont" )
+    self:SetTextInset( 5, 0 )
 
 end
 
 function PANEL:GenerateExample()
 
-	-- Do nothing!
+    -- Do nothing!
 
 end
 
 vgui.Register( "ixListView_Label", PANEL, "DLabel" )
 
 --[[---------------------------------------------------------
-	ixListView_Line
+    ixListView_Line
 -----------------------------------------------------------]]
 
 local PANEL = {}
@@ -32,148 +32,148 @@ AccessorFunc( PANEL, "m_bAlt", "AltLine" )
 
 function PANEL:Init()
 
-	self:SetSelectable( true )
-	self:SetMouseInputEnabled( true )
+    self:SetSelectable( true )
+    self:SetMouseInputEnabled( true )
 
-	self.Columns = {}
-	self.Data = {}
+    self.Columns = {}
+    self.Data = {}
 
 end
 
 function PANEL:OnSelect()
 
-	-- For override
+    -- For override
 
 end
 
 function PANEL:OnRightClick()
 
-	-- For override
+    -- For override
 
 end
 
 function PANEL:OnMousePressed( mcode )
 
-	if ( mcode == MOUSE_RIGHT ) then
+    if ( mcode == MOUSE_RIGHT ) then
 
-		-- This is probably the expected behaviour..
-		if ( !self:IsLineSelected() ) then
+        -- This is probably the expected behaviour..
+        if ( !self:IsLineSelected() ) then
 
-			self:GetListView():OnClickLine( self, true )
-			self:OnSelect()
+            self:GetListView():OnClickLine( self, true )
+            self:OnSelect()
 
-		end
+        end
 
-		self:GetListView():OnRowRightClick( self:GetID(), self )
-		self:OnRightClick()
+        self:GetListView():OnRowRightClick( self:GetID(), self )
+        self:OnRightClick()
 
-		return
+        return
 
-	end
+    end
 
-	self:GetListView():OnClickLine( self, true )
-	self:OnSelect()
+    self:GetListView():OnClickLine( self, true )
+    self:OnSelect()
 
 end
 
 function PANEL:OnCursorMoved()
 
-	if ( input.IsMouseDown( MOUSE_LEFT ) ) then
-		self:GetListView():OnClickLine( self )
-	end
+    if ( input.IsMouseDown( MOUSE_LEFT ) ) then
+        self:GetListView():OnClickLine( self )
+    end
 
 end
 
 function PANEL:SetSelected( b )
 
-	self.m_bSelected = b
+    self.m_bSelected = b
 
-	-- Update colors of the lines
-	for id, column in pairs( self.Columns ) do
-		column:ApplySchemeSettings()
-	end
+    -- Update colors of the lines
+    for id, column in pairs( self.Columns ) do
+        column:ApplySchemeSettings()
+    end
 
 end
 
 function PANEL:IsLineSelected()
 
-	return self.m_bSelected
+    return self.m_bSelected
 
 end
 
 function PANEL:SetColumnText( i, strText )
 
-	if ( type( strText ) == "Panel" ) then
+    if ( type( strText ) == "Panel" ) then
 
-		if ( IsValid( self.Columns[ i ] ) ) then self.Columns[ i ]:Remove() end
+        if ( IsValid( self.Columns[ i ] ) ) then self.Columns[ i ]:Remove() end
 
-		strText:SetParent( self )
-		self.Columns[ i ] = strText
-		self.Columns[ i ].Value = strText
-		return
+        strText:SetParent( self )
+        self.Columns[ i ] = strText
+        self.Columns[ i ].Value = strText
+        return
 
-	end
+    end
 
-	if ( !IsValid( self.Columns[ i ] ) ) then
+    if ( !IsValid( self.Columns[ i ] ) ) then
 
-		self.Columns[ i ] = vgui.Create( "ixListView_Label", self )
-		self.Columns[ i ]:SetMouseInputEnabled( false )
+        self.Columns[ i ] = vgui.Create( "ixListView_Label", self )
+        self.Columns[ i ]:SetMouseInputEnabled( false )
 
-		-- Disable autostretch behavior since we are not using it anyway, it gets expensive fast
-		self.Columns[ i ].Think = nil
+        -- Disable autostretch behavior since we are not using it anyway, it gets expensive fast
+        self.Columns[ i ].Think = nil
 
-	end
+    end
 
-	self.Columns[ i ]:SetText( tostring( strText ) )
-	self.Columns[ i ].Value = strText
-	return self.Columns[ i ]
+    self.Columns[ i ]:SetText( tostring( strText ) )
+    self.Columns[ i ].Value = strText
+    return self.Columns[ i ]
 
 end
 PANEL.SetValue = PANEL.SetColumnText
 
 function PANEL:GetColumnText( i )
 
-	if ( !self.Columns[ i ] ) then return "" end
+    if ( !self.Columns[ i ] ) then return "" end
 
-	return self.Columns[ i ].Value
+    return self.Columns[ i ].Value
 
 end
 
 PANEL.GetValue = PANEL.GetColumnText
 
 --[[---------------------------------------------------------
-	Allows you to store data per column
+    Allows you to store data per column
 
-	Used in the SortByColumn function for incase you want to
-	sort with something else than the text
+    Used in the SortByColumn function for incase you want to
+    sort with something else than the text
 -----------------------------------------------------------]]
 function PANEL:SetSortValue( i, data )
 
-	self.Data[ i ] = data
+    self.Data[ i ] = data
 
 end
 
 function PANEL:GetSortValue( i )
 
-	return self.Data[ i ]
+    return self.Data[ i ]
 
 end
 
 function PANEL:DataLayout( ListView )
 
-	self:ApplySchemeSettings()
+    self:ApplySchemeSettings()
 
-	local height = self:GetTall()
+    local height = self:GetTall()
 
-	local x = 0
-	for k, Column in pairs( self.Columns ) do
+    local x = 0
+    for k, Column in pairs( self.Columns ) do
 
-		local w = ListView:ColumnWidth( k )
-		Column:SetPos( x, 0 )
-		Column:SetSize( w, height )
-		x = x + w
+        local w = ListView:ColumnWidth( k )
+        Column:SetPos( x, 0 )
+        Column:SetSize( w, height )
+        x = x + w
 
-	end
+    end
 
 end
 

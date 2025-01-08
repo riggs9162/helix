@@ -1,19 +1,19 @@
 
 file = {
-	"gamemode",
-	"plugins",
-	"docs/hooks",
-	exclude = {"gamemode/core/libs/thirdparty"}
+    "gamemode",
+    "plugins",
+    "docs/hooks",
+    exclude = {"gamemode/core/libs/thirdparty"}
 }
 
 module_file = {
-	Character = "gamemode/core/meta/sh_character.lua",
-	Entity = "gamemode/core/meta/sh_entity.lua",
-	Inventory = "gamemode/core/meta/sh_inventory.lua",
-	Item = "gamemode/core/meta/sh_item.lua",
-	Player = "gamemode/core/meta/sh_player.lua",
-	Color = "gamemode/core/meta/sh_color.lua",
-	Vector = "gamemode/core/meta/sh_vector.lua"
+    Character = "gamemode/core/meta/sh_character.lua",
+    Entity = "gamemode/core/meta/sh_entity.lua",
+    Inventory = "gamemode/core/meta/sh_inventory.lua",
+    Item = "gamemode/core/meta/sh_item.lua",
+    Player = "gamemode/core/meta/sh_player.lua",
+    Color = "gamemode/core/meta/sh_color.lua",
+    Vector = "gamemode/core/meta/sh_vector.lua"
 }
 
 dir = "docs/html"
@@ -40,21 +40,21 @@ pretty_urls = true -- avoid showing .html in urls
 pretty_topic_names = true -- strips extension from manual filenames, this does not check filename collisions
 
 custom_tags = {
-	{"realm", hidden = true},
-	{"internal", hidden = true},
-	{"notes", hidden = false}
+    {"realm", hidden = true},
+    {"internal", hidden = true},
+    {"notes", hidden = false}
 }
 
 custom_display_name_handler = function(item, default_handler)
-	if (item.type == "function" and item.module) then
-		if (item.module.type == "classmod" or item.module.type == "panel") then
-			return item.module.mod_name .. ":" .. default_handler(item)
-		elseif (item.module.type == "hooks") then
-			return item.module.mod_name:upper() .. ":" .. default_handler(item)
-		end
-	end
+    if (item.type == "function" and item.module) then
+        if (item.module.type == "classmod" or item.module.type == "panel") then
+            return item.module.mod_name .. ":" .. default_handler(item)
+        elseif (item.module.type == "hooks") then
+            return item.module.mod_name:upper() .. ":" .. default_handler(item)
+        end
+    end
 
-	return default_handler(item)
+    return default_handler(item)
 end
 
 new_type("hooks", "Hooks", true)

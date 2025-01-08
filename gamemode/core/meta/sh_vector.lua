@@ -100,7 +100,7 @@ function meta:InWorld()
     if ( SERVER ) then return util.IsInWorld(self) end
 
     trace.start = self
-	trace.endpos = self
+    trace.endpos = self
 
     return util.TraceLine(tr).HitWorld
 end
