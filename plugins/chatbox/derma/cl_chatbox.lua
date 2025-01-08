@@ -168,12 +168,12 @@ function PANEL:AddTab(id, filter)
     end
 
     self.tabs[id] = panel
+
     return panel
 end
 
 function PANEL:RemoveTab(id)
     local tab = self.tabs[id]
-
     if (!tab) then return end
 
     tab:GetButton():Remove()
