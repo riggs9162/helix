@@ -146,6 +146,10 @@ if (CLIENT) then
         text[#text + 1] = "\n"
         MsgC(unpack(text))
     end
+
+    concommand.Add("ix_chat_reload", function()
+        PLUGIN:CreateChat()
+    end)
 else
     util.AddNetworkString("ixChatMessage")
 
