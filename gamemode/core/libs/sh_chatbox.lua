@@ -267,8 +267,71 @@ function ix.chat.Parse(client, message, bNoSend)
     return chatType, message, anonymous
 end
 
+local grammarFixes = {
+    {"aint", "ain't"},
+    {"arent", "aren't"},
+    {"cant", "can't"},
+    {"couldnt", "couldn't"},
+    {"didnt", "didn't"},
+    {"doesnt", "doesn't"},
+    {"dont", "don't"},
+    {"hadnt", "hadn't"},
+    {"hasnt", "hasn't"},
+    {"havent", "haven't"},
+    {"hed", "he'd"},
+    {"heres", "here's"},
+    {"hes", "he's"},
+    {"hows", "how's"},
+    {"id", "I'd"},
+    {"im", "I'm"},
+    {"isnt", "isn't"},
+    {"itd", "it'd"},
+    {"its", "it's"},
+    {"ive", "I've"},
+    {"let's", "let's"}, -- Common confusion with "lets"
+    {"shed", "she'd"},
+    {"shes", "she's"},
+    {"shouldnt", "shouldn't"},
+    {"thats", "that's"},
+    {"theres", "there's"},
+    {"theres", "there's"},
+    {"theyll", "they'll"},
+    {"theyre", "they're"},
+    {"wasnt", "wasn't"},
+    {"wed", "we'd"},
+    {"werent", "weren't"},
+    {"weve", "we've"},
+    {"whats", "what's"},
+    {"whens", "when's"},
+    {"wheres", "where's"},
+    {"whos", "who's"},
+    {"whys", "why's"},
+    {"wont", "won't"},
+    {"wouldnt", "wouldn't"},
+    {"yall", "y'all"},
+    {"youd", "you'd"},
+    {"youll", "you'll"}.
+    {"youre", "you're"},
+    {"youve", "you've"}
+}
+
+local grammarFixesCapital = table.Copy(grammarFixes)
+for _, v in ipairs(grammarFixesCapital) do
+    v[1] = v[1]:utf8upper()
+    v[2] = v[2]:utf8upper()
+end
+
+-- Apply grammar fixes
+local function applyFixes(text, fixes)
+    for _, v in ipairs(fixes) do
+        text = string.Replace(text, v[1], v[2])
+    end
+
+    return text
+end
+
 --- Formats a string to fix basic grammar - removing extra spacing at the beginning and end, capitalizing the first character,
--- and making sure it ends in punctuation.
+-- and making sure it ends in punctuation. Thing's like "youre", "dont", and "im" are fixed by this function.
 -- @realm shared
 -- @string text String to format
 -- @treturn string Formatted string
@@ -276,15 +339,28 @@ end
 -- > Hello.
 -- @usage print(ix.chat.Format("wow!"))
 -- > Wow!
+-- @usage print(ix.chat.Format("im a cool guy"))
+-- > I'm a cool guy.
+-- @usage print(ix.chat.Format("youre a cool guy"))
+-- > You're a cool guy.
+-- @usage print(ix.chat.Format("DONT DO THAT"))
+-- > DON'T DO THAT.
 function ix.chat.Format(text)
     text = string.Trim(text)
-    local last = text:utf8sub(-1)
 
-    if (last != "." and last != "?" and last != "!" and last != "-" and last != "\"") then
+    text = applyFixes(text, grammarFixes)
+    text = applyFixes(text, grammarFixesCapital)
+
+    -- Ensure text ends with punctuation
+    local last = text:utf8sub(-1)
+    if (last != "." or last != "?" or last != "!" or last != "-" or last != "\"") then
         text = text .. "."
     end
 
-    return text:utf8sub(1, 1):utf8upper() .. text:utf8sub(2)
+    -- Capitalize the first letter
+    text = text:utf8sub(1, 1):utf8upper() .. text:utf8sub(2)
+
+    return text
 end
 
 if (SERVER) then
