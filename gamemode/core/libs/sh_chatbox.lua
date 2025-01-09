@@ -507,6 +507,7 @@ do
                 end
 
                 icon = Material(hook.Run("GetPlayerIcon", speaker) or icon)
+                color = hook.Run("GetPlayerColor", speaker, color) or color
 
                 chat.AddText(icon, Color(255, 50, 50), "[OOC] ", speaker, color_white, ": "..text)
             end,

@@ -661,6 +661,16 @@ end
 function GetPlayerIcon(speaker)
 end
 
+--- Returns the player's color to be displayed in the chat box.
+-- @realm shared
+-- @player speaker Player that is speaking
+-- @treturn Color Color to display
+-- @usage function PLUGIN:GetPlayerColor(speaker)
+--     return Color(255, 0, 0) -- Use red color for the player.
+-- end
+function GetPlayerColor(speaker)
+end
+
 --- Returns the sound to emit from the player upon getting damage.
 -- @realm server
 -- @player client Client that received damage
