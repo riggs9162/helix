@@ -310,7 +310,7 @@ local grammarFixes = {
     {"wouldnt", "wouldn't"},
     {"yall", "y'all"},
     {"youd", "you'd"},
-    {"youll", "you'll"}.
+    {"youll", "you'll"},
     {"youre", "you're"},
     {"youve", "you've"}
 }
