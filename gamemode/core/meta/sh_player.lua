@@ -204,8 +204,8 @@ end
 -- @realm shared
 -- @string name Name of the bodygroup
 -- @treturn number Value of the bodygroup
--- @usage local headGroup = client:GetBodygroupName("head")
-function meta:GetBodygroupName(name)
+-- @usage local headGroup = client:GetBodygroupByName("head")
+function meta:GetBodygroupByName(name)
     local index = self:FindBodygroupByName(name)
     if ( index > -1 ) then
         return self:GetBodygroup(index)
