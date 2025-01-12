@@ -91,6 +91,7 @@ function PLUGIN:CalcView(client, origin, angles, fov)
             traceData.ignoreworld = bNoclip
             traceData.mins = traceMin
             traceData.maxs = traceMax
+            traceData.mask = MASK_SHOT
         view.origin = util.TraceHull(traceData).HitPos
         aimOrigin = view.origin
         view.angles = curAng + client:GetViewPunchAngles()
@@ -100,6 +101,7 @@ function PLUGIN:CalcView(client, origin, angles, fov)
             traceData2.endpos = aimOrigin + curAng:Forward() * 65535
             traceData2.filter = client
             traceData2.ignoreworld = bNoclip
+            traceData2.mask = MASK_SHOT
 
         local bClassic = ix.option.Get("thirdpersonClassic", false)
 
