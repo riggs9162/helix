@@ -97,7 +97,7 @@ if (CLIENT) then
         for i = 1, client:GetBoneCount() do
             local name = client:GetBoneName(i)
 
-            if (string.find(name:lower(), "head")) then
+            if ( ix.util.StringMatches(name, "head") ) then
                 head = i
                 break
             end
