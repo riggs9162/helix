@@ -75,6 +75,50 @@ function meta:InheritMaterials(entity)
     end
 end
 
+--- Resets all bodygroups this player's model has to their defaults (`0`).
+-- @realm shared
+function meta:ResetBodygroups()
+    for i = 0, (self:GetNumBodyGroups() - 1) do
+        self:SetBodygroup(i, 0)
+    end
+end
+
+--- Resets all bone manipulations this player's model has to their defaults.
+-- @realm shared
+function meta:ResetBoneMatrix()
+    for i = 0, self:GetBoneCount() - 1 do
+        self:ManipulateBoneScale(i, Vector(1, 1, 1))
+        self:ManipulateBoneAngles(i, angle_zero)
+        self:ManipulateBonePosition(i, vector_origin)
+    end
+end
+
+--- Sets the bodygroup of this player's model by its name.
+-- @realm shared
+-- @string name Name of the bodygroup
+-- @number value Value to set the bodygroup to
+-- @usage client:SetBodygroupName("head", 1)
+function meta:SetBodygroupName(name, value)
+    local index = self:FindBodygroupByName(name)
+    if ( index > -1 ) then
+        self:SetBodygroup(index, value)
+    end
+end
+
+--- Returns the bodygroup value of this player's model by its name.
+-- @realm shared
+-- @string name Name of the bodygroup
+-- @treturn number Value of the bodygroup
+-- @usage local headGroup = client:GetBodygroupByName("head")
+function meta:GetBodygroupByName(name)
+    local index = self:FindBodygroupByName(name)
+    if ( index > -1 ) then
+        return self:GetBodygroup(index)
+    end
+
+    return -1
+end
+
 if (SERVER) then
     --- Returns the neighbouring door entity for double doors.
     -- @realm shared
