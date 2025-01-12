@@ -1137,12 +1137,14 @@ local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or ".
 -- @tab sounds Sound paths to play
 -- @number delay[opt=0] How long to wait before starting to play the sounds
 -- @number spacing[opt=0.1] How long to wait between playing each sound
--- @number volume[opt=75] The sound level of each sound
+-- @number level[opt=75] The sound level of each sound
 -- @number pitch[opt=100] Pitch percentage of each sound
+-- @number volume[opt=1] Volume of each sound
+-- @number channel[opt=CHAN_AUTO] Channel of each sound
 -- @treturn number How long the entire sequence of sounds will take to play
 -- @usage -- Play a sequence of sounds with a delay between each sound
--- ix.util.EmitQueuedSounds(entity, {"sound1.wav", "sound2.wav", "sound3.wav"}, 0.5)
-function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch, callback)
+-- ix.util.EmitQueuedSounds(entity, {"sound1.wav", "sound2.wav", "sound3.wav"}, 0.5, 0.1, 75, 100, 1, CHAN_AUTO)
+function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, level, pitch, volume, channel)
     -- Let there be a delay before any sound is played.
     delay = delay or 0
     spacing = spacing or 0.1
@@ -1166,16 +1168,12 @@ function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, volume, pitch,
         timer.Simple(delay, function()
             -- Check if the entity still exists and play the sound.
             if (IsValid(entity)) then
-                entity:EmitSound(v, volume, pitch)
+                entity:EmitSound(v, level, pitch)
             end
         end)
 
         -- Add the delay for the next sound.
         delay = delay + length + postSet + spacing
-    end
-
-    if (callback) then
-        timer.Simple(delay, callback)
     end
 
     -- Return how long it took for the whole thing.
