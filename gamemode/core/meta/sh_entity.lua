@@ -206,9 +206,7 @@ if (SERVER) then
         self.ixIsMuted = true
         self:DeleteOnRemove(dummy)
 
-        for _, v in ipairs(self:GetBodyGroups() or {}) do
-            dummy:SetBodygroup(v.id, self:GetBodygroup(v.id))
-        end
+        dummy:InheritBodygroups(self)
 
         for _, v in ents.Iterator() do
             if (v:GetParent() == self) then
