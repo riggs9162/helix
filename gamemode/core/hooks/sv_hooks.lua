@@ -582,7 +582,7 @@ function GM:PostPlayerLoadout(ply)
     local char = ply:GetCharacter()
     if (char:GetInventory()) then
         for k, _ in char:GetInventory():Iter() do
-			k:Call("OnLoadout", client)
+			k:Call("OnLoadout", ply)
 
 			if (k:GetData("equip") and k.attribBoosts) then
 				for attribKey, attribValue in pairs(k.attribBoosts) do
