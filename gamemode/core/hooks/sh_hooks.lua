@@ -203,6 +203,8 @@ function GM:TranslateActivity(ply, act)
 end
 
 function GM:CanPlayerUseBusiness(ply, uniqueID)
+    if (!ix.config.Get("allowBusiness", true)) then return false end
+
     local itemTable = ix.item.list[uniqueID]
 
     local char = ply:GetCharacter()

@@ -995,6 +995,12 @@ function GM:FinishChat()
     net.SendToServer()
 end
 
+function GM:BuildBusinessMenu()
+	if (!ix.config.Get("allowBusiness", true)) then
+		return false
+	end
+end
+
 gameevent.Listen("player_spawn")
 hook.Add("player_spawn", "ixPlayerSpawn", function(data)
     local ply = Player(data.userid)
