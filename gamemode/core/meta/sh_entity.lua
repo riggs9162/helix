@@ -61,12 +61,16 @@ function meta:IsLocked()
     return false
 end
 
+-- Inherits the bodygroups of the given entity.
+-- @realm shared
 function meta:InheritBodygroups(entity)
     for _, v in ipairs(entity:GetBodyGroups() or {}) do
         self:SetBodygroup(v.id, entity:GetBodygroup(v.id))
     end
 end
 
+-- Inherits the materials of the given entity.
+-- @realm shared
 function meta:InheritMaterials(entity)
     self:SetMaterial(entity:GetMaterial())
 
