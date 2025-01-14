@@ -102,17 +102,17 @@ end
 -- This function can be helpful for getting rid of those pesky errors.
 -- @realm shared
 function META:FindError()
-    for _, v in pairs(self:GetItems()) do
-        if (v.width == 1 and v.height == 1) then continue end
+	for k, _ in self:Iter() do
+		if (k.width == 1 and k.height == 1) then continue end
 
-        print("Finding error: " .. v.name)
-        print("Item Position: " .. v.gridX, v.gridY)
+		print("Finding error: " .. k.name)
+		print("Item Position: " .. k.gridX, k.gridY)
 
-        for x = v.gridX, v.gridX + v.width - 1 do
-            for y = v.gridY, v.gridY + v.height - 1 do
-                local item = self.slots[x][y]
+		for x = k.gridX, k.gridX + k.width - 1 do
+			for y = k.gridY, k.gridY + k.height - 1 do
+				local item = self.slots[x][y]
 
-                if (item and item.id != v.id) then
+				if (item and item.id != k.id) then
                     print("Error Found: ".. item.name)
                 end
             end
@@ -630,31 +630,28 @@ end
 --     -- do something with the item table
 -- end
 function META:HasItem(targetID, data)
-    local items = self:GetItems()
+	for k, _ in self:Iter() do
+		if (k.uniqueID == targetID) then
+			if (data) then
+				local itemData = k.data
+				local bFound = true
 
-    for _, v in pairs(items) do
-        if (v.uniqueID == targetID) then
-            if (data) then
-                local itemData = v.data
-                local bFound = true
+				for dataKey, dataVal in pairs(data) do
+					if (itemData[dataKey] != dataVal) then
+						bFound = false
+						break
+					end
+				end
+				if (!bFound) then
+					continue
+				end
+			end
 
-                for dataKey, dataVal in pairs(data) do
-                    if (itemData[dataKey] != dataVal) then
-                        bFound = false
-                        break
-                    end
-                end
+			return k
+		end
+	end
 
-                if (!bFound) then
-                    continue
-                end
-            end
-
-            return v
-        end
-    end
-
-    return false
+	return false
 end
 
 --- Checks whether or not the `Inventory` has a table of items.
@@ -671,22 +668,20 @@ end
 -- if not Entity(1):GetCharacter():GetInventory():HasItems(itemFilter) then return end
 -- -- Filters out if this player has both a water, and a sparkling water.
 function META:HasItems(targetIDs)
-    local items = self:GetItems()
-    local count = #targetIDs -- assuming array
-    targetIDs = table.Copy(targetIDs)
+	local count = #targetIDs -- assuming array
+	targetIDs = table.Copy(targetIDs)
 
-    for _, v in pairs(items) do
-        for k, targetID in ipairs(targetIDs) do
-            if (v.uniqueID == targetID) then
-                table.remove(targetIDs, k)
-                count = count - 1
+	for item, _ in self:Iter() do
+		for k, targetID in ipairs(targetIDs) do
+			if (item.uniqueID == targetID) then
+				table.remove(targetIDs, k)
+				count = count - 1
 
-                break
-            end
-        end
-    end
-
-    return count <= 0, targetIDs
+				break
+			end
+		end
+	end
+	return count <= 0, targetIDs
 end
 
 --- Whether or not an `Inventory` has an item of a base, optionally with specified data.
@@ -706,31 +701,28 @@ end
 -- end
 -- -- Notifies the player that they should get some more guns.
 function META:HasItemOfBase(baseID, data)
-    local items = self:GetItems()
+	for k, _ in self:Iter() do
+		if (k.base == baseID) then
+			if (data) then
+				local itemData = k.data
+				local bFound = true
 
-    for _, v in pairs(items) do
-        if (v.base == baseID) then
-            if (data) then
-                local itemData = v.data
-                local bFound = true
+				for dataKey, dataVal in pairs(data) do
+					if (itemData[dataKey] != dataVal) then
+						bFound = false
+						break
+					end
+				end
+				if (!bFound) then
+					continue
+				end
+			end
 
-                for dataKey, dataVal in pairs(data) do
-                    if (itemData[dataKey] != dataVal) then
-                        bFound = false
-                        break
-                    end
-                end
+			return k
+		end
+	end
 
-                if (!bFound) then
-                    continue
-                end
-            end
-
-            return v
-        end
-    end
-
-    return false
+	return false
 end
 
 if (SERVER) then
@@ -971,9 +963,9 @@ if (SERVER) then
             net.WriteTable(self.vars or {})
         net.Send(receiver)
 
-        for _, v in pairs(self:GetItems()) do
-            v:Call("OnSendData", receiver)
-        end
+        for k, _ in self:Iter() do
+			k:Call("OnSendData", receiver)
+		end
     end
 end
 

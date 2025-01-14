@@ -112,18 +112,18 @@ function GM:TranslateActivity(ply, act)
             local ladderMove = plyInfo.ixAnimLadderMove
             local ladderUp = plyInfo.ixAnimLadderUp
             local ladderDown = plyInfo.ixAnimLadderDown
-    
+
             local pos = ply:WorldSpaceCenter()
             local ang = ply:EyeAngles()
             ang.p = 0
-    
+
             local trace = util.TraceLine({
                 start = pos,
                 endpos = pos + ang:Forward() * 48,
                 filter = ply,
                 mask = MASK_PLAYERSOLID
             })
-    
+
             debugoverlay.Line(trace.StartPos, trace.HitPos, 0.1, Color(255, 0, 0), true)
             debugoverlay.Cross(trace.HitPos, 5, 0.1, trace.Hit and Color(0, 255, 0) or Color(255, 0, 0), true)
 
@@ -685,8 +685,8 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
 
     -- don't allow transferring items that are in use
     if ( inventory ) then
-        for _, v in pairs(inventory:GetItems()) do
-            if ( v:GetData("equip") == true ) then
+        for k, _ in inventory:Iter() do
+			if (k:GetData("equip") == true) then
                 if ( CLIENT ) then
                     ix.util.NotifyLocalized("equippedBag")
                 end

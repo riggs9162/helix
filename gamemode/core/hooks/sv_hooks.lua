@@ -581,15 +581,15 @@ function GM:PostPlayerLoadout(ply)
     -- Reload All Attrib Boosts
     local char = ply:GetCharacter()
     if (char:GetInventory()) then
-        for _, v in pairs(char:GetInventory():GetItems()) do
-            v:Call("OnLoadout", ply)
+        for k, _ in char:GetInventory():Iter() do
+			k:Call("OnLoadout", client)
 
-            if (v:GetData("equip") and v.attribBoosts) then
-                for attribKey, attribValue in pairs(v.attribBoosts) do
-                    char:AddBoost(v.uniqueID, attribKey, attribValue)
-                end
-            end
-        end
+			if (k:GetData("equip") and k.attribBoosts) then
+				for attribKey, attribValue in pairs(k.attribBoosts) do
+					char:AddBoost(k.uniqueID, attribKey, attribValue)
+				end
+			end
+		end
     end
 
     -- If their faction wants to do something when the player's loadout is set, let it.
@@ -946,9 +946,9 @@ end
 function GM:CharacterPreSave(char)
     local ply = char:GetPlayer()
 
-    for _, v in pairs(char:GetInventory():GetItems()) do
-        if (v.OnSave) then
-            v:Call("OnSave", ply)
+    for k, _ in character:GetInventory():Iter() do
+		if (k.OnSave) then
+			k:Call("OnSave", ply)
         end
     end
 
