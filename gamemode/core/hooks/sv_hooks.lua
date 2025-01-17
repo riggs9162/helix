@@ -946,9 +946,9 @@ end
 function GM:CharacterPreSave(char)
     local ply = char:GetPlayer()
 
-    for k, _ in character:GetInventory():Iter() do
-		if (k.OnSave) then
-			k:Call("OnSave", ply)
+    for v in char:GetInventory():Iter() do
+		if (v.OnSave) then
+			v:Call("OnSave", ply)
         end
     end
 
