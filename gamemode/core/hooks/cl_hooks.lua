@@ -3,7 +3,10 @@ function GM:ForceDermaSkin()
 end
 
 function GM:ScoreboardShow()
-    if (LocalPlayer():GetCharacter()) then
+    local ply = LocalPlayer()
+    if ( !IsValid(ply) ) then return end
+
+    if (ply:GetCharacter()) then
         vgui.Create("ixMenu")
     end
 end
