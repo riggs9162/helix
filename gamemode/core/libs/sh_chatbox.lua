@@ -351,14 +351,14 @@ function ix.chat.Format(text)
     text = applyFixes(text, grammarFixes)
     text = applyFixes(text, grammarFixesCapital)
 
-    -- Ensure text ends with punctuation
-    local last = text:utf8sub(-1)
-    if (last != "." or last != "?" or last != "!" or last != "-" or last != "\"") then
-        text = text .. "."
-    end
-
     -- Capitalize the first letter
     text = text:utf8sub(1, 1):utf8upper() .. text:utf8sub(2)
+
+    -- Ensure text ends with punctuation
+    local last = text:utf8sub(-1)
+    if (last != "." and last != "!" and last != "?") then
+        text = text .. "."
+    end
 
     return text
 end
