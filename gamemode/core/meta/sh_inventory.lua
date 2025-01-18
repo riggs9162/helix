@@ -348,54 +348,48 @@ end
 -- @treturn number The X position that the item was removed from
 -- @treturn number The Y position that the item was removed from
 function META:Remove(id, bNoReplication, bNoDelete, bTransferring)
-    local x2, y2
+	local x2, y2
+	local item = ix.item.instances[id]
 
-    for x = 1, self.w do
-        if (self.slots[x]) then
-            for y = 1, self.h do
-                local item = self.slots[x][y]
+	if (item and item.invID == self.id) then
+		local x, y = item.gridX, item.gridY
+		if (self.slots[x] and self.slots[x][y] and self.slots[x][y].id == id) then
+			self.slots[x][y] = nil
 
-                if (item and item.id == id) then
-                    self.slots[x][y] = nil
+			x2 = x
+			y2 = y
+		end
+	end
 
-                    x2 = x2 or x
-                    y2 = y2 or y
-                end
-            end
-        end
-    end
+	if (SERVER and !bNoReplication) then
+		local receivers = self:GetReceivers()
 
-    if (SERVER and !bNoReplication) then
-        local receivers = self:GetReceivers()
+		if (istable(receivers)) then
+			net.Start("ixInventoryRemove")
+				net.WriteUInt(id, 32)
+				net.WriteUInt(self:GetID(), 32)
+			net.Send(receivers)
+		end
 
-        if (istable(receivers)) then
-            net.Start("ixInventoryRemove")
-                net.WriteUInt(id, 32)
-                net.WriteUInt(self:GetID(), 32)
-            net.Send(receivers)
-        end
+		-- we aren't removing the item - we're transferring it to another inventory
+		if (!bTransferring) then
+			hook.Run("InventoryItemRemoved", self, ix.item.instances[id])
+		end
 
-        -- we aren't removing the item - we're transferring it to another inventory
-        if (!bTransferring) then
-            hook.Run("InventoryItemRemoved", self, ix.item.instances[id])
-        end
+		if (!bNoDelete) then
+			if (item and item.OnRemoved) then
+				item:OnRemoved()
+			end
 
-        if (!bNoDelete) then
-            local item = ix.item.instances[id]
+			local query = mysql:Delete("ix_items")
+				query:Where("item_id", id)
+			query:Execute()
 
-            if (item and item.OnRemoved) then
-                item:OnRemoved()
-            end
+			ix.item.instances[id] = nil
+		end
+	end
 
-            local query = mysql:Delete("ix_items")
-                query:Where("item_id", id)
-            query:Execute()
-
-            ix.item.instances[id] = nil
-        end
-    end
-
-    return x2, y2
+	return x2, y2
 end
 
 --- Adds a player as a receiver on this `Inventory`
