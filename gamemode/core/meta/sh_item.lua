@@ -417,88 +417,89 @@ end
 -- @bool bNoDelete Whether or not the item should not be fully deleted
 -- @treturn bool Whether the item was successfully deleted or not
 function ITEM:Remove(bNoReplication, bNoDelete)
-    local inv = ix.inventory.Get(self.invID)
-    local x2, y2
+	local inv = ix.item.inventories[self.invID]
+	local bFailed = false
 
-    if (inv) then
-        if (self.invID ~= 0) then
-            local failed = false
+	if (self.invID > 0 and inv) then
+		for x = self.gridX, self.gridX + (self.width - 1) do
+			if (inv.slots[x]) then
+				for y = self.gridY, self.gridY + (self.height - 1) do
+					local item = inv.slots[x][y]
 
-            for x = self.gridX, self.gridX + (self.width - 1) do
-                if (inv.slots[x]) then
-                    for y = self.gridY, self.gridY + (self.height - 1) do
-                        local item = inv.slots[x][y]
+					if (item and item.id == self.id) then
+						inv.slots[x][y] = nil
+					else
+						bFailed = true
+					end
+				end
+			else
+				bFailed = true
+			end
+		end
 
-                        if (item and item.id == self.id) then
-                            inv.slots[x][y] = nil
+		if (bFailed) then
+			local items = {}
+			for k, v in pairs(ix.item.instances) do
+				if (v.invID == self.invID and v.id != self.id) then
+					table.insert(items, v)
+				end
+			end
 
-                            x2 = x2 or x
-                            y2 = y2 or y
-                        else
-                            failed = true
-                        end
-                    end
-                end
-            end
+			inv.slots = {}
+			for _, v in ipairs(items) do
+				for x = v.gridX, v.gridX + (v.width - 1) do
+					for y = v.gridY, v.gridY + (v.height - 1) do
+						inv.slots[x] = inv.slots[x] or {}
+						inv.slots[x][y] = v
+					end
+				end
+			end
+		end
+	else
+		-- @todo definition probably isn't needed
+		inv = ix.item.inventories[self.invID]
 
-            if (failed) then
-                local invW, invH = inv:GetSize()
-                x2, y2 = nil, nil
+		if (inv) then
+			ix.item.inventories[self.invID][self.id] = nil
+		end
+	end
 
-                for x = 1, invW do
-                    if (inv.slots[x]) then
-                        for y = 1, invH do
-                            local item = inv.slots[x][y]
+	if (SERVER and !bNoReplication) then
+		local entity = self:GetEntity()
 
-                            if (item and item.id == self.id) then
-                                inv.slots[x][y] = nil
+		if (IsValid(entity)) then
+			entity:Remove()
+		end
 
-                                x2 = x2 or x
-                                y2 = y2 or y
-                            end
-                        end
-                    end
-                end
-            end
-        else
-            ix.item.inventories[self.invID][self.id] = nil
-        end
-    end
+		local receivers = inv.GetReceivers and inv:GetReceivers()
 
-    if (SERVER and !bNoReplication) then
-        local entity = self:GetEntity()
+		if (self.invID != 0 and istable(receivers)) then
+			if (bFailed) then
+				inv:Sync(receivers)
+			else
+				net.Start("ixInventoryRemove")
+					net.WriteUInt(self.id, 32)
+					net.WriteUInt(self.invID, 32)
+				net.Send(receivers)
+			end
+		end
 
-        if (IsValid(entity)) then
-            entity:Remove()
-        end
+		if (!bNoDelete) then
+			local item = ix.item.instances[self.id]
 
-        if (inv and inv.GetReceivers) then
-            local receivers = inv:GetReceivers()
+			if (item and item.OnRemoved) then
+				item:OnRemoved()
+			end
 
-            if (self.invID ~= 0 and istable(receivers) and #receivers > 0) then
-                net.Start("ixInventoryRemove")
-                    net.WriteUInt(self.id, 32)
-                    net.WriteUInt(self.invID, 32)
-                net.Send(receivers)
-            end
-        end
+			local query = mysql:Delete("ix_items")
+				query:Where("item_id", self.id)
+			query:Execute()
 
-        if (!bNoDelete) then
-            local item = ix.item.instances[self.id]
+			ix.item.instances[self.id] = nil
+		end
+	end
 
-            if (item and item.OnRemoved) then
-                item:OnRemoved()
-            end
-
-            local query = mysql:Delete("ix_items")
-                query:Where("item_id", self.id)
-            query:Execute()
-
-            ix.item.instances[self.id] = nil
-        end
-    end
-
-    return x2, y2
+	return true
 end
 
 if (SERVER) then
