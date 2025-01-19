@@ -570,6 +570,7 @@ if (SERVER) then
             self:SetMoveType(MOVETYPE_OBSERVER)
             self:SetNoDraw(true)
             self:SetNotSolid(true)
+            self:SetWepRaised(false)
 
             local uniqueID = "ixUnRagdoll" .. self:SteamID()
 
