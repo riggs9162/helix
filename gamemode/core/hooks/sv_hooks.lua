@@ -805,7 +805,7 @@ function GM:SaveData()
 
     -- Go through all doors and set their networked vars wether or not they are locked
     local doors = {}
-    for _, v in ents.Iterator() do
+    for _, v in ipairs(ents.GetAll()) do
         if (v:IsDoor()) then
             doors[#doors + 1] = v:EntIndex()
         end
@@ -828,7 +828,7 @@ function GM:SaveData()
 
     -- Do the same for vehicles .. .
     local vehicles = {}
-    for _, v in ents.Iterator() do
+    for _, v in ipairs(ents.GetAll()) do
         if (v:IsVehicle()) then
             vehicles[#vehicles + 1] = v:EntIndex()
         end
