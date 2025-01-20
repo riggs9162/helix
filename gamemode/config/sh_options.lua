@@ -36,6 +36,10 @@ if (CLIENT) then
         category = "performance"
     })
 
+    ix.option.Add("disableOutlines", ix.type.bool, false, {
+        category = "performance"
+    })
+
     ix.option.Add("openBags", ix.type.bool, true, {
         category = "general"
     })
