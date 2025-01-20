@@ -64,6 +64,10 @@ local MODE = 3
 local enable_thin_line_workaround = false
 
 local function SetRenderType(render_type)
+    if ix.option.Get("disableOutlines", false) then
+        return
+    end
+
     if
         render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM
         and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF
@@ -412,6 +416,10 @@ local function Render()
 end
 
 local function RenderOutlines()
+    if ix.option.Get("disableOutlines", false) then
+        return
+    end
+
     hook.Run("PreDrawOutlines", GetRenderType())
 
     local listSizes = GetCurrentListsSize()
