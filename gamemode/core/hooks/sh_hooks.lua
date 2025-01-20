@@ -1,3 +1,25 @@
+local Vector = Vector
+local ix = ix
+local IsValid = IsValid
+local isstring = isstring
+local isvector = isvector
+local util = util
+local debugoverlay = debugoverlay
+local Color = Color
+local CurTime = CurTime
+local istable = istable
+local pairs = pairs
+local hook = hook
+local IsFirstTimePredicted = IsFirstTimePredicted
+local net = net
+local FindMetaTable = FindMetaTable
+local math = math
+local isnumber = isnumber
+local os = os
+local ipairs = ipairs
+local isfunction = isfunction
+local baseclass = baseclass
+
 function GM:PlayerNoClip(ply)
     return ply:IsAdmin()
 end

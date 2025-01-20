@@ -1,3 +1,43 @@
+local LocalPlayer = LocalPlayer
+local IsValid = IsValid
+local vgui = vgui
+local surface = surface
+local ScreenScale = ScreenScale
+local math = math
+local ix = ix
+local Angle = Angle
+local Vector = Vector
+local hook = hook
+local ScrW = ScrW
+local ScrH = ScrH
+local timer = timer
+local GetGlobalString = GetGlobalString
+local Color = Color
+local RealTime = RealTime
+local util = util
+local Entity = Entity
+local SysTime = SysTime
+local FrameTime = FrameTime
+local render = render
+local cam = cam
+local pairs = pairs
+local team = team
+local L = L
+local string = string
+local IsFirstTimePredicted = IsFirstTimePredicted
+local isfunction = isfunction
+local RunConsoleCommand = RunConsoleCommand
+local istable = istable
+local table = table
+local derma = derma
+local SetClipboardText = SetClipboardText
+local net = net
+local Derma_StringRequest = Derma_StringRequest
+local gameevent = gameevent
+local Player = Player
+local chat = chat
+local unpack = unpack
+
 function GM:ForceDermaSkin()
     return "helix"
 end
