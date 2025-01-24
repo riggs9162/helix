@@ -221,7 +221,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
             dmgInfo:AddDamage(add)
         end
 
-        debugoverlay.Axis(dmgInfo:GetDamagePosition(), Angle(0, 0, 0), 5, 5, true)
+        debugoverlay.Axis(dmgInfo:GetDamagePosition(), angle_zero, 5, 5, true)
 
         -- Scale the damage to be more realistic
         dmgInfo:ScaleDamage(dmgInfo:GetDamageForce():Length() / 1024)

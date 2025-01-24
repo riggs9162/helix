@@ -127,7 +127,7 @@ function PLUGIN:CreateMove(cmd)
         LocalPlayer():GetViewEntity() == LocalPlayer()) then
         fm = cmd:GetForwardMove()
         sm = cmd:GetSideMove()
-        diff = (owner:EyeAngles() - (owner.camAng or Angle(0, 0, 0)))[2] or 0
+        diff = (owner:EyeAngles() - (owner.camAng or angle_zero))[2] or 0
         diff = diff / 90
 
         cmd:SetForwardMove(fm + sm * diff)
@@ -140,7 +140,7 @@ function PLUGIN:InputMouseApply(cmd, x, y, ang)
     owner = LocalPlayer()
 
     if (!owner.camAng) then
-        owner.camAng = Angle(0, 0, 0)
+        owner.camAng = angle_zero
     end
 
     owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)

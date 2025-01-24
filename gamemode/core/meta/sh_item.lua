@@ -529,7 +529,7 @@ if (SERVER) then
             -- Spawn the actual item entity.
             local entity = ents.Create("ix_item")
             entity:Spawn()
-            entity:SetAngles(angles or Angle(0, 0, 0))
+            entity:SetAngles(angles or angle_zero)
             entity:SetItem(self.id)
 
             -- If the first argument is a player, then we will find a position to drop

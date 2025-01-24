@@ -155,7 +155,7 @@ else
                         timer.Simple(0, function()
                             client:SetPos(position)
                             client:SetEyeAngles(angles)
-                            client:SetVelocity(Vector(0, 0, 0))
+                            client:SetVelocity(vector_origin)
                         end)
                     end
 

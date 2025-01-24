@@ -163,7 +163,7 @@ function GM:TranslateActivity(ply, act)
             local len2D = velocity:Length2DSqr()
 
             -- Check if we are moving up or down the ladder
-            ply.ixLadderVelocity = ply.ixLadderVelocity or Vector(0, 0, 0)
+            ply.ixLadderVelocity = ply.ixLadderVelocity or vector_origin
             ply.ixLadderNextCheck = ply.ixLadderNextCheck or CurTime()
             ply.ixLadderDir = ply.ixLadderDir or "idle"
 

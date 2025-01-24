@@ -118,7 +118,7 @@ end
 -- @number distance The distance to check
 -- @treturn string The area's unique identifier
 -- @treturn table The area's information, if found
--- @usage local area, info = ix.area.GetNearestArea(Vector(0, 0, 0), 128)
+-- @usage local area, info = ix.area.GetNearestArea(vector_origin, 128)
 -- if (area) then
 --     print("The nearest area is", info.name)
 -- else
@@ -165,7 +165,7 @@ end
 -- @string area The area's unique identifier
 -- @treturn boolean Whether or not the position is within the area
 -- @treturn table The area's information, if found
--- @usage local isInArea, info = ix.area.IsInArea(Vector(0, 0, 0), "example")
+-- @usage local isInArea, info = ix.area.IsInArea(vector_origin, "example")
 -- if (isInArea) then
 --     print("The position is within the area", info.name)
 -- else
@@ -185,7 +185,7 @@ end
 -- @vector position The position to check
 -- @treturn string The area's unique identifier
 -- @treturn table The area's information, if found
--- @usage local area, info = ix.area.GetArea(Vector(0, 0, 0))
+-- @usage local area, info = ix.area.GetArea(vector_origin)
 -- if (area) then
 --     print("The position is within the area", info.name)
 -- else

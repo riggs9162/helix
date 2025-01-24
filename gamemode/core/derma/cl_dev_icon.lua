@@ -36,7 +36,7 @@ hook.Add("CreateDeveloperMenuButtons", "ixDeveloperItemCam", function(tabs)
             local model = leftPanel:Add("DAdjustableModelPanel")
             model:Dock(FILL)
             model:SetModel("models/props_borealis/bluebarrel001.mdl")
-            model:SetLookAt(Vector(0, 0, 0))
+            model:SetLookAt(vector_origin)
 
             model.LayoutEntity = function() end
 
