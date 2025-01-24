@@ -397,13 +397,8 @@ if (SERVER) then
         entity:SetModel(self:GetModel())
         entity:SetSkin(self:GetSkin())
 
-        for i = 0, (self:GetNumBodyGroups() - 1) do
-            entity:SetBodygroup(i, self:GetBodygroup(i))
-        end
-
-        for i = 0, 31 do
-            entity:SetSubMaterial(i, self:GetSubMaterial(i))
-        end
+        entity:InheritBodygroups(self)
+        entity:InheritMaterials(self)
 
         entity:Spawn()
 
