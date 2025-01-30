@@ -624,6 +624,36 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
         panel:SetInventoryID(inventory:GetID())
         panel:SetItemTable(itemTable)
 
+        local ent = panel:GetEntity()
+        if (IsValid(ent)) then
+            local pos = ent:GetPos()
+            local ang = ent:GetAngles()
+
+            local best = PositionSpawnIcon(ent, pos, true)
+            local pos = best and best.origin or Vector(0, 0, 0)
+            local ang = best and best.angles or Angle(0, 0, 0)
+            local fov = best and best.fov or 75
+
+            local iconCam = itemTable.iconCam
+            if (iconCam) then
+                if (iconCam.pos) then
+                    pos = iconCam.pos
+                end
+
+                if (iconCam.ang) then
+                    ang = iconCam.ang
+                end
+
+                if (iconCam.fov) then
+                    fov = iconCam.fov
+                end
+            end
+
+            panel:SetCamPos(pos)
+            panel:SetFOV(fov)
+            panel:SetLookAng(ang)
+        end
+
         if (self.panels[itemTable:GetID()]) then
             self.panels[itemTable:GetID()]:Remove()
         end
