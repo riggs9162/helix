@@ -118,7 +118,7 @@ end
 -- @number distance The distance to check
 -- @treturn string The area's unique identifier
 -- @treturn table The area's information, if found
--- @usage local area, info = ix.area.GetNearestArea(vector_origin, 128)
+-- @usage local area, info = ix.area.GetNearestArea(Vector(0, 0, 0), 128)
 -- if (area) then
 --     print("The nearest area is", info.name)
 -- else
@@ -165,7 +165,7 @@ end
 -- @string area The area's unique identifier
 -- @treturn boolean Whether or not the position is within the area
 -- @treturn table The area's information, if found
--- @usage local isInArea, info = ix.area.IsInArea(vector_origin, "example")
+-- @usage local isInArea, info = ix.area.IsInArea(Vector(0, 0, 0), "example")
 -- if (isInArea) then
 --     print("The position is within the area", info.name)
 -- else
@@ -185,7 +185,7 @@ end
 -- @vector position The position to check
 -- @treturn string The area's unique identifier
 -- @treturn table The area's information, if found
--- @usage local area, info = ix.area.GetArea(vector_origin)
+-- @usage local area, info = ix.area.GetArea(Vector(0, 0, 0))
 -- if (area) then
 --     print("The position is within the area", info.name)
 -- else
@@ -214,8 +214,8 @@ ix.util.Include("cl_hooks.lua")
 -- return world center, local min, and local max from world start/end positions
 function PLUGIN:GetLocalAreaPosition(startPosition, endPosition)
     local center = LerpVector(0.5, startPosition, endPosition)
-    local min = WorldToLocal(startPosition, angle_zero, center, angle_zero)
-    local max = WorldToLocal(endPosition, angle_zero, center, angle_zero)
+    local min = WorldToLocal(startPosition, Angle(0, 0, 0), center, Angle(0, 0, 0))
+    local max = WorldToLocal(endPosition, Angle(0, 0, 0), center, Angle(0, 0, 0))
 
     return center, min, max
 end

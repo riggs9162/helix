@@ -96,7 +96,7 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
         local center, min, max = self:GetLocalAreaPosition(v.startPosition, v.endPosition)
         local color = ColorAlpha(v.properties.color or ix.config.Get("color"), 255)
 
-        render.DrawWireframeBox(center, angle_zero, min, max, color)
+        render.DrawWireframeBox(center, Angle(0, 0, 0), min, max, color)
 
         cam.Start2D()
             local centerScreen = center:ToScreen()
@@ -122,7 +122,7 @@ function PLUGIN:PostDrawTranslucentRenderables(bDepth, bSkybox)
         local center, min, max = self:GetLocalAreaPosition(self.editStart, pos)
         local color = Color(255, 255, 255, 25 + (1 + math.sin(SysTime() * 6)) * 115)
 
-        render.DrawWireframeBox(center, angle_zero, min, max, color)
+        render.DrawWireframeBox(center, Angle(0, 0, 0), min, max, color)
 
         cam.Start2D()
             local centerScreen = center:ToScreen()

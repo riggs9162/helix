@@ -163,7 +163,7 @@ function GM:TranslateActivity(ply, act)
             local len2D = velocity:Length2DSqr()
 
             -- Check if we are moving up or down the ladder
-            ply.ixLadderVelocity = ply.ixLadderVelocity or vector_origin
+            ply.ixLadderVelocity = ply.ixLadderVelocity or Vector(0, 0, 0)
             ply.ixLadderNextCheck = ply.ixLadderNextCheck or CurTime()
             ply.ixLadderDir = ply.ixLadderDir or "idle"
 
@@ -642,7 +642,7 @@ function GM:Move(ply, moveData)
         if ( ply:GetNetVar("actEnterAngle") ) then
             moveData:SetForwardSpeed(0)
             moveData:SetSideSpeed(0)
-            moveData:SetVelocity(vector_origin)
+            moveData:SetVelocity(Vector(0, 0, 0))
         end
 
         if ( ply:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) ) then

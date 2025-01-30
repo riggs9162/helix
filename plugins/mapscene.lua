@@ -7,8 +7,8 @@ PLUGIN.description = "Adds areas of the map that are visible during character se
 PLUGIN.scenes = PLUGIN.scenes or {}
 
 local x3, y3 = 0, 0
-local realOrigin = vector_origin
-local realAngles = angle_zero
+local realOrigin = Vector(0, 0, 0)
+local realAngles = Angle(0, 0, 0)
 local view = {}
 
 ix.config.Add("mapSceneFOV", 90, "The field of view for the map scene.", nil, {

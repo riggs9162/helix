@@ -495,3 +495,74 @@ ix.command.Add("DoorSetClass", {
         end
     end
 })
+
+properties.Add("ix_door_toggle_hidden", {
+    MenuLabel = "[Door] Toggle Hidden",
+    Order = 9999,
+    MenuIcon = "icon16/door.png",
+    Filter = function(self, ent, client)
+        if (!IsValid(ent) or !ent:IsDoor()) then
+            return false
+        end
+
+        return CAMI.PlayerHasAccess(client, "Helix - Manage Doors", nil)
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+            net.WriteEntity(ent)
+        self:MsgEnd()
+    end,
+    Receive = function(self, length, client)
+        local entity = net.ReadEntity()
+        if (!self:Filter(entity, client)) then
+            return
+        end
+
+        entity:SetNetVar("visible", !entity:GetNetVar("visible", false))
+
+        PLUGIN:CallOnDoorChildren(entity, function(child)
+            child:SetNetVar("visible", !entity:GetNetVar("visible", false))
+        end)
+
+        client:Notify("@dSet" .. (entity:GetNetVar("visible", false) and "Not" or "") .. "Hidden")
+
+        PLUGIN:SaveDoorData()
+    end
+})
+
+properties.Add("ix_door_toggle_ownable", {
+    MenuLabel = "[Door] Toggle Ownable",
+    Order = 9999,
+    MenuIcon = "icon16/door.png",
+    Filter = function(self, ent, client)
+        if (!IsValid(ent) or !ent:IsDoor()) then
+            return false
+        end
+
+        return CAMI.PlayerHasAccess(client, "Helix - Manage Doors", nil)
+    end,
+    Action = function(self, ent)
+        self:MsgStart()
+            net.WriteEntity(ent)
+        self:MsgEnd()
+    end,
+    Receive = function(self, length, client)
+        local entity = net.ReadEntity()
+        if (!self:Filter(entity, client)) then
+            return
+        end
+
+        local ownable = entity:GetNetVar("ownable", false)
+        entity:SetNetVar("ownable", !ownable)
+        entity:SetNetVar("visible", !ownable)
+
+        PLUGIN:CallOnDoorChildren(entity, function(child)
+            child:SetNetVar("ownable", !ownable)
+            child:SetNetVar("visible", !ownable)
+        end)
+
+        client:Notify("@dSet" .. (ownable and "Not" or "") .. "Ownable")
+
+        PLUGIN:SaveDoorData()
+    end
+})

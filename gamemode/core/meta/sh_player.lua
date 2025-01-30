@@ -469,7 +469,7 @@ if (SERVER) then
                     self:SetNoDraw(false)
                     self:SetNotSolid(false)
                     self:SetMoveType(MOVETYPE_WALK)
-                    self:SetLocalVelocity(IsValid(entity) and entity.ixLastVelocity or vector_origin)
+                    self:SetLocalVelocity(IsValid(entity) and entity.ixLastVelocity or Vector(0, 0, 0))
                 end
 
                 if (IsValid(self) and !entity.ixIgnoreDelete) then
@@ -662,7 +662,7 @@ end
 -- @tparam Vector position The position to check against.
 -- @tparam number radius The radius to check.
 -- @treturn boolean Returns true if the player is within the radius.
--- @usage if Entity(1):IsNearPosition(vector_origin, 100) then
+-- @usage if Entity(1):IsNearPosition(Vector(0, 0, 0), 100) then
 --     print("Player is near the origin.")
 -- end
 -- > Player is near the origin.

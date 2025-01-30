@@ -92,8 +92,8 @@ end
 function meta:ResetBoneMatrix()
     for i = 0, self:GetBoneCount() - 1 do
         self:ManipulateBoneScale(i, Vector(1, 1, 1))
-        self:ManipulateBoneAngles(i, angle_zero)
-        self:ManipulateBonePosition(i, vector_origin)
+        self:ManipulateBoneAngles(i, Angle(0, 0, 0))
+        self:ManipulateBonePosition(i, Vector(0, 0, 0))
     end
 end
 

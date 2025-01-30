@@ -79,7 +79,7 @@ function PLUGIN:CalcView(client, origin, angles, fov)
             crouchFactor = Lerp(ft*5, crouchFactor, 0)
         end
 
-        curAng = owner.camAng or angle_zero
+        curAng = owner.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
             traceData.start =     client:GetPos() + client:GetViewOffset() +
@@ -127,7 +127,7 @@ function PLUGIN:CreateMove(cmd)
         LocalPlayer():GetViewEntity() == LocalPlayer()) then
         fm = cmd:GetForwardMove()
         sm = cmd:GetSideMove()
-        diff = (owner:EyeAngles() - (owner.camAng or angle_zero))[2] or 0
+        diff = (owner:EyeAngles() - (owner.camAng or Angle(0, 0, 0)))[2] or 0
         diff = diff / 90
 
         cmd:SetForwardMove(fm + sm * diff)
@@ -140,7 +140,7 @@ function PLUGIN:InputMouseApply(cmd, x, y, ang)
     owner = LocalPlayer()
 
     if (!owner.camAng) then
-        owner.camAng = angle_zero
+        owner.camAng = Angle(0, 0, 0)
     end
 
     owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)

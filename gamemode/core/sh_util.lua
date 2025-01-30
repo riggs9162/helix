@@ -150,7 +150,7 @@ function ix.util.SanitizeType(type, input)
             Color(tonumber(input.r) or 255, tonumber(input.g) or 255, tonumber(input.b) or 255, tonumber(input.a) or 255) or
             color_white
     elseif (type == ix.type.vector) then
-        return isvector(input) and input or vector_origin
+        return isvector(input) and input or Vector(0, 0, 0)
     elseif (type == ix.type.array) then
         return input
     else

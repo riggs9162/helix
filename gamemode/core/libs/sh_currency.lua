@@ -105,7 +105,7 @@ if (SERVER) then
     -- @realm server
     -- @vector pos The position of the money to be spawned.
     -- @number amount The amount of cash being spawned.
-    -- @angle[opt=angle_zero] angle The angle of the entity being spawned.
+    -- @angle[opt=Angle(0, 0, 0)] angle The angle of the entity being spawned.
     -- @treturn entity The spawned money entity.
     function ix.currency.Spawn(pos, amount, angle)
         if (!amount or amount < 0) then
@@ -128,7 +128,7 @@ if (SERVER) then
         money:SetPos(pos)
         -- double check for negative.
         money:SetAmount(math.Round(math.abs(amount)))
-        money:SetAngles(angle or angle_zero)
+        money:SetAngles(angle or Angle(0, 0, 0))
         money:Activate()
 
         return money

@@ -797,7 +797,7 @@ do
     -- @string uniqueID Unique ID of the item
     -- @vector position The position in which the item's entity will be spawned
     -- @func[opt=nil] callback Function to call when the item entity is created
-    -- @angle[opt=angle_zero] angles The angles at which the item's entity will spawn
+    -- @angle[opt=Angle(0, 0, 0)] angles The angles at which the item's entity will spawn
     -- @tab[opt=nil] data Additional data for this item instance
     function ix.item.Spawn(uniqueID, position, callback, angles, data)
         ix.item.Instance(0, uniqueID, data or {}, 1, 1, function(item)

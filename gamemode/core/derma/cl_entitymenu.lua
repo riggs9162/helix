@@ -132,7 +132,7 @@ function PANEL:Init()
     self.blur = 0
     self.alpha = 1
     self.bClosing = false
-    self.lastPosition = vector_origin
+    self.lastPosition = Vector(0, 0, 0)
 
     self:CreateAnimation(animationTime, {
         target = {blur = 1},

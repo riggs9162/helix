@@ -148,7 +148,7 @@ function ikon:renderHook()
             render.SuppressEngineLighting(true)
             render.Clear(0, 0, 0, 0, true, true)
 
-            render.SetLightingOrigin(vector_origin)
+            render.SetLightingOrigin(Vector(0, 0, 0))
             render.ResetModelLighting(200 / 255, 200 / 255, 200 / 255)
             render.SetColorModulation(1, 1, 1)
 

@@ -63,7 +63,7 @@ function SWEP:Initialize()
 
     self.lastHand = 0
     self.maxHoldDistanceSquared = self.maxHoldDistance ^ 2
-    self.heldObjectAngle = angle_zero
+    self.heldObjectAngle = Angle(0, 0, 0)
 end
 
 if (CLIENT) then

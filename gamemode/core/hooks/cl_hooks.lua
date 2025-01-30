@@ -355,7 +355,7 @@ function GM:CalcViewModelView(weapon, viewModel, oldEyePos, oldEyeAngles, eyePos
     end
 
     local fraction = ply.ixRaisedFraction
-    local lowerPos = weapon.LowerPosition or vector_origin
+    local lowerPos = weapon.LowerPosition or Vector(0, 0, 0)
     local rotation = weapon.LowerAngles or LOWERED_ANGLES
 
     if (ix.option.Get("altLower", true) and weapon.LowerAngles2) then
