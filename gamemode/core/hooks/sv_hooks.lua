@@ -13,7 +13,7 @@ function GM:PlayerInitialSpawn(ply)
         local faction = ix.faction.indices[index]
 
         local char = ix.char.New({
-            name = ply:Name(),
+            name = ply:Nick(),
             faction = faction and faction.uniqueID or "unknown",
             model = faction and table.Random(faction:GetModels(ply)) or "models/gman.mdl"
         }, botID, ply, ply:SteamID64())
@@ -54,7 +54,7 @@ function GM:PlayerInitialSpawn(ply)
         ix.char.Restore(ply, function(charList)
             if (!IsValid(ply)) then return end
 
-            MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. ply:Name())
+            MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. ply:Nick())
 
             for _, v in ipairs(charList) do
                 ix.char.loaded[v]:Sync(ply)

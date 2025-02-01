@@ -64,17 +64,13 @@ local MODE = 3
 local enable_thin_line_workaround = false
 
 local function SetRenderType(render_type)
-    if ix.option.Get("disableOutlines", false) then
-        return
-    end
+    if ix.option.Get("disableOutlines", false) then return end
 
     if
         render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM
         and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF
         and render_type ~= OUTLINE_RENDERTYPE_AFTER_EF
-    then
-        return
-    end
+    then return end
 
     RenderType = render_type
 
@@ -90,9 +86,7 @@ local function GetOutlineThickness()
 end
 
 local function SetOutlineThickness(thickness)
-    if thickness < 1 then
-        return
-    end
+    if thickness < 1 then return end
 
     OutlineThickness = thickness
 
@@ -167,13 +161,9 @@ function ix.outline.Add(ents, color, mode, render_type, outline_thickness)
     end
 
     -- Check for a validity
-    if not SetRenderType(render_type) then
-        return
-    end
+    if not SetRenderType(render_type) then return end
 
-    if not SetOutlineThickness(outline_thickness) then
-        return
-    end
+    if not SetOutlineThickness(outline_thickness) then return end
 
     -- Create list if it doesnt exist
     InitializeCurrentListIfNeeded()
@@ -182,9 +172,7 @@ function ix.outline.Add(ents, color, mode, render_type, outline_thickness)
     local List, ListSize = GetCurrentList(), GetCurrentListSize()
 
     -- Maximum 255 reference values
-    if ListSize >= 255 then
-        return
-    end
+    if ListSize >= 255 then return end
 
     -- Support for passing Entity as first argument
     if not istable(ents) then
@@ -192,9 +180,7 @@ function ix.outline.Add(ents, color, mode, render_type, outline_thickness)
     end
 
     -- Do not pass empty tables
-    if ents[1] == nil then
-        return
-    end
+    if ents[1] == nil then return end
 
     local t = {
         [ENTS] = ents,
@@ -231,9 +217,7 @@ local function Render()
     local scene = render.GetRenderTarget()
 
     -- Only draw inside of the actual main screen RT, prevents breaking addons and other rendering
-    if scene ~= nil then
-        return
-    end
+    if scene ~= nil then return end
 
     -- Copy the current RT to another RT so we can restore this later on
     -- the way the drawing of this library works is as follows:
@@ -416,9 +400,7 @@ local function Render()
 end
 
 local function RenderOutlines()
-    if ix.option.Get("disableOutlines", false) then
-        return
-    end
+    if ix.option.Get("disableOutlines", false) then return end
 
     hook.Run("PreDrawOutlines", GetRenderType())
 

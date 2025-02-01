@@ -44,9 +44,7 @@ local traceMin = Vector(-4, -4, -4)
 local traceMax = Vector(4, 4, 4)
 
 function PLUGIN:CalcView(client, origin)
-    if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
-        return
-    end
+    if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then return end
 
     local enterAngle = client:GetNetVar("actEnterAngle")
     local fraction = self.cameraFraction
