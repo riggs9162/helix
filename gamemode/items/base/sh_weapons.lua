@@ -121,7 +121,7 @@ function ITEM:Equip(client, bNoSelect, bNoSound)
     client.carryWeapons = client.carryWeapons or {}
 
     for k, _ in client:GetCharacter():GetInventory():Iter() do
-		if (k.id != self.id) then
+        if (k.id != self.id) then
             local itemTable = ix.item.instances[k.id]
 
             if (!itemTable) then
@@ -286,15 +286,15 @@ hook.Add("PlayerDeath", "ixStripClip", function(client)
     client.carryWeapons = {}
 
     for k, _ in client:GetCharacter():GetInventory():Iter() do
-		if (k.isWeapon and k:GetData("equip")) then
-			k:SetData("ammo", nil)
-			k:SetData("equip", nil)
+        if (k.isWeapon and k:GetData("equip")) then
+            k:SetData("ammo", nil)
+            k:SetData("equip", nil)
 
-			if (k.pacData) then
-				k:RemovePAC(client)
-			end
-		end
-	end
+            if (k.pacData) then
+                k:RemovePAC(client)
+            end
+        end
+    end
 end)
 
 hook.Add("EntityRemoved", "ixRemoveGrenade", function(entity)
