@@ -122,7 +122,7 @@ function ITEM:Equip(client, bNoSelect, bNoSound)
 
     for k, _ in client:GetCharacter():GetInventory():Iter() do
 		if (k.id != self.id) then
-            local itemTable = ix.item.instances[v.id]
+            local itemTable = ix.item.instances[k.id]
 
             if (!itemTable) then
                 client:NotifyLocalized("tellAdmin", "wid!xt")
