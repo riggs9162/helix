@@ -30,7 +30,7 @@ function PANEL:SetItem(itemTable)
         surface.DrawRect(0, 0, w, h)
     end
 
-    self.icon = self:Add("SpawnIcon")
+    self.icon = self:Add("ixSpawnIcon")
     self.icon:SetZPos(1)
     self.icon:SetSize(self:GetWide(), self:GetWide())
     self.icon:Dock(FILL)
@@ -59,18 +59,34 @@ function PANEL:SetItem(itemTable)
         end
     end
 
-    if ((itemTable.iconCam and !ICON_RENDER_QUEUE[itemTable.uniqueID]) or itemTable.forceRender) then
-        local iconCam = itemTable.iconCam
-        iconCam = {
-            cam_pos = iconCam.pos,
-            cam_fov = iconCam.fov,
-            cam_ang = iconCam.ang,
-        }
-        ICON_RENDER_QUEUE[itemTable.uniqueID] = true
+    local ent = self.icon:GetEntity()
+    if (IsValid(ent)) then
+        local pos = ent:GetPos()
+        local ang = ent:GetAngles()
 
-        self.icon:RebuildSpawnIconEx(
-            iconCam
-        )
+        local best = PositionSpawnIcon(ent, pos, true)
+        local pos = best and best.origin or Vector(0, 0, 0)
+        local ang = best and best.angles or Angle(0, 0, 0)
+        local fov = best and best.fov or 75
+
+        local iconCam = itemTable.iconCam
+        if (iconCam) then
+            if (iconCam.pos) then
+                pos = iconCam.pos
+            end
+
+            if (iconCam.ang) then
+                ang = iconCam.ang
+            end
+
+            if (iconCam.fov) then
+                fov = iconCam.fov
+            end
+        end
+
+        panel:SetCamPos(pos)
+        panel:SetFOV(fov)
+        panel:SetLookAng(ang)
     end
 end
 
