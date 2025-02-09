@@ -1465,6 +1465,29 @@ if ( CLIENT ) then
 
         return bIsDown
     end
+
+    local BASE_RES_X, BASE_RES_Y = 1920, 1080 -- Reference resolution
+
+    --- Scales a value based on screen resolution while maintaining aspect ratio.
+    -- The scaling function is designed to be dynamic, adapting to different screen sizes.
+    -- Larger screens will have a smaller scale factor to maintain UI consistency.
+    -- @realm client
+    -- @param size The base size to scale
+    -- @param useHeight Whether to scale based on height instead of width
+    -- @return Scaled size
+    function ix.util.ScreenScale(size, useHeight)
+        local screenW, screenH = ScrW(), ScrH()
+    
+        -- Compute scale factors based on an exponential decay to make elements significantly smaller on large screens
+        local scaleX = (BASE_RES_X / screenW) ^ 0.85
+        local scaleY = (BASE_RES_Y / screenH) ^ 0.85
+        
+        -- Choose the appropriate scale mode
+        local scale = useHeight and scaleY or math.min(scaleX, scaleY)
+        
+        -- Ensure elements do not disappear and maintain readability
+        return math.max(math.floor(size * scale + 0.5), 1)
+    end
 end
 
 --- Rolls a percentage chance.
