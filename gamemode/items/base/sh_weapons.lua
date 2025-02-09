@@ -3,9 +3,11 @@ ITEM.name = "Weapon"
 ITEM.description = "A Weapon."
 ITEM.category = "Weapons"
 ITEM.model = "models/weapons/w_pistol.mdl"
+
+ITEM.width = 1
+ITEM.height = 1
+
 ITEM.class = "weapon_pistol"
-ITEM.width = 2
-ITEM.height = 2
 ITEM.isWeapon = true
 ITEM.isGrenade = false
 ITEM.weaponCategory = "sidearm"
@@ -31,33 +33,30 @@ end
 -- On item is dropped, Remove a weapon from the player and keep the ammo in the item.
 ITEM:Hook("drop", function(item)
     local inventory = ix.item.inventories[item.invID]
-
-    if (!inventory) then return end
+    if ( !inventory ) then return end
 
     -- the item could have been dropped by someone else (i.e someone searching this player), so we find the real owner
     local owner
-
-    for client, character in ix.util.GetCharacters() do
-        if (character:GetID() == inventory.owner) then
-            owner = client
+    for ply, character in ix.util.GetCharacters() do
+        if ( character:GetID() == inventory.owner ) then
+            owner = ply
             break
         end
     end
 
-    if (!IsValid(owner)) then return end
+    if ( !IsValid(owner) ) then return end
 
-    if (item:GetData("equip")) then
+    if ( item:GetData("equip") ) then
         item:SetData("equip", nil)
 
         owner.carryWeapons = owner.carryWeapons or {}
 
         local weapon = owner.carryWeapons[item.weaponCategory]
-
-        if (!IsValid(weapon)) then
+        if ( !IsValid(weapon) ) then
             weapon = owner:GetWeapon(item.class)
         end
 
-        if (IsValid(weapon)) then
+        if ( IsValid(weapon) ) then
             item:SetData("ammo", weapon:Clip1())
 
             owner:StripWeapon(item.class)
@@ -74,15 +73,16 @@ ITEM.functions.EquipUn = { -- sorry, for name order.
     name = "Unequip",
     tip = "equipTip",
     icon = "icon16/cross.png",
+
     OnRun = function(item)
         item:Unequip(item.player, true)
         return false
     end,
-    OnCanRun = function(item)
-        local client = item.player
 
-        return !IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and
-            hook.Run("CanPlayerUnequipItem", client, item) != false
+    OnCanRun = function(item)
+        local ply = item.player
+
+        return !IsValid(item.entity) and IsValid(ply) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", ply, item) != false
     end
 }
 
@@ -91,46 +91,49 @@ ITEM.functions.Equip = {
     name = "Equip",
     tip = "equipTip",
     icon = "icon16/tick.png",
+
     OnRun = function(item)
         item:Equip(item.player, true)
         return false
     end,
-    OnCanRun = function(item)
-        local client = item.player
 
-        return !IsValid(item.entity) and IsValid(client) and item:GetData("equip") != true and
-            hook.Run("CanPlayerEquipItem", client, item) != false
+    OnCanRun = function(item)
+        local ply = item.player
+
+        return !IsValid(item.entity) and IsValid(ply) and item:GetData("equip") != true and hook.Run("CanPlayerEquipItem", ply, item) != false
     end
 }
 
-function ITEM:WearPAC(client)
-    if (ix.pac and self.pacData) then
-        client:AddPart(self.uniqueID, self)
+function ITEM:WearPAC(ply)
+    if ( ix.pac and self.pacData ) then
+        ply:AddPart(self.uniqueID, self)
     end
 end
 
-function ITEM:RemovePAC(client)
-    if (ix.pac and self.pacData) then
-        client:RemovePart(self.uniqueID)
+function ITEM:RemovePAC(ply)
+    if ( ix.pac and self.pacData ) then
+        ply:RemovePart(self.uniqueID)
     end
 end
 
-function ITEM:Equip(client, bNoSelect, bNoSound)
-    local items = client:GetCharacter():GetInventory():GetItems()
+function ITEM:Equip(ply, bNoSelect, bNoSound)
+    local char = ply:GetCharacter()
+    local inventory = char:GetInventory()
 
-    client.carryWeapons = client.carryWeapons or {}
+    local items = inventory:GetItems()
 
-    for k, _ in client:GetCharacter():GetInventory():Iter() do
-        if (k.id != self.id) then
-            local itemTable = ix.item.instances[k.id]
+    ply.carryWeapons = ply.carryWeapons or {}
 
-            if (!itemTable) then
-                client:NotifyLocalized("tellAdmin", "wid!xt")
+    for v, _ in inventory:Iter() do
+        if ( v.id != self.id ) then
+            local itemTable = ix.item.instances[v.id]
+            if ( !itemTable ) then
+                ply:NotifyLocalized("tellAdmin", "wid!xt")
 
                 return false
             else
-                if (itemTable.isWeapon and client.carryWeapons[self.weaponCategory] and itemTable:GetData("equip")) then
-                    client:NotifyLocalized("weaponSlotFilled", self.weaponCategory)
+                if ( itemTable.isWeapon and ply.carryWeapons[self.weaponCategory] and itemTable:GetData("equip") ) then
+                    ply:NotifyLocalized("weaponSlotFilled", self.weaponCategory)
 
                     return false
                 end
@@ -138,95 +141,93 @@ function ITEM:Equip(client, bNoSelect, bNoSound)
         end
     end
 
-    if (client:HasWeapon(self.class)) then
-        client:StripWeapon(self.class)
+    if ( ply:HasWeapon(self.class) ) then
+        ply:StripWeapon(self.class)
     end
 
-    local weapon = client:Give(self.class, !self.isGrenade)
-
-    if (IsValid(weapon)) then
+    local weapon = ply:Give(self.class, !self.isGrenade)
+    if ( IsValid(weapon) ) then
         local ammoType = weapon:GetPrimaryAmmoType()
 
-        client.carryWeapons[self.weaponCategory] = weapon
+        ply.carryWeapons[self.weaponCategory] = weapon
 
-        if (!bNoSelect) then
-            client:SelectWeapon(weapon:GetClass())
+        if ( !bNoSelect ) then
+            ply:SelectWeapon(weapon:GetClass())
         end
 
-        if (!bNoSound) then
-            client:EmitSound(self.useSound, 60)
+        if ( !bNoSound ) then
+            ply:EmitSound(self.useSound, 60)
         end
 
         -- Remove default given ammo.
-        if (client:GetAmmoCount(ammoType) == weapon:Clip1() and self:GetData("ammo", 0) == 0) then
-            client:RemoveAmmo(weapon:Clip1(), ammoType)
+        if ( ply:GetAmmoCount(ammoType) == weapon:Clip1() and self:GetData("ammo", 0) == 0 ) then
+            ply:RemoveAmmo(weapon:Clip1(), ammoType)
         end
 
         -- assume that a weapon with -1 clip1 and clip2 would be a throwable (i.e hl2 grenade)
         -- TODO: figure out if this interferes with any other weapons
-        if (weapon:GetMaxClip1() == -1 and weapon:GetMaxClip2() == -1 and client:GetAmmoCount(ammoType) == 0) then
-            client:SetAmmo(1, ammoType)
+        if ( weapon:GetMaxClip1() == -1 and weapon:GetMaxClip2() == -1 and ply:GetAmmoCount(ammoType) == 0 ) then
+            ply:SetAmmo(1, ammoType)
         end
 
         self:SetData("equip", true)
 
-        if (self.isGrenade) then
+        if ( self.isGrenade ) then
             weapon:SetClip1(1)
-            client:SetAmmo(0, ammoType)
+            ply:SetAmmo(0, ammoType)
         else
             weapon:SetClip1(self:GetData("ammo", 0))
         end
 
         weapon.ixItem = self
 
-        if (self.OnEquipWeapon) then
-            self:OnEquipWeapon(client, weapon)
+        if ( self.OnEquipWeapon ) then
+            self:OnEquipWeapon(ply, weapon)
         end
     else
         print(Format("[Helix] Cannot equip weapon - %s does not exist!", self.class))
     end
 end
 
-function ITEM:Unequip(client, bPlaySound, bRemoveItem)
-    client.carryWeapons = client.carryWeapons or {}
+function ITEM:Unequip(ply, bPlaySound, bRemoveItem)
+    ply.carryWeapons = ply.carryWeapons or {}
 
-    local weapon = client.carryWeapons[self.weaponCategory]
-
-    if (!IsValid(weapon)) then
-        weapon = client:GetWeapon(self.class)
+    local weapon = ply.carryWeapons[self.weaponCategory]
+    if ( !IsValid(weapon) ) then
+        weapon = ply:GetWeapon(self.class)
     end
 
-    if (IsValid(weapon)) then
+    if ( IsValid(weapon) ) then
         weapon.ixItem = nil
 
         self:SetData("ammo", weapon:Clip1())
-        client:StripWeapon(self.class)
+        ply:StripWeapon(self.class)
     else
         print(Format("[Helix] Cannot unequip weapon - %s does not exist!", self.class))
     end
 
-    if (bPlaySound) then
-        client:EmitSound(self.useSound, 60)
+    if ( bPlaySound ) then
+        ply:EmitSound(self.useSound, 60)
     end
 
-    client.carryWeapons[self.weaponCategory] = nil
+    ply.carryWeapons[self.weaponCategory] = nil
+
     self:SetData("equip", nil)
-    self:RemovePAC(client)
+    self:RemovePAC(ply)
 
-    if (self.OnUnequipWeapon) then
-        self:OnUnequipWeapon(client, weapon)
+    if ( self.OnUnequipWeapon ) then
+        self:OnUnequipWeapon(ply, weapon)
     end
 
-    if (bRemoveItem) then
+    if ( bRemoveItem ) then
         self:Remove()
     end
 end
 
 function ITEM:CanTransfer(oldInventory, newInventory)
-    if (newInventory and self:GetData("equip")) then
+    if ( newInventory and self:GetData("equip") ) then
         local owner = self:GetOwner()
-
-        if (IsValid(owner)) then
+        if ( IsValid(owner) ) then
             owner:NotifyLocalized("equippedWeapon")
         end
 
@@ -237,21 +238,20 @@ function ITEM:CanTransfer(oldInventory, newInventory)
 end
 
 function ITEM:OnLoadout()
-    if (self:GetData("equip")) then
-        local client = self.player
-        client.carryWeapons = client.carryWeapons or {}
+    if ( self:GetData("equip") ) then
+        local ply = self.player
+        ply.carryWeapons = ply.carryWeapons or {}
 
-        local weapon = client:Give(self.class, true)
-
-        if (IsValid(weapon)) then
-            client:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
-            client.carryWeapons[self.weaponCategory] = weapon
+        local weapon = ply:Give(self.class, true)
+        if ( IsValid(weapon) ) then
+            ply:RemoveAmmo(weapon:Clip1(), weapon:GetPrimaryAmmoType())
+            ply.carryWeapons[self.weaponCategory] = weapon
 
             weapon.ixItem = self
             weapon:SetClip1(self:GetData("ammo", 0))
 
-            if (self.OnEquipWeapon) then
-                self:OnEquipWeapon(client, weapon)
+            if ( self.OnEquipWeapon ) then
+                self:OnEquipWeapon(ply, weapon)
             end
         else
             print(Format("[Helix] Cannot give weapon - %s does not exist!", self.class))
@@ -261,8 +261,7 @@ end
 
 function ITEM:OnSave()
     local weapon = self.player:GetWeapon(self.class)
-
-    if (IsValid(weapon) and weapon.ixItem == self and self:GetData("equip")) then
+    if ( IsValid(weapon) and weapon.ixItem == self and self:GetData("equip") ) then
         self:SetData("ammo", weapon:Clip1())
     end
 end
@@ -271,10 +270,9 @@ function ITEM:OnRemoved()
     local inventory = ix.item.inventories[self.invID]
     local owner = inventory.GetOwner and inventory:GetOwner()
 
-    if (IsValid(owner) and owner:IsPlayer()) then
+    if ( IsValid(owner) and owner:IsPlayer() ) then
         local weapon = owner:GetWeapon(self.class)
-
-        if (IsValid(weapon)) then
+        if ( IsValid(weapon) ) then
             weapon:Remove()
         end
 
@@ -282,16 +280,18 @@ function ITEM:OnRemoved()
     end
 end
 
-hook.Add("PlayerDeath", "ixStripClip", function(client)
-    client.carryWeapons = {}
+hook.Add("PlayerDeath", "ixStripClip", function(ply)
+    ply.carryWeapons = {}
 
-    for k, _ in client:GetCharacter():GetInventory():Iter() do
-        if (k.isWeapon and k:GetData("equip")) then
-            k:SetData("ammo", nil)
-            k:SetData("equip", nil)
+    local char = ply:GetCharacter()
+    local inventory = char:GetInventory()
+    for v, _ in inventory:Iter() do
+        if ( v.isWeapon and v:GetData("equip") ) then
+            v:SetData("ammo", nil)
+            v:SetData("equip", nil)
 
-            if (k.pacData) then
-                k:RemovePAC(client)
+            if ( v.pacData ) then
+                v:RemovePAC(ply)
             end
         end
     end
@@ -299,15 +299,13 @@ end)
 
 hook.Add("EntityRemoved", "ixRemoveGrenade", function(entity)
     -- hack to remove hl2 grenades after they've all been thrown
-    if (entity:GetClass() == "weapon_frag") then
-        local client = entity:GetOwner()
+    if ( entity:GetClass() == "weapon_frag" ) then
+        local ply = entity:GetOwner()
 
-        if (IsValid(client) and client:IsPlayer() and client:GetCharacter()) then
+        if ( IsValid(ply) and ply:IsPlayer() and char ) then
             local ammoName = game.GetAmmoName(entity:GetPrimaryAmmoType())
-
-            if (isstring(ammoName) and ammoName:lower() == "grenade" and client:GetAmmoCount(ammoName) < 1
-            and entity.ixItem and entity.ixItem.Unequip) then
-                entity.ixItem:Unequip(client, false, true)
+            if ( isstring(ammoName) and ammoName:lower() == "grenade" and ply:GetAmmoCount(ammoName) < 1 and entity.ixItem and entity.ixItem.Unequip ) then
+                entity.ixItem:Unequip(ply, false, true)
             end
         end
     end
