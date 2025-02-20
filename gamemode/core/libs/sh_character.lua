@@ -437,7 +437,8 @@ do
         end,
         OnDisplay = function(self, container, payload)
             local scroll = container:Add("DScrollPanel")
-            scroll:Dock(FILL) -- TODO: don't fill so we can allow other panels
+            scroll:Dock(TOP)
+            scroll:SetTall(128)
             scroll.Paint = function(panel, width, height)
                 derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, Color(255, 255, 255, 25))
             end
