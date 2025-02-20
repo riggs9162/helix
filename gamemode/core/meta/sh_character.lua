@@ -151,7 +151,7 @@ if (SERVER) then
 
             -- Apply saved body groups.
             for k, v in pairs(self:GetData("groups", {})) do
-                client:SetBodygroup(k, v)
+                client:SetBodygroupName(k, v)
             end
 
             -- Apply a saved skin.

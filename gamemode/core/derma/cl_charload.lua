@@ -19,7 +19,7 @@ local function SetCharacter(self, character)
 
         if (istable(bodygroups)) then
             for k, v in pairs(bodygroups) do
-                self:SetBodygroup(k, v)
+                self.Entity:SetBodygroupName(k, v)
             end
         end
     else

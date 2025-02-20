@@ -169,16 +169,29 @@ function PANEL:Init()
 
             -- assuming bodygroups
             if (istable(model)) then
-                self.factionModel:SetModel(model[1], model[2] or 0, model[3])
-                self.descriptionModel:SetModel(model[1], model[2] or 0, model[3])
-                self.attributesModel:SetModel(model[1], model[2] or 0, model[3])
+                self.factionModel:SetModel(model[1], model[2] or 0)
+                self.descriptionModel:SetModel(model[1], model[2] or 0)
+                self.attributesModel:SetModel(model[1], model[2] or 0)
+
+                for k, v in pairs(model[3] or {}) do
+                    self.factionModel.Entity:SetBodygroupName(k, v)
+                    self.descriptionModel.Entity:SetBodygroupName(k, v)
+                    self.attributesModel.Entity:SetBodygroupName(k, v)
+                end
             else
                 self.factionModel:SetModel(model)
                 self.descriptionModel:SetModel(model)
                 self.attributesModel:SetModel(model)
             end
         end
+
+        hook.Run("SetupCharacterModelPanels", self, value)
     end)
+
+    local customPayloadHooks = hook.Run("SetupCharacterCreationHooks", self)
+    for k, v in pairs(customPayloadHooks or {}) do
+        self:AddPayloadHook(k, v)
+    end
 
     -- setup character creation hooks
     net.Receive("ixCharacterAuthed", function()
@@ -360,7 +373,7 @@ function PANEL:Populate()
                     local models = faction:GetModels(LocalPlayer())
 
                     self.payload:Set("faction", panel.faction)
-                    self.payload:Set("model", math.random(1, #models))
+                    self.payload:Set("model", math.random(#models))
                 end
 
                 if ((lastSelected and lastSelected == v.index) or (!lastSelected and v.isDefault)) then
