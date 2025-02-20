@@ -114,10 +114,10 @@ ITEM.functions.Equip = {
         local char = item.player:GetCharacter()
 
         for k, _ in char:GetInventory():Iter() do
-			if (k.id != item.id) then
-				local itemTable = ix.item.instances[k.id]
+            if (k.id != item.id) then
+                local itemTable = ix.item.instances[k.id]
 
-				if (itemTable.pacData and k.outfitCategory == item.outfitCategory and itemTable:GetData("equip")) then
+                if (itemTable.pacData and k.outfitCategory == item.outfitCategory and itemTable:GetData("equip")) then
                     item.player:NotifyLocalized(item.equippedNotify or "outfitAlreadyEquipped")
 
                     return false
