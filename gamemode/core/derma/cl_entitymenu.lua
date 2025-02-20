@@ -111,7 +111,7 @@ AccessorFunc(PANEL, "desiredHeight", "DesiredHeight", FORCE_NUMBER)
 
 function PANEL:Init()
     if (IsValid(ix.menu.panel)) then
-        self:Remove()
+        BaseClass.Remove(self)
         return
     end
 
@@ -143,6 +143,8 @@ function PANEL:Init()
 end
 
 function PANEL:SetOptions(options)
+    if (!istable(options) or !IsValid(self.list)) then return end
+
     for k, v in pairs(options) do
         self.list:AddOption(k, v)
     end
@@ -268,6 +270,19 @@ function PANEL:Remove()
             BaseClass.Remove(self)
         end
     })
+end
+
+function PANEL:RemoveInstant()
+    if (self.bClosing) then return end
+
+    self.bClosing = true
+
+    self:SetMouseInputEnabled(false)
+    self:SetKeyboardInputEnabled(false)
+    gui.EnableScreenClicker(false)
+
+    ix.menu.panel = nil
+    BaseClass.Remove(self)
 end
 
 vgui.Register("ixEntityMenu", PANEL, "EditablePanel")
