@@ -9,13 +9,23 @@ function GM:PlayerInitialSpawn(ply)
 
     if (ply:IsBot()) then
         local botID = os.time() + ply:EntIndex()
-        local index = math.random(1, table.Count(ix.faction.indices))
+        local index = math.random(table.Count(ix.faction.indices))
         local faction = ix.faction.indices[index]
+
+        local model = "models/player.mdl"
+        if (faction.models) then
+            if (istable(faction.models)) then
+                local data = faction.models[math.random(#faction.models)]
+                model = data[1]
+            else
+                model = faction.models
+            end
+        end
 
         local char = ix.char.New({
             name = ply:Nick(),
             faction = faction and faction.uniqueID or "unknown",
-            model = faction and table.Random(faction:GetModels(ply)) or "models/gman.mdl"
+            model = faction and model or "models/gman.mdl"
         }, botID, ply, ply:SteamID64())
         char.isBot = true
 
@@ -506,7 +516,7 @@ function GM:PlayerLoadout(ply)
 
         local charModel = char:GetModel()
         if ( istable(charModel) ) then
-            charModel = charModel[math.random(1, #charModel)]
+            charModel = charModel[math.random(#charModel)]
         end
 
         ply:SetModel(charModel)
@@ -706,13 +716,13 @@ local drownSounds = {
 
 function GM:GetPlayerPainSound(ply)
     if (ply:WaterLevel() >= 3) then
-        return drownSounds[math.random(1, #drownSounds)]
+        return drownSounds[math.random(#drownSounds)]
     end
 end
 
 function GM:PlayerHurt(ply, attacker, health, damage)
     if ((ply.ixNextPain or 0) < CurTime() and health > 0) then
-        local painSound = hook.Run("GetPlayerPainSound", ply) or painSounds[math.random(1, #painSounds)]
+        local painSound = hook.Run("GetPlayerPainSound", ply) or painSounds[math.random(#painSounds)]
 
         if (ply:IsFemale() and !painSound:find("female")) then
             painSound = painSound:gsub("male", "female")
@@ -1071,4 +1081,17 @@ net.Receive("ixFinishChat", function(len, ply)
     if ( !char ) then return end
 
     hook.Run("FinishChat", ply)
+end)
+
+net.Receive("ixMapRestart", function(len, ply)
+    if ( !IsValid(ply) ) then return end
+    if ( !CAMI.PlayerHasAccess(ply, "Helix - MapRestart", nil) ) then return end
+
+    local delay = net.ReadFloat()
+    
+    ix.util.NotifyLocalized("mapRestarting", nil, delay)
+
+    timer.Simple(delay, function()
+        RunConsoleCommand("changelevel", game.GetMap())
+    end)
 end)

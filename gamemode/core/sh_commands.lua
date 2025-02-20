@@ -997,10 +997,17 @@ ix.command.Add("MapRestart", {
     arguments = bit.bor(ix.type.number, ix.type.optional),
     OnRun = function(self, client, delay)
         delay = delay or 10
+
+        net.Start("ixMapRestart")
+            net.WriteFloat(delay)
+        net.Send(client)
+
+        /*
         ix.util.NotifyLocalized("mapRestarting", nil, delay)
 
         timer.Simple(delay, function()
             RunConsoleCommand("changelevel", game.GetMap())
         end)
+        */
     end
 })

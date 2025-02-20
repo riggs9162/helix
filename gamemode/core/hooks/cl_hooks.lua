@@ -1064,3 +1064,12 @@ net.Receive("ixChatAddText", function()
 
     chat.AddText(unpack(args))
 end)
+
+net.Receive("ixMapRestart", function()
+    local delay = net.ReadFloat()
+    Derma_Query(L("mapRestartConfirmation"), L("mapRestart"), L("yes"), function()
+        net.Start("ixMapRestart")
+            net.WriteFloat(delay)
+        net.SendToServer()
+    end, L("no"), function() end)
+end)

@@ -494,4 +494,8 @@ LANGUAGE = {
     -- Area Editor
     areaEditor = "Area Editor",
     areaEditorUpdated = "You have updated the \"%s\" area.",
+
+    -- Map Restart
+    mapRestart = "Map Restart",
+    mapRestartConfirmation = "Are you sure you want to restart the map?",
 }
