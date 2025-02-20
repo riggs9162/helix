@@ -81,7 +81,9 @@ else
         if (entity[callbackName]) then
             entity[callbackName](entity, client, data)
         else
-            entity:OnOptionSelected(client, option, data)
+            if (entity.OnOptionSelected) then
+                entity:OnOptionSelected(client, option, data)
+            end
         end
     end)
 end
