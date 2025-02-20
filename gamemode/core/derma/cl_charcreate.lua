@@ -189,9 +189,6 @@ function PANEL:Init()
     end)
 
     local customPayloadHooks = hook.Run("SetupCharacterCreationHooks", self)
-    for k, v in pairs(customPayloadHooks or {}) do
-        self:AddPayloadHook(k, v)
-    end
 
     -- setup character creation hooks
     net.Receive("ixCharacterAuthed", function()
