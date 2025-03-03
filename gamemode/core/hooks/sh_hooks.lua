@@ -84,8 +84,9 @@ function GM:TranslateActivity(ply, act)
             end
 
             local holdType = weapon and ( weapon.HoldType or weapon:GetHoldType()) or "normal"
+            local isPistol = holdType == "pistol" or holdType == "revolver"
             if ( !bAlwaysRaised and weapon and !bRaised and ply:OnGround() ) then
-                holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or "passive"
+                holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or ( isPistol and "normal" or "passive" )
             end
 
             local tree = ix.anim.player[holdType]
