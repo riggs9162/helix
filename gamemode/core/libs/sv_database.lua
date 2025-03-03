@@ -1,4 +1,3 @@
-
 ix.db = ix.db or {
     schema = {},
     schemaQueue = {},
@@ -15,10 +14,7 @@ ix.db = ix.db or {
 
 ix.db.config = ix.config.server.database or {}
 
-function ix.db.Connect(folder)
-    ix.config.server = folder and ix.yaml.Read("gamemodes/" .. folder.. "/config.yml") or ix.config.server
-    ix.db.config = ix.config.server.database or ix.db.config
-
+function ix.db.Connect()
     ix.db.config.adapter = ix.db.config.adapter or "sqlite"
 
     local dbmodule = ix.db.config.adapter
@@ -33,12 +29,12 @@ function ix.db.Connect(folder)
 end
 
 function ix.db.AddToSchema(schemaType, field, fieldType)
-    if (!ix.db.type[fieldType]) then
+    if ( !ix.db.type[fieldType] ) then
         error(string.format("attempted to add field in schema with invalid type '%s'", fieldType))
         return
     end
 
-    if (!mysql:IsConnected() or !ix.db.schema[schemaType]) then
+    if ( !mysql:IsConnected() or !ix.db.schema[schemaType] ) then
         ix.db.schemaQueue[#ix.db.schemaQueue + 1] = {schemaType, field, fieldType}
         return
     end
@@ -49,13 +45,12 @@ end
 -- this is only ever used internally
 function ix.db.InsertSchema(schemaType, field, fieldType)
     local schema = ix.db.schema[schemaType]
-
-    if (!schema) then
+    if ( !schema ) then
         error(string.format("attempted to insert into schema with invalid schema type '%s'", schemaType))
         return
     end
 
-    if (!schema[field]) then
+    if ( !schema[field] ) then
         schema[field] = true
 
         local query = mysql:Update("ix_schema")
@@ -123,7 +118,7 @@ function ix.db.LoadTables()
     -- load schema from database
     query = mysql:Select("ix_schema")
         query:Callback(function(result)
-            if (!istable(result)) then return end
+            if ( !istable(result) ) then return end
 
             for _, v in pairs(result) do
                 ix.db.schema[v.table] = util.JSONToTable(v.columns)
@@ -160,15 +155,15 @@ end
 
 hook.Add("InitPostEntity", "ixDatabaseConnect", function()
     -- Connect to the database using SQLite, mysqoo, or tmysql4.
-    ix.db.Connect(Schema.folder)
+    ix.db.Connect()
 end)
 
 local resetCalled = 0
 
 concommand.Add("ix_wipedb", function(client, cmd, arguments)
     -- can only be ran through the server's console
-    if (!IsValid(client) or client:IsListenServerHost()) then
-        if (resetCalled < RealTime()) then
+    if ( !IsValid(client) ) then
+        if ( resetCalled < RealTime() ) then
             resetCalled = RealTime() + 3
 
             MsgC(Color(255, 0, 0), "[Helix] WIPING THE DATABASE WILL PERMENANTLY REMOVE ALL PLAYER, CHARACTER, ITEM, AND INVENTORY DATA.\n")
