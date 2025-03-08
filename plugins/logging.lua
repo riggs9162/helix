@@ -229,8 +229,8 @@ if (SERVER) then
 
         if (item.isBag) then
             for k, _ in item:GetInventory():Iter() do
-				ix.log.Add(character:GetPlayer(), "inventoryRemove", character:GetName(), k:GetName(), k:GetID())
-			end
+                ix.log.Add(character:GetPlayer(), "inventoryRemove", character:GetName(), k:GetName(), k:GetID())
+            end
         end
     end
 end

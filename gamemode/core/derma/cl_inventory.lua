@@ -745,10 +745,10 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
 
             if (ix.option.Get("openBags", true)) then
                 for k, _ in inventory:Iter() do
-					if (!k.isBag) then continue end
+                    if (!k.isBag) then continue end
 
-					k.functions.View.OnClick(k)
-				end
+                    k.functions.View.OnClick(k)
+                end
             end
 
             canvas.PerformLayout = canvasLayout

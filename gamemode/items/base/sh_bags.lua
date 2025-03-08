@@ -203,7 +203,7 @@ function ITEM:CanTransfer(oldInventory, newInventory)
         if (index == index2) then return false end
 
         for k, _ in self:GetInventory():Iter() do
-			if (k:GetData("id") == index2) then
+            if (k:GetData("id") == index2) then
                 return false
             end
         end

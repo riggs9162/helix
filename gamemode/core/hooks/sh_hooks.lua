@@ -711,7 +711,7 @@ function GM:CanTransferItem(itemObject, curInv, inventory)
     -- don't allow transferring items that are in use
     if ( inventory ) then
         for k, _ in inventory:Iter() do
-			if (k:GetData("equip") == true) then
+            if (k:GetData("equip") == true) then
                 if ( CLIENT ) then
                     ix.util.NotifyLocalized("equippedBag")
                 end

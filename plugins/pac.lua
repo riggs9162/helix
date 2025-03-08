@@ -118,8 +118,8 @@ if (SERVER) then
             local inv = curChar:GetInventory()
 
             for k, _ in inv:Iter() do
-				if (k:GetData("equip") == true and k.pacData) then
-					client:AddPart(k.uniqueID, k)
+                if (k:GetData("equip") == true and k.pacData) then
+                    client:AddPart(k.uniqueID, k)
                 end
             end
         end
@@ -153,8 +153,8 @@ if (SERVER) then
             local inventory = character:GetInventory()
 
             for k, _ in inventory:Iter() do
-				if (k:GetData("equip") == true and k.pacData) then
-					client:AddPart(k.uniqueID, k)
+                if (k:GetData("equip") == true and k.pacData) then
+                    client:AddPart(k.uniqueID, k)
                 end
             end
         end

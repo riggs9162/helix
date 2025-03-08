@@ -592,14 +592,14 @@ function GM:PostPlayerLoadout(ply)
     local char = ply:GetCharacter()
     if (char:GetInventory()) then
         for k, _ in char:GetInventory():Iter() do
-			k:Call("OnLoadout", ply)
+            k:Call("OnLoadout", ply)
 
-			if (k:GetData("equip") and k.attribBoosts) then
-				for attribKey, attribValue in pairs(k.attribBoosts) do
-					char:AddBoost(k.uniqueID, attribKey, attribValue)
-				end
-			end
-		end
+            if (k:GetData("equip") and k.attribBoosts) then
+                for attribKey, attribValue in pairs(k.attribBoosts) do
+                    char:AddBoost(k.uniqueID, attribKey, attribValue)
+                end
+            end
+        end
     end
 
     -- If their faction wants to do something when the player's loadout is set, let it.
@@ -961,8 +961,8 @@ function GM:CharacterPreSave(char)
     local ply = char:GetPlayer()
 
     for v in char:GetInventory():Iter() do
-		if (v.OnSave) then
-			v:Call("OnSave", ply)
+        if (v.OnSave) then
+            v:Call("OnSave", ply)
         end
     end
 

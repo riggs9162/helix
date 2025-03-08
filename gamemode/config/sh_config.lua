@@ -176,7 +176,7 @@ ix.config.Add("weaponRaiseTime", 1, "The time it takes for a weapon to raise.", 
     category = "server"
 })
 ix.config.Add("allowBusiness", true, "Whether or not business is enabled.", nil, {
-	category = "server"
+    category = "server"
 })
 ix.config.Add("maxHoldWeight", 100, "The maximum weight that a player can carry in their hands.", nil, {
     data = {min = 1, max = 500},

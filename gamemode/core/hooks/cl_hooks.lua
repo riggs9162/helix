@@ -1039,9 +1039,9 @@ function GM:FinishChat()
 end
 
 function GM:BuildBusinessMenu()
-	if (!ix.config.Get("allowBusiness", true)) then
-		return false
-	end
+    if (!ix.config.Get("allowBusiness", true)) then
+        return false
+    end
 end
 
 gameevent.Listen("player_spawn")
