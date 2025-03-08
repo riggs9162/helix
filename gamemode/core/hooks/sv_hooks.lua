@@ -732,7 +732,11 @@ function GM:PlayerHurt(ply, attacker, health, damage)
         ply.ixNextPain = CurTime() + 0.33
     end
 
-    ix.log.Add(ply, "playerHurt", damage, attacker:GetName() != "" and attacker:GetName() or attacker:GetClass())
+    local name = IsValid(attacker) and (attacker.GetName and attacker:GetName() or attacker:GetClass()) or "world"
+    local weapon = IsValid(attacker) and attacker.GetActiveWeapon and attacker:GetActiveWeapon()
+    local weaponText = IsValid(weapon) and (weapon.GetPrintName and weapon:GetPrintName() or weapon:GetClass())
+
+    ix.log.Add(ply, "playerHurt", damage, name, weaponText)
 end
 
 function GM:PlayerDeathThink(ply)
