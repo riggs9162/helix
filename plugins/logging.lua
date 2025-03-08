@@ -88,15 +88,16 @@ if (SERVER) then
 
     ix.log.AddType("playerHurt", function(client, ...)
         local arg = {...}
+        local damage = arg[1]
         local attackerName = arg[2]
         local weaponName = arg[3]
         
         if (attackerName and weaponName) then
-            return L("%s has been hurt by %s with %s.", client:Name(), attackerName, weaponName)
+            return L("%s has been hurt by %s dealing %d damage with %s.", client:Name(), attackerName, damage, weaponName)
         elseif (attackerName) then
-            return L("%s has been hurt by %s.", client:Name(), attackerName)
+            return L("%s has been hurt by %s dealing %d damage.", client:Name(), attackerName, damage)
         else
-            return L("%s has been hurt.", client:Name())
+            return L("%s has been hurt for %d damage.", client:Name(), damage)
         end
     end, FLAG_WARNING)
 
