@@ -679,7 +679,7 @@ function GM:PlayerDeath(ply, inflictor, attacker)
         local deathSound = hook.Run("GetPlayerDeathSound", ply)
 
         if (deathSound != false) then
-            deathSound = deathSound or deathSounds[math.random(1, #deathSounds)]
+            deathSound = deathSound or deathSounds[math.random(#deathSounds)]
 
             if (ply:IsFemale() and !deathSound:find("female")) then
                 deathSound = deathSound:gsub("male", "female")
