@@ -66,7 +66,7 @@ function GM:TranslateActivity(ply, act)
     -- Check if we have changed the activity from the last time we checked
     local oldAct = ply.ixLastAct or -1
     if ( oldAct != act ) then
-        ply.ixLastAct = act
+        plyInfo.ixLastAct = act
     end
 
     local modelClass = plyInfo.ixAnimModelClass or "player"
@@ -378,6 +378,7 @@ local function UpdatePlayerHoldType(ply, weapon)
     end
 
     plyInfo.ixAnimHoldType = holdType
+    plyInfo.ixLastAct = -1
 end
 
 local function UpdateAnimationTable(ply, vehicle)
@@ -403,6 +404,7 @@ local function UpdateAnimationTable(ply, vehicle)
     plyInfo.ixAnimLadderMove = baseTable["ladder_move"]
     plyInfo.ixAnimLadderUp = baseTable["ladder_up"]
     plyInfo.ixAnimLadderDown = baseTable["ladder_down"]
+    plyInfo.ixLastAct = -1
 end
 
 function GM:PlayerWeaponChanged(ply, weapon)
