@@ -294,7 +294,6 @@ local grammarFixes = {
     {"shouldnt", "shouldn't"},
     {"thats", "that's"},
     {"theres", "there's"},
-    {"theres", "there's"},
     {"theyll", "they'll"},
     {"theyre", "they're"},
     {"wasnt", "wasn't"},
@@ -321,17 +320,19 @@ for _, v in ipairs(grammarFixesCapital) do
     v[2] = v[2]:utf8upper()
 end
 
--- Apply grammar fixes
+-- Modified function to apply fixes only to whole words.
 local function applyFixes(text, fixes)
     for _, v in ipairs(fixes) do
-        text = string.Replace(text, v[1], v[2])
+        -- Create a pattern that only matches whole words.
+        local pattern = "%f[%a]" .. v[1] .. "%f[%A]"
+        text = string.gsub(text, pattern, v[2])
     end
 
     return text
 end
 
 --- Formats a string to fix basic grammar - removing extra spacing at the beginning and end, capitalizing the first character,
--- and making sure it ends in punctuation. Thing's like "youre", "dont", and "im" are fixed by this function.
+-- and making sure it ends in punctuation. Things like "youre", "dont", and "im" are fixed by this function.
 -- @realm shared
 -- @string text String to format
 -- @treturn string Formatted string
@@ -356,7 +357,7 @@ function ix.chat.Format(text)
 
     -- Ensure text ends with punctuation
     local last = text:utf8sub(-1)
-    if (last != "." and last != "!" and last != "?") then
+    if (last ~= "." and last ~= "!" and last ~= "?") then
         text = text .. "."
     end
 
