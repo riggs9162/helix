@@ -62,6 +62,13 @@ local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
 function GM:TranslateActivity(ply, act)
     local plyInfo = ply:GetTable()
+
+    -- Check if we have changed the activity from the last time we checked
+    local oldAct = ply.ixLastAct or -1
+    if ( oldAct != act ) then
+        ply.ixLastAct = act
+    end
+
     local modelClass = plyInfo.ixAnimModelClass or "player"
     local bRaised = ply:IsWepRaised()
 
@@ -108,26 +115,48 @@ function GM:TranslateActivity(ply, act)
         local glide = plyInfo.ixAnimGlide
 
         if ( ply:InVehicle() ) then
-            act = plyInfo.ixAnimTable[1]
+            local newAct = plyInfo.ixAnimTable[1]
 
             local fixVector = plyInfo.ixAnimTable[2]
             if ( isvector(fixVector) ) then
                 ply:SetLocalPos(animationFixOffset)
             end
 
-            if ( isstring(act) ) then
-                plyInfo.CalcSeqOverride = ply:LookupSequence(act)
+            if ( isstring(newAct) ) then
+                plyInfo.CalcSeqOverride = ply:LookupSequence(newAct)
+            elseif ( istable(newAct) ) then
+                if ( !plyInfo.CalcSeqOverrideTable ) then
+                    plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                end
+
+                -- Randomly select a new sequence from the table if we came from a different act
+                if ( oldAct != newAct ) then
+                    plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                end
+
+                plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
             else
-                return act
+                return newAct
             end
         elseif ( ply:OnGround() ) then
             if ( plyInfo.ixAnimTable[act] ) then
-                local act2 = plyInfo.ixAnimTable[act][bRaised and 2 or 1]
+                local newAct = plyInfo.ixAnimTable[act][bRaised and 2 or 1]
 
-                if ( isstring(act2) ) then
-                    plyInfo.CalcSeqOverride = ply:LookupSequence(act2)
+                if ( isstring(newAct) ) then
+                    plyInfo.CalcSeqOverride = ply:LookupSequence(newAct)
+                elseif ( istable(newAct) ) then
+                    if ( !plyInfo.CalcSeqOverrideTable ) then
+                        plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                    end
+
+                    -- Randomly select a new sequence from the table if we came from a different act
+                    if ( oldAct != plyInfo.ixLastAct ) then
+                        plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                    end
+
+                    plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
                 else
-                    return act2
+                    return newAct
                 end
             end
         elseif ( ply:GetMoveType() == MOVETYPE_LADDER ) then
@@ -283,7 +312,6 @@ function GM:DoAnimationEvent(ply, event, data)
         return self.BaseClass:DoAnimationEvent(ply, event, data)
     else
         local weapon = ply:GetActiveWeapon()
-
         if ( IsValid(weapon) ) then
             local animation = ply.ixAnimTable
             if ( !animation ) then return end
