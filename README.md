@@ -1,12 +1,9 @@
-<p align="center">
-    <img src="https://minerva-servers.com/resources/logo_transparent.png" alt="Minerva Servers" style="max-width:50%;" />
-</p>
 
 <p align="center">
     <a href="https://discord.gg/PayC7BpwQE">
         <img src="https://img.shields.io/discord/505957257125691423.svg" alt="Discord" />
     </a>
-    <a href="https://github.com/Minerva-Servers/helix/actions">
+    <a href="https://github.com/riggs9162/helix/actions">
         <img src="https://img.shields.io/github/workflow/status/Minerva-Servers/helix/CI" alt="Build Status" />
     </a>
 </p>
