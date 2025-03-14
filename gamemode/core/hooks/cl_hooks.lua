@@ -612,11 +612,12 @@ function GM:HUDPaintBackground()
     if (hasVignetteMaterial and ix.config.Get("vignette")) then
         vignetteAlphaDelta = mathApproach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
 
-        surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
-        surface.SetMaterial(vignette)
-        surface.DrawTexturedRect(0, 0, scrW, scrH)
-
-        hook.Run("DrawVignette", vignetteAlphaDelta)
+        local drawVignette = hook.Run("DrawVignette", vignetteAlphaDelta)
+        if (drawVignette != false) then
+            surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
+            surface.SetMaterial(vignette)
+            surface.DrawTexturedRect(0, 0, scrW, scrH)
+        end
     end
 
     blurGoal = ply:GetLocalVar("blur", 0) + (hookRun("AdjustBlurAmount", blurGoal) or 0)
