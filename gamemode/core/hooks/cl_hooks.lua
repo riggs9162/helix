@@ -473,10 +473,13 @@ end
 local vignette = ix.util.GetMaterial("helix/gui/vignette.png")
 local vignetteAlphaGoal = 0
 local vignetteAlphaDelta = 0
-local vignetteTraceHeight = Vector(0, 0, 768)
 local blurGoal = 0
 local blurDelta = 0
 local hasVignetteMaterial = !vignette:IsError()
+
+if (timer.Exists("ixVignetteChecker")) then
+    timer.Remove("ixVignetteChecker")
+end
 
 timer.Create("ixVignetteChecker", 1, 0, function()
     local ply = LocalPlayer()
@@ -484,13 +487,13 @@ timer.Create("ixVignetteChecker", 1, 0, function()
     if (IsValid(ply)) then
         local data = {}
             data.start = ply:GetPos()
-            data.endpos = data.start + vignetteTraceHeight
+            data.endpos = data.start + ply:GetAimVector() * 96
             data.filter = ply
         local trace = util.TraceLine(data)
 
         -- this timer could run before InitPostEntity is called, so we have to check for the validity of the trace table
-        if (trace and trace.Hit) then
-            vignetteAlphaGoal = 80
+        if (trace and trace.Entity and IsValid(trace.Entity)) then
+            vignetteAlphaGoal = 1
         else
             vignetteAlphaGoal = 0
         end
@@ -610,11 +613,11 @@ function GM:HUDPaintBackground()
     local scrW, scrH = ScrW(), ScrH()
 
     if (hasVignetteMaterial and ix.config.Get("vignette")) then
-        vignetteAlphaDelta = mathApproach(vignetteAlphaDelta, vignetteAlphaGoal, frameTime * 30)
+        vignetteAlphaDelta = mathApproach(vignetteAlphaDelta, vignetteAlphaGoal * 200, frameTime * 30)
 
         local drawVignette = hook.Run("DrawVignette", vignetteAlphaDelta)
         if (drawVignette != false) then
-            surface.SetDrawColor(0, 0, 0, 175 + vignetteAlphaDelta)
+            surface.SetDrawColor(0, 0, 0, vignetteAlphaDelta)
             surface.SetMaterial(vignette)
             surface.DrawTexturedRect(0, 0, scrW, scrH)
         end
