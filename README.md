@@ -1,9 +1,10 @@
+
 <p align="center">
-    <a href="https://discord.project-ordinance.com/">
+    <a href="https://discord.project-ordinance/">
         <img src="https://img.shields.io/discord/505957257125691423.svg" alt="Discord" />
     </a>
     <a href="https://github.com/riggs9162/helix/actions">
-        <img src="https://img.shields.io/github/workflow/status/riggs9162/helix/CI" alt="Build Status" />
+        <img src="https://img.shields.io/github/workflow/status/Minerva-Servers/helix/CI" alt="Build Status" />
     </a>
 </p>
 
