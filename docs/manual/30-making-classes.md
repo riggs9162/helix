@@ -65,7 +65,7 @@ CLASS.isDefault = true
 
 ## CLASS:OnSet(ply)
 
-The `CLASS:OnSet` function is called when a player is assigned to this class. It’s typically used to set the player’s model, skin, or any other attributes specific to the class. More information about the `CLASS:OnSet` function can be found in the [Character Hooks](https://minerva-servers.com/helix/hooks/class/#OnSet) documentation.
+The `CLASS:OnSet` function is called when a player is assigned to this class. It’s typically used to set the player’s model, skin, or any other attributes specific to the class. More information about the `CLASS:OnSet` function can be found in the [Character Hooks](https://project-ordinance.com/helix/documentation/hooks/class/#OnSet) documentation.
 
 In the example:
 

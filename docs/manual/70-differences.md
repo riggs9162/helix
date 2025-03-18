@@ -1,10 +1,10 @@
 # Differences
 
-All notable differences between the default **Helix Framework** and the **Minerva** edited version are documented below.
+All notable differences between the default **Helix Framework** and **Riggs'** edited version are documented below.
 
 ## Rank System
 
-A fully integrated **rank system** has been added to the Minerva version of Helix. This system functions as a copy of the default class system from the Framework, with additional flexibility.
+A fully integrated **rank system** has been added to this version of Helix. This system functions as a copy of the default class system from the Framework, with additional flexibility.
 
 ## Reworked Animation System
 
@@ -19,7 +19,7 @@ The **Map Scenes plugin** has been enhanced to allow more customization and flex
 
 ## Developer-Friendly Enhancements
 
-The Minerva version of Helix is designed to be more **developer-friendly**, featuring improved documentation and examples. The following are the most notable changes:
+This version of Helix is designed to be more **developer-friendly**, featuring improved documentation and examples. The following are the most notable changes:
 
 ### More detailed documentation for the following features:
 

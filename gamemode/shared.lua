@@ -43,7 +43,7 @@ GM.Website = "https://nebulous.cloud"
 GM.Version = "1.4.0"
 
 local version = GM.Version or "1.0"
-local install = "https://github.com/Minerva-Servers/helix/archive/refs/heads/Minerva-Servers.zip"
+local install = "https://github.com/riggs9162/helix/archive/refs/heads/riggs9162.zip"
 local function CheckVersion(response)
     if ( response == version ) then
         if ( SERVER ) then
@@ -62,7 +62,7 @@ local function CheckVersion(response)
 end
 
 hook.Add("Initialize", "HelixVersionCheck", function()
-    http.Fetch("https://raw.githubusercontent.com/Minerva-Servers/helix/Minerva-Servers/VERSION.txt", function(response)
+    http.Fetch("https://raw.githubusercontent.com/riggs9162/helix/riggs9162/VERSION.txt", function(response)
         CheckVersion(response)
     end)
 end)

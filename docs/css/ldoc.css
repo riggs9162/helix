@@ -15,18 +15,18 @@
     --font-normal: 16px;
     --font-tiny: 8px;
 
-    --font-style-normal: 'Inter', 'Roboto', 'Arial', sans-serif; /* Clean, modern, and highly readable */
+    --font-style-normal: 'Arial', sans-serif; /* Clean, modern, and highly readable */
     --font-style-code: 'Fira Code', 'Courier New', monospace; /* Stylish monospace with good readability */    
 
-    --color-accent: rgb(255, 130, 20); /* Bright orange accent */
-    --color-accent-dark: rgb(220, 90, 20); /* Deeper orange for contrast */
+    --color-accent: rgb(200, 0, 0); /* Bright orange accent */
+    --color-accent-dark: rgb(150, 0, 0); /* Deeper orange for contrast */
     --color-white: rgb(255, 255, 255); /* Pure white */
-    --color-offwhite: rgb(235, 235, 230); /* Soft, warmer off-white */
-    --color-white-accent: rgb(245, 225, 200); /* Light orange tint for highlights */
+    --color-offwhite: rgb(220, 200, 200); /* Soft, warmer off-white */
+    --color-white-accent: rgb(200, 150, 150); /* Light orange tint for highlights */
     --color-black: rgb(10, 10, 10); /* Near-black with a touch of warmth */
-    --color-lightgrey: rgb(180, 180, 175); /* Subtle grey for a softer look */
-    --color-background-light: rgb(250, 245, 235); /* Warm light background */
-    --color-background-dark: rgb(40, 40, 30); /* Darker tone with a slight warmth */    
+    --color-lightgrey: rgb(150, 50, 50); /* Subtle grey for a softer look */
+    --color-background-light: rgb(250, 235, 235); /* Warm light background */
+    --color-background-dark: rgb(40, 30, 30); /* Darker tone with a slight warmth */    
 }
 
 * {
@@ -50,6 +50,7 @@ a {
 
 h1, h2, h3, h4 {
     font-weight: 400;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
 ul li {
@@ -255,7 +256,6 @@ nav section details.category summary h2 {
 
     font-size: var(--font-big);
     letter-spacing: 2px;
-    text-transform: uppercase;
     cursor: pointer;
 
     padding-bottom: var(--padding-tiny);
@@ -286,7 +286,6 @@ article header h1 {
     padding-bottom: 8px;
     font-family: var(--font-style-code);
     margin: 0;
-    text-transform: none;
 }
 
 article header h2 {
@@ -294,7 +293,6 @@ article header h2 {
     margin: 0;
     font-size: var(--font-normal);
     font-weight: normal;
-    text-transform: none;
 }
 
 article header.module a {
@@ -316,7 +314,6 @@ article h1 {
     border-bottom: 1px solid rgba(0, 0, 0, 0.25);
     margin-top: var(--padding-big);
     margin-bottom: 8px;
-    text-transform: uppercase;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
@@ -330,7 +327,6 @@ article h2 {
 article h3 {
     color: var(--color-accent);
     margin-top: var(--padding-normal);
-    text-transform: uppercase;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 }
 
@@ -356,7 +352,6 @@ article h1.title {
     font-size: var(--font-big);
     font-weight: 100;
     letter-spacing: 2px;
-    text-transform: uppercase;
 }
 
 a.reference {
@@ -392,7 +387,6 @@ a.reference {
     padding: var(--padding-tiny);
     font-size: var(--font-normal);
 
-    text-transform: uppercase;
     letter-spacing: 2px;
     font-weight: 600;
 }
@@ -446,7 +440,6 @@ a.reference {
     color: var(--color-accent);
     font-size: var(--font-normal);
     letter-spacing: 2px;
-    text-transform: uppercase;
 }
 
 .method pre {

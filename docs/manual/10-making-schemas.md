@@ -15,7 +15,7 @@ A typical schema is organized into various folders:
 - `sh_schema.lua`: Shared logic, accessible by both the client and server.
 - `cl_hooks.lua`, `sv_hooks.lua`, `sh_hooks.lua`: Game hooks for custom functionality.
 - `libs/`: Contains custom libraries for your schema.
-- `meta/`: Holds extended or modified behavior for existing Helix classes like [player](https://minerva-servers.com/helix/classes/player/), [character](https://minerva-servers.com/helix/classes/character/), etc.
+- `meta/`: Holds extended or modified behavior for existing Helix classes like [player](https://project-ordinance.com/helix/documentation/classes/player/), [character](https://project-ordinance.com/helix/documentation/classes/character/), etc.
 
 # Basic Schema Setup
 
@@ -98,11 +98,11 @@ ix.util.Include("sh_configs.lua")
 ix.util.Include("sh_commands.lua")
 ```
 
-These files can contain [configs](https://minerva-servers.com/helix/libraries/ix.config/), [commands](https://minerva-servers.com/helix/libraries/ix.command/), or other utilities specific to your schema.
+These files can contain [configs](https://project-ordinance.com/helix/documentation/libraries/ix.config/), [commands](https://project-ordinance.com/helix/documentation/libraries/ix.command/), or other utilities specific to your schema.
 
 ## Adding Flags
 
-[Flags](https://minerva-servers.com/helix/libraries/ix.flag/#ix.flag.Add) are used in Helix to restrict access to certain items or features. You can define flags like this:
+[Flags](https://project-ordinance.com/helix/documentation/libraries/ix.flag/#ix.flag.Add) are used in Helix to restrict access to certain items or features. You can define flags like this:
 
 ```
 ix.flag.Add("v", "Access to light blackmarket goods.")
@@ -111,7 +111,7 @@ ix.flag.Add("V", "Access to heavy blackmarket goods.")
 
 ## Custom Animations
 
-If your schema uses unique player models, you can define their [animation classes](https://minerva-servers.com/helix/libraries/ix.anim/) like this:
+If your schema uses unique player models, you can define their [animation classes](https://project-ordinance.com/helix/documentation/libraries/ix.anim/) like this:
 
 ```
 ix.anim.SetModelClass("models/eliteghostcp.mdl", "metrocop")
@@ -120,7 +120,7 @@ ix.anim.SetModelClass("models/eliteshockcp.mdl", "metrocop")
 
 # Custom Functions
 
-Your schema can [include](https://minerva-servers.com/helix/libraries/ix.util/#ix.util.Include) custom utility functions to be used throughout your code. Here’s an example from the [Half-Life 2 Roleplay schema](https://github.com/NebulousCloud/helix-hl2rp/tree/master):
+Your schema can [include](https://project-ordinance.com/helix/documentation/libraries/ix.util/#ix.util.Include) custom utility functions to be used throughout your code. Here’s an example from the [Half-Life 2 Roleplay schema](https://github.com/NebulousCloud/helix-hl2rp/tree/master):
 
 ```
 function Schema:ZeroNumber(number, length)
