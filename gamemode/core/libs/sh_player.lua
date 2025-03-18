@@ -1,8 +1,23 @@
+--[[--
+Physical representation of connected player.
+
+`Player`s are a type of `Entity`. They are a physical representation of a `Character` - and can possess at most one `Character`
+object at a time that you can interface with.
+
+See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
+]]
+-- @classmod Player
+
 local playerMeta = FindMetaTable("Player")
 
 -- ixData information for the player.
 do
     if (SERVER) then
+        --- Returns the value of a player's data.
+        -- @realm shared
+        -- @string key The key to get the data from.
+        -- @param default The value to return if the data does not exist.
+        -- @treturn any The value of the data.
         function playerMeta:GetData(key, default)
             if (key == true) then
                 return self.ixData
@@ -41,6 +56,10 @@ end
 
 -- Whitelist networking information here.
 do
+    --- Returns whether or not a player has a whitelist for a faction.
+    -- @realm shared
+    -- @string faction The index of the faction to check.
+    -- @treturn bool Whether or not the player has the whitelist.
     function playerMeta:HasWhitelist(faction)
         local data = ix.faction.indices[faction]
 
@@ -57,6 +76,9 @@ do
         return false
     end
 
+    --- Returns all of the player's current items.
+    -- @realm shared
+    -- @treturn table The player's items.
     function playerMeta:GetItems()
         local char = self:GetCharacter()
 
@@ -69,6 +91,9 @@ do
         end
     end
 
+    --- Returns the current class data of the character the player is using.
+    -- @realm shared
+    -- @treturn table The class data.
     function playerMeta:GetClassData()
         local char = self:GetCharacter()
 
@@ -83,6 +108,9 @@ do
         end
     end
 
+    --- Returns the current rank data of the character the player is using.
+    -- @realm shared
+    -- @treturn table The rank data.
     function playerMeta:GetRankData()
         local char = self:GetCharacter()
 

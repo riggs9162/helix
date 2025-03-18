@@ -2,7 +2,7 @@
 --[[--
 Helper library for loading/getting rank information.
 
-Ranks in Minerva's Helix are similar to classes, but serve a different purpose, which is to provide a hierarchy within a faction.
+Ranks in Riggs' Helix are similar to classes, but serve a different purpose, which is to provide a hierarchy within a faction.
 For example, you may have a police faction in your schema, and have "police recruit" and "police chief" as different ranks in your faction.
 Anyone can join a rank in their faction by default, but you can restrict this as you need with `RANK.CanSwitchTo`.
 ]]
