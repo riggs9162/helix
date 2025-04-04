@@ -750,8 +750,7 @@ if (CLIENT) then
     function derma.GetColor(name, panel, default)
         default = default or ix.config.Get("color")
 
-        local skin = panel:GetSkin()
-
+        local skin = panel.GetSkin and panel:GetSkin() or derma.GetDefaultSkin()
         if (!skin) then
             return default
         end
