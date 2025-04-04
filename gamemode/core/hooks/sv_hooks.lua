@@ -163,7 +163,6 @@ function GM:CanPlayerInteractItem(ply, action, item, data)
         if (hook.Run("CanPlayerCombineItem", ply, item, other) == false) then return false end
 
         local combineItem = ix.item.instances[other]
-
         if (combineItem and combineItem.invID != 0) then
             local combineInv = ix.item.inventories[combineItem.invID]
 
@@ -815,11 +814,13 @@ function GM:InitPostEntity()
 end
 
 function GM:SaveData()
+    MsgC(Color(255, 255, 0), "[Helix] Saving data...\n")
+
     ix.date.Save()
 
     -- Go through all doors and set their networked vars wether or not they are locked
     local doors = {}
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if (v:IsDoor()) then
             doors[#doors + 1] = v:EntIndex()
         end
@@ -833,8 +834,9 @@ function GM:SaveData()
                 local partner = entity.ixPartner
 
                 if (IsValid(partner)) then
-                    entity:SetNetVar("locked", entity:GetSaveTable().m_bLocked)
-                    partner:SetNetVar("locked", entity:GetSaveTable().m_bLocked)
+                    local saveTable = entity:GetSaveTable()
+                    entity:SetNetVar("locked", saveTable.m_bLocked)
+                    partner:SetNetVar("locked", saveTable.m_bLocked)
                 end
             end
         end
@@ -842,7 +844,7 @@ function GM:SaveData()
 
     -- Do the same for vehicles .. .
     local vehicles = {}
-    for _, v in ipairs(ents.GetAll()) do
+    for _, v in ents.Iterator() do
         if (v:IsVehicle()) then
             vehicles[#vehicles + 1] = v:EntIndex()
         end
@@ -853,10 +855,13 @@ function GM:SaveData()
             local entity = Entity(v)
 
             if (IsValid(entity)) then
-                entity:SetNetVar("locked", entity:GetSaveTable().VehicleLocked)
+                local saveTable = entity:GetSaveTable()
+                entity:SetNetVar("locked", saveTable.VehicleLocked)
             end
         end
     end
+
+    MsgC(Color(0, 255, 0), "[Helix] Saved data!\n")
 end
 
 function GM:ShutDown()
@@ -868,8 +873,9 @@ function GM:ShutDown()
     for _, v in player.Iterator() do
         v:SaveData()
 
-        if (v:GetCharacter()) then
-            v:GetCharacter():Save()
+        local char = v:GetCharacter()
+        if (char) then
+            char:Save()
         end
     end
 end
@@ -1019,10 +1025,8 @@ end)
 function GM:GetPreferredCarryAngles(entity)
     if (entity:GetClass() == "ix_item") then
         local itemTable = entity:GetItemTable()
-
         if (itemTable) then
             local preferedAngle = itemTable.preferedAngle
-
             if (preferedAngle) then -- I don't want to return something
                 return preferedAngle
             end
