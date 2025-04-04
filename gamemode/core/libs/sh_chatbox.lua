@@ -311,7 +311,20 @@ local grammarFixes = {
     {"youd", "you'd"},
     {"youll", "you'll"},
     {"youre", "you're"},
-    {"youve", "you've"}
+    {"youve", "you've"},
+
+    -- Common shortcuts like "pls" and "thx"
+    {"pls", "please"},
+    {"plz", "please"},
+    {"thx", "thanks"},
+    {"thnx", "thanks"},
+    {"ty", "thank you"},
+    {"tyvm", "thank you very much"},
+    {"tysm", "thank you so much"},
+    {"ur", "your"},
+    {"u", "you"},
+    {"kthx", "okay, thank you"},
+    {"kthxbai", "okay, thank you, bye"}
 }
 
 local grammarFixesCapital = table.Copy(grammarFixes)
