@@ -1,0 +1,41 @@
+# List of Helix Fonts
+
+The following is a list of fonts that are available in Helix. These fonts are used in various parts of the framework and can be used in your own schemas.
+
+- ix3D2DFont
+- ix3D2DMediumFont
+- ix3D2DSmallFont
+- ixTitleFont
+- ixSubTitleFont
+- ixMenuMiniFont
+- ixMenuButtonFont
+- ixMenuButtonFontSmall
+- ixMenuButtonFontThick
+- ixMenuButtonLabelFont
+- ixMenuButtonHugeFont
+- ixToolTipText
+- ixMonoSmallFont
+- ixMonoMediumFont
+- ixBigFont
+- ixMediumFont
+- ixNoticeFont
+- ixMediumLightFont
+- ixMediumLightBlurFont
+- ixGenericFont
+- ixChatFont
+- ixChatFontItalics
+- ixSmallTitleFont
+- ixMinimalTitleFont
+- ixSmallFont
+- ixItemDescFont
+- ixSmallBoldFont
+- ixItemBoldFont
+- ixIntroTitleFont
+- ixIntroTitleBlurFont
+- ixIntroSubtitleFont
+- ixIntroSmallFont
+- ixIconsSmall
+- ixSmallTitleIcons
+- ixIconsMedium
+- ixIconsMenuButton
+- ixIconsBig
