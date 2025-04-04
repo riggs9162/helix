@@ -243,7 +243,7 @@ if (SERVER) then
         if ((client.ixNextContainerPassword or 0) > RealTime()) then return end
 
         local entity = net.ReadEntity()
-        local steamID = client:SteamID()
+        local steamID = client:SteamID64()
         local attempts = entity.PasswordAttempts[steamID]
 
         if (attempts and attempts >= 10) then

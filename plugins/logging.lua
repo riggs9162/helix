@@ -32,9 +32,9 @@ if (SERVER) then
 
     ix.log.AddType("disconnect", function(client, ...)
         if (client:IsTimingOut()) then
-            return L("%s (%s) has disconnected (timed out).", client:SteamName(), client:SteamID())
+            return L("%s (%s) has disconnected (timed out).", client:SteamName(), client:SteamID64())
         else
-            return L("%s (%s) has disconnected.", client:SteamName(), client:SteamID())
+            return L("%s (%s) has disconnected.", client:SteamName(), client:SteamID64())
         end
     end, FLAG_NORMAL)
 
@@ -50,7 +50,7 @@ if (SERVER) then
 
     ix.log.AddType("charDelete", function(client, ...)
         local arg = {...}
-        return L("%s (%s) deleted character '%s'", client:SteamName(), client:SteamID(), arg[1])
+        return L("%s (%s) deleted character '%s'", client:SteamName(), client:SteamID64(), arg[1])
     end, FLAG_SERVER)
 
     ix.log.AddType("itemAction", function(client, ...)

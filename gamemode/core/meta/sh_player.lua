@@ -239,7 +239,7 @@ if (SERVER) then
             self.ixInteractionTarget = entity
             self.ixInteractionCharacter = self:GetCharacter():GetID()
 
-            timer.Create("ixCharacterInteraction" .. self:SteamID(), time, 1, function()
+            timer.Create("ixCharacterInteraction" .. self:SteamID64(), time, 1, function()
                 if (IsValid(self) and IsValid(entity) and IsValid(self.ixInteractionTarget) and
                     self.ixInteractionCharacter == self:GetCharacter():GetID()) then
                     local data = {}
@@ -567,7 +567,7 @@ if (SERVER) then
             self:SetNotSolid(true)
             self:SetWepRaised(false)
 
-            local uniqueID = "ixUnRagdoll" .. self:SteamID()
+            local uniqueID = "ixUnRagdoll" .. self:SteamID64()
 
             if (time) then
                 timer.Create(uniqueID, 0.33, 0, function()

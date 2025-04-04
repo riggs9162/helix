@@ -134,7 +134,7 @@ function PANEL:Init()
         end)
 
         menu:AddOption(L("copySteamID"), function()
-            SetClipboardText(client:IsBot() and client:EntIndex() or client:SteamID())
+            SetClipboardText(client:IsBot() and client:EntIndex() or client:SteamID64())
         end)
 
         hook.Run("PopulateScoreboardPlayerMenu", client, menu)

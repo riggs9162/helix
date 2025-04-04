@@ -936,7 +936,7 @@ function GM:ShowPlayerOptions(ply, options)
 
     options["Copy Steam ID"] = {"icon16/user.png", function()
         if (IsValid(ply)) then
-            SetClipboardText(ply:SteamID())
+            SetClipboardText(ply:SteamID64())
         end
     end}
 

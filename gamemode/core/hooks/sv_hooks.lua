@@ -115,7 +115,7 @@ end
 
 function GM:KeyPress(ply, key)
     if (key == IN_RELOAD) then
-        timer.Create("ixToggleRaise" .. ply:SteamID(), ix.config.Get("weaponRaiseTime"), 1, function()
+        timer.Create("ixToggleRaise" .. ply:SteamID64(), ix.config.Get("weaponRaiseTime"), 1, function()
             if (IsValid(ply)) then
                 ply:ToggleWepRaised()
             end
@@ -140,9 +140,9 @@ end
 
 function GM:KeyRelease(ply, key)
     if (key == IN_RELOAD) then
-        timer.Remove("ixToggleRaise" .. ply:SteamID())
+        timer.Remove("ixToggleRaise" .. ply:SteamID64())
     elseif (key == IN_USE) then
-        timer.Remove("ixCharacterInteraction" .. ply:SteamID())
+        timer.Remove("ixCharacterInteraction" .. ply:SteamID64())
     end
 end
 
@@ -174,7 +174,7 @@ function GM:CanPlayerInteractItem(ply, action, item, data)
         end
     end
 
-    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == ply:SteamID() and item.ixCharID != ply:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction and ix.config.Get("itemOwnership", false)) then
+    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == ply:SteamID64() and item.ixCharID != ply:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction and ix.config.Get("itemOwnership", false)) then
         ply:NotifyLocalized("itemOwned")
         return false
     end
@@ -318,7 +318,7 @@ function GM:CharacterLoaded(char)
     local ply = char:GetPlayer()
 
     if (IsValid(ply)) then
-        local uniqueID = "ixSaveChar" .. ply:SteamID()
+        local uniqueID = "ixSaveChar" .. ply:SteamID64()
 
         timer.Create(uniqueID, ix.config.Get("saveInterval"), 0, function()
             if (IsValid(ply) and ply:GetCharacter()) then

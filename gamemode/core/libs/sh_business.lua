@@ -92,7 +92,7 @@ if (SERVER) then
                 if (drop) then
                     ix.item.Spawn(uniqueID, entity:GetPos() + Vector(0, 0, 16), function(item, itemEntity)
                         if (IsValid(client)) then
-                            itemEntity.ixSteamID = client:SteamID()
+                            itemEntity.ixSteamID = client:SteamID64()
                             itemEntity.ixCharID = client:GetCharacter():GetID()
                         end
                     end)

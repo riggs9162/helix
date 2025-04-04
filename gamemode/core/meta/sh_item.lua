@@ -542,7 +542,7 @@ if (SERVER) then
             entity:SetPos(position)
 
             if (IsValid(client)) then
-                entity.ixSteamID = client:SteamID()
+                entity.ixSteamID = client:SteamID64()
                 entity.ixCharID = client:GetCharacter():GetID()
                 entity:SetNetVar("owner", entity.ixCharID)
             end

@@ -185,8 +185,8 @@ ix.command.Add("CharTakeAllFlags", {
 ix.command.Add("ToggleRaise", {
     description = "@cmdToggleRaise",
     OnRun = function(self, client, arguments)
-        if (!timer.Exists("ixToggleRaise" .. client:SteamID())) then
-            timer.Create("ixToggleRaise" .. client:SteamID(), ix.config.Get("weaponRaiseTime"), 1, function()
+        if (!timer.Exists("ixToggleRaise" .. client:SteamID64())) then
+            timer.Create("ixToggleRaise" .. client:SteamID64(), ix.config.Get("weaponRaiseTime"), 1, function()
                 client:ToggleWepRaised()
             end)
         end
@@ -546,7 +546,7 @@ do
 
                 local money = ix.currency.Spawn(client, amount)
                 money.ixCharID = client:GetCharacter():GetID()
-                money.ixSteamID = client:SteamID()
+                money.ixSteamID = client:SteamID64()
             end
         })
     end)

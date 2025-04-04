@@ -97,7 +97,7 @@ end
 
 if (SERVER) then
     function PLUGIN:PostPlayerLoadout(client)
-        local uniqueID = "ixStam" .. client:SteamID()
+        local uniqueID = "ixStam" .. client:SteamID64()
 
         timer.Create(uniqueID, 0.25, 0, function()
             if (!IsValid(client)) then
