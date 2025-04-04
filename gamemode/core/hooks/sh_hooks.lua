@@ -509,7 +509,7 @@ function GM:CalcMainActivity(ply, velocity)
             plyInfo.CalcIdeal = ACT_GLIDE
         elseif ( len2D <= 0.25 ) then
             plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
-        elseif ( len2D > ( ix.config.Get("walkSpeed") * 1.1 ) ^ 2 ) then
+        elseif ( len2D > ( ix.config.Get("walkSpeed") * 1.25 ) ^ 2 ) then
             plyInfo.CalcIdeal = ACT_MP_RUN
         else
             plyInfo.CalcIdeal = ACT_MP_WALK
