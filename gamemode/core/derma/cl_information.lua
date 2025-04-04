@@ -247,7 +247,7 @@ function PANEL:Update(character)
 
     if (self.money) then
         self.money:SetLabelText(L("money"))
-        self.money:SetText(ix.currency.Get(character:GetMoney()))
+        self.money:SetText(ix.currency.symbol .. ix.currency.Format(character:GetMoney()))
         self.money:SizeToContents()
     end
 
