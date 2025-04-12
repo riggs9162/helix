@@ -4,16 +4,16 @@ local PANEL = {}
 function PANEL:Init()
     local entity = ix.gui.vendor.entity
 
-    self:SetSize(320, 480)
-    self:MoveLeftOf(ix.gui.vendor, 8)
-    self:MakePopup()
+    self:SetSize(ScrW() / 4, ScrH() / 2)
+    self:SetX(ScrW() / 4 - self:GetWide() / 2)
     self:CenterVertical()
     self:SetTitle(L"vendorEditor")
     self.lblTitle:SetTextColor(color_white)
 
-    self.name = self:Add("DTextEntry")
+    self.name = self:Add("ixTextEntry")
     self.name:Dock(TOP)
     self.name:SetText(entity:GetDisplayName())
+    self.name:SetFont("ixSmallTitleFont")
     self.name:SetPlaceholderText(L"name")
     self.name.OnEnter = function(this)
         if (entity:GetDisplayName() != this:GetText()) then
@@ -21,10 +21,11 @@ function PANEL:Init()
         end
     end
 
-    self.description = self:Add("DTextEntry")
+    self.description = self:Add("ixTextEntry")
     self.description:Dock(TOP)
     self.description:DockMargin(0, 4, 0, 0)
     self.description:SetText(entity:GetDescription())
+    self.description:SetFont("ixSmallTitleFont")
     self.description:SetPlaceholderText(L"description")
     self.description.OnEnter = function(this)
         if (entity:GetDescription() != this:GetText()) then
@@ -32,10 +33,11 @@ function PANEL:Init()
         end
     end
 
-    self.model = self:Add("DTextEntry")
+    self.model = self:Add("ixTextEntry")
     self.model:Dock(TOP)
     self.model:DockMargin(0, 4, 0, 0)
     self.model:SetText(entity:GetModel())
+    self.model:SetFont("ixSmallTitleFont")
     self.model:SetPlaceholderText(L"model")
     self.model.OnEnter = function(this)
         if (entity:GetModel():lower() != this:GetText():lower()) then
@@ -45,10 +47,11 @@ function PANEL:Init()
 
     local useMoney = tonumber(entity.money) != nil
 
-    self.money = self:Add("DTextEntry")
+    self.money = self:Add("ixTextEntry")
     self.money:Dock(TOP)
     self.money:DockMargin(0, 4, 0, 0)
     self.money:SetText(!useMoney and "∞" or entity.money)
+    self.money:SetFont("ixSmallTitleFont")
     self.money:SetPlaceholderText(L"money")
     self.money:SetDisabled(!useMoney)
     self.money:SetEnabled(useMoney)
@@ -61,58 +64,47 @@ function PANEL:Init()
         self:updateVendor("money", value)
     end
 
-    self.bubble = self:Add("DCheckBoxLabel")
-    self.bubble:SetText(L"vendorNoBubble")
+    self.bubble = self:Add("ixSettingsRowBool")
+    self.bubble:SetText(L("vendorNoBubble"))
     self.bubble:Dock(TOP)
     self.bubble:DockMargin(0, 4, 0, 0)
     self.bubble:SetValue(entity:GetNoBubble() and 1 or 0)
-    self.bubble.OnChange = function(this, value)
-        if (this.noSend) then
-            this.noSend = nil
-        else
-            self:updateVendor("bubble", value)
-        end
+    self.bubble.OnValueChanged = function(this, value)
+        self:updateVendor("bubble", value)
     end
 
-    self.useMoney = self:Add("DCheckBoxLabel")
-    self.useMoney:SetText(L"vendorUseMoney")
+    self.useMoney = self:Add("ixSettingsRowBool")
+    self.useMoney:SetText(L("vendorUseMoney"))
     self.useMoney:Dock(TOP)
     self.useMoney:DockMargin(0, 4, 0, 0)
-    self.useMoney:SetChecked(useMoney)
-    self.useMoney.OnChange = function(this, value)
+    self.useMoney:SetValue(useMoney)
+    self.useMoney.OnValueChanged = function(this, value)
         self:updateVendor("useMoney")
     end
 
-    self.sellScale = self:Add("DNumSlider")
+    self.sellScale = self:Add("ixSettingsRowNumber")
     self.sellScale:Dock(TOP)
     self.sellScale:DockMargin(0, 4, 0, 0)
-    self.sellScale:SetText(L"vendorSellScale")
-    self.sellScale.Label:SetTextColor(color_white)
-    self.sellScale.TextArea:SetTextColor(color_white)
+    self.sellScale:SetText(L("vendorSellScale"))
     self.sellScale:SetDecimals(1)
-    self.sellScale.noSend = true
     self.sellScale:SetValue(entity.scale)
     self.sellScale.OnValueChanged = function(this, value)
-        if (this.noSend) then
-            this.noSend = nil
-        else
-            timer.Create("ixVendorScale", 1, 1, function()
-                if (IsValid(self) and IsValid(self.sellScale)) then
-                    value = self.sellScale:GetValue()
+        timer.Create("ixVendorScale", 1, 1, function()
+            if (IsValid(self) and IsValid(self.sellScale)) then
+                value = self.sellScale:GetValue()
 
-                    if (value != entity.scale) then
-                        self:updateVendor("scale", value)
-                    end
+                if (value != entity.scale) then
+                    self:updateVendor("scale", value)
                 end
-            end)
-        end
+            end
+        end)
     end
 
-    self.faction = self:Add("DButton")
-    self.faction:SetText(L"vendorFaction")
+    self.faction = self:Add("ixMenuButton")
     self.faction:Dock(TOP)
-    self.faction:SetTextColor(color_white)
-    self.faction:DockMargin(0, 4, 0, 0)
+    self.faction:DockMargin(0, 4, 0, 4)
+    self.faction:SetText(L("vendorFaction"))
+    self.faction:SizeToContents()
     self.faction.DoClick = function(this)
         if (IsValid(ix.gui.editorFaction)) then
             ix.gui.editorFaction:Remove()
@@ -124,9 +116,8 @@ function PANEL:Init()
         ix.gui.editorFaction:Setup()
     end
 
-    self.searchBar = self:Add("DTextEntry")
+    self.searchBar = self:Add("ixIconTextEntry")
     self.searchBar:Dock(TOP)
-    self.searchBar:DockMargin(0, 4, 0, 0)
     self.searchBar:SetUpdateOnType(true)
     self.searchBar:SetPlaceholderText("Search...")
     self.searchBar.OnValueChange = function(this, value)
@@ -234,6 +225,7 @@ function PANEL:Init()
     end
 
     self:ReloadItemList()
+    self:MakePopup()
 end
 
 function PANEL:ReloadItemList(filter)

@@ -1,48 +1,68 @@
 
+local animationTime = 1
+local matrixZScale = Vector(1, 1, 0.0001)
+local backgroundColor = Color(0, 0, 0, 66)
+
+DEFINE_BASECLASS("ixSubpanelParent")
 local PANEL = {}
 
 AccessorFunc(PANEL, "bReadOnly", "ReadOnly", FORCE_BOOL)
 
 function PANEL:Init()
-    self:SetSize(ScrW() * 0.45, ScrH() * 0.65)
-    self:SetTitle("")
-    self:MakePopup()
-    self:Center()
+    if (IsValid(ix.gui.vendor)) then
+        ix.gui.vendor:Remove()
+    end
 
-    local header = self:Add("DPanel")
-    header:SetTall(34)
+    self.currentAlpha = 0
+    self.currentBlur = 0
+    self.bSettingUp = true
+    self.anchorMode = true
+    self.noAnchor = CurTime() + 0.5
+    self.bClosing = false
+
+    self:SetPadding(ScreenScale(32), true)
+    self:SetSize(ScrW(), ScrH())
+    self:SetPos(0, 0)
+
+    local header = self:Add("EditablePanel")
     header:Dock(TOP)
+    header:DockMargin(0, 0, 0, 8)
+
+    local configColor = ix.config.Get("color")
 
     self.vendorName = header:Add("DLabel")
     self.vendorName:Dock(LEFT)
-    self.vendorName:SetWide(self:GetWide() * 0.5 - 7)
+    self.vendorName:SetWide(self:GetWide() / 2 - self:GetPadding() - 4)
     self.vendorName:SetText("John Doe")
-    self.vendorName:SetTextInset(4, 0)
-    self.vendorName:SetTextColor(color_white)
-    self.vendorName:SetFont("ixMediumFont")
+    self.vendorName:SetTextColor(configColor)
+    self.vendorName:SetFont("ixSubTitleFont")
+    self.vendorName:SetContentAlignment(5)
+    self.vendorName:SizeToContentsY()
+    self.vendorName:SetMouseInputEnabled(false)
 
     self.ourName = header:Add("DLabel")
     self.ourName:Dock(RIGHT)
-    self.ourName:SetWide(self:GetWide() * 0.5 - 7)
-    self.ourName:SetText(L"you".." ("..ix.currency.Get(LocalPlayer():GetCharacter():GetMoney())..")")
-    self.ourName:SetTextInset(0, 0)
-    self.ourName:SetTextColor(color_white)
-    self.ourName:SetFont("ixMediumFont")
+    self.ourName:SetWide(self:GetWide() / 2 - self:GetPadding() - 4)
+    self.ourName:SetText(L("you") .. " (" .. ix.currency.Get(LocalPlayer():GetCharacter():GetMoney()) .. ")")
+    self.ourName:SetTextColor(configColor)
+    self.ourName:SetFont("ixSubTitleFont")
+    self.ourName:SetContentAlignment(5)
+    self.ourName:SizeToContentsY()
+    self.ourName:SetMouseInputEnabled(false)
 
-    local footer = self:Add("DPanel")
-    footer:SetTall(34)
+    header:SetTall(math.max(self.vendorName:GetTall(), self.ourName:GetTall()))
+
+    local footer = self:Add("EditablePanel")
     footer:Dock(BOTTOM)
-    footer:SetPaintBackground(false)
+    footer:DockMargin(0, 8, 0, 0)
+    footer:SetTall(ScreenScale(16))
 
-    self.vendorSell = footer:Add("DButton")
-    self.vendorSell:SetFont("ixMediumFont")
+    self.vendorSell = footer:Add("ixMenuButton")
     self.vendorSell:SetWide(self.vendorName:GetWide())
     self.vendorSell:Dock(LEFT)
+    self.vendorSell:DockMargin(0, 0, 4, 0)
     self.vendorSell:SetContentAlignment(5)
-    -- The text says purchase but the vendor is selling it to us.
-    self.vendorSell:SetText(L"purchase")
-    self.vendorSell:SetTextColor(color_white)
-
+    self.vendorSell:SetText(L("purchase"))
     self.vendorSell.DoClick = function(this)
         if (IsValid(self.activeSell)) then
             net.Start("ixVendorTrade")
@@ -52,13 +72,12 @@ function PANEL:Init()
         end
     end
 
-    self.vendorBuy = footer:Add("DButton")
-    self.vendorBuy:SetFont("ixMediumFont")
+    self.vendorBuy = footer:Add("ixMenuButton")
     self.vendorBuy:SetWide(self.ourName:GetWide())
     self.vendorBuy:Dock(RIGHT)
+    self.vendorBuy:DockMargin(4, 0, 0, 0)
     self.vendorBuy:SetContentAlignment(5)
-    self.vendorBuy:SetText(L"sell")
-    self.vendorBuy:SetTextColor(color_white)
+    self.vendorBuy:SetText(L("sell"))
     self.vendorBuy.DoClick = function(this)
         if (IsValid(self.activeBuy)) then
             net.Start("ixVendorTrade")
@@ -69,10 +88,12 @@ function PANEL:Init()
     end
 
     self.selling = self:Add("DScrollPanel")
-    self.selling:SetWide(self:GetWide() * 0.5 - 7)
+    self.selling:SetWide(self:GetWide() / 2 - self:GetPadding() - 4)
     self.selling:Dock(LEFT)
-    self.selling:DockMargin(0, 4, 0, 4)
-    self.selling:SetPaintBackground(true)
+    self.selling.Paint = function(this, width, height)
+        surface.SetDrawColor(backgroundColor)
+        surface.DrawRect(0, 0, width, height)
+    end
 
     self.sellingItems = self.selling:Add("DListLayout")
     self.sellingItems:SetSize(self.selling:GetSize())
@@ -80,10 +101,12 @@ function PANEL:Init()
     self.sellingItems:SetTall(ScrH())
 
     self.buying = self:Add("DScrollPanel")
-    self.buying:SetWide(self:GetWide() * 0.5 - 7)
+    self.buying:SetWide(self:GetWide() / 2 - self:GetPadding() - 4)
     self.buying:Dock(RIGHT)
-    self.buying:DockMargin(0, 4, 0, 4)
-    self.buying:SetPaintBackground(true)
+    self.buying.Paint = function(this, width, height)
+        surface.SetDrawColor(backgroundColor)
+        surface.DrawRect(0, 0, width, height)
+    end
 
     self.buyingItems = self.buying:Add("DListLayout")
     self.buyingItems:SetSize(self.buying:GetSize())
@@ -91,6 +114,51 @@ function PANEL:Init()
 
     self.sellingList = {}
     self.buyingList = {}
+
+    self.sellingButtons = {}
+    self.buyingButtons = {}
+
+    self:ShowBackground()
+
+    self:MakePopup()
+    self:OnOpened()
+end
+
+function PANEL:OnOpened()
+    self:SetAlpha(0)
+
+    self:CreateAnimation(animationTime, {
+        target = {currentAlpha = 255},
+        easing = "outQuint",
+
+        Think = function(animation, panel)
+            panel:SetAlpha(panel.currentAlpha)
+        end
+    })
+end
+
+function PANEL:HideBackground()
+    self:CreateAnimation(animationTime, {
+        index = 2,
+        target = {currentBlur = 0},
+        easing = "outQuint"
+    })
+end
+
+function PANEL:ShowBackground()
+    self:CreateAnimation(animationTime, {
+        index = 2,
+        target = {currentBlur = 1},
+        easing = "outQuint"
+    })
+end
+
+function PANEL:OnKeyCodePressed(key)
+    self.noAnchor = CurTime() + 0.5
+
+    if (key == KEY_TAB) then
+        self:Remove()
+    end
 end
 
 function PANEL:addItem(uniqueID, listID)
@@ -102,6 +170,7 @@ function PANEL:addItem(uniqueID, listID)
     and ix.item.list[uniqueID]) then
         if (data and data[VENDOR_MODE] and data[VENDOR_MODE] != VENDOR_BUYONLY) then
             local item = self.sellingItems:Add("ixVendorItem")
+            item:SetButtonList(self.sellingButtons)
             item:Setup(uniqueID)
 
             self.sellingList[uniqueID] = item
@@ -113,6 +182,7 @@ function PANEL:addItem(uniqueID, listID)
     and LocalPlayer():GetCharacter():GetInventory():HasItem(uniqueID)) then
         if (data and data[VENDOR_MODE] and data[VENDOR_MODE] != VENDOR_SELLONLY) then
             local item = self.buyingItems:Add("ixVendorItem")
+            item:SetButtonList(self.buyingButtons)
             item:Setup(uniqueID)
             item.isLocal = true
 
@@ -140,7 +210,7 @@ end
 
 function PANEL:Setup(entity)
     self.entity = entity
-    self:SetTitle(entity:GetDisplayName())
+    --self:SetTitle(entity:GetDisplayName())
     self.vendorName:SetText(entity:GetDisplayName()..(entity.money and " ("..entity.money..")" or ""))
 
     self.vendorBuy:SetEnabled(!self:GetReadOnly())
@@ -153,28 +223,31 @@ function PANEL:Setup(entity)
     for _, v in SortedPairs(LocalPlayer():GetCharacter():GetInventory():GetItems()) do
         self:addItem(v.uniqueID, "buying")
     end
-end
 
-function PANEL:OnRemove()
-    net.Start("ixVendorClose")
-    net.SendToServer()
-
-    if (IsValid(ix.gui.vendorEditor)) then
-        ix.gui.vendorEditor:Remove()
-    end
+    self.bSettingUp = false
 end
 
 function PANEL:Think()
     local entity = self.entity
-
-    if (!IsValid(entity)) then
-        self:Remove()
-
+    if (!IsValid(entity) and !self.bSettingUp) then
+        BaseClass.Remove(self)
         return
     end
 
+    if (self.bClosing) then return end
+
+    local bTabDown = input.IsKeyDown(KEY_TAB)
+    if (bTabDown and (self.noAnchor or CurTime() + 0.4) < CurTime() and self.anchorMode) then
+        self.anchorMode = false
+        surface.PlaySound("buttons/lightswitch2.wav")
+    end
+
+    if ((!self.anchorMode and !bTabDown) or gui.IsGameUIVisible()) then
+        self:Remove()
+    end
+
     if ((self.nextUpdate or 0) < CurTime()) then
-        self:SetTitle(self.entity:GetDisplayName())
+        -- self:SetTitle(self.entity:GetDisplayName())
         self.vendorName:SetText(entity:GetDisplayName()..(entity.money and " ("..ix.currency.Get(entity.money)..")" or ""))
         self.ourName:SetText(L"you".." ("..ix.currency.Get(LocalPlayer():GetCharacter():GetMoney())..")")
 
@@ -192,58 +265,102 @@ function PANEL:OnItemSelected(panel)
     end
 end
 
-vgui.Register("ixVendor", PANEL, "DFrame")
+function PANEL:Paint(width, height)
+    derma.SkinFunc("PaintMenuBackground", self, width, height, self.currentBlur)
+
+    local bShouldScale = self.currentAlpha != 255
+    if (bShouldScale) then
+        local currentScale = Lerp(self.currentAlpha / 255, 0.9, 1)
+        local matrix = Matrix()
+
+        matrix:Scale(matrixZScale * currentScale)
+        matrix:Translate(Vector(
+            ScrW() / 2 - (ScrW() * currentScale / 2),
+            ScrH() / 2 - (ScrH() * currentScale / 2),
+            1
+        ))
+
+        cam.PushModelMatrix(matrix)
+    end
+
+    BaseClass.Paint(self, width, height)
+
+    if (bShouldScale) then
+        cam.PopModelMatrix()
+    end
+end
+
+function PANEL:Remove()
+    self.bClosing = true
+    self:SetMouseInputEnabled(false)
+    self:SetKeyboardInputEnabled(false)
+
+    CloseDermaMenus()
+    gui.EnableScreenClicker(false)
+
+    net.Start("ixVendorClose")
+    net.SendToServer()
+
+    if (IsValid(ix.gui.vendorEditor)) then
+        ix.gui.vendorEditor:Remove()
+    end
+
+    self:CreateAnimation(animationTime / 2, {
+        index = 2,
+        target = {currentBlur = 0},
+        easing = "outQuint"
+    })
+
+    self:CreateAnimation(animationTime / 2, {
+        target = {currentAlpha = 0},
+        easing = "outQuint",
+
+        Think = function(animation, panel)
+            panel:SetAlpha(panel.currentAlpha)
+        end,
+
+        OnComplete = function(animation, panel)
+            BaseClass.Remove(panel)
+        end
+    })
+end
+
+vgui.Register("ixVendor", PANEL, "ixSubpanelParent")
 
 PANEL = {}
 
 function PANEL:Init()
-    self:SetTall(36)
-    self:DockMargin(4, 4, 4, 0)
+    self:SetContentAlignment(4)
 
-    self.icon = self:Add("SpawnIcon")
-    self.icon:SetPos(2, 2)
-    self.icon:SetSize(32, 32)
+    self.icon = self:Add("ixSpawnIcon")
+    self.icon:Dock(LEFT)
     self.icon:SetModel("models/error.mdl")
-
-    self.name = self:Add("DLabel")
-    self.name:Dock(FILL)
-    self.name:DockMargin(42, 0, 0, 0)
-    self.name:SetFont("ixChatFont")
-    self.name:SetTextColor(color_white)
-    self.name:SetExpensiveShadow(1, Color(0, 0, 0, 200))
-
-    self.click = self:Add("DButton")
-    self.click:Dock(FILL)
-    self.click:SetText("")
-    self.click.Paint = function() end
-    self.click.DoClick = function(this)
-        if (self.isLocal) then
-            ix.gui.vendor.activeBuy = self
-        else
-            ix.gui.vendor.activeSell = self
-        end
-
-        ix.gui.vendor:OnItemSelected(self)
-    end
+    self.icon:SetMouseInputEnabled(false)
 end
 
-function PANEL:SetCallback(callback)
-    self.click.DoClick = function(this)
-        callback()
-        self.selected = true
+function PANEL:DoClick()
+    if (self.isLocal) then
+        ix.gui.vendor.activeBuy = self
+    else
+        ix.gui.vendor.activeSell = self
     end
+
+    ix.gui.vendor:OnItemSelected(self)
 end
 
 function PANEL:Setup(uniqueID)
     local item = ix.item.list[uniqueID]
-
     if (item) then
         self.item = uniqueID
         self.icon:SetModel(item:GetModel(), item:GetSkin())
-        self.name:SetText(item:GetName())
+        self:SetText(item:GetName())
+        self:SizeToContents()
+        self:SetTall(self:GetTall() + 4)
+        self.icon:SetSize(self:GetTall(), self:GetTall())
+        self:SetTextInset(self.icon:GetWide() + 4, 0)
         self.itemName = item:GetName()
 
-        self.click:SetHelixTooltip(function(tooltip)
+        self:SetHelixTooltip(function(tooltip)
             ix.hud.PopulateItemTooltip(tooltip, item)
 
             local entity = ix.gui.vendor.entity
@@ -261,10 +378,8 @@ end
 function PANEL:Think()
     if ((self.nextUpdate or 0) < CurTime()) then
         local entity = ix.gui.vendor.entity
-
         if (entity and self.isLocal) then
             local count = LocalPlayer():GetCharacter():GetInventory():GetItemCount(self.item)
-
             if (count == 0) then
                 self:Remove()
             end
@@ -274,14 +389,8 @@ function PANEL:Think()
     end
 end
 
-function PANEL:Paint(w, h)
-    if (ix.gui.vendor.activeBuy == self or ix.gui.vendor.activeSell == self) then
-        surface.SetDrawColor(ix.config.Get("color"))
-    else
-        surface.SetDrawColor(0, 0, 0, 100)
-    end
+vgui.Register("ixVendorItem", PANEL, "ixMenuSelectionButton")
 
-    surface.DrawRect(0, 0, w, h)
+if (IsValid(ix.gui.vendor)) then
+    ix.gui.vendor:Remove()
 end
-
-vgui.Register("ixVendorItem", PANEL, "DPanel")
