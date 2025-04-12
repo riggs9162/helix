@@ -263,7 +263,7 @@ function ix.util.FindPlayer(identifier, bAllowPatterns)
     end
 
     for _, v in player.Iterator() do
-        if (ix.util.StringMatches(v:Name(), identifier)) then
+        if (ix.util.StringMatches(v:Name(), identifier) or v:SteamID() == identifier or v:SteamID64() == identifier) then
             return v
         end
     end
