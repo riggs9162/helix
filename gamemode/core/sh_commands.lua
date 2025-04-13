@@ -34,7 +34,7 @@ ix.command.Add("PM", {
         local voiceMail = target:GetData("vm")
 
         if (voiceMail and voiceMail:find("%S")) then
-            return target:GetName()..": "..voiceMail
+            return target:GetName() .. ": " .. voiceMail
         end
 
         if ((client.ixNextPM or 0) < CurTime()) then
@@ -924,7 +924,7 @@ ix.command.Add("CharSetClass", {
         local classTable
 
         for _, v in ipairs(ix.class.list) do
-            if (ix.util.StringMatches(v.uniqueID, class) or ix.util.StringMatches(v.name, class)) then
+            if (tonumber(class) == v.index or ix.util.StringMatches(v.name, class) or ix.util.StringMatches(v.uniqueID, class)) then
                 classTable = v
                 break
             end
@@ -965,14 +965,13 @@ ix.command.Add("CharSetRank", {
         local rankTable
 
         for _, v in ipairs(ix.rank.list) do
-            if (ix.util.StringMatches(v.uniqueID, rank) or ix.util.StringMatches(v.name, rank)) then
+            if (tonumber(rank) == v.index or ix.util.StringMatches(v.name, rank) or ix.util.StringMatches(v.uniqueID, rank)) then
                 rankTable = v
                 break
             end
         end
 
         if (rankTable) then
-            local oldRank = target:GetRank()
             local targetPlayer = target:GetPlayer()
             if ( !IsValid(targetPlayer) ) then return end
 
@@ -1001,13 +1000,5 @@ ix.command.Add("MapRestart", {
         net.Start("ixMapRestart")
             net.WriteFloat(delay)
         net.Send(client)
-
-        /*
-        ix.util.NotifyLocalized("mapRestarting", nil, delay)
-
-        timer.Simple(delay, function()
-            RunConsoleCommand("changelevel", game.GetMap())
-        end)
-        */
     end
 })
