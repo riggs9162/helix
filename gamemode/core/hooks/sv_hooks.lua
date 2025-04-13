@@ -3,6 +3,7 @@ util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixPlayerEndVoice")
 util.AddNetworkString("ixStartChat")
 util.AddNetworkString("ixFinishChat")
+util.AddNetworkString("ixMapRestart")
 
 function GM:PlayerInitialSpawn(ply)
     ply.ixJoinTime = RealTime()
@@ -1096,7 +1097,7 @@ net.Receive("ixMapRestart", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Helix - MapRestart", nil) ) then return end
 
     local delay = net.ReadFloat()
-    
+
     ix.util.NotifyLocalized("mapRestarting", nil, delay)
 
     timer.Simple(delay, function()
