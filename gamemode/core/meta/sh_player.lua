@@ -271,6 +271,10 @@ if (SERVER) then
     -- use this argument
     -- @number[opt=startTime + time] finishTime Game time in seconds that the timer should complete at. If you are using `time`,
     -- then you shouldn't use this argument
+    -- @usage client:SetAction("Searching...", 4, function()
+    --     print("hello!")
+    -- end)
+    -- -- prints "hello!" after 4 seconds
     function meta:SetAction(text, time, callback, startTime, finishTime)
         if (time and time <= 0) then
             if (callback) then
