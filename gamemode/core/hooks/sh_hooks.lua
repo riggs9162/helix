@@ -20,8 +20,8 @@ local ipairs = ipairs
 local isfunction = isfunction
 local baseclass = baseclass
 
-function GM:PlayerNoClip(ply)
-    return ply:IsAdmin()
+function GM:PlayerNoClip(client)
+    return client:IsAdmin()
 end
 
 -- luacheck: globals HOLDTYPE_TRANSLATOR
@@ -60,25 +60,25 @@ local PLAYER_HOLDTYPE_TRANSLATOR = PLAYER_HOLDTYPE_TRANSLATOR
 local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
 local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
-function GM:TranslateActivity(ply, act)
-    local plyInfo = ply:GetTable()
+function GM:TranslateActivity(client, act)
+    local plyInfo = client:GetTable()
 
     -- Check if we have changed the activity from the last time we checked
-    local oldAct = ply.ixLastAct or -1
+    local oldAct = client.ixLastAct or -1
     if ( oldAct != act ) then
         plyInfo.ixLastAct = act
     end
 
     local modelClass = plyInfo.ixAnimModelClass or "player"
-    local bRaised = ply:IsWepRaised()
+    local bRaised = client:IsWepRaised()
 
     if ( modelClass == "player" ) then
-        local weapon = ply:GetActiveWeapon()
+        local weapon = client:GetActiveWeapon()
         local bAlwaysRaised = ix.config.Get("weaponAlwaysRaised")
         weapon = IsValid(weapon) and weapon or nil
 
-        if ( !bAlwaysRaised and weapon and !bRaised and ply:OnGround() ) then
-            local model = ply:GetModel()
+        if ( !bAlwaysRaised and weapon and !bRaised and client:OnGround() ) then
+            local model = client:GetModel()
             if ( ix.util.StringMatches(model, "zombie" ) ) then
                 local tree = ix.anim.zombie
                 if ( ix.util.StringMatches(model, "fast" ) ) then
@@ -92,14 +92,14 @@ function GM:TranslateActivity(ply, act)
 
             local holdType = weapon and ( weapon.HoldType or weapon:GetHoldType()) or "normal"
             local isPistol = holdType == "pistol" or holdType == "revolver"
-            if ( !bAlwaysRaised and weapon and !bRaised and ply:OnGround() ) then
+            if ( !bAlwaysRaised and weapon and !bRaised and client:OnGround() ) then
                 holdType = PLAYER_HOLDTYPE_TRANSLATOR[holdType] or ( isPistol and "normal" or "passive" )
             end
 
             local tree = ix.anim.player[holdType]
             if ( tree and tree[act] ) then
                 if ( isstring(tree[act]) ) then
-                    plyInfo.CalcSeqOverride = ply:LookupSequence(tree[act])
+                    plyInfo.CalcSeqOverride = client:LookupSequence(tree[act])
 
                     return
                 else
@@ -108,50 +108,50 @@ function GM:TranslateActivity(ply, act)
             end
         end
 
-        return self.BaseClass:TranslateActivity(ply, act)
+        return self.BaseClass:TranslateActivity(client, act)
     end
 
     if ( plyInfo.ixAnimTable ) then
         local glide = plyInfo.ixAnimGlide
 
-        if ( ply:InVehicle() ) then
+        if ( client:InVehicle() ) then
             local newAct = plyInfo.ixAnimTable[1]
 
             local fixVector = plyInfo.ixAnimTable[2]
             if ( isvector(fixVector) ) then
-                ply:SetLocalPos(animationFixOffset)
+                client:SetLocalPos(animationFixOffset)
             end
 
             if ( isstring(newAct) ) then
-                plyInfo.CalcSeqOverride = ply:LookupSequence(newAct)
+                plyInfo.CalcSeqOverride = client:LookupSequence(newAct)
             elseif ( istable(newAct) ) then
                 if ( !plyInfo.CalcSeqOverrideTable ) then
-                    plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                    plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                 end
 
                 -- Randomly select a new sequence from the table if we came from a different act
                 if ( oldAct != newAct ) then
-                    plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                    plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                 end
 
                 plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
             else
                 return newAct
             end
-        elseif ( ply:OnGround() ) then
+        elseif ( client:OnGround() ) then
             if ( plyInfo.ixAnimTable[act] ) then
                 local newAct = plyInfo.ixAnimTable[act][bRaised and 2 or 1]
 
                 if ( isstring(newAct) ) then
-                    plyInfo.CalcSeqOverride = ply:LookupSequence(newAct)
+                    plyInfo.CalcSeqOverride = client:LookupSequence(newAct)
                 elseif ( istable(newAct) ) then
                     if ( !plyInfo.CalcSeqOverrideTable ) then
-                        plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                        plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                     end
 
                     -- Randomly select a new sequence from the table if we came from a different act
                     if ( oldAct != plyInfo.ixLastAct ) then
-                        plyInfo.CalcSeqOverrideTable = ply:LookupSequence(newAct[math.random(#newAct)])
+                        plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                     end
 
                     plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
@@ -159,20 +159,20 @@ function GM:TranslateActivity(ply, act)
                     return newAct
                 end
             end
-        elseif ( ply:GetMoveType() == MOVETYPE_LADDER ) then
+        elseif ( client:GetMoveType() == MOVETYPE_LADDER ) then
             local ladderIdle = plyInfo.ixAnimLadderIdle
             local ladderMove = plyInfo.ixAnimLadderMove
             local ladderUp = plyInfo.ixAnimLadderUp
             local ladderDown = plyInfo.ixAnimLadderDown
 
-            local pos = ply:WorldSpaceCenter()
-            local ang = ply:EyeAngles()
+            local pos = client:WorldSpaceCenter()
+            local ang = client:EyeAngles()
             ang.p = 0
 
             local trace = util.TraceLine({
                 start = pos,
                 endpos = pos + ang:Forward() * 48,
-                filter = ply,
+                filter = client,
                 mask = MASK_PLAYERSOLID
             })
 
@@ -182,46 +182,46 @@ function GM:TranslateActivity(ply, act)
             if ( !trace.Hit ) then
                 if ( glide ) then
                     if ( isstring(glide) ) then
-                        plyInfo.CalcSeqOverride = ply:LookupSequence(glide)
+                        plyInfo.CalcSeqOverride = client:LookupSequence(glide)
                     else
                         return glide
                     end
                 end
             end
 
-            local velocity = ply:GetVelocity()
+            local velocity = client:GetVelocity()
             local len2D = velocity:Length2DSqr()
 
             -- Check if we are moving up or down the ladder
-            ply.ixLadderVelocity = ply.ixLadderVelocity or Vector(0, 0, 0)
-            ply.ixLadderNextCheck = ply.ixLadderNextCheck or CurTime()
-            ply.ixLadderDir = ply.ixLadderDir or "idle"
+            client.ixLadderVelocity = client.ixLadderVelocity or Vector(0, 0, 0)
+            client.ixLadderNextCheck = client.ixLadderNextCheck or CurTime()
+            client.ixLadderDir = client.ixLadderDir or "idle"
 
-            if ( CurTime() >= ply.ixLadderNextCheck ) then
-                ply.ixLadderNextCheck = CurTime() + 0.1
+            if ( CurTime() >= client.ixLadderNextCheck ) then
+                client.ixLadderNextCheck = CurTime() + 0.1
 
                 if ( velocity.z > 10 ) then
-                    ply.ixLadderDir = "up"
+                    client.ixLadderDir = "up"
                 elseif ( velocity.z < -10 ) then
-                    ply.ixLadderDir = "down"
+                    client.ixLadderDir = "down"
                 else
-                    ply.ixLadderDir = "idle"
+                    client.ixLadderDir = "idle"
                 end
             end
 
             if ( len2D <= 0.25 ) then
-                if ( ply.ixLadderDir == "up" ) then
+                if ( client.ixLadderDir == "up" ) then
                     if ( ladderUp ) then
                         if ( isstring(ladderUp) ) then
-                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderUp)
+                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderUp)
                         else
                             return ladderUp
                         end
                     end
-                elseif ( ply.ixLadderDir == "down" ) then
+                elseif ( client.ixLadderDir == "down" ) then
                     if ( ladderDown ) then
                         if ( isstring(ladderDown) ) then
-                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderDown)
+                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderDown)
                         else
                             return ladderDown
                         end
@@ -229,7 +229,7 @@ function GM:TranslateActivity(ply, act)
                 else
                     if ( ladderIdle ) then
                         if ( isstring(ladderIdle) ) then
-                            plyInfo.CalcSeqOverride = ply:LookupSequence(ladderIdle)
+                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderIdle)
                         else
                             return ladderIdle
                         end
@@ -238,7 +238,7 @@ function GM:TranslateActivity(ply, act)
             else
                 if ( ladderMove ) then
                     if ( isstring(ladderMove) ) then
-                        plyInfo.CalcSeqOverride = ply:LookupSequence(ladderMove)
+                        plyInfo.CalcSeqOverride = client:LookupSequence(ladderMove)
                     else
                         return ladderMove
                     end
@@ -246,7 +246,7 @@ function GM:TranslateActivity(ply, act)
             end
         elseif ( glide ) then
             if ( isstring(glide) ) then
-                plyInfo.CalcSeqOverride = ply:LookupSequence(glide)
+                plyInfo.CalcSeqOverride = client:LookupSequence(glide)
             else
                 return plyInfo.ixAnimGlide
             end
@@ -254,12 +254,12 @@ function GM:TranslateActivity(ply, act)
     end
 end
 
-function GM:CanPlayerUseBusiness(ply, uniqueID)
+function GM:CanPlayerUseBusiness(client, uniqueID)
     if (!ix.config.Get("allowBusiness", true)) then return false end
 
     local itemTable = ix.item.list[uniqueID]
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if ( !char ) then return false end
     if ( itemTable.noBusiness ) then return false end
 
@@ -268,13 +268,13 @@ function GM:CanPlayerUseBusiness(ply, uniqueID)
 
         if ( istable(itemTable.factions) ) then
             for _, v in pairs(itemTable.factions) do
-                if ( ply:Team() == v ) then
+                if ( client:Team() == v ) then
                     allowed = true
 
                     break
                 end
             end
-        elseif ( ply:Team() != itemTable.factions ) then
+        elseif ( client:Team() != itemTable.factions ) then
             allowed = false
         end
 
@@ -306,37 +306,37 @@ function GM:CanPlayerUseBusiness(ply, uniqueID)
     return true
 end
 
-function GM:DoAnimationEvent(ply, event, data)
-    local class = ply.ixAnimModelClass
+function GM:DoAnimationEvent(client, event, data)
+    local class = client.ixAnimModelClass
     if ( class == "player" ) then
-        return self.BaseClass:DoAnimationEvent(ply, event, data)
+        return self.BaseClass:DoAnimationEvent(client, event, data)
     else
-        local weapon = ply:GetActiveWeapon()
+        local weapon = client:GetActiveWeapon()
         if ( IsValid(weapon) ) then
-            local animation = ply.ixAnimTable
+            local animation = client.ixAnimTable
             if ( !animation ) then return end
 
-            local attack = isstring(animation.attack) and ply:LookupSequence(animation.attack) or animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1
-            local reload = isstring(animation.reload) and ply:LookupSequence(animation.reload) or animation.reload or ACT_GESTURE_RELOAD_SMG1
+            local attack = isstring(animation.attack) and client:LookupSequence(animation.attack) or animation.attack or ACT_GESTURE_RANGE_ATTACK_SMG1
+            local reload = isstring(animation.reload) and client:LookupSequence(animation.reload) or animation.reload or ACT_GESTURE_RELOAD_SMG1
 
             if ( event == PLAYERANIMEVENT_ATTACK_PRIMARY ) then
-                ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
 
                 return ACT_VM_PRIMARYATTACK
             elseif ( event == PLAYERANIMEVENT_ATTACK_SECONDARY ) then
-                ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, attack, true)
 
                 return ACT_VM_SECONDARYATTACK
             elseif ( event == PLAYERANIMEVENT_RELOAD ) then
-                ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, reload, true)
+                client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, reload, true)
 
                 return ACT_INVALID
             elseif ( event == PLAYERANIMEVENT_JUMP ) then
-                ply:AnimRestartMainSequence()
+                client:AnimRestartMainSequence()
 
                 return ACT_INVALID
             elseif ( event == PLAYERANIMEVENT_CANCEL_RELOAD ) then
-                ply:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+                client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
 
                 return ACT_INVALID
             end
@@ -364,12 +364,12 @@ function GM:EntityRemoved(entity)
     end
 end
 
-local function UpdatePlayerHoldType(ply, weapon)
-    if ( !IsValid(ply) ) then return end
+local function UpdatePlayerHoldType(client, weapon)
+    if ( !IsValid(client) ) then return end
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
 
-    weapon = weapon or ply:GetActiveWeapon()
+    weapon = weapon or client:GetActiveWeapon()
     local holdType = "normal"
 
     if ( IsValid(weapon) ) then
@@ -381,10 +381,10 @@ local function UpdatePlayerHoldType(ply, weapon)
     plyInfo.ixLastAct = -1
 end
 
-local function UpdateAnimationTable(ply, vehicle)
-    if ( !IsValid(ply) ) then return end
+local function UpdateAnimationTable(client, vehicle)
+    if ( !IsValid(client) ) then return end
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
     local baseTable = ix.anim[plyInfo.ixAnimModelClass] or {}
 
     if ( IsValid(vehicle) ) then
@@ -407,64 +407,64 @@ local function UpdateAnimationTable(ply, vehicle)
     plyInfo.ixLastAct = -1
 end
 
-function GM:PlayerWeaponChanged(ply, weapon)
-    UpdatePlayerHoldType(ply, weapon)
-    UpdateAnimationTable(ply)
+function GM:PlayerWeaponChanged(client, weapon)
+    UpdatePlayerHoldType(client, weapon)
+    UpdateAnimationTable(client)
 
     if ( CLIENT ) then return end
 
     -- update weapon raise state
     if ( weapon.IsAlwaysRaised or ALWAYS_RAISED[weapon:GetClass()] ) then
-        ply:SetWepRaised(true, weapon)
+        client:SetWepRaised(true, weapon)
         return
     elseif ( weapon.IsAlwaysLowered or weapon.NeverRaised ) then
-        ply:SetWepRaised(false, weapon)
+        client:SetWepRaised(false, weapon)
         return
     end
 
     -- If the player has been forced to have their weapon lowered.
-    if ( ply:IsRestricted() ) then
-        ply:SetWepRaised(false, weapon)
+    if ( client:IsRestricted() ) then
+        client:SetWepRaised(false, weapon)
         return
     end
 
     -- Let the config decide before actual results.
     if ( ix.config.Get("weaponAlwaysRaised") ) then
-        ply:SetWepRaised(true, weapon)
+        client:SetWepRaised(true, weapon)
         return
     end
 
-    ply:SetWepRaised(false, weapon)
+    client:SetWepRaised(false, weapon)
 end
 
-function GM:PlayerSwitchWeapon(ply, oldWeapon, weapon)
+function GM:PlayerSwitchWeapon(client, oldWeapon, weapon)
     if ( !IsFirstTimePredicted() ) then return end
 
     -- the player switched weapon themself (i.e not through SelectWeapon), so we have to network it here
     if ( SERVER ) then
         net.Start("PlayerSelectWeapon")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteString(weapon:GetClass())
         net.Broadcast()
     end
 
-    hook.Run("PlayerWeaponChanged", ply, weapon)
+    hook.Run("PlayerWeaponChanged", client, weapon)
 end
 
-function GM:PlayerModelChanged(ply, model)
+function GM:PlayerModelChanged(client, model)
     if ( !model ) then return end
 
-    ply.ixAnimModelClass = ix.anim.GetModelClass(model)
+    client.ixAnimModelClass = ix.anim.GetModelClass(model)
 
-    UpdateAnimationTable(ply)
+    UpdateAnimationTable(client)
 end
 
-function GM:HandlePlayerDucking(ply, velocity, plyTable)
+function GM:HandlePlayerDucking(client, velocity, plyTable)
     if ( !plyTable ) then
-        plyTable = ply:GetTable()
+        plyTable = client:GetTable()
     end
 
-    if ( !ply:IsFlagSet(FL_DUCKING) ) then return false end
+    if ( !client:IsFlagSet(FL_DUCKING) ) then return false end
 
     if ( velocity:Length2DSqr() > 0.25 ) then
         plyTable.CalcIdeal = ACT_MP_CROUCHWALK
@@ -478,30 +478,30 @@ end
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
 
-function GM:CalcMainActivity(ply, velocity)
-    local forcedSequence = ply:GetNetVar("forcedSequence")
+function GM:CalcMainActivity(client, velocity)
+    local forcedSequence = client:GetNetVar("forcedSequence")
     if ( forcedSequence ) then
-        if ( ply:GetSequence() != forcedSequence ) then
-            ply:SetCycle(0)
+        if ( client:GetSequence() != forcedSequence ) then
+            client:SetCycle(0)
         end
 
         return -1, forcedSequence
     end
 
-    ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - ply:EyeAngles()[2]))
+    client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
     plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
 
     -- we could call the baseclass function, but it's faster to do it this way
     local BaseClass = GAMEMODE.BaseClass
 
-    if ( BaseClass:HandlePlayerNoClipping(ply, velocity) or
-        BaseClass:HandlePlayerDriving(ply) or
-        BaseClass:HandlePlayerVaulting(ply, velocity) or
-        BaseClass:HandlePlayerJumping(ply, velocity) or
-        BaseClass:HandlePlayerSwimming(ply, velocity) or
-        BaseClass:HandlePlayerDucking(ply, velocity) ) then -- luacheck: ignore 542
+    if ( BaseClass:HandlePlayerNoClipping(client, velocity) or
+        BaseClass:HandlePlayerDriving(client) or
+        BaseClass:HandlePlayerVaulting(client, velocity) or
+        BaseClass:HandlePlayerJumping(client, velocity) or
+        BaseClass:HandlePlayerSwimming(client, velocity) or
+        BaseClass:HandlePlayerDucking(client, velocity) ) then -- luacheck: ignore 542
     else
         local len2D = velocity:Length2DSqr()
 
@@ -516,20 +516,20 @@ function GM:CalcMainActivity(ply, velocity)
         end
     end
 
-    hook.Run("TranslateActivity", ply, plyInfo.CalcIdeal)
+    hook.Run("TranslateActivity", client, plyInfo.CalcIdeal)
 
     local sequenceOverride = plyInfo.CalcSeqOverride
     plyInfo.CalcSeqOverride = -1
 
-    plyInfo.m_bWasOnGround = ply:OnGround()
-    plyInfo.m_bWasNoclipping = ( ply:GetMoveType() == MOVETYPE_NOCLIP and !ply:InVehicle() )
+    plyInfo.m_bWasOnGround = client:OnGround()
+    plyInfo.m_bWasNoclipping = ( client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle() )
 
     return plyInfo.CalcIdeal, sequenceOverride or plyInfo.CalcSeqOverride or -1
 end
 
-function GM:UpdateAnimation(ply, velocity, maxSeqGroundSpeed)
-    if ( ply:GetNetVar("forcedSequence") ) then
-        ply:SetPlaybackRate(ply:GetNetVar("sequenceSpeed", 1))
+function GM:UpdateAnimation(client, velocity, maxSeqGroundSpeed)
+    if ( client:GetNetVar("forcedSequence") ) then
+        client:SetPlaybackRate(client:GetNetVar("sequenceSpeed", 1))
     else
         local len = velocity:Length()
         local movement = 1.0
@@ -541,43 +541,43 @@ function GM:UpdateAnimation(ply, velocity, maxSeqGroundSpeed)
         local rate = math.min(movement, 2)
 
         -- if we're under water we want to constantly be swimming..
-        if ( ply:WaterLevel() >= 2 ) then
+        if ( client:WaterLevel() >= 2 ) then
             rate = math.max(rate, 0.5)
-        elseif ( !ply:IsOnGround() and len >= 1000 ) then
+        elseif ( !client:IsOnGround() and len >= 1000 ) then
             rate = 0.1
         end
 
-        ply:SetPlaybackRate(rate)
+        client:SetPlaybackRate(rate)
     end
 
     -- We only need to do this clientside..
     if ( CLIENT ) then
-        if ( ply:InVehicle() ) then
+        if ( client:InVehicle() ) then
             -- This is used for the 'rollercoaster' arms
-            local Vehicle = ply:GetVehicle()
+            local Vehicle = client:GetVehicle()
             local Velocity = Vehicle:GetVelocity()
             local fwd = Vehicle:GetUp()
             local dp = fwd:Dot(Vector(0, 0, 1))
 
-            ply:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
+            client:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
 
             -- Pass the vehicles steer param down to the player
             local steer = Vehicle:GetPoseParameter("vehicle_steer")
             steer = steer * 2 - 1 -- convert from 0..1 to -1..1
-            if ( Vehicle:GetClass() == "prop_vehicle_prisoner_pod" ) then steer = 0 ply:SetPoseParameter("aim_yaw", math.NormalizeAngle(ply:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
-            ply:SetPoseParameter("vehicle_steer", steer)
+            if ( Vehicle:GetClass() == "prop_vehicle_prisoner_pod" ) then steer = 0 client:SetPoseParameter("aim_yaw", math.NormalizeAngle(client:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90)) end
+            client:SetPoseParameter("vehicle_steer", steer)
 
         end
 
-        GAMEMODE:GrabEarAnimation(ply)
-        GAMEMODE:MouthMoveAnimation(ply)
+        GAMEMODE:GrabEarAnimation(client)
+        GAMEMODE:MouthMoveAnimation(client)
     end
 end
 
 local KEY_BLACKLIST = IN_ATTACK + IN_ATTACK2
 
-function GM:StartCommand(ply, command)
-    if ( !ply:CanShootWeapon() ) then
+function GM:StartCommand(client, command)
+    if ( !client:CanShootWeapon() ) then
         command:RemoveKey(KEY_BLACKLIST)
     end
 end
@@ -590,27 +590,27 @@ function GM:CharacterVarChanged(char, varName, oldVar, newVar)
     end
 end
 
-function GM:CanPlayerThrowPunch(ply)
-    if ( !ply:IsWepRaised() ) then return false end
+function GM:CanPlayerThrowPunch(client)
+    if ( !client:IsWepRaised() ) then return false end
 
     return true
 end
 
-function GM:OnCharacterCreated(ply, character)
+function GM:OnCharacterCreated(client, character)
     local faction = ix.faction.Get(character:GetFaction())
     if ( faction and faction.OnCharacterCreated ) then
-        faction:OnCharacterCreated(ply, character)
+        faction:OnCharacterCreated(client, character)
     end
 end
 
-function GM:GetDefaultCharacterName(ply, faction)
+function GM:GetDefaultCharacterName(client, faction)
     local info = ix.faction.indices[faction]
     if ( info and info.GetDefaultName ) then
-        return info:GetDefaultName(ply)
+        return info:GetDefaultName(client)
     end
 end
 
-function GM:CanPlayerUseCharacter(ply, character)
+function GM:CanPlayerUseCharacter(client, character)
     local banned = character:GetData("banned")
     if ( banned ) then
         if ( isnumber(banned) ) then
@@ -626,23 +626,23 @@ function GM:CanPlayerUseCharacter(ply, character)
 
     ::charBanBypass::
 
-    local bHasWhitelist = ply:HasWhitelist(character:GetFaction())
+    local bHasWhitelist = client:HasWhitelist(character:GetFaction())
     if ( !bHasWhitelist ) then
         return false, "@noWhitelist"
     end
 end
 
-function GM:CanProperty(ply, property, entity)
-    if ( ply:IsAdmin() ) then return true end
+function GM:CanProperty(client, property, entity)
+    if ( client:IsAdmin() ) then return true end
 
     if ( CLIENT and ( property == "remover" or property == "collision" ) ) then return true end
 
     return false
 end
 
-function GM:PhysgunPickup(ply, entity)
-    local bPickup = self.BaseClass:PhysgunPickup(ply, entity)
-    if ( !bPickup and entity:IsPlayer() and ( ply:IsSuperAdmin() or ply:IsAdmin() and !entity:IsSuperAdmin() ) ) then
+function GM:PhysgunPickup(client, entity)
+    local bPickup = self.BaseClass:PhysgunPickup(client, entity)
+    if ( !bPickup and entity:IsPlayer() and ( client:IsSuperAdmin() or client:IsAdmin() and !entity:IsSuperAdmin() ) ) then
         bPickup = true
     end
 
@@ -658,7 +658,7 @@ function GM:PhysgunPickup(ply, entity)
     return bPickup
 end
 
-function GM:PhysgunDrop(ply, entity)
+function GM:PhysgunDrop(client, entity)
     if ( entity:IsPlayer() ) then
         entity:SetMoveType(MOVETYPE_WALK)
     elseif ( entity.ixCollisionGroup ) then
@@ -667,18 +667,18 @@ function GM:PhysgunDrop(ply, entity)
     end
 end
 
-function GM:Move(ply, moveData)
-    local char = ply:GetCharacter()
+function GM:Move(client, moveData)
+    local char = client:GetCharacter()
     if ( char ) then
-        if ( ply:GetNetVar("actEnterAngle") ) then
+        if ( client:GetNetVar("actEnterAngle") ) then
             moveData:SetForwardSpeed(0)
             moveData:SetSideSpeed(0)
             moveData:SetVelocity(Vector(0, 0, 0))
         end
 
-        if ( ply:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) ) then
+        if ( client:GetMoveType() == MOVETYPE_WALK and moveData:KeyDown(IN_WALK) ) then
             local mf, ms = 0, 0
-            local speed = ply:GetWalkSpeed()
+            local speed = client:GetWalkSpeed()
             local ratio = ix.config.Get("walkRatio")
 
             if ( moveData:KeyDown(IN_FORWARD) ) then
@@ -701,13 +701,13 @@ end
 
 function GM:CanTransferItem(itemObject, curInv, inventory)
     if ( SERVER ) then
-        local ply = itemObject.GetOwner and itemObject:GetOwner() or nil
+        local client = itemObject.GetOwner and itemObject:GetOwner() or nil
 
-        if ( IsValid(ply) and curInv.GetReceivers ) then
+        if ( IsValid(client) and curInv.GetReceivers ) then
             local bAuthorized = false
 
             for _, v in ipairs(curInv:GetReceivers()) do
-                if ( ply == v ) then
+                if ( client == v ) then
                     bAuthorized = true
                     break
                 end
@@ -765,12 +765,12 @@ function GM:CanPlayerTransferNestedBags(itemObject, curInv, inventory)
     return true
 end
 
-function GM:CanPlayerEquipItem(ply, item)
-    return item.invID == ply:GetCharacter():GetInventory():GetID()
+function GM:CanPlayerEquipItem(client, item)
+    return item.invID == client:GetCharacter():GetInventory():GetID()
 end
 
-function GM:CanPlayerUnequipItem(ply, item)
-    return item.invID == ply:GetCharacter():GetInventory():GetID()
+function GM:CanPlayerUnequipItem(client, item)
+    return item.invID == client:GetCharacter():GetInventory():GetID()
 end
 
 function GM:OnItemTransferred(item, curInv, inventory)
@@ -804,31 +804,31 @@ end
 if ( SERVER ) then
     util.AddNetworkString("PlayerVehicle")
 
-    function GM:PlayerEnteredVehicle(ply, vehicle, role)
-        UpdateAnimationTable(ply)
+    function GM:PlayerEnteredVehicle(client, vehicle, role)
+        UpdateAnimationTable(client)
 
         net.Start("PlayerVehicle")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteEntity(vehicle)
             net.WriteBool(true)
         net.Broadcast()
     end
 
-    function GM:PlayerLeaveVehicle(ply, vehicle)
-        UpdateAnimationTable(ply)
+    function GM:PlayerLeaveVehicle(client, vehicle)
+        UpdateAnimationTable(client)
 
         net.Start("PlayerVehicle")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteEntity(vehicle)
             net.WriteBool(false)
         net.Broadcast()
     end
 else
     net.Receive("PlayerVehicle", function(length)
-        local ply = net.ReadPlayer()
+        local client = net.ReadPlayer()
         local vehicle = net.ReadEntity()
         local bEntered = net.ReadBool()
 
-        UpdateAnimationTable(ply, bEntered and vehicle or false)
+        UpdateAnimationTable(client, bEntered and vehicle or false)
     end)
 end

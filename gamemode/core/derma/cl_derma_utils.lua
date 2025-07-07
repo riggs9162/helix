@@ -85,9 +85,9 @@ function Derma_Message( strText, strTitle, strButtonText )
 
 end
 
-concommand.Add( "ix_derma_message", function( ply )
+concommand.Add( "ix_derma_message", function( client )
 
-    if ( !IsValid( ply ) ) then return end
+    if ( !IsValid( client ) ) then return end
 
     Derma_Message( "Hey Some Text Here!!!", "Message Title (Optional)", "Button Text (Optional)" )
 
@@ -165,9 +165,9 @@ function Derma_Query( strText, strTitle, ... )
 
 end
 
-concommand.Add( "ix_derma_query", function( ply )
+concommand.Add( "ix_derma_query", function( client )
 
-    if ( !IsValid( ply ) ) then return end
+    if ( !IsValid( client ) ) then return end
 
     Derma_Query( "Would you like me to punch you right in the face?", "Question!",
                         "Yesss",    function() MsgN( "Pressed YES!") end,
@@ -279,9 +279,9 @@ function Derma_StringRequest( strTitle, strText, strDefaultText, fnEnter, fnCanc
 
 end
 
-concommand.Add( "ix_derma_stringrequest", function( ply )
+concommand.Add( "ix_derma_stringrequest", function( client )
 
-    if ( !IsValid( ply ) ) then return end
+    if ( !IsValid( client ) ) then return end
 
     Derma_StringRequest( "Question",
                     "What Is Your Favourite Color?",

@@ -31,12 +31,12 @@ ITEM.functions.use = {
     icon = "icon16/add.png",
 
     OnRun = function(item)
-        local ply = item.player
-        if ( !IsValid(ply) ) then return false end
+        local client = item.player
+        if ( !IsValid(client) ) then return false end
 
         local rounds = item:GetData("rounds", item.ammoAmount)
-        ply:GiveAmmo(rounds, item.ammo)
-        ply:EmitSound(item.useSound, 60)
+        client:GiveAmmo(rounds, item.ammo)
+        client:EmitSound(item.useSound, 60)
 
         return true
     end

@@ -654,9 +654,9 @@ end
 -- @tparam string message The message to send to admins.
 -- @usage Entity(1):NotifyAdmin("This player did something suspicious.")
 function meta:NotifyAdmin(message)
-    for _, ply in player.Iterator() do
-        if ply:IsAdmin() then
-            ply:Notify(message)
+    for _, client in player.Iterator() do
+        if client:IsAdmin() then
+            client:Notify(message)
         end
     end
 end

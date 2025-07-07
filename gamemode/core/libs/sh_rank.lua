@@ -203,8 +203,8 @@ if (SERVER) then
     function charMeta:RankPromote()
         if ( !self ) then return false end
 
-        local ply = self:GetPlayer()
-        if ( !IsValid(ply) ) then return false end
+        local client = self:GetPlayer()
+        if ( !IsValid(client) ) then return false end
 
         local rank = self:GetRank()
         if ( !rank ) then return false end
@@ -222,7 +222,7 @@ if (SERVER) then
         for k, v in ipairs(ix.rank.list) do
             if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
                 self:SetRank(k)
-                hook.Run("PlayerJoinedRank", ply, k, rank)
+                hook.Run("PlayerJoinedRank", client, k, rank)
                 break
             end
         end
@@ -235,8 +235,8 @@ if (SERVER) then
     function charMeta:RankDemote()
         if ( !self ) then return end
 
-        local ply = self:GetPlayer()
-        if ( !IsValid(ply) ) then return end
+        local client = self:GetPlayer()
+        if ( !IsValid(client) ) then return end
 
         local rank = self:GetRank()
         if ( !rank ) then return end
@@ -254,7 +254,7 @@ if (SERVER) then
         for k, v in ipairs(ix.rank.list) do
             if ( v.sortOrder == nextRank and v.faction == self:GetFaction() ) then
                 self:SetRank(k)
-                hook.Run("PlayerJoinedRank", ply, k, rank)
+                hook.Run("PlayerJoinedRank", client, k, rank)
 
                 return true
             end

@@ -6,8 +6,8 @@ CAMI.RegisterPrivilege({
 
 if ( SERVER ) then
     util.AddNetworkString("ixDeveloperAreaEditName")
-    net.Receive("ixDeveloperAreaEditName", function(_, ply)
-        if ( CAMI.PlayerHasAccess(ply, "Helix - Developer", nil) and CAMI.PlayerHasAccess(ply, "Helix - AreaEdit", nil) ) then
+    net.Receive("ixDeveloperAreaEditName", function(_, client)
+        if ( CAMI.PlayerHasAccess(client, "Helix - Developer", nil) and CAMI.PlayerHasAccess(client, "Helix - AreaEdit", nil) ) then
             local previousName = net.ReadString()
             local name = net.ReadString()
 
@@ -25,16 +25,16 @@ if ( SERVER ) then
                 net.Start("ixAreaSync")
                     net.WriteUInt(length, 32)
                     net.WriteData(compressed, length)
-                net.Send(ply)
+                net.Send(client)
             end)
 
-            ply:NotifyLocalized("areaEditorUpdated", L(areaID))
+            client:NotifyLocalized("areaEditorUpdated", L(areaID))
         end
     end)
 
     util.AddNetworkString("ixDeveloperAreaEditProperties")
-    net.Receive("ixDeveloperAreaEditProperties", function(_, ply)
-        if ( CAMI.PlayerHasAccess(ply, "Helix - Developer", nil) and CAMI.PlayerHasAccess(ply, "Helix - AreaEdit", nil) ) then
+    net.Receive("ixDeveloperAreaEditProperties", function(_, client)
+        if ( CAMI.PlayerHasAccess(client, "Helix - Developer", nil) and CAMI.PlayerHasAccess(client, "Helix - AreaEdit", nil) ) then
             local areaID = net.ReadString()
             local key = net.ReadString()
             local value = net.ReadType()
@@ -55,16 +55,16 @@ if ( SERVER ) then
                 net.Start("ixAreaSync")
                     net.WriteUInt(length, 32)
                     net.WriteData(compressed, length)
-                net.Send(ply)
+                net.Send(client)
             end)
 
-            ply:NotifyLocalized("areaEditorUpdated", L(areaID))
+            client:NotifyLocalized("areaEditorUpdated", L(areaID))
         end
     end)
 
     util.AddNetworkString("ixDeveloperAreaDelete")
-    net.Receive("ixDeveloperAreaDelete", function(_, ply)
-        if ( CAMI.PlayerHasAccess(ply, "Helix - Developer", nil) and CAMI.PlayerHasAccess(ply, "Helix - AreaEdit", nil) ) then
+    net.Receive("ixDeveloperAreaDelete", function(_, client)
+        if ( CAMI.PlayerHasAccess(client, "Helix - Developer", nil) and CAMI.PlayerHasAccess(client, "Helix - AreaEdit", nil) ) then
             local areaID = net.ReadString()
 
             ix.area.stored[areaID] = nil
@@ -77,10 +77,10 @@ if ( SERVER ) then
                 net.Start("ixAreaSync")
                     net.WriteUInt(length, 32)
                     net.WriteData(compressed, length)
-                net.Send(ply)
+                net.Send(client)
             end)
 
-            ply:NotifyLocalized("areaEditorDeleted", L(areaID))
+            client:NotifyLocalized("areaEditorDeleted", L(areaID))
         end
     end)
 end

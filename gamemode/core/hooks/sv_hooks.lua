@@ -5,11 +5,11 @@ util.AddNetworkString("ixStartChat")
 util.AddNetworkString("ixFinishChat")
 util.AddNetworkString("ixMapRestart")
 
-function GM:PlayerInitialSpawn(ply)
-    ply.ixJoinTime = RealTime()
+function GM:PlayerInitialSpawn(client)
+    client.ixJoinTime = RealTime()
 
-    if (ply:IsBot()) then
-        local botID = os.time() + ply:EntIndex()
+    if (client:IsBot()) then
+        local botID = os.time() + client:EntIndex()
         local index = math.random(table.Count(ix.faction.indices))
         local faction = ix.faction.indices[index]
 
@@ -24,10 +24,10 @@ function GM:PlayerInitialSpawn(ply)
         end
 
         local char = ix.char.New({
-            name = ply:Nick(),
+            name = client:Nick(),
             faction = faction and faction.uniqueID or "unknown",
             model = faction and model or "models/gman.mdl"
-        }, botID, ply, ply:SteamID64())
+        }, botID, client, client:SteamID64())
         char.isBot = true
 
         local inventory = ix.inventory.Create(ix.config.Get("inventoryWidth"), ix.config.Get("inventoryHeight"), botID)
@@ -39,39 +39,39 @@ function GM:PlayerInitialSpawn(ply)
         ix.char.loaded[botID] = char
 
         char:Setup()
-        ply:Spawn()
+        client:Spawn()
 
-        ix.chat.Send(nil, "connect", ply:SteamName())
+        ix.chat.Send(nil, "connect", client:SteamName())
 
         return
     end
 
-    ix.config.Send(ply)
-    ix.date.Send(ply)
+    ix.config.Send(client)
+    ix.date.Send(client)
 
-    ply:LoadData(function(data)
-        if (!IsValid(ply)) then return end
+    client:LoadData(function(data)
+        if (!IsValid(client)) then return end
 
         -- Don't use the char cache if they've connected to another server using the same database
         local address = ix.util.GetAddress()
-        local bNoCache = ply:GetData("lastIP", address) != address
-        ply:SetData("lastIP", address)
+        local bNoCache = client:GetData("lastIP", address) != address
+        client:SetData("lastIP", address)
 
         net.Start("ixDataSync")
             net.WriteTable(data or {})
-            net.WriteUInt(ply.ixPlayTime or 0, 32)
-        net.Send(ply)
+            net.WriteUInt(client.ixPlayTime or 0, 32)
+        net.Send(client)
 
-        ix.char.Restore(ply, function(charList)
-            if (!IsValid(ply)) then return end
+        ix.char.Restore(client, function(charList)
+            if (!IsValid(client)) then return end
 
-            MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. ply:Nick())
+            MsgN("Loaded (" .. table.concat(charList, ", ") .. ") for " .. client:Nick())
 
             for _, v in ipairs(charList) do
-                ix.char.loaded[v]:Sync(ply)
+                ix.char.loaded[v]:Sync(client)
             end
 
-            ply.ixCharList = charList
+            client.ixCharList = charList
 
             net.Start("ixCharacterMenu")
             net.WriteUInt(#charList, 6)
@@ -80,94 +80,94 @@ function GM:PlayerInitialSpawn(ply)
                 net.WriteUInt(v, 32)
             end
 
-            net.Send(ply)
+            net.Send(client)
 
-            ply.ixLoaded = true
-            ply:SetData("intro", true)
+            client.ixLoaded = true
+            client:SetData("intro", true)
 
             for _, v in player.Iterator() do
                 if (v:GetCharacter()) then
-                    v:GetCharacter():Sync(ply)
+                    v:GetCharacter():Sync(client)
                 end
             end
         end, bNoCache)
 
-        ix.chat.Send(nil, "connect", ply:SteamName())
+        ix.chat.Send(nil, "connect", client:SteamName())
     end)
 
-    ply:SetNoDraw(true)
-    ply:SetNotSolid(true)
-    ply:Lock()
-    ply:SyncVars()
+    client:SetNoDraw(true)
+    client:SetNotSolid(true)
+    client:Lock()
+    client:SyncVars()
 
     timer.Simple(1, function()
-        if (!IsValid(ply)) then return end
+        if (!IsValid(client)) then return end
 
-        ply:KillSilent()
-        ply:StripAmmo()
+        client:KillSilent()
+        client:StripAmmo()
     end)
 end
 
-function GM:PlayerUse(ply, entity)
-    if (ply:IsRestricted() or (isfunction(entity.GetEntityMenu) and entity:GetClass() != "ix_item")) then return false end
+function GM:PlayerUse(client, entity)
+    if (client:IsRestricted() or (isfunction(entity.GetEntityMenu) and entity:GetClass() != "ix_item")) then return false end
 
     return true
 end
 
-function GM:KeyPress(ply, key)
+function GM:KeyPress(client, key)
     if (key == IN_RELOAD) then
-        timer.Create("ixToggleRaise" .. ply:SteamID64(), ix.config.Get("weaponRaiseTime"), 1, function()
-            if (IsValid(ply)) then
-                ply:ToggleWepRaised()
+        timer.Create("ixToggleRaise" .. client:SteamID64(), ix.config.Get("weaponRaiseTime"), 1, function()
+            if (IsValid(client)) then
+                client:ToggleWepRaised()
             end
         end)
     elseif (key == IN_USE) then
         local data = {}
-            data.start = ply:GetShootPos()
-            data.endpos = data.start + ply:GetAimVector() * 96
-            data.filter = ply
+            data.start = client:GetShootPos()
+            data.endpos = data.start + client:GetAimVector() * 96
+            data.filter = client
         local entity = util.TraceLine(data).Entity
 
-        if (IsValid(entity) and hook.Run("PlayerUse", ply, entity)) then
+        if (IsValid(entity) and hook.Run("PlayerUse", client, entity)) then
             if (entity:IsDoor()) then
-                local result = hook.Run("CanPlayerUseDoor", ply, entity)
+                local result = hook.Run("CanPlayerUseDoor", client, entity)
                 if (result != false) then
-                    hook.Run("PlayerUseDoor", ply, entity)
+                    hook.Run("PlayerUseDoor", client, entity)
                 end
             end
         end
     end
 end
 
-function GM:KeyRelease(ply, key)
+function GM:KeyRelease(client, key)
     if (key == IN_RELOAD) then
-        timer.Remove("ixToggleRaise" .. ply:SteamID64())
+        timer.Remove("ixToggleRaise" .. client:SteamID64())
     elseif (key == IN_USE) then
-        timer.Remove("ixCharacterInteraction" .. ply:SteamID64())
+        timer.Remove("ixCharacterInteraction" .. client:SteamID64())
     end
 end
 
-function GM:CanPlayerInteractItem(ply, action, item, data)
-    if (ply:IsRestricted()) then return false end
+function GM:CanPlayerInteractItem(client, action, item, data)
+    if (client:IsRestricted()) then return false end
 
-    if (IsValid(ply.ixRagdoll)) then
-        ply:NotifyLocalized("notNow")
+    if (IsValid(client.ixRagdoll)) then
+        client:NotifyLocalized("notNow")
         return false
     end
 
-    if (action == "drop" and hook.Run("CanPlayerDropItem", ply, item) == false) then return false end
-    if (action == "take" and hook.Run("CanPlayerTakeItem", ply, item) == false) then return false end
+    if (action == "drop" and hook.Run("CanPlayerDropItem", client, item) == false) then return false end
+    if (action == "take" and hook.Run("CanPlayerTakeItem", client, item) == false) then return false end
 
     if (action == "combine") then
         local other = data[1]
 
-        if (hook.Run("CanPlayerCombineItem", ply, item, other) == false) then return false end
+        if (hook.Run("CanPlayerCombineItem", client, item, other) == false) then return false end
 
         local combineItem = ix.item.instances[other]
         if (combineItem and combineItem.invID != 0) then
             local combineInv = ix.item.inventories[combineItem.invID]
 
-            if (!combineInv:OnCheckAccess(ply)) then
+            if (!combineInv:OnCheckAccess(client)) then
                 return false
             end
         else
@@ -175,31 +175,31 @@ function GM:CanPlayerInteractItem(ply, action, item, data)
         end
     end
 
-    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == ply:SteamID64() and item.ixCharID != ply:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction and ix.config.Get("itemOwnership", false)) then
-        ply:NotifyLocalized("itemOwned")
+    if (isentity(item) and item.ixSteamID and item.ixCharID and item.ixSteamID == client:SteamID64() and item.ixCharID != client:GetCharacter():GetID() and !item:GetItemTable().bAllowMultiCharacterInteraction and ix.config.Get("itemOwnership", false)) then
+        client:NotifyLocalized("itemOwned")
         return false
     end
 
-    return ply:Alive()
+    return client:Alive()
 end
 
-function GM:CanPlayerDropItem(ply, item)
+function GM:CanPlayerDropItem(client, item)
     -- Check if the player is able to drop the item.
 end
 
-function GM:CanPlayerTakeItem(ply, item)
+function GM:CanPlayerTakeItem(client, item)
     -- Check if the player is able to take the item.
 end
 
-function GM:CanPlayerCombineItem(ply, item, other)
+function GM:CanPlayerCombineItem(client, item, other)
     -- Check if the player is able to combine the item with another.
 end
 
-function GM:PlayerShouldTakeDamage(ply, attacker)
-    return ply:GetCharacter() != nil
+function GM:PlayerShouldTakeDamage(client, attacker)
+    return client:GetCharacter() != nil
 end
 
-function GM:GetFallDamage(ply, speed)
+function GM:GetFallDamage(client, speed)
     return ( speed - 580 ) * ( 100 / 444 )
 end
 
@@ -240,15 +240,15 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function GM:PrePlayerLoadedCharacter(ply, char, lastChar)
+function GM:PrePlayerLoadedCharacter(client, char, lastChar)
     -- Reset all bodygroups
-    ply:ResetBodygroups()
+    client:ResetBodygroups()
 
     -- Remove all skins
-    ply:SetSkin(0)
+    client:SetSkin(0)
 end
 
-function GM:PlayerLoadedCharacter(ply, char, lastChar)
+function GM:PlayerLoadedCharacter(client, char, lastChar)
     local query = mysql:Update("ix_characters")
         query:Where("id", char:GetID())
         query:Update("last_join_time", math.floor(os.time()))
@@ -268,7 +268,7 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
 
     if (char) then
         for _, v in ipairs(ix.class.list) do
-            if (v.faction == ply:Team() and v.isDefault) then
+            if (v.faction == client:Team() and v.isDefault) then
                 char:SetClass(v.index)
 
                 break
@@ -276,7 +276,7 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
         end
 
         for _, v in ipairs(ix.rank.list) do
-            if (v.faction == ply:Team() and v.isDefault) then
+            if (v.faction == client:Team() and v.isDefault) then
                 char:SetRank(v.index)
 
                 break
@@ -284,7 +284,7 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
         end
     end
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
     if (IsValid(plyInfo.ixRagdoll)) then
         plyInfo.ixRagdoll.ixNoReset = true
         plyInfo.ixRagdoll.ixIgnoreDelete = true
@@ -292,17 +292,17 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
     end
 
     local faction = ix.faction.indices[char:GetFaction()]
-    local uniqueID = "ixSalary" .. ply:SteamID64()
+    local uniqueID = "ixSalary" .. client:SteamID64()
 
     if (faction and faction.pay and faction.pay > 0) then
         timer.Create(uniqueID, faction.payTime or 300, 0, function()
-            if (IsValid(ply)) then
-                if (hook.Run("CanPlayerEarnSalary", ply, faction) != false) then
-                    local pay = hook.Run("GetSalaryAmount", ply, faction) or faction.pay
+            if (IsValid(client)) then
+                if (hook.Run("CanPlayerEarnSalary", client, faction) != false) then
+                    local pay = hook.Run("GetSalaryAmount", client, faction) or faction.pay
 
                     char:GiveMoney(pay)
-                    ply:NotifyLocalized("salary", ix.currency.Get(pay))
-                    hook.Run("OnPlayerEarnSalary", ply, faction, pay)
+                    client:NotifyLocalized("salary", ix.currency.Get(pay))
+                    hook.Run("OnPlayerEarnSalary", client, faction, pay)
                 end
             else
                 timer.Remove(uniqueID)
@@ -312,18 +312,18 @@ function GM:PlayerLoadedCharacter(ply, char, lastChar)
         timer.Remove(uniqueID)
     end
 
-    hook.Run("PlayerLoadout", ply)
+    hook.Run("PlayerLoadout", client)
 end
 
 function GM:CharacterLoaded(char)
-    local ply = char:GetPlayer()
+    local client = char:GetPlayer()
 
-    if (IsValid(ply)) then
-        local uniqueID = "ixSaveChar" .. ply:SteamID64()
+    if (IsValid(client)) then
+        local uniqueID = "ixSaveChar" .. client:SteamID64()
 
         timer.Create(uniqueID, ix.config.Get("saveInterval"), 0, function()
-            if (IsValid(ply) and ply:GetCharacter()) then
-                ply:GetCharacter():Save()
+            if (IsValid(client) and client:GetCharacter()) then
+                client:GetCharacter():Save()
             else
                 timer.Remove(uniqueID)
             end
@@ -331,46 +331,46 @@ function GM:CharacterLoaded(char)
     end
 end
 
-function GM:PlayerSay(ply, text)
-    local chatType, message, anonymous = ix.chat.Parse(ply, text, true)
+function GM:PlayerSay(client, text)
+    local chatType, message, anonymous = ix.chat.Parse(client, text, true)
 
     if (chatType == "ic") then
-        if (ix.command.Parse(ply, message)) then
+        if (ix.command.Parse(client, message)) then
             return ""
         end
     end
 
-    text = ix.chat.Send(ply, chatType, message, anonymous)
+    text = ix.chat.Send(client, chatType, message, anonymous)
 
     if (isstring(text) and chatType != "ic") then
-        ix.log.Add(ply, "chat", chatType and chatType:utf8upper() or "??", text)
+        ix.log.Add(client, "chat", chatType and chatType:utf8upper() or "??", text)
     end
 
-    hook.Run("PostPlayerSay", ply, chatType, message, anonymous)
+    hook.Run("PostPlayerSay", client, chatType, message, anonymous)
 
     return ""
 end
 
-function GM:CanAutoFormatMessage(ply, chatType, message)
+function GM:CanAutoFormatMessage(client, chatType, message)
     return chatType == "ic" or chatType == "w" or chatType == "y"
 end
 
-function GM:PlayerSpawn(ply)
-    ply:ResetBoneMatrix()
-    ply:SetNoDraw(false)
-    ply:UnLock()
-    ply:SetNotSolid(false)
-    ply:SetMoveType(MOVETYPE_WALK)
-    ply:SetRagdolled(false)
-    ply:SetAction()
-    ply:SetDSP(1)
+function GM:PlayerSpawn(client)
+    client:ResetBoneMatrix()
+    client:SetNoDraw(false)
+    client:UnLock()
+    client:SetNotSolid(false)
+    client:SetMoveType(MOVETYPE_WALK)
+    client:SetRagdolled(false)
+    client:SetAction()
+    client:SetDSP(1)
 
-    hook.Run("PlayerLoadout", ply)
+    hook.Run("PlayerLoadout", client)
 end
 
 -- Shortcuts for (super)admin only things.
-local function IsAdmin(_, ply)
-    return ply:IsAdmin()
+local function IsAdmin(_, client)
+    return client:IsAdmin()
 end
 
 -- Set the gamemode hooks to the appropriate shortcuts.
@@ -378,64 +378,64 @@ GM.PlayerGiveSWEP = IsAdmin
 GM.PlayerSpawnEffect = IsAdmin
 GM.PlayerSpawnSENT = IsAdmin
 
-function GM:PlayerSpawnNPC(ply, npcType, weapon)
-    return ply:IsAdmin() or ply:GetCharacter():HasFlags("n")
+function GM:PlayerSpawnNPC(client, npcType, weapon)
+    return client:IsAdmin() or client:GetCharacter():HasFlags("n")
 end
 
-function GM:PlayerSpawnSWEP(ply, weapon, info)
-    return ply:IsAdmin()
+function GM:PlayerSpawnSWEP(client, weapon, info)
+    return client:IsAdmin()
 end
 
-function GM:PlayerSpawnProp(ply)
-    if (ply:GetCharacter() and ply:GetCharacter():HasFlags("e")) then return true end
+function GM:PlayerSpawnProp(client)
+    if (client:GetCharacter() and client:GetCharacter():HasFlags("e")) then return true end
 
     return false
 end
 
-function GM:PlayerSpawnRagdoll(ply)
-    if (ply:GetCharacter() and ply:GetCharacter():HasFlags("r")) then return true end
+function GM:PlayerSpawnRagdoll(client)
+    if (client:GetCharacter() and client:GetCharacter():HasFlags("r")) then return true end
 
     return false
 end
 
-function GM:PlayerSpawnVehicle(ply, model, name, data)
-    if (ply:GetCharacter()) then
+function GM:PlayerSpawnVehicle(client, model, name, data)
+    if (client:GetCharacter()) then
         if (data.Category == "Chairs") then
-            return ply:GetCharacter():HasFlags("c")
+            return client:GetCharacter():HasFlags("c")
         else
-            return ply:GetCharacter():HasFlags("C")
+            return client:GetCharacter():HasFlags("C")
         end
     end
 
     return false
 end
 
-function GM:PlayerSpawnedEffect(ply, model, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedEffect(client, model, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedNPC(ply, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedNPC(client, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedProp(ply, model, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedProp(client, model, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedRagdoll(ply, model, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedRagdoll(client, model, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedSENT(ply, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedSENT(client, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedSWEP(ply, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedSWEP(client, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
-function GM:PlayerSpawnedVehicle(ply, entity)
-    entity:SetNetVar("owner", ply:GetCharacter():GetID())
+function GM:PlayerSpawnedVehicle(client, entity)
+    entity:SetNetVar("owner", client:GetCharacter():GetID())
 end
 
 ix.allowedHoldableClasses = {
@@ -450,7 +450,7 @@ ix.allowedHoldableClasses = {
     ["npc_turret_floor"] = true,
 }
 
-function GM:CanPlayerHoldObject(ply, entity)
+function GM:CanPlayerHoldObject(client, entity)
     if (ix.allowedHoldableClasses[entity:GetClass()]) then return true end
 end
 
@@ -495,23 +495,23 @@ function GM:VoiceDistanceChanged(distance)
 end
 
 -- Called when weapons should be given to a player.
-function GM:PlayerLoadout(ply)
-    if (ply.ixSkipLoadout) then
-        ply.ixSkipLoadout = nil
+function GM:PlayerLoadout(client)
+    if (client.ixSkipLoadout) then
+        client.ixSkipLoadout = nil
 
         return
     end
 
-    ply:SetWeaponColor(Vector(ply:GetInfo("cl_weaponcolor")))
-    ply:StripWeapons()
-    ply:StripAmmo()
-    ply:SetLocalVar("blur", nil)
+    client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
+    client:StripWeapons()
+    client:StripAmmo()
+    client:SetLocalVar("blur", nil)
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
 
     -- Check if they have loaded a char.
     if (char) then
-        ply:SetupHands()
+        client:SetupHands()
         -- Set their player model to the char's model.
 
         local charModel = char:GetModel()
@@ -519,17 +519,17 @@ function GM:PlayerLoadout(ply)
             charModel = charModel[math.random(#charModel)]
         end
 
-        ply:SetModel(charModel)
-        ply:Give("ix_hands")
-        ply:SetWalkSpeed(ix.config.Get("walkSpeed"))
-        ply:SetRunSpeed(ix.config.Get("runSpeed"))
-        ply:SetHealth(char:GetData("health", ply:GetMaxHealth()))
+        client:SetModel(charModel)
+        client:Give("ix_hands")
+        client:SetWalkSpeed(ix.config.Get("walkSpeed"))
+        client:SetRunSpeed(ix.config.Get("runSpeed"))
+        client:SetHealth(char:GetData("health", client:GetMaxHealth()))
 
-        local faction = ix.faction.indices[ply:Team()]
+        local faction = ix.faction.indices[client:Team()]
         if (faction) then
             -- If their faction wants to do something when the player spawns, let it.
             if (faction.OnSpawn) then
-                faction:OnSpawn(ply)
+                faction:OnSpawn(client)
             end
 
             -- @todo add docs for player:Give() failing if player already has weapon - which means if a player is given a weapon
@@ -540,59 +540,59 @@ function GM:PlayerLoadout(ply)
             -- If the faction has default weapons, give them to the player.
             if (faction.weapons) then
                 for _, v in ipairs(faction.weapons) do
-                    ply:Give(v)
+                    client:Give(v)
                 end
             end
         end
 
         -- Ditto, but for classes.
-        local class = ix.class.list[ply:GetCharacter():GetClass()]
+        local class = ix.class.list[client:GetCharacter():GetClass()]
         if (class) then
             if (class.OnSpawn) then
-                class:OnSpawn(ply)
+                class:OnSpawn(client)
             end
 
             if (class.weapons) then
                 for _, v in ipairs(class.weapons) do
-                    ply:Give(v)
+                    client:Give(v)
                 end
             end
         end
 
         -- Ditto, but for ranks.
-        local rank = ix.rank.list[ply:GetCharacter():GetRank()]
+        local rank = ix.rank.list[client:GetCharacter():GetRank()]
         if (rank) then
             if (rank.OnSpawn) then
-                rank:OnSpawn(ply)
+                rank:OnSpawn(client)
             end
 
             if (rank.weapons) then
                 for _, v in ipairs(rank.weapons) do
-                    ply:Give(v)
+                    client:Give(v)
                 end
             end
         end
 
         -- Apply any flags as needed.
-        ix.flag.OnSpawn(ply)
-        ix.attributes.Setup(ply)
+        ix.flag.OnSpawn(client)
+        ix.attributes.Setup(client)
 
-        hook.Run("PostPlayerLoadout", ply)
+        hook.Run("PostPlayerLoadout", client)
 
-        ply:SelectWeapon("ix_hands")
+        client:SelectWeapon("ix_hands")
     else
-        ply:SetNoDraw(true)
-        ply:Lock()
-        ply:SetNotSolid(true)
+        client:SetNoDraw(true)
+        client:Lock()
+        client:SetNotSolid(true)
     end
 end
 
-function GM:PostPlayerLoadout(ply)
+function GM:PostPlayerLoadout(client)
     -- Reload All Attrib Boosts
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if (char:GetInventory()) then
         for k, _ in char:GetInventory():Iter() do
-            k:Call("OnLoadout", ply)
+            k:Call("OnLoadout", client)
 
             if (k:GetData("equip") and k.attribBoosts) then
                 for attribKey, attribValue in pairs(k.attribBoosts) do
@@ -603,30 +603,30 @@ function GM:PostPlayerLoadout(ply)
     end
 
     -- If their faction wants to do something when the player's loadout is set, let it.
-    local faction = ix.faction.indices[ply:Team()]
+    local faction = ix.faction.indices[client:Team()]
     if (faction and faction.OnLoadout) then
-        faction:OnLoadout(ply)
+        faction:OnLoadout(client)
     end
 
     -- Ditto, but for classes.
     local class = ix.class.list[char:GetClass()]
     if (class and class.OnLoadout) then
-        class:OnLoadout(ply)
+        class:OnLoadout(client)
     end
 
     -- Ditto, but for ranks.
     local rank = ix.rank.list[char:GetRank()]
     if (rank and rank.OnLoadout) then
-        rank:OnLoadout(ply)
+        rank:OnLoadout(client)
     end
 
     if (ix.config.Get("allowVoice")) then
-        if ( timer.Exists(ply:SteamID64() .. "ixCanHearPlayersVoice") ) then
-            timer.Remove(ply:SteamID64() .. "ixCanHearPlayersVoice")
+        if ( timer.Exists(client:SteamID64() .. "ixCanHearPlayersVoice") ) then
+            timer.Remove(client:SteamID64() .. "ixCanHearPlayersVoice")
         end
 
-        timer.Create(ply:SteamID64() .. "ixCanHearPlayersVoice", 0.5, 0, function()
-            CalcPlayerCanHearPlayersVoice(ply)
+        timer.Create(client:SteamID64() .. "ixCanHearPlayersVoice", 0.5, 0, function()
+            CalcPlayerCanHearPlayersVoice(client)
         end)
     end
 end
@@ -637,15 +637,15 @@ local deathSounds = {
     Sound("vo/npc/male01/pain09.wav")
 }
 
-function GM:DoPlayerDeath(ply, attacker, damageinfo)
-    ply:AddDeaths(1)
+function GM:DoPlayerDeath(client, attacker, damageinfo)
+    client:AddDeaths(1)
 
-    if (hook.Run("ShouldSpawnClientRagdoll", ply) != false) then
-        ply:CreateRagdoll()
+    if (hook.Run("ShouldSpawnClientRagdoll", client) != false) then
+        client:CreateRagdoll()
     end
 
     if (IsValid(attacker) and attacker:IsPlayer()) then
-        if (ply == attacker) then
+        if (client == attacker) then
             attacker:AddFrags(-1)
         else
             attacker:AddFrags(1)
@@ -653,59 +653,59 @@ function GM:DoPlayerDeath(ply, attacker, damageinfo)
     end
 
     net.Start("ixPlayerDeath")
-    net.Send(ply)
+    net.Send(client)
 
-    ply:SetAction("@respawning", ix.config.Get("spawnTime", 5))
-    ply:SetDSP(31)
+    client:SetAction("@respawning", ix.config.Get("spawnTime", 5))
+    client:SetDSP(31)
 end
 
-function GM:GetPlayerDeathSound(ply)
-    local char = ply:GetCharacter()
+function GM:GetPlayerDeathSound(client)
+    local char = client:GetCharacter()
     if (!char) then return end
 
     local rank = ix.rank.list[char:GetRank()]
     if (rank and rank["GetDeathSound"]) then
-        return rank:GetDeathSound(ply)
+        return rank:GetDeathSound(client)
     end
 
     local class = ix.class.list[char:GetClass()]
     if (class and class["GetDeathSound"]) then
-        return class:GetDeathSound(ply)
+        return class:GetDeathSound(client)
     end
 
     local faction = ix.faction.indices[char:GetFaction()]
     if (faction and faction["GetDeathSound"]) then
-        return faction:GetDeathSound(ply)
+        return faction:GetDeathSound(client)
     end
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker)
-    local char = ply:GetCharacter()
+function GM:PlayerDeath(client, inflictor, attacker)
+    local char = client:GetCharacter()
     if (char) then
-        if (IsValid(ply.ixRagdoll)) then
-            ply.ixRagdoll.ixIgnoreDelete = true
-            ply:SetLocalVar("blur", nil)
+        if (IsValid(client.ixRagdoll)) then
+            client.ixRagdoll.ixIgnoreDelete = true
+            client:SetLocalVar("blur", nil)
 
-            if (hook.Run("ShouldRemoveRagdollOnDeath", ply) != false) then
-                ply.ixRagdoll:Remove()
+            if (hook.Run("ShouldRemoveRagdollOnDeath", client) != false) then
+                client.ixRagdoll:Remove()
             end
         end
 
-        ply:SetNetVar("deathStartTime", CurTime())
-        ply:SetNetVar("deathTime", CurTime() + ix.config.Get("spawnTime", 5))
+        client:SetNetVar("deathStartTime", CurTime())
+        client:SetNetVar("deathTime", CurTime() + ix.config.Get("spawnTime", 5))
 
         char:SetData("health", nil)
 
-        local deathSound = hook.Run("GetPlayerDeathSound", ply)
+        local deathSound = hook.Run("GetPlayerDeathSound", client)
 
         if (deathSound != false) then
             deathSound = deathSound or deathSounds[math.random(#deathSounds)]
 
-            if (ply:IsFemale() and !deathSound:find("female")) then
+            if (client:IsFemale() and !deathSound:find("female")) then
                 deathSound = deathSound:gsub("male", "female")
             end
 
-            ply:EmitSound(deathSound)
+            client:EmitSound(deathSound)
         end
 
         local weapon = attacker:IsPlayer() and attacker:GetActiveWeapon()
@@ -715,7 +715,7 @@ function GM:PlayerDeath(ply, inflictor, attacker)
             weaponText = attacker:GetVehicle():GetClass()
         end
 
-        ix.log.Add(ply, "playerDeath", attacker:GetName() != "" and attacker:GetName() or attacker:GetClass(), weaponText)
+        ix.log.Add(client, "playerDeath", attacker:GetName() != "" and attacker:GetName() or attacker:GetClass(), weaponText)
     end
 end
 
@@ -734,64 +734,64 @@ local drownSounds = {
     Sound("player/pl_drown3.wav"),
 }
 
-function GM:GetPlayerPainSound(ply)
-    if (ply:WaterLevel() >= 3) then
+function GM:GetPlayerPainSound(client)
+    if (client:WaterLevel() >= 3) then
         return drownSounds[math.random(#drownSounds)]
     end
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if (!char) then return end
 
     local rank = ix.rank.list[char:GetRank()]
     if (rank and rank["GetPainSound"]) then
-        return rank:GetPainSound(ply)
+        return rank:GetPainSound(client)
     end
 
     local class = ix.class.list[char:GetClass()]
     if (class and class["GetPainSound"]) then
-        return class:GetPainSound(ply)
+        return class:GetPainSound(client)
     end
 
     local faction = ix.faction.indices[char:GetFaction()]
     if (faction and faction["GetPainSound"]) then
-        return faction:GetPainSound(ply)
+        return faction:GetPainSound(client)
     end
 end
 
-function GM:PlayerHurt(ply, attacker, health, damage)
-    if ((ply.ixNextPain or 0) < CurTime() and health > 0) then
-        local painSound = hook.Run("GetPlayerPainSound", ply) or painSounds[math.random(#painSounds)]
+function GM:PlayerHurt(client, attacker, health, damage)
+    if ((client.ixNextPain or 0) < CurTime() and health > 0) then
+        local painSound = hook.Run("GetPlayerPainSound", client) or painSounds[math.random(#painSounds)]
 
-        if (ply:IsFemale() and !painSound:find("female")) then
+        if (client:IsFemale() and !painSound:find("female")) then
             painSound = painSound:gsub("male", "female")
         end
 
-        ply:EmitSound(painSound)
-        ply.ixNextPain = CurTime() + 0.33
+        client:EmitSound(painSound)
+        client.ixNextPain = CurTime() + 0.33
     end
 
     local name = IsValid(attacker) and (attacker.GetName and attacker:GetName() or attacker:GetClass()) or "world"
     local weapon = IsValid(attacker) and attacker.GetActiveWeapon and attacker:GetActiveWeapon()
     local weaponText = IsValid(weapon) and (weapon.GetPrintName and weapon:GetPrintName() or weapon:GetClass())
 
-    ix.log.Add(ply, "playerHurt", damage, name, weaponText)
+    ix.log.Add(client, "playerHurt", damage, name, weaponText)
 end
 
-function GM:PlayerDeathThink(ply)
-    if (ply:GetCharacter()) then
-        local deathTime = ply:GetNetVar("deathTime")
+function GM:PlayerDeathThink(client)
+    if (client:GetCharacter()) then
+        local deathTime = client:GetNetVar("deathTime")
         if (deathTime and deathTime <= CurTime()) then
-            ply:Spawn()
+            client:Spawn()
         end
     end
 
     return false
 end
 
-function GM:PlayerDisconnected(ply)
-    ply:SaveData()
+function GM:PlayerDisconnected(client)
+    client:SaveData()
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if (char) then
         local charEnts = char:GetVar("charEnts") or {}
 
@@ -801,28 +801,28 @@ function GM:PlayerDisconnected(ply)
             end
         end
 
-        hook.Run("OnCharacterDisconnect", ply, char)
+        hook.Run("OnCharacterDisconnect", client, char)
             char:Save()
-        ix.chat.Send(nil, "disconnect", ply:SteamName())
+        ix.chat.Send(nil, "disconnect", client:SteamName())
     end
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
     if (IsValid(plyInfo.ixRagdoll)) then
         plyInfo.ixRagdoll:Remove()
     end
 
-    ply:ClearNetVars()
+    client:ClearNetVars()
 
     if (!plyInfo.ixVoiceHear) then return end
 
     for _, v in player.Iterator() do
         if (!v.ixVoiceHear) then continue end
 
-        v.ixVoiceHear[ply] = nil
+        v.ixVoiceHear[client] = nil
     end
 
-    if ( timer.Exists(ply:SteamID64() .. "ixCanHearPlayersVoice") ) then
-        timer.Remove(ply:SteamID64() .. "ixCanHearPlayersVoice")
+    if ( timer.Exists(client:SteamID64() .. "ixCanHearPlayersVoice") ) then
+        timer.Remove(client:SteamID64() .. "ixCanHearPlayersVoice")
     end
 end
 
@@ -923,7 +923,7 @@ function GM:GetGameDescription()
     return "IX: " .. (Schema and Schema.name or "Unknown")
 end
 
-function GM:OnPlayerUseBusiness(ply, item)
+function GM:OnPlayerUseBusiness(client, item)
     -- You can manipulate purchased items with this hook.
     -- does not requires any kind of return.
     -- ex) item:SetData("businessItem", true)
@@ -945,19 +945,19 @@ function GM:PlayerCanHearPlayersVoice(listener, speaker)
     return bCanHear, true
 end
 
-function GM:PlayerCanPickupWeapon(ply, weapon)
+function GM:PlayerCanPickupWeapon(client, weapon)
     local data = {}
-        data.start = ply:GetShootPos()
-        data.endpos = data.start + ply:GetAimVector() * 96
-        data.filter = ply
+        data.start = client:GetShootPos()
+        data.endpos = data.start + client:GetAimVector() * 96
+        data.filter = client
     local trace = util.TraceLine(data)
 
-    if (trace.Entity == weapon and ply:KeyDown(IN_USE)) then return true end
+    if (trace.Entity == weapon and client:KeyDown(IN_USE)) then return true end
 
-    return ply.ixWeaponGive
+    return client.ixWeaponGive
 end
 
-function GM:OnPhysgunFreeze(weapon, physObj, entity, ply)
+function GM:OnPhysgunFreeze(weapon, physObj, entity, client)
     -- Validate the physObj parameter
     if (!IsValid(physObj)) then return false end
 
@@ -978,18 +978,18 @@ function GM:OnPhysgunFreeze(weapon, physObj, entity, ply)
     end
 
     -- Add it to the player's frozen props
-    ply:AddFrozenPhysicsObject(entity, physObj)
-    ply:SendHint("PhysgunUnfreeze", 0.3)
-    ply:SuppressHint("PhysgunFreeze")
+    client:AddFrozenPhysicsObject(entity, physObj)
+    client:SendHint("PhysgunUnfreeze", 0.3)
+    client:SuppressHint("PhysgunFreeze")
 
     return true
 end
 
-function GM:CanPlayerSuicide(ply)
+function GM:CanPlayerSuicide(client)
     return false
 end
 
-function GM:AllowPlayerPickup(ply, entity)
+function GM:AllowPlayerPickup(client, entity)
     return false
 end
 
@@ -1003,15 +1003,15 @@ function GM:PostCleanupMap()
 end
 
 function GM:CharacterPreSave(char)
-    local ply = char:GetPlayer()
+    local client = char:GetPlayer()
 
     for v in char:GetInventory():Iter() do
         if (v.OnSave) then
-            v:Call("OnSave", ply)
+            v:Call("OnSave", client)
         end
     end
 
-    char:SetData("health", ply:Alive() and ply:Health() or nil)
+    char:SetData("health", client:Alive() and client:Health() or nil)
 end
 
 timer.Create("ixLifeGuard", 1, 0, function()
@@ -1050,11 +1050,11 @@ timer.Create("ixLifeGuard", 1, 0, function()
     end
 end)
 
-net.Receive("ixStringRequest", function(length, ply)
+net.Receive("ixStringRequest", function(length, client)
     local time = net.ReadUInt(32)
     local text = net.ReadString()
 
-    local plyInfo = ply:GetTable()
+    local plyInfo = client:GetTable()
     if (plyInfo.ixStrReqs and plyInfo.ixStrReqs[time]) then
         plyInfo.ixStrReqs[time](text)
         plyInfo.ixStrReqs[time] = nil
@@ -1110,29 +1110,29 @@ net.Receive("ixPlayerEndVoice", function(len)
     hook.Run("PlayerEndVoice", target)
 end)
 
-net.Receive("ixStartChat", function(len, ply)
-    if ( !IsValid(ply) ) then return end
+net.Receive("ixStartChat", function(len, client)
+    if ( !IsValid(client) ) then return end
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if ( !char ) then return end
 
     local bTeamChat = net.ReadBool()
 
-    hook.Run("StartChat", ply, bTeamChat)
+    hook.Run("StartChat", client, bTeamChat)
 end)
 
-net.Receive("ixFinishChat", function(len, ply)
-    if ( !IsValid(ply) ) then return end
+net.Receive("ixFinishChat", function(len, client)
+    if ( !IsValid(client) ) then return end
 
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
     if ( !char ) then return end
 
-    hook.Run("FinishChat", ply)
+    hook.Run("FinishChat", client)
 end)
 
-net.Receive("ixMapRestart", function(len, ply)
-    if ( !IsValid(ply) ) then return end
-    if ( !CAMI.PlayerHasAccess(ply, "Helix - MapRestart", nil) ) then return end
+net.Receive("ixMapRestart", function(len, client)
+    if ( !IsValid(client) ) then return end
+    if ( !CAMI.PlayerHasAccess(client, "Helix - MapRestart", nil) ) then return end
 
     local delay = net.ReadFloat()
 

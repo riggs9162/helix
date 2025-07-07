@@ -15,9 +15,9 @@ CLASS.name = "Overwatch Soldier"
 CLASS.faction = FACTION_OTA
 CLASS.isDefault = true
 
-function CLASS:OnSet(ply)
+function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
@@ -29,7 +29,7 @@ function CLASS:OnSet(ply)
     char:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
-    ply:SetSkin(0)
+    client:SetSkin(0)
 end
 
 CLASS_OWS = CLASS.index
@@ -63,16 +63,16 @@ This determines if the class is the default choice for the faction. If `true`, p
 CLASS.isDefault = true
 ```
 
-## CLASS:OnSet(ply)
+## CLASS:OnSet(client)
 
 The `CLASS:OnSet` function is called when a player is assigned to this class. It’s typically used to set the player’s model, skin, or any other attributes specific to the class. More information about the `CLASS:OnSet` function can be found in the [Character Hooks](https://project-ordinance.com/helix/documentation/hooks/class/#OnSet) documentation.
 
 In the example:
 
 ```
-function CLASS:OnSet(ply)
+function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
@@ -84,12 +84,12 @@ function CLASS:OnSet(ply)
     char:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
-    ply:SetSkin(0)
+    client:SetSkin(0)
 end
 ```
 
 - `char:SetModel("models/combine_soldier.mdl")` Sets the player’s character model to a Overwatch Soldier.
-- `ply:SetSkin(0)` Sets the player’s skin to the default (skin 0).
+- `client:SetSkin(0)` Sets the player’s skin to the default (skin 0).
 
 ## Registering the Class
 
@@ -130,9 +130,9 @@ CLASS.name = "Overwatch Soldier"
 CLASS.faction = FACTION_OTA
 CLASS.isDefault = true
 
-function CLASS:OnSet(ply)
+function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
@@ -144,7 +144,7 @@ function CLASS:OnSet(ply)
     char:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
-    ply:SetSkin(0)
+    client:SetSkin(0)
 end
 
 CLASS_OWS = CLASS.index
@@ -175,9 +175,9 @@ CLASS.weapons = {
 You can give players armor points when they join a class as an example of customizing attributes. This is done by setting the player’s armor in the `CLASS:OnSet` function. For example:
 
 ```
-function CLASS:OnSet(ply)
+function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = ply:GetCharacter()
+    local char = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
     if ( !char ) then return end
@@ -189,10 +189,10 @@ function CLASS:OnSet(ply)
     char:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
-    ply:SetSkin(0)
+    client:SetSkin(0)
 
     -- Set the player's armor to 50.
-    ply:SetArmor(50)
+    client:SetArmor(50)
 end
 ```
 

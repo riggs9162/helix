@@ -267,12 +267,12 @@ else
     end)
 
     function PLUGIN:DrawPlayerRagdoll(entity)
-        local ply = entity.objCache
+        local client = entity.objCache
 
-        if (IsValid(ply)) then
+        if (IsValid(client)) then
             if (!entity.overridePAC3) then
-                if ply.pac_parts then
-                    for _, part in pairs(ply.pac_parts) do
+                if client.pac_parts then
+                    for _, part in pairs(client.pac_parts) do
                         if part.last_owner and part.last_owner:IsValid() then
                             hook.Run("OnPAC3PartTransferred", part)
                             part:SetOwner(entity)
@@ -280,7 +280,7 @@ else
                         end
                     end
                 end
-                ply.pac_playerspawn = pac.RealTime -- used for events
+                client.pac_playerspawn = pac.RealTime -- used for events
 
                 entity.overridePAC3 = true
             end

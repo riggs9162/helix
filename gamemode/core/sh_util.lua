@@ -1294,7 +1294,7 @@ end
 
 --- Finds a target in the player's crosshair, with an optional range.
 -- @realm shared
--- @player ply Player to find the target for
+-- @player client Player to find the target for
 -- @entity target Target entity to check
 -- @number[opt=0.9] range Range to check for the target
 -- @treturn bool Whether or not the target is in the player's crosshair
@@ -1307,8 +1307,8 @@ end
 -- @usage -- returns false if Entity(2) is not in Entity(1)'s crosshair within 0.1 range
 -- print(ix.util.FindInCrosshair(Entity(1), Entity(2), 0.1))
 -- > false
-function ix.util.FindInCrosshair(ply, target, range)
-    if ( !IsValid(ply) and !IsValid(target) ) then return end
+function ix.util.FindInCrosshair(client, target, range)
+    if ( !IsValid(client) and !IsValid(target) ) then return end
 
     if ( !IsValid(target) ) then return end
 
@@ -1318,7 +1318,7 @@ function ix.util.FindInCrosshair(ply, target, range)
 
     range = math.Clamp(range, 0, 1)
 
-    local origin, originVector = ply:EyePos(), ply:GetAimVector()
+    local origin, originVector = client:EyePos(), client:GetAimVector()
 
     local targetOrigin = target.EyePos and target:EyePos() or target:WorldSpaceCenter()
     local direction = targetOrigin - origin

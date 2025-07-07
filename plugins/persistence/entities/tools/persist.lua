@@ -26,7 +26,7 @@ function TOOL:CanPersist(entity)
 end
 
 function TOOL:LeftClick(trace)
-    local ply = self:GetOwner()
+    local client = self:GetOwner()
     local entity = trace.Entity
 
     if ( !self:CanPersist(entity) ) then
@@ -40,13 +40,13 @@ function TOOL:LeftClick(trace)
     if ( CLIENT ) then return true end
 
     if ( entity:GetNetVar("Persistent", false) ) then
-        ply:NotifyLocalized("persist_already_persisted")
+        client:NotifyLocalized("persist_already_persisted")
         return false
     end
 
     for k, v in ipairs(ix.persist.stored) do
         if ( v == entity ) then
-            ply:NotifyLocalized("persist_already_persisted")
+            client:NotifyLocalized("persist_already_persisted")
             return false
         end
     end
@@ -55,15 +55,15 @@ function TOOL:LeftClick(trace)
 
     entity:SetNetVar("Persistent", true)
 
-    ply:NotifyLocalized("persist_entity")
+    client:NotifyLocalized("persist_entity")
 
-    ix.log.Add(ply, "persist", ix.persist:GetRealModel(entity), true)
+    ix.log.Add(client, "persist", ix.persist:GetRealModel(entity), true)
 
     return true
 end
 
 function TOOL:RightClick(trace)
-    local ply = self:GetOwner()
+    local client = self:GetOwner()
     local entity = trace.Entity
 
     if ( !self:CanPersist(entity) ) then
@@ -77,7 +77,7 @@ function TOOL:RightClick(trace)
     if ( CLIENT ) then return true end
 
     if ( !entity:GetNetVar("Persistent", false) ) then
-        ply:NotifyLocalized("persist_not_persisted")
+        client:NotifyLocalized("persist_not_persisted")
         return false
     end
 
@@ -90,9 +90,9 @@ function TOOL:RightClick(trace)
 
     entity:SetNetVar("Persistent", false)
 
-    ply:NotifyLocalized("persist_unpersisted")
+    client:NotifyLocalized("persist_unpersisted")
 
-    ix.log.Add(ply, "persist", ix.persist:GetRealModel(entity), false)
+    ix.log.Add(client, "persist", ix.persist:GetRealModel(entity), false)
 
     return true
 end
