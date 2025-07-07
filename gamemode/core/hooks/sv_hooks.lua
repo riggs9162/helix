@@ -659,6 +659,26 @@ function GM:DoPlayerDeath(ply, attacker, damageinfo)
     ply:SetDSP(31)
 end
 
+function GM:GetPlayerDeathSound(ply)
+    local char = ply:GetCharacter()
+    if (!char) then return end
+
+    local rank = ix.rank.list[char:GetRank()]
+    if (rank and rank["GetDeathSound"]) then
+        return rank:GetDeathSound(ply)
+    end
+
+    local class = ix.class.list[char:GetClass()]
+    if (class and class["GetDeathSound"]) then
+        return class:GetDeathSound(ply)
+    end
+
+    local faction = ix.faction.indices[char:GetFaction()]
+    if (faction and faction["GetDeathSound"]) then
+        return faction:GetDeathSound(ply)
+    end
+end
+
 function GM:PlayerDeath(ply, inflictor, attacker)
     local char = ply:GetCharacter()
     if (char) then
@@ -717,6 +737,24 @@ local drownSounds = {
 function GM:GetPlayerPainSound(ply)
     if (ply:WaterLevel() >= 3) then
         return drownSounds[math.random(#drownSounds)]
+    end
+
+    local char = ply:GetCharacter()
+    if (!char) then return end
+
+    local rank = ix.rank.list[char:GetRank()]
+    if (rank and rank["GetPainSound"]) then
+        return rank:GetPainSound(ply)
+    end
+
+    local class = ix.class.list[char:GetClass()]
+    if (class and class["GetPainSound"]) then
+        return class:GetPainSound(ply)
+    end
+
+    local faction = ix.faction.indices[char:GetFaction()]
+    if (faction and faction["GetPainSound"]) then
+        return faction:GetPainSound(ply)
     end
 end
 
