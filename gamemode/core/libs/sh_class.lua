@@ -130,9 +130,9 @@ function ix.class.GetPlayers(class)
     for _, v in player.Iterator() do
         if ( !IsValid(v) ) then continue end
 
-        local char = v:GetCharacter()
+        local character = v:GetCharacter()
 
-        if (char and char:GetClass() == class) then
+        if (character and character:GetClass() == class) then
             table.insert(players, v)
         end
     end

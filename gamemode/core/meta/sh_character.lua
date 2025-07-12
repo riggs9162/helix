@@ -145,7 +145,7 @@ if (SERVER) then
             -- Set the faction, model, and character index for the player.
             local model = self:GetModel()
 
-            client:SetNetVar("char", self:GetID())
+            client:SetNetVar("character", self:GetID())
             client:SetTeam(self:GetFaction())
             client:SetModel(istable(model) and model[1] or model)
 
@@ -205,7 +205,7 @@ if (SERVER) then
             net.Send(client)
 
             if (isCurrentChar) then
-                client:SetNetVar("char", nil)
+                client:SetNetVar("character", nil)
                 client:Spawn()
             end
         end

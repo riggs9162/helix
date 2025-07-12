@@ -117,8 +117,8 @@ function ITEM:RemovePAC(client)
 end
 
 function ITEM:Equip(client, bNoSelect, bNoSound)
-    local char = client:GetCharacter()
-    local inventory = char:GetInventory()
+    local character = client:GetCharacter()
+    local inventory = character:GetInventory()
 
     local items = inventory:GetItems()
 
@@ -283,8 +283,8 @@ end
 hook.Add("PlayerDeath", "ixStripClip", function(client)
     client.carryWeapons = {}
 
-    local char = client:GetCharacter()
-    local inventory = char:GetInventory()
+    local character = client:GetCharacter()
+    local inventory = character:GetInventory()
     for v, _ in inventory:Iter() do
         if ( v.isWeapon and v:GetData("equip") ) then
             v:SetData("ammo", nil)
@@ -302,7 +302,7 @@ hook.Add("EntityRemoved", "ixRemoveGrenade", function(entity)
     if ( entity:GetClass() == "weapon_frag" ) then
         local client = entity:GetOwner()
 
-        if ( IsValid(client) and client:IsPlayer() and char ) then
+        if ( IsValid(client) and client:IsPlayer() and character ) then
             local ammoName = game.GetAmmoName(entity:GetPrimaryAmmoType())
             if ( isstring(ammoName) and ammoName:lower() == "grenade" and client:GetAmmoCount(ammoName) < 1 and entity.ixItem and entity.ixItem.Unequip ) then
                 entity.ixItem:Unequip(client, false, true)

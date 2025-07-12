@@ -125,8 +125,8 @@ function ix.rank.GetPlayers(rank)
     for _, v in player.Iterator() do
         if ( !IsValid(v) ) then continue end
 
-        local char = v:GetCharacter()
-        if (char and char:GetRank() == rank) then
+        local character = v:GetCharacter()
+        if (character and character:GetRank() == rank) then
             players[#players + 1] = v
         end
     end

@@ -32,8 +32,8 @@ do
         return hook.Run("IsCharacterRecognized", self, id)
     end
 
-    function PLUGIN:IsCharacterRecognized(char, id)
-        if (char.id == id) then
+    function PLUGIN:IsCharacterRecognized(character, id)
+        if (character.id == id) then
             return true
         end
 
@@ -47,7 +47,7 @@ do
             end
         end
 
-        local recognized = char:GetData("rgn", "")
+        local recognized = character:GetData("rgn", "")
 
         if (recognized != "" and recognized:find(","..id..",")) then
             return true

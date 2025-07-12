@@ -17,16 +17,16 @@ CLASS.isDefault = true
 
 function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
-    if ( !char ) then return end
+    if ( !character ) then return end
 
     -- Set the character's model to a Overwatch Soldier.
-    char:SetModel("models/combine_soldier.mdl")
+    character:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
-    char:SetData("skin", 0)
+    character:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
     client:SetSkin(0)
@@ -72,23 +72,23 @@ In the example:
 ```
 function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
-    if ( !char ) then return end
+    if ( !character ) then return end
 
     -- Set the character's model to a Overwatch Soldier.
-    char:SetModel("models/combine_soldier.mdl")
+    character:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
-    char:SetData("skin", 0)
+    character:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
     client:SetSkin(0)
 end
 ```
 
-- `char:SetModel("models/combine_soldier.mdl")` Sets the player’s character model to a Overwatch Soldier.
+- `character:SetModel("models/combine_soldier.mdl")` Sets the player’s character model to a Overwatch Soldier.
 - `client:SetSkin(0)` Sets the player’s skin to the default (skin 0).
 
 ## Registering the Class
@@ -132,16 +132,16 @@ CLASS.isDefault = true
 
 function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
-    if ( !char ) then return end
+    if ( !character ) then return end
 
     -- Set the character's model to a Overwatch Soldier.
-    char:SetModel("models/combine_soldier.mdl")
+    character:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
-    char:SetData("skin", 0)
+    character:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
     client:SetSkin(0)
@@ -177,16 +177,16 @@ You can give players armor points when they join a class as an example of custom
 ```
 function CLASS:OnSet(client)
     -- Localize the character so we can use it later.
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
     -- If the character doesn't exist, cancel the function.
-    if ( !char ) then return end
+    if ( !character ) then return end
 
     -- Set the character's model to a Overwatch Soldier.
-    char:SetModel("models/combine_soldier.mdl")
+    character:SetModel("models/combine_soldier.mdl")
 
     -- Set the character's skin data to 0.
-    char:SetData("skin", 0)
+    character:SetData("skin", 0)
 
     -- Set the player's skin to the default (skin 0).
     client:SetSkin(0)

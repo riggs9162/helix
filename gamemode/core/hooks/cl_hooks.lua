@@ -554,8 +554,8 @@ do
 
         if (!IsValid(client)) then return end
 
-        local char = client:GetCharacter()
-        if (!char) then return end
+        local character = client:GetCharacter()
+        if (!character) then return end
 
         lastTrace.start = client:GetShootPos()
         lastTrace.endpos = lastTrace.start + client:GetAimVector(client) * 160
@@ -737,14 +737,14 @@ function GM:GetInjuredText(client)
     end
 end
 
-function GM:PopulateImportantCharacterInfo(client, char, container)
+function GM:PopulateImportantCharacterInfo(client, character, container)
     local color = team.GetColor(client:Team())
     container:SetArrowColor(color)
 
     -- name
     local name = container:AddRow("name")
     name:SetImportant()
-    name:SetText(hookRun("GetCharacterName", client) or char:GetName())
+    name:SetText(hookRun("GetCharacterName", client) or character:GetName())
     name:SetBackgroundColor(color)
     name:SizeToContents()
 
@@ -760,9 +760,9 @@ function GM:PopulateImportantCharacterInfo(client, char, container)
     end
 end
 
-function GM:PopulateCharacterInfo(client, char, container)
+function GM:PopulateCharacterInfo(client, character, container)
     -- description
-    local descriptionText = char:GetDescription()
+    local descriptionText = character:GetDescription()
     descriptionText = (descriptionText:utf8len() > 128 and
         string.format("%s...", descriptionText:utf8sub(1, 125)) or
         descriptionText)

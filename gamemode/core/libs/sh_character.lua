@@ -1092,7 +1092,7 @@ do
                 hook.Run("CharacterDeleted", client, id, isCurrentChar)
 
                 if (isCurrentChar) then
-                    client:SetNetVar("char", nil)
+                    client:SetNetVar("character", nil)
                     client:KillSilent()
                     client:StripAmmo()
                 end
@@ -1237,7 +1237,7 @@ do
     -- @treturn[1] Character Currently loaded character
     -- @treturn[2] nil If this player has no character loaded
     function playerMeta:GetCharacter()
-        return ix.char.loaded[self:GetNetVar("char")]
+        return ix.char.loaded[self:GetNetVar("character")]
     end
 
     playerMeta.GetChar = playerMeta.GetCharacter

@@ -179,7 +179,7 @@ exports.tokenize = function (str)
         if token[1] == "{" or token[1] == "[" then
           inline = true
         elseif token.const then
-          -- Since word pattern contains last char we're re-adding it
+          -- Since word pattern contains last character we're re-adding it
           str = token[2][2] .. str
           token.raw = token.raw:sub(1, #token.raw - #token[2][2])
         elseif token[1] == "id" then
@@ -309,12 +309,12 @@ Parser.parse = function (self)
 
   local ref = nil
   if self:peekType("string") and not self:peek().force_text then
-    local char = self:peek()[2][1]:sub(1,1)
-    if char == "&" then
+    local character = self:peek()[2][1]:sub(1,1)
+    if character == "&" then
       ref = self:peek()[2][1]:sub(2)
       self:advanceValue()
       self:ignoreSpace()
-    elseif char == "*" then
+    elseif character == "*" then
       ref = self:peek()[2][1]:sub(2)
       return self.refs[ref]
     end

@@ -251,9 +251,9 @@ ITEM.functions.Equip = {
     icon = "icon16/tick.png",
     OnRun = function(item)
         local client = item.player
-        local char = client:GetCharacter()
+        local character = client:GetCharacter()
 
-        for k, _ in char:GetInventory():Iter() do
+        for k, _ in character:GetInventory():Iter() do
             if (k.id != item.id) then
                 local itemTable = ix.item.instances[k.id]
 

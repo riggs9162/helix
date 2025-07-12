@@ -160,14 +160,14 @@ end
 -- @player owner The player to take control over the inventory.
 -- @bool fullUpdate Whether or not to update the inventory immediately to the new owner.
 function META:SetOwner(owner, fullUpdate)
-    if (type(owner) == "Player" and owner:GetNetVar("char")) then
-        owner = owner:GetNetVar("char")
+    if (type(owner) == "Player" and owner:GetNetVar("character")) then
+        owner = owner:GetNetVar("character")
     elseif (!isnumber(owner)) then return end
 
     if (SERVER) then
         if (fullUpdate) then
             for _, v in player.Iterator() do
-                if (v:GetNetVar("char") == owner) then
+                if (v:GetNetVar("character") == owner) then
                     self:Sync(v, true)
 
                     break

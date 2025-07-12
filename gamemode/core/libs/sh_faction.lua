@@ -118,8 +118,8 @@ function ix.faction.GetPlayers(faction)
     for _, v in player.Iterator() do
         if ( !IsValid(v) ) then continue end
 
-        local char = v:GetCharacter()
-        if (char and char:GetFaction() == faction) then
+        local character = v:GetCharacter()
+        if (character and character:GetFaction() == faction) then
             table.insert(players, v)
         end
     end

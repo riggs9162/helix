@@ -66,14 +66,14 @@ if (CLIENT) then
 end
 
 function ITEM:RemovePart(client)
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
     self:SetData("equip", false)
     client:RemovePart(self.uniqueID)
 
     if (self.attribBoosts) then
         for k, _ in pairs(self.attribBoosts) do
-            char:RemoveBoost(self.uniqueID, k)
+            character:RemoveBoost(self.uniqueID, k)
         end
     end
 
@@ -111,9 +111,9 @@ ITEM.functions.Equip = {
     tip = "equipTip",
     icon = "icon16/tick.png",
     OnRun = function(item)
-        local char = item.player:GetCharacter()
+        local character = item.player:GetCharacter()
 
-        for k, _ in char:GetInventory():Iter() do
+        for k, _ in character:GetInventory():Iter() do
             if (k.id != item.id) then
                 local itemTable = ix.item.instances[k.id]
 
@@ -130,7 +130,7 @@ ITEM.functions.Equip = {
 
         if (item.attribBoosts) then
             for k, v in pairs(item.attribBoosts) do
-                char:AddBoost(item.uniqueID, k, v)
+                character:AddBoost(item.uniqueID, k, v)
             end
         end
 

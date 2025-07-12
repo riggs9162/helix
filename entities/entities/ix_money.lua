@@ -34,9 +34,9 @@ if (SERVER) then
 
     function ENT:Use(activator)
         if (self.ixSteamID and self.ixCharID) then
-            local char = activator:GetCharacter()
+            local character = activator:GetCharacter()
 
-            if (char and self.ixCharID != char:GetID() and self.ixSteamID == activator:SteamID64() and ix.config.Get("itemOwnership", false)) then
+            if (character and self.ixCharID != character:GetID() and self.ixSteamID == activator:SteamID64() and ix.config.Get("itemOwnership", false)) then
                 activator:NotifyLocalized("itemOwned")
                 return false
             end

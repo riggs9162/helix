@@ -91,7 +91,7 @@ if (SERVER) then
         local damage = arg[1]
         local attackerName = arg[2]
         local weaponName = arg[3]
-        
+
         if (attackerName and weaponName) then
             return L("%s has been hurt by %s dealing %d damage with %s.", client:Name(), attackerName, damage, weaponName)
         elseif (attackerName) then

@@ -120,11 +120,11 @@ if (SERVER) then
 
     function PLUGIN:CanVendorSellItem(client, vendor, itemID)
         local tradeData = vendor.items[itemID]
-        local char = client:GetCharacter()
+        local character = client:GetCharacter()
 
-        if (!tradeData or !char) then return false end
+        if (!tradeData or !character) then return false end
 
-        if (!char:HasMoney(tradeData[1] or 0)) then return false end
+        if (!character:HasMoney(tradeData[1] or 0)) then return false end
 
         return true
     end

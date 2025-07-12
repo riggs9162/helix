@@ -24,7 +24,7 @@ restricted to certain usergroups using a [CAMI](https://github.com/glua/CAMI)-co
 -- name that's specified in the `OnRun` function arguments and allows you to use any string to change the text that displays
 -- in the command's syntax help. When using this field, make sure that the amount is equal to the amount of arguments, as such:
 --     COMMAND.arguments = {ix.type.character, ix.type.number}
---     COMMAND.argumentNames = {"target char", "cash (1-1000)"}
+--     COMMAND.argumentNames = {"target character", "cash (1-1000)"}
 -- @field[type=table,opt] arguments If this field is defined, then additional checks will be performed to ensure that the
 -- arguments given to the command are valid. This removes extra boilerplate code since all the passed arguments are guaranteed
 -- to be valid. See `CommandArgumentsStructure` for more information.

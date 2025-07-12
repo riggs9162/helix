@@ -33,9 +33,9 @@ function ix.currency.Get(amount)
     end
 
     if (amount == 1) then
-        return ix.currency.symbol.."1 "..ix.currency.singular
+        return ix.currency.symbol .. "1 " .. ix.currency.singular
     else
-        return ix.currency.symbol..amount.." "..ix.currency.plural
+        return ix.currency.symbol .. amount .. " " .. ix.currency.plural
     end
 end
 
@@ -137,7 +137,6 @@ if (SERVER) then
     function GM:OnPickupMoney(client, moneyEntity)
         if (IsValid(moneyEntity)) then
             local amount = moneyEntity:GetAmount()
-    
             client:GetCharacter():GiveMoney(amount)
         end
     end

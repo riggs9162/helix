@@ -69,11 +69,11 @@ function PANEL:SetClass(data)
 
         self.icon:SetModel(model)
     else
-        local char = LocalPlayer():GetCharacter()
+        local character = LocalPlayer():GetCharacter()
         local model = LocalPlayer():GetModel()
 
-        if (char) then
-            model = char:GetModel()
+        if (character) then
+            model = character:GetModel()
         end
 
         self.icon:SetModel(model)

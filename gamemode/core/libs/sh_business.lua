@@ -12,9 +12,9 @@ if (SERVER) then
             return
         end
 
-        local char = client:GetCharacter()
+        local character = client:GetCharacter()
 
-        if (!char) then return end
+        if (!character) then return end
 
         local indicies = net.ReadUInt(8)
         local items = {}
@@ -46,18 +46,18 @@ if (SERVER) then
 
         if (table.IsEmpty(items)) then return end
 
-        if (char:HasMoney(cost)) then
-            char:TakeMoney(cost)
+        if (character:HasMoney(cost)) then
+            character:TakeMoney(cost)
 
             local entity = ents.Create("ix_shipment")
             entity:Spawn()
             entity:SetPos(client:GetItemDropPos(entity))
             entity:SetItems(items)
-            entity:SetNetVar("owner", char:GetID())
+            entity:SetNetVar("owner", character:GetID())
 
-            local shipments = char:GetVar("charEnts") or {}
+            local shipments = character:GetVar("charEnts") or {}
             table.insert(shipments, entity)
-            char:SetVar("charEnts", shipments, true)
+            character:SetVar("charEnts", shipments, true)
 
             net.Start("ixBusinessResponse")
             net.Send(client)

@@ -23,22 +23,22 @@ function GM:PlayerInitialSpawn(client)
             end
         end
 
-        local char = ix.char.New({
+        local character = ix.char.New({
             name = client:Nick(),
             faction = faction and faction.uniqueID or "unknown",
             model = faction and model or "models/gman.mdl"
         }, botID, client, client:SteamID64())
-        char.isBot = true
+        character.isBot = true
 
         local inventory = ix.inventory.Create(ix.config.Get("inventoryWidth"), ix.config.Get("inventoryHeight"), botID)
         inventory:SetOwner(botID)
         inventory.noSave = true
 
-        char.vars.inv = {inventory}
+        character.vars.inv = {inventory}
 
-        ix.char.loaded[botID] = char
+        ix.char.loaded[botID] = character
 
-        char:Setup()
+        character:Setup()
         client:Spawn()
 
         ix.chat.Send(nil, "connect", client:SteamName())
@@ -52,7 +52,7 @@ function GM:PlayerInitialSpawn(client)
     client:LoadData(function(data)
         if (!IsValid(client)) then return end
 
-        -- Don't use the char cache if they've connected to another server using the same database
+        -- Don't use the character cache if they've connected to another server using the same database
         local address = ix.util.GetAddress()
         local bNoCache = client:GetData("lastIP", address) != address
         client:SetData("lastIP", address)
@@ -240,7 +240,7 @@ function GM:EntityTakeDamage(entity, dmgInfo)
     end
 end
 
-function GM:PrePlayerLoadedCharacter(client, char, lastChar)
+function GM:PrePlayerLoadedCharacter(client, character, lastChar)
     -- Reset all bodygroups
     client:ResetBodygroups()
 
@@ -248,9 +248,9 @@ function GM:PrePlayerLoadedCharacter(client, char, lastChar)
     client:SetSkin(0)
 end
 
-function GM:PlayerLoadedCharacter(client, char, lastChar)
+function GM:PlayerLoadedCharacter(client, character, lastChar)
     local query = mysql:Update("ix_characters")
-        query:Where("id", char:GetID())
+        query:Where("id", character:GetID())
         query:Update("last_join_time", math.floor(os.time()))
     query:Execute()
 
@@ -266,10 +266,10 @@ function GM:PlayerLoadedCharacter(client, char, lastChar)
         lastChar:SetVar("charEnts", nil)
     end
 
-    if (char) then
+    if (character) then
         for _, v in ipairs(ix.class.list) do
             if (v.faction == client:Team() and v.isDefault) then
-                char:SetClass(v.index)
+                character:SetClass(v.index)
 
                 break
             end
@@ -277,7 +277,7 @@ function GM:PlayerLoadedCharacter(client, char, lastChar)
 
         for _, v in ipairs(ix.rank.list) do
             if (v.faction == client:Team() and v.isDefault) then
-                char:SetRank(v.index)
+                character:SetRank(v.index)
 
                 break
             end
@@ -291,7 +291,7 @@ function GM:PlayerLoadedCharacter(client, char, lastChar)
         plyInfo.ixRagdoll:Remove()
     end
 
-    local faction = ix.faction.indices[char:GetFaction()]
+    local faction = ix.faction.indices[character:GetFaction()]
     local uniqueID = "ixSalary" .. client:SteamID64()
 
     if (faction and faction.pay and faction.pay > 0) then
@@ -300,7 +300,7 @@ function GM:PlayerLoadedCharacter(client, char, lastChar)
                 if (hook.Run("CanPlayerEarnSalary", client, faction) != false) then
                     local pay = hook.Run("GetSalaryAmount", client, faction) or faction.pay
 
-                    char:GiveMoney(pay)
+                    character:GiveMoney(pay)
                     client:NotifyLocalized("salary", ix.currency.Get(pay))
                     hook.Run("OnPlayerEarnSalary", client, faction, pay)
                 end
@@ -315,8 +315,8 @@ function GM:PlayerLoadedCharacter(client, char, lastChar)
     hook.Run("PlayerLoadout", client)
 end
 
-function GM:CharacterLoaded(char)
-    local client = char:GetPlayer()
+function GM:CharacterLoaded(character)
+    local client = character:GetPlayer()
 
     if (IsValid(client)) then
         local uniqueID = "ixSaveChar" .. client:SteamID64()
@@ -507,14 +507,14 @@ function GM:PlayerLoadout(client)
     client:StripAmmo()
     client:SetLocalVar("blur", nil)
 
-    local char = client:GetCharacter()
+    local character = client:GetCharacter()
 
-    -- Check if they have loaded a char.
-    if (char) then
+    -- Check if they have loaded a character.
+    if (character) then
         client:SetupHands()
-        -- Set their player model to the char's model.
+        -- Set their player model to the character's model.
 
-        local charModel = char:GetModel()
+        local charModel = character:GetModel()
         if ( istable(charModel) ) then
             charModel = charModel[math.random(#charModel)]
         end
@@ -523,7 +523,7 @@ function GM:PlayerLoadout(client)
         client:Give("ix_hands")
         client:SetWalkSpeed(ix.config.Get("walkSpeed"))
         client:SetRunSpeed(ix.config.Get("runSpeed"))
-        client:SetHealth(char:GetData("health", client:GetMaxHealth()))
+        client:SetHealth(character:GetData("health", client:GetMaxHealth()))
 
         local faction = ix.faction.indices[client:Team()]
         if (faction) then
@@ -589,14 +589,14 @@ end
 
 function GM:PostPlayerLoadout(client)
     -- Reload All Attrib Boosts
-    local char = client:GetCharacter()
-    if (char:GetInventory()) then
-        for k, _ in char:GetInventory():Iter() do
+    local character = client:GetCharacter()
+    if (character:GetInventory()) then
+        for k, _ in character:GetInventory():Iter() do
             k:Call("OnLoadout", client)
 
             if (k:GetData("equip") and k.attribBoosts) then
                 for attribKey, attribValue in pairs(k.attribBoosts) do
-                    char:AddBoost(k.uniqueID, attribKey, attribValue)
+                    character:AddBoost(k.uniqueID, attribKey, attribValue)
                 end
             end
         end
@@ -609,13 +609,13 @@ function GM:PostPlayerLoadout(client)
     end
 
     -- Ditto, but for classes.
-    local class = ix.class.list[char:GetClass()]
+    local class = ix.class.list[character:GetClass()]
     if (class and class.OnLoadout) then
         class:OnLoadout(client)
     end
 
     -- Ditto, but for ranks.
-    local rank = ix.rank.list[char:GetRank()]
+    local rank = ix.rank.list[character:GetRank()]
     if (rank and rank.OnLoadout) then
         rank:OnLoadout(client)
     end
@@ -660,28 +660,28 @@ function GM:DoPlayerDeath(client, attacker, damageinfo)
 end
 
 function GM:GetPlayerDeathSound(client)
-    local char = client:GetCharacter()
-    if (!char) then return end
+    local character = client:GetCharacter()
+    if (!character) then return end
 
-    local rank = ix.rank.list[char:GetRank()]
+    local rank = ix.rank.list[character:GetRank()]
     if (rank and rank["GetDeathSound"]) then
         return rank:GetDeathSound(client)
     end
 
-    local class = ix.class.list[char:GetClass()]
+    local class = ix.class.list[character:GetClass()]
     if (class and class["GetDeathSound"]) then
         return class:GetDeathSound(client)
     end
 
-    local faction = ix.faction.indices[char:GetFaction()]
+    local faction = ix.faction.indices[character:GetFaction()]
     if (faction and faction["GetDeathSound"]) then
         return faction:GetDeathSound(client)
     end
 end
 
 function GM:PlayerDeath(client, inflictor, attacker)
-    local char = client:GetCharacter()
-    if (char) then
+    local character = client:GetCharacter()
+    if (character) then
         if (IsValid(client.ixRagdoll)) then
             client.ixRagdoll.ixIgnoreDelete = true
             client:SetLocalVar("blur", nil)
@@ -694,7 +694,7 @@ function GM:PlayerDeath(client, inflictor, attacker)
         client:SetNetVar("deathStartTime", CurTime())
         client:SetNetVar("deathTime", CurTime() + ix.config.Get("spawnTime", 5))
 
-        char:SetData("health", nil)
+        character:SetData("health", nil)
 
         local deathSound = hook.Run("GetPlayerDeathSound", client)
 
@@ -739,20 +739,20 @@ function GM:GetPlayerPainSound(client)
         return drownSounds[math.random(#drownSounds)]
     end
 
-    local char = client:GetCharacter()
-    if (!char) then return end
+    local character = client:GetCharacter()
+    if (!character) then return end
 
-    local rank = ix.rank.list[char:GetRank()]
+    local rank = ix.rank.list[character:GetRank()]
     if (rank and rank["GetPainSound"]) then
         return rank:GetPainSound(client)
     end
 
-    local class = ix.class.list[char:GetClass()]
+    local class = ix.class.list[character:GetClass()]
     if (class and class["GetPainSound"]) then
         return class:GetPainSound(client)
     end
 
-    local faction = ix.faction.indices[char:GetFaction()]
+    local faction = ix.faction.indices[character:GetFaction()]
     if (faction and faction["GetPainSound"]) then
         return faction:GetPainSound(client)
     end
@@ -791,9 +791,9 @@ end
 function GM:PlayerDisconnected(client)
     client:SaveData()
 
-    local char = client:GetCharacter()
-    if (char) then
-        local charEnts = char:GetVar("charEnts") or {}
+    local character = client:GetCharacter()
+    if (character) then
+        local charEnts = character:GetVar("charEnts") or {}
 
         for _, v in ipairs(charEnts) do
             if (v and IsValid(v)) then
@@ -801,8 +801,8 @@ function GM:PlayerDisconnected(client)
             end
         end
 
-        hook.Run("OnCharacterDisconnect", client, char)
-            char:Save()
+        hook.Run("OnCharacterDisconnect", client, character)
+            character:Save()
         ix.chat.Send(nil, "disconnect", client:SteamName())
     end
 
@@ -912,9 +912,9 @@ function GM:ShutDown()
     for _, v in player.Iterator() do
         v:SaveData()
 
-        local char = v:GetCharacter()
-        if (char) then
-            char:Save()
+        local character = v:GetCharacter()
+        if (character) then
+            character:Save()
         end
     end
 end
@@ -1002,16 +1002,16 @@ function GM:PostCleanupMap()
     ix.plugin.RunLoadData()
 end
 
-function GM:CharacterPreSave(char)
-    local client = char:GetPlayer()
+function GM:CharacterPreSave(character)
+    local client = character:GetPlayer()
 
-    for v in char:GetInventory():Iter() do
+    for v in character:GetInventory():Iter() do
         if (v.OnSave) then
             v:Call("OnSave", client)
         end
     end
 
-    char:SetData("health", client:Alive() and client:Health() or nil)
+    character:SetData("health", client:Alive() and client:Health() or nil)
 end
 
 timer.Create("ixLifeGuard", 1, 0, function()
@@ -1113,8 +1113,8 @@ end)
 net.Receive("ixStartChat", function(len, client)
     if ( !IsValid(client) ) then return end
 
-    local char = client:GetCharacter()
-    if ( !char ) then return end
+    local character = client:GetCharacter()
+    if ( !character ) then return end
 
     local bTeamChat = net.ReadBool()
 
@@ -1124,8 +1124,8 @@ end)
 net.Receive("ixFinishChat", function(len, client)
     if ( !IsValid(client) ) then return end
 
-    local char = client:GetCharacter()
-    if ( !char ) then return end
+    local character = client:GetCharacter()
+    if ( !character ) then return end
 
     hook.Run("FinishChat", client)
 end)

@@ -259,8 +259,8 @@ function GM:CanPlayerUseBusiness(client, uniqueID)
 
     local itemTable = ix.item.list[uniqueID]
 
-    local char = client:GetCharacter()
-    if ( !char ) then return false end
+    local character = client:GetCharacter()
+    if ( !character ) then return false end
     if ( itemTable.noBusiness ) then return false end
 
     if ( itemTable.factions ) then
@@ -286,13 +286,13 @@ function GM:CanPlayerUseBusiness(client, uniqueID)
 
         if ( istable(itemTable.classes) ) then
             for _, v in pairs(itemTable.classes) do
-                if ( char:GetClass() == v ) then
+                if ( character:GetClass() == v ) then
                     allowed = true
 
                     break
                 end
             end
-        elseif ( char:GetClass() == itemTable.classes ) then
+        elseif ( character:GetClass() == itemTable.classes ) then
             allowed = true
         end
 
@@ -300,7 +300,7 @@ function GM:CanPlayerUseBusiness(client, uniqueID)
     end
 
     if ( itemTable.flag ) then
-        if ( !char:HasFlags(itemTable.flag) ) then return false end
+        if ( !character:HasFlags(itemTable.flag) ) then return false end
     end
 
     return true
@@ -582,10 +582,10 @@ function GM:StartCommand(client, command)
     end
 end
 
-function GM:CharacterVarChanged(char, varName, oldVar, newVar)
+function GM:CharacterVarChanged(character, varName, oldVar, newVar)
     if ( ix.char.varHooks[varName] ) then
         for _, v in pairs(ix.char.varHooks[varName]) do
-            v(char, oldVar, newVar)
+            v(character, oldVar, newVar)
         end
     end
 end
@@ -668,8 +668,8 @@ function GM:PhysgunDrop(client, entity)
 end
 
 function GM:Move(client, moveData)
-    local char = client:GetCharacter()
-    if ( char ) then
+    local character = client:GetCharacter()
+    if ( character ) then
         if ( client:GetNetVar("actEnterAngle") ) then
             moveData:SetForwardSpeed(0)
             moveData:SetSideSpeed(0)

@@ -80,10 +80,10 @@ do
     -- @realm shared
     -- @treturn table The player's items.
     function playerMeta:GetItems()
-        local char = self:GetCharacter()
+        local character = self:GetCharacter()
 
-        if (char) then
-            local inv = char:GetInventory()
+        if (character) then
+            local inv = character:GetInventory()
 
             if (inv) then
                 return inv:GetItems()
@@ -95,10 +95,10 @@ do
     -- @realm shared
     -- @treturn table The class data.
     function playerMeta:GetClassData()
-        local char = self:GetCharacter()
+        local character = self:GetCharacter()
 
-        if (char) then
-            local class = char:GetClass()
+        if (character) then
+            local class = character:GetClass()
 
             if (class) then
                 local classData = ix.class.list[class]
@@ -112,10 +112,10 @@ do
     -- @realm shared
     -- @treturn table The rank data.
     function playerMeta:GetRankData()
-        local char = self:GetCharacter()
+        local character = self:GetCharacter()
 
-        if (char) then
-            local rank = char:GetRank()
+        if (character) then
+            local rank = character:GetRank()
 
             if (rank) then
                 local rankData = ix.rank.list[rank]
