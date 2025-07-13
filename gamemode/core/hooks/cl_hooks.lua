@@ -2,7 +2,7 @@ local LocalPlayer = LocalPlayer
 local IsValid = IsValid
 local vgui = vgui
 local surface = surface
-local ScreenScale = ScreenScale
+local ScreenScaleH = ScreenScaleH
 local math = math
 local ix = ix
 local Angle = Angle
@@ -78,41 +78,41 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixTitleFont", {
         font = font,
-        size = ScreenScale(30),
+        size = ScreenScaleH(30),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixSubTitleFont", {
         font = font,
-        size = ScreenScale(16),
+        size = ScreenScaleH(16),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixMenuMiniFont", {
         font = "Roboto",
-        size = math.max(ScreenScale(4), 18),
+        size = math.max(ScreenScaleH(4), 18),
         weight = 300,
     })
 
     surface.CreateFont("ixMenuButtonFont", {
         font = "Roboto Th",
-        size = ScreenScale(14),
+        size = ScreenScaleH(14),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixMenuButtonFontSmall", {
         font = "Roboto Th",
-        size = ScreenScale(10),
+        size = ScreenScaleH(10),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixMenuButtonFontThick", {
         font = "Roboto",
-        size = ScreenScale(14),
+        size = ScreenScaleH(14),
         extended = true,
         weight = 300
     })
@@ -126,7 +126,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixMenuButtonHugeFont", {
         font = "Roboto Th",
-        size = ScreenScale(24),
+        size = ScreenScaleH(24),
         extended = true,
         weight = 100
     })
@@ -171,7 +171,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixNoticeFont", {
         font = font,
-        size = math.max(ScreenScale(8), 18),
+        size = math.max(ScreenScaleH(8), 18),
         weight = 100,
         extended = true,
         antialias = true
@@ -201,7 +201,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixChatFont", {
         font = font,
-        size = math.max(ScreenScale(7), 17) * ix.option.Get("chatFontScale", 1),
+        size = math.max(ScreenScaleH(7), 17) * ix.option.Get("chatFontScale", 1),
         extended = true,
         weight = 600,
         antialias = true
@@ -209,7 +209,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixChatFontItalics", {
         font = font,
-        size = math.max(ScreenScale(7), 17) * ix.option.Get("chatFontScale", 1),
+        size = math.max(ScreenScaleH(7), 17) * ix.option.Get("chatFontScale", 1),
         extended = true,
         weight = 600,
         antialias = true,
@@ -218,28 +218,28 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixSmallTitleFont", {
         font = "Roboto Th",
-        size = math.max(ScreenScale(12), 24),
+        size = math.max(ScreenScaleH(12), 24),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixMinimalTitleFont", {
         font = "Roboto",
-        size = math.max(ScreenScale(8), 22),
+        size = math.max(ScreenScaleH(8), 22),
         extended = true,
         weight = 800
     })
 
     surface.CreateFont("ixSmallFont", {
         font = font,
-        size = math.max(ScreenScale(6), 17),
+        size = math.max(ScreenScaleH(6), 17),
         extended = true,
         weight = 500
     })
 
     surface.CreateFont("ixItemDescFont", {
         font = font,
-        size = math.max(ScreenScale(6), 17),
+        size = math.max(ScreenScaleH(6), 17),
         extended = true,
         shadow = true,
         weight = 500
@@ -247,7 +247,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixSmallBoldFont", {
         font = font,
-        size = math.max(ScreenScale(8), 20),
+        size = math.max(ScreenScaleH(8), 20),
         extended = true,
         weight = 800
     })
@@ -255,7 +255,7 @@ function GM:LoadFonts(font, genericFont)
     surface.CreateFont("ixItemBoldFont", {
         font = font,
         shadow = true,
-        size = math.max(ScreenScale(8), 20),
+        size = math.max(ScreenScaleH(8), 20),
         extended = true,
         weight = 800
     })
@@ -265,14 +265,14 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixIntroTitleFont", {
         font = font,
-        size = math.min(ScreenScale(128), 128),
+        size = math.min(ScreenScaleH(128), 128),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixIntroTitleBlurFont", {
         font = font,
-        size = math.min(ScreenScale(128), 128),
+        size = math.min(ScreenScaleH(128), 128),
         extended = true,
         weight = 100,
         blursize = 4
@@ -280,14 +280,14 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixIntroSubtitleFont", {
         font = font,
-        size = ScreenScale(24),
+        size = ScreenScaleH(24),
         extended = true,
         weight = 100
     })
 
     surface.CreateFont("ixIntroSmallFont", {
         font = font,
-        size = ScreenScale(14),
+        size = ScreenScaleH(14),
         extended = true,
         weight = 100
     })
@@ -301,7 +301,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixSmallTitleIcons", {
         font = "fontello",
-        size = math.max(ScreenScale(11), 23),
+        size = math.max(ScreenScaleH(11), 23),
         extended = true,
         weight = 100
     })
@@ -315,7 +315,7 @@ function GM:LoadFonts(font, genericFont)
 
     surface.CreateFont("ixIconsMenuButton", {
         font = "fontello",
-        size = ScreenScale(14),
+        size = ScreenScaleH(14),
         extended = true,
         weight = 100
     })
