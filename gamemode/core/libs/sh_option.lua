@@ -129,9 +129,10 @@ function ix.option.AddQuick(name, description, category, optionType, default, da
     data = data or {}
     data.category = category
 
+    local keyUpper = key:sub(1, 1):upper() .. key:sub(2)
     ix.lang.AddTable("english", {
-        ["opt" .. string.sub(key, 1, 1):upper() .. string.sub(key, 2)] = name,
-        ["optd" .. string.sub(key, 1, 1):upper() .. string.sub(key, 2)] = description
+        ["opt" .. keyUpper] = name,
+        ["optd" .. keyUpper] = description
     })
 
     ix.option.Add(key, optionType, default, data)
