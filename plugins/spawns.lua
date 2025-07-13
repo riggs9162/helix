@@ -6,48 +6,50 @@ PLUGIN.description = "Spawn points for factions and classes."
 PLUGIN.author = "Chessnut"
 PLUGIN.spawns = PLUGIN.spawns or {}
 
-function PLUGIN:PlayerLoadout(client)
-    local character = client:GetCharacter()
+if (SERVER) then
+    function PLUGIN:PlayerLoadout(client)
+        local character = client:GetCharacter()
 
-    if (self.spawns and !table.IsEmpty(self.spawns) and character) then
-        local class = character:GetClass()
-        local points
-        local className = "default"
+        if (self.spawns and !table.IsEmpty(self.spawns) and character) then
+            local class = character:GetClass()
+            local points
+            local className = "default"
 
-        for k, v in ipairs(ix.faction.indices) do
-            if (k == client:Team()) then
-                points = self.spawns[v.uniqueID] or {}
-
-                break
-            end
-        end
-
-        if (points) then
-            for _, v in ipairs(ix.class.list) do
-                if (class == v.index) then
-                    className = v.uniqueID
+            for k, v in ipairs(ix.faction.indices) do
+                if (k == client:Team()) then
+                    points = self.spawns[v.uniqueID] or {}
 
                     break
                 end
             end
 
-            points = points[className] or points["default"]
+            if (points) then
+                for _, v in ipairs(ix.class.list) do
+                    if (class == v.index) then
+                        className = v.uniqueID
 
-            if (points and !table.IsEmpty(points)) then
-                local position = table.Random(points)
+                        break
+                    end
+                end
 
-                client:SetPos(position)
+                points = points[className] or points["default"]
+
+                if (points and !table.IsEmpty(points)) then
+                    local position = table.Random(points)
+
+                    client:SetPos(position)
+                end
             end
         end
     end
-end
 
-function PLUGIN:LoadData()
-    self.spawns = self:GetData() or {}
-end
+    function PLUGIN:LoadData()
+        self.spawns = self:GetData() or {}
+    end
 
-function PLUGIN:SaveSpawns()
-    self:SetData(self.spawns)
+    function PLUGIN:SaveSpawns()
+        self:SetData(self.spawns)
+    end
 end
 
 ix.command.Add("SpawnAdd", {

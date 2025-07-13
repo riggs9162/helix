@@ -1077,3 +1077,11 @@ net.Receive("ixMapRestart", function()
         net.SendToServer()
     end, L("no"), function() end)
 end)
+
+net.Receive("ixPlayerLoadout", function()
+    local client = LocalPlayer()
+    if ( !IsValid(client) ) then return end
+
+    hook.Run("PlayerLoadout", LocalPlayer())
+    hook.Run("PostPlayerLoadout", LocalPlayer())
+end)

@@ -1,9 +1,10 @@
-util.AddNetworkString("ixPlayerDeath")
-util.AddNetworkString("ixPlayerStartVoice")
-util.AddNetworkString("ixPlayerEndVoice")
-util.AddNetworkString("ixStartChat")
 util.AddNetworkString("ixFinishChat")
 util.AddNetworkString("ixMapRestart")
+util.AddNetworkString("ixPlayerDeath")
+util.AddNetworkString("ixPlayerEndVoice")
+util.AddNetworkString("ixPlayerLoadout")
+util.AddNetworkString("ixPlayerStartVoice")
+util.AddNetworkString("ixStartChat")
 
 function GM:PlayerInitialSpawn(client)
     client.ixJoinTime = RealTime()
@@ -498,9 +499,11 @@ end
 function GM:PlayerLoadout(client)
     if (client.ixSkipLoadout) then
         client.ixSkipLoadout = nil
-
         return
     end
+
+    net.Start("ixPlayerLoadout")
+    net.Send(client)
 
     client:SetWeaponColor(Vector(client:GetInfo("cl_weaponcolor")))
     client:StripWeapons()
