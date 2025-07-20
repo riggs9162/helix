@@ -68,9 +68,26 @@ end
 -- @number amount The amount of cash being formatted.
 -- @treturn string The formatted string with the currency symbol.
 -- @usage ix.currency.FormatWithSymbol(1000) -- "$1,000"
+-- @usage ix.currency.FormatWithSymbol(-500) -- "-$500"
 function ix.currency.FormatWithSymbol(amount)
-    local formatted = ix.currency.Format(amount)
-    return formatted and (ix.currency.symbol .. formatted) or nil
+    if (!isnumber(amount)) then
+        ErrorNoHaltWithStack("[Helix] Can't format currency with symbol: Invalid amount")
+        return nil
+    end
+
+    local isNegative = amount < 0
+    local absAmount = math.abs(amount)
+    local formatted = ix.currency.Format(absAmount)
+
+    if (!formatted) then
+        return nil
+    end
+
+    if (isNegative) then
+        return "-" .. ix.currency.symbol .. formatted
+    else
+        return ix.currency.symbol .. formatted
+    end
 end
 
 --- Applies a tax to a specified amount.
