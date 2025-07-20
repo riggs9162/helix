@@ -1409,6 +1409,75 @@ function ix.util.GetClosestEntity(pos, distance, entities, bEntitiesIsIgnored)
 end
 
 if ( CLIENT ) then
+    local families = {
+        "regular",
+        "bold",
+        "italic",
+        "italic.bold"
+    }
+
+    --- Creates a font family with the given name, font, and size.
+    -- @realm client
+    -- @param name string The name of the font family.
+    -- @param font string The font to use for the family.
+    -- @param size number The size of the font.
+    -- @param familiesOverride table Optional table of families to override the default ones.
+    -- @usage ix.util.CreateFontFamily("ix", "MyFont", "Arial", 16)
+    function ix.util.CreateFontFamily(prefix, name, font, size, familiesOverride)
+        if ( !font or font == "" ) then
+            print("Failed to create font family '" .. name .. "': Font is not defined.")
+            return
+        end
+
+        if ( !size or size <= 0 ) then
+            print("Failed to create font family '" .. name .. "': Size is not defined or invalid.")
+            return
+        end
+
+        -- Create the base font
+        surface.CreateFont(prefix .. "." .. name, {
+            font = font,
+            size = size,
+            weight = 700,
+            antialias = true
+        })
+
+        -- Create the font families
+        if ( familiesOverride and istable(familiesOverride) ) then
+            -- If familiesOverride is provided, use it instead of the default families
+            -- Though familiesOverride may use the key as the family name and the value as the font name incase of custom fonts
+            for family, fontName in pairs(familiesOverride) do
+                if ( isstring(family) and isstring(fontName) ) then
+                    surface.CreateFont(prefix .. "." .. name .. "." .. family, {
+                        font = fontName,
+                        size = size,
+                        weight = ix.util.StringMatches(family, "bold") and 900 or 700,
+                        italic = ix.util.StringMatches(family, "italic"),
+                        antialias = true
+                    })
+                else
+                    surface.CreateFont(prefix .. "." .. name .. "." .. family, {
+                        font = font,
+                        size = size,
+                        weight = ix.util.StringMatches(family, "bold") and 900 or 700,
+                        italic = ix.util.StringMatches(family, "italic"),
+                        antialias = true
+                    })
+                end
+            end
+        else
+            for _, family in ipairs(families) do
+                surface.CreateFont(prefix .. "." .. name .. "." .. family, {
+                    font = font,
+                    size = size,
+                    weight = ix.util.StringMatches(family, "bold") and 900 or 700,
+                    italic = ix.util.StringMatches(family, "italic"),
+                    antialias = true
+                })
+            end
+        end
+    end
+
     --- Returns the size of a text string.
     -- @realm client
     -- @string text Text to get the size of
