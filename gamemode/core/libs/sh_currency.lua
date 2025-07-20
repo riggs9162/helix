@@ -63,6 +63,16 @@ function ix.currency.Format(amount)
     return formatted
 end
 
+--- Formats the currency amount with the symbol.
+-- @realm shared
+-- @number amount The amount of cash being formatted.
+-- @treturn string The formatted string with the currency symbol.
+-- @usage ix.currency.FormatWithSymbol(1000) -- "$1,000"
+function ix.currency.FormatWithSymbol(amount)
+    local formatted = ix.currency.Format(amount)
+    return formatted and (ix.currency.symbol .. formatted) or nil
+end
+
 --- Applies a tax to a specified amount.
 -- @realm shared
 -- @number amount The amount of currency.
