@@ -6,10 +6,29 @@ util.AddNetworkString("ixPlayerLoadout")
 util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixStartChat")
 
+gameevent.Listen("OnRequestFullUpdate")
+hook.Add("OnRequestFullUpdate", "ax.OnRequestFullUpdate", function(data)
+    if ( !istable(data) or !isnumber(data.userid) ) then return end
+
+    local client = Player(data.userid)
+    if ( !IsValid(client) ) then return end
+
+    local clientTable = client:GetTable()
+    if ( clientTable.ixReady ) then return end
+
+    clientTable.ixReady = true
+
+    timer.Simple(0, function()
+        if ( !IsValid(client) ) then return end
+
+        hook.Run("PlayerReady", client)
+    end)
+end)
+
 function GM:PlayerInitialSpawn(client)
     client.ixJoinTime = RealTime()
 
-    if (client:IsBot()) then
+    if ( client:IsBot() ) then
         local botID = os.time() + client:EntIndex()
         local index = math.random(table.Count(ix.faction.indices))
         local faction = ix.faction.indices[index]
@@ -46,7 +65,9 @@ function GM:PlayerInitialSpawn(client)
 
         return
     end
+end
 
+function GM:PlayerReady(client)
     ix.config.Send(client)
     ix.date.Send(client)
 
