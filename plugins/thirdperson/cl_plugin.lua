@@ -18,12 +18,12 @@ ix.option.Add("thirdpersonClassic", ix.type.bool, false, {
 })
 
 ix.option.Add("thirdpersonVertical", ix.type.number, 10, {
-    category = "thirdperson", min = 0, max = 30,
+    category = "thirdperson", min = -10, max = 10,
     hidden = isHidden
 })
 
 ix.option.Add("thirdpersonHorizontal", ix.type.number, 0, {
-    category = "thirdperson", min = -30, max = 30,
+    category = "thirdperson", min = -50, max = 50,
     hidden = isHidden
 })
 
