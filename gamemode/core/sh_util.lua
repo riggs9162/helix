@@ -643,20 +643,43 @@ if (CLIENT) then
 
     local cos, sin, abs, rad1, log, pow = math.cos, math.sin, math.abs, math.rad, math.log, math.pow
 
-    -- arc drawing functions
-    -- by bobbleheadbob
-    -- https://facepunch.com/showthread.php?t=1558060
+    --- Draws an arc on the screen.
+    -- @realm client
+    -- @number cx X-coordinate of the center of the arc
+    -- @number cy Y-coordinate of the center of the arc
+    -- @number radius Radius of the arc
+    -- @number thickness Thickness of the arc
+    -- @number startang Starting angle of the arc in degrees
+    -- @number endang Ending angle of the arc in degrees
+    -- @number roughness Determines the smoothness of the arc
+    -- @color color Color of the arc
+    -- @usage ix.util.DrawArc(100, 100, 50, 10, 0, 90, 1, Color(255, 255, 255))
     function ix.util.DrawArc(cx, cy, radius, thickness, startang, endang, roughness, color)
         surface.SetDrawColor(color)
         ix.util.DrawPrecachedArc(ix.util.PrecacheArc(cx, cy, radius, thickness, startang, endang, roughness))
     end
 
-    function ix.util.DrawPrecachedArc(arc) -- Draw a premade arc.
+    --- Draws a pre-cached arc.
+    -- @realm client
+    -- @tab arc Table containing pre-cached arc data
+    -- @usage ix.util.DrawPrecachedArc(precachedArc)
+    function ix.util.DrawPrecachedArc(arc)
         for _, v in ipairs(arc) do
             surface.DrawPoly(v)
         end
     end
 
+    --- Pre-caches an arc for drawing.
+    -- @realm client
+    -- @number cx X-coordinate of the center of the arc
+    -- @number cy Y-coordinate of the center of the arc
+    -- @number radius Radius of the arc
+    -- @number thickness Thickness of the arc
+    -- @number startang Starting angle of the arc in degrees
+    -- @number endang Ending angle of the arc in degrees
+    -- @number roughness Determines the smoothness of the arc
+    -- @treturn table Table containing pre-cached arc data
+    -- @usage local arc = ix.util.PrecacheArc(100, 100, 50, 10, 0, 90, 1)
     function ix.util.PrecacheArc(cx, cy, radius, thickness, startang, endang, roughness)
         local quadarc = {}
 
