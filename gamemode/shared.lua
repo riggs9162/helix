@@ -112,6 +112,8 @@ ix.util.IncludeDir("core/hooks")
 
 -- Called after the gamemode has loaded.
 function GM:Initialize()
+    -- Load items.
+    ix.item.LoadFromDir("helix/gamemode/items")
     -- Load all of the Helix plugins.
     ix.plugin.Initialize()
     -- Restore client options
@@ -120,8 +122,6 @@ function GM:Initialize()
     ix.config.Load()
     -- Load languages.
     ix.lang.LoadFromDir("helix/gamemode/languages")
-    -- Load items.
-    ix.item.LoadFromDir("helix/gamemode/items")
 
     hook.Run("OnHelixInitialized")
 end
@@ -155,6 +155,8 @@ function GM:OnReloaded()
     if (!IX_RELOADED) then
         IX_RELOADED = true
 
+        -- Load items.
+        ix.item.LoadFromDir("helix/gamemode/items")
         -- Load all of the Helix plugins.
         ix.plugin.Initialize()
         -- Restore the configurations from earlier if applicable.
@@ -163,8 +165,6 @@ function GM:OnReloaded()
         ix.option.Load()
         -- Load languages.
         ix.lang.LoadFromDir("helix/gamemode/languages")
-        -- Load items.
-        ix.item.LoadFromDir("helix/gamemode/items")
 
         hook.Run("OnHelixReloaded")
     end
