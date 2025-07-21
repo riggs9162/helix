@@ -83,8 +83,12 @@ local function IncludeWorkshopAddons()
     ix.util.Log(Color(0, 255, 0), "Completed workshop addon load (" .. total .. " addons)...")
 end
 
-IncludeContent()
-IncludeWorkshopAddons()
+hook.Add("OnHelixInitialized", "HelixContentLoad", function()
+    -- Include all content files.
+    IncludeContent()
+    -- Include all workshop addons.
+    IncludeWorkshopAddons()
+end)
 
 cvars.AddChangeCallback("sbox_persist", function(name, old, new)
     -- A timer in case someone tries to rapily change the convar, such as addons with "live typing" or whatever
