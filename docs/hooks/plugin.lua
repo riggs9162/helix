@@ -219,7 +219,7 @@ end
 function CanPlayerInteractItem(client, action, item, data)
 end
 
---- Whether or not a plyer is allowed to join a class.
+--- Whether or not a player is allowed to join a class.
 -- @realm shared
 -- @player client Player attempting to join
 -- @number class ID of the class

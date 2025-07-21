@@ -306,11 +306,11 @@ function GM:PlayerLoadedCharacter(client, character, lastChar)
         end
     end
 
-    local plyInfo = client:GetTable()
-    if (IsValid(plyInfo.ixRagdoll)) then
-        plyInfo.ixRagdoll.ixNoReset = true
-        plyInfo.ixRagdoll.ixIgnoreDelete = true
-        plyInfo.ixRagdoll:Remove()
+    local clientTable = client:GetTable()
+    if (IsValid(clientTable.ixRagdoll)) then
+        clientTable.ixRagdoll.ixNoReset = true
+        clientTable.ixRagdoll.ixIgnoreDelete = true
+        clientTable.ixRagdoll:Remove()
     end
 
     local faction = ix.faction.indices[character:GetFaction()]
@@ -830,14 +830,14 @@ function GM:PlayerDisconnected(client)
         ix.chat.Send(nil, "disconnect", client:SteamName())
     end
 
-    local plyInfo = client:GetTable()
-    if (IsValid(plyInfo.ixRagdoll)) then
-        plyInfo.ixRagdoll:Remove()
+    local clientTable = client:GetTable()
+    if (IsValid(clientTable.ixRagdoll)) then
+        clientTable.ixRagdoll:Remove()
     end
 
     client:ClearNetVars()
 
-    if (!plyInfo.ixVoiceHear) then return end
+    if (!clientTable.ixVoiceHear) then return end
 
     for _, v in player.Iterator() do
         if (!v.ixVoiceHear) then continue end
@@ -1078,10 +1078,10 @@ net.Receive("ixStringRequest", function(length, client)
     local time = net.ReadUInt(32)
     local text = net.ReadString()
 
-    local plyInfo = client:GetTable()
-    if (plyInfo.ixStrReqs and plyInfo.ixStrReqs[time]) then
-        plyInfo.ixStrReqs[time](text)
-        plyInfo.ixStrReqs[time] = nil
+    local clientTable = client:GetTable()
+    if (clientTable.ixStrReqs and clientTable.ixStrReqs[time]) then
+        clientTable.ixStrReqs[time](text)
+        clientTable.ixStrReqs[time] = nil
     end
 end)
 

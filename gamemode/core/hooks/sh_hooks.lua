@@ -61,15 +61,15 @@ local HOLDTYPE_TRANSLATOR = HOLDTYPE_TRANSLATOR
 local animationFixOffset = Vector(16.5438, -0.1642, -20.5493)
 
 function GM:TranslateActivity(client, act)
-    local plyInfo = client:GetTable()
+    local clientTable = client:GetTable()
 
     -- Check if we have changed the activity from the last time we checked
     local oldAct = client.ixLastAct or -1
     if ( oldAct != act ) then
-        plyInfo.ixLastAct = act
+        clientTable.ixLastAct = act
     end
 
-    local modelClass = plyInfo.ixAnimModelClass or "player"
+    local modelClass = clientTable.ixAnimModelClass or "player"
     local bRaised = client:IsWepRaised()
 
     if ( modelClass == "player" ) then
@@ -99,7 +99,7 @@ function GM:TranslateActivity(client, act)
             local tree = ix.anim.player[holdType]
             if ( tree and tree[act] ) then
                 if ( isstring(tree[act]) ) then
-                    plyInfo.CalcSeqOverride = client:LookupSequence(tree[act])
+                    clientTable.CalcSeqOverride = client:LookupSequence(tree[act])
 
                     return
                 else
@@ -111,59 +111,59 @@ function GM:TranslateActivity(client, act)
         return self.BaseClass:TranslateActivity(client, act)
     end
 
-    if ( plyInfo.ixAnimTable ) then
-        local glide = plyInfo.ixAnimGlide
+    if ( clientTable.ixAnimTable ) then
+        local glide = clientTable.ixAnimGlide
 
         if ( client:InVehicle() ) then
-            local newAct = plyInfo.ixAnimTable[1]
+            local newAct = clientTable.ixAnimTable[1]
 
-            local fixVector = plyInfo.ixAnimTable[2]
+            local fixVector = clientTable.ixAnimTable[2]
             if ( isvector(fixVector) ) then
                 client:SetLocalPos(animationFixOffset)
             end
 
             if ( isstring(newAct) ) then
-                plyInfo.CalcSeqOverride = client:LookupSequence(newAct)
+                clientTable.CalcSeqOverride = client:LookupSequence(newAct)
             elseif ( istable(newAct) ) then
-                if ( !plyInfo.CalcSeqOverrideTable ) then
-                    plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+                if ( !clientTable.CalcSeqOverrideTable ) then
+                    clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                 end
 
                 -- Randomly select a new sequence from the table if we came from a different act
                 if ( oldAct != newAct ) then
-                    plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+                    clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                 end
 
-                plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
+                clientTable.CalcSeqOverride = clientTable.CalcSeqOverrideTable
             else
                 return newAct
             end
         elseif ( client:OnGround() ) then
-            if ( plyInfo.ixAnimTable[act] ) then
-                local newAct = plyInfo.ixAnimTable[act][bRaised and 2 or 1]
+            if ( clientTable.ixAnimTable[act] ) then
+                local newAct = clientTable.ixAnimTable[act][bRaised and 2 or 1]
 
                 if ( isstring(newAct) ) then
-                    plyInfo.CalcSeqOverride = client:LookupSequence(newAct)
+                    clientTable.CalcSeqOverride = client:LookupSequence(newAct)
                 elseif ( istable(newAct) ) then
-                    if ( !plyInfo.CalcSeqOverrideTable ) then
-                        plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+                    if ( !clientTable.CalcSeqOverrideTable ) then
+                        clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                     end
 
                     -- Randomly select a new sequence from the table if we came from a different act
-                    if ( oldAct != plyInfo.ixLastAct ) then
-                        plyInfo.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+                    if ( oldAct != clientTable.ixLastAct ) then
+                        clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
                     end
 
-                    plyInfo.CalcSeqOverride = plyInfo.CalcSeqOverrideTable
+                    clientTable.CalcSeqOverride = clientTable.CalcSeqOverrideTable
                 else
                     return newAct
                 end
             end
         elseif ( client:GetMoveType() == MOVETYPE_LADDER ) then
-            local ladderIdle = plyInfo.ixAnimLadderIdle
-            local ladderMove = plyInfo.ixAnimLadderMove
-            local ladderUp = plyInfo.ixAnimLadderUp
-            local ladderDown = plyInfo.ixAnimLadderDown
+            local ladderIdle = clientTable.ixAnimLadderIdle
+            local ladderMove = clientTable.ixAnimLadderMove
+            local ladderUp = clientTable.ixAnimLadderUp
+            local ladderDown = clientTable.ixAnimLadderDown
 
             local pos = client:WorldSpaceCenter()
             local ang = client:EyeAngles()
@@ -182,7 +182,7 @@ function GM:TranslateActivity(client, act)
             if ( !trace.Hit ) then
                 if ( glide ) then
                     if ( isstring(glide) ) then
-                        plyInfo.CalcSeqOverride = client:LookupSequence(glide)
+                        clientTable.CalcSeqOverride = client:LookupSequence(glide)
                     else
                         return glide
                     end
@@ -213,7 +213,7 @@ function GM:TranslateActivity(client, act)
                 if ( client.ixLadderDir == "up" ) then
                     if ( ladderUp ) then
                         if ( isstring(ladderUp) ) then
-                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderUp)
+                            clientTable.CalcSeqOverride = client:LookupSequence(ladderUp)
                         else
                             return ladderUp
                         end
@@ -221,7 +221,7 @@ function GM:TranslateActivity(client, act)
                 elseif ( client.ixLadderDir == "down" ) then
                     if ( ladderDown ) then
                         if ( isstring(ladderDown) ) then
-                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderDown)
+                            clientTable.CalcSeqOverride = client:LookupSequence(ladderDown)
                         else
                             return ladderDown
                         end
@@ -229,7 +229,7 @@ function GM:TranslateActivity(client, act)
                 else
                     if ( ladderIdle ) then
                         if ( isstring(ladderIdle) ) then
-                            plyInfo.CalcSeqOverride = client:LookupSequence(ladderIdle)
+                            clientTable.CalcSeqOverride = client:LookupSequence(ladderIdle)
                         else
                             return ladderIdle
                         end
@@ -238,7 +238,7 @@ function GM:TranslateActivity(client, act)
             else
                 if ( ladderMove ) then
                     if ( isstring(ladderMove) ) then
-                        plyInfo.CalcSeqOverride = client:LookupSequence(ladderMove)
+                        clientTable.CalcSeqOverride = client:LookupSequence(ladderMove)
                     else
                         return ladderMove
                     end
@@ -246,9 +246,9 @@ function GM:TranslateActivity(client, act)
             end
         elseif ( glide ) then
             if ( isstring(glide) ) then
-                plyInfo.CalcSeqOverride = client:LookupSequence(glide)
+                clientTable.CalcSeqOverride = client:LookupSequence(glide)
             else
-                return plyInfo.ixAnimGlide
+                return clientTable.ixAnimGlide
             end
         end
     end
@@ -367,7 +367,7 @@ end
 local function UpdatePlayerHoldType(client, weapon)
     if ( !IsValid(client) ) then return end
 
-    local plyInfo = client:GetTable()
+    local clientTable = client:GetTable()
 
     weapon = weapon or client:GetActiveWeapon()
     local holdType = "normal"
@@ -377,34 +377,34 @@ local function UpdatePlayerHoldType(client, weapon)
         holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
     end
 
-    plyInfo.ixAnimHoldType = holdType
-    plyInfo.ixLastAct = -1
+    clientTable.ixAnimHoldType = holdType
+    clientTable.ixLastAct = -1
 end
 
 local function UpdateAnimationTable(client, vehicle)
     if ( !IsValid(client) ) then return end
 
-    local plyInfo = client:GetTable()
-    local baseTable = ix.anim[plyInfo.ixAnimModelClass] or {}
+    local clientTable = client:GetTable()
+    local baseTable = ix.anim[clientTable.ixAnimModelClass] or {}
 
     if ( IsValid(vehicle) ) then
         local vehicleClass = vehicle:IsChair() and "chair" or vehicle:GetClass()
 
         if ( baseTable.vehicle and baseTable.vehicle[vehicleClass] ) then
-            plyInfo.ixAnimTable = baseTable.vehicle[vehicleClass]
+            clientTable.ixAnimTable = baseTable.vehicle[vehicleClass]
         else
-            plyInfo.ixAnimTable = baseTable.normal[ACT_MP_CROUCH_IDLE]
+            clientTable.ixAnimTable = baseTable.normal[ACT_MP_CROUCH_IDLE]
         end
     else
-        plyInfo.ixAnimTable = baseTable[plyInfo.ixAnimHoldType]
+        clientTable.ixAnimTable = baseTable[clientTable.ixAnimHoldType]
     end
 
-    plyInfo.ixAnimGlide = baseTable["glide"]
-    plyInfo.ixAnimLadderIdle = baseTable["ladder_idle"]
-    plyInfo.ixAnimLadderMove = baseTable["ladder_move"]
-    plyInfo.ixAnimLadderUp = baseTable["ladder_up"]
-    plyInfo.ixAnimLadderDown = baseTable["ladder_down"]
-    plyInfo.ixLastAct = -1
+    clientTable.ixAnimGlide = baseTable["glide"]
+    clientTable.ixAnimLadderIdle = baseTable["ladder_idle"]
+    clientTable.ixAnimLadderMove = baseTable["ladder_move"]
+    clientTable.ixAnimLadderUp = baseTable["ladder_up"]
+    clientTable.ixAnimLadderDown = baseTable["ladder_down"]
+    clientTable.ixLastAct = -1
 end
 
 function GM:PlayerWeaponChanged(client, weapon)
@@ -490,8 +490,8 @@ function GM:CalcMainActivity(client, velocity)
 
     client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - client:EyeAngles()[2]))
 
-    local plyInfo = client:GetTable()
-    plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
+    local clientTable = client:GetTable()
+    clientTable.CalcIdeal = ACT_MP_STAND_IDLE
 
     -- we could call the baseclass function, but it's faster to do it this way
     local BaseClass = GAMEMODE.BaseClass
@@ -506,25 +506,25 @@ function GM:CalcMainActivity(client, velocity)
         local len2D = velocity:Length2DSqr()
 
         if ( velocity[3] != 0 and len2D <= 16 ^ 2 ) then
-            plyInfo.CalcIdeal = ACT_GLIDE
+            clientTable.CalcIdeal = ACT_GLIDE
         elseif ( len2D <= 0.25 ) then
-            plyInfo.CalcIdeal = ACT_MP_STAND_IDLE
+            clientTable.CalcIdeal = ACT_MP_STAND_IDLE
         elseif ( len2D > ( ix.config.Get("walkSpeed") * 1.25 ) ^ 2 ) then
-            plyInfo.CalcIdeal = ACT_MP_RUN
+            clientTable.CalcIdeal = ACT_MP_RUN
         else
-            plyInfo.CalcIdeal = ACT_MP_WALK
+            clientTable.CalcIdeal = ACT_MP_WALK
         end
     end
 
-    hook.Run("TranslateActivity", client, plyInfo.CalcIdeal)
+    hook.Run("TranslateActivity", client, clientTable.CalcIdeal)
 
-    local sequenceOverride = plyInfo.CalcSeqOverride
-    plyInfo.CalcSeqOverride = -1
+    local sequenceOverride = clientTable.CalcSeqOverride
+    clientTable.CalcSeqOverride = -1
 
-    plyInfo.m_bWasOnGround = client:OnGround()
-    plyInfo.m_bWasNoclipping = ( client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle() )
+    clientTable.m_bWasOnGround = client:OnGround()
+    clientTable.m_bWasNoclipping = ( client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle() )
 
-    return plyInfo.CalcIdeal, sequenceOverride or plyInfo.CalcSeqOverride or -1
+    return clientTable.CalcIdeal, sequenceOverride or clientTable.CalcSeqOverride or -1
 end
 
 function GM:UpdateAnimation(client, velocity, maxSeqGroundSpeed)
