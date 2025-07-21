@@ -7,7 +7,7 @@ util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixStartChat")
 
 gameevent.Listen("OnRequestFullUpdate")
-hook.Add("OnRequestFullUpdate", "ax.OnRequestFullUpdate", function(data)
+hook.Add("OnRequestFullUpdate", "ixOnRequestFullUpdate", function(data)
     if ( !istable(data) or !isnumber(data.userid) ) then return end
 
     local client = Player(data.userid)
