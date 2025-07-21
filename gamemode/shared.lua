@@ -110,10 +110,6 @@ ix.util.IncludeDir("core/libs")
 ix.util.IncludeDir("core/derma")
 ix.util.IncludeDir("core/hooks")
 
--- Include language and default base items.
-ix.lang.LoadFromDir("helix/gamemode/languages")
-ix.item.LoadFromDir("helix/gamemode/items")
-
 -- Called after the gamemode has loaded.
 function GM:Initialize()
     -- Load all of the Helix plugins.
@@ -122,6 +118,12 @@ function GM:Initialize()
     ix.option.Load()
     -- Restore the configurations from earlier if applicable.
     ix.config.Load()
+    -- Load languages.
+    ix.lang.LoadFromDir("helix/gamemode/languages")
+    -- Load items.
+    ix.item.LoadFromDir("helix/gamemode/items")
+
+    hook.Run("OnHelixInitialized")
 end
 
 -- luacheck: globals IX_RELOADED
@@ -159,6 +161,12 @@ function GM:OnReloaded()
         ix.config.Load()
         -- Restore client options
         ix.option.Load()
+        -- Load languages.
+        ix.lang.LoadFromDir("helix/gamemode/languages")
+        -- Load items.
+        ix.item.LoadFromDir("helix/gamemode/items")
+
+        hook.Run("OnHelixReloaded")
     end
 end
 
