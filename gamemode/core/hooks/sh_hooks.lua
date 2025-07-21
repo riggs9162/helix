@@ -390,8 +390,12 @@ local function UpdateAnimationTable(client, vehicle)
     if ( IsValid(vehicle) ) then
         local vehicleClass = vehicle:IsChair() and "chair" or vehicle:GetClass()
 
-        if ( baseTable.vehicle and baseTable.vehicle[vehicleClass] ) then
-            clientTable.ixAnimTable = baseTable.vehicle[vehicleClass]
+        if ( baseTable.vehicle ) then
+            if ( baseTable.vehicle[vehicleClass] ) then
+                clientTable.ixAnimTable = baseTable.vehicle[vehicleClass]
+            else
+                clientTable.ixAnimTable = {"silo_sit", vector_origin}
+            end
         else
             clientTable.ixAnimTable = baseTable.normal[ACT_MP_CROUCH_IDLE]
         end
