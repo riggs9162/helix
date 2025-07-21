@@ -20,13 +20,15 @@ function PANEL:SetModel(model, skin, hidden)
     BaseClass.SetModel(self, model)
 
     local entity = self.Entity
+    if (!IsValid(entity)) then
+        return
+    end
 
     if (skin) then
         entity:SetSkin(skin)
     end
 
     local sequence = entity:SelectWeightedSequence(ACT_IDLE)
-
     if (sequence <= 0) then
         sequence = entity:LookupSequence("idle_unarmed")
     end
