@@ -162,10 +162,11 @@ function GM:KeyPress(client, key)
 end
 
 function GM:KeyRelease(client, key)
+    local steamID64 = client:SteamID64()
     if (key == IN_RELOAD) then
-        timer.Remove("ixToggleRaise" .. client:SteamID64())
+        timer.Remove("ixToggleRaise" .. steamID64)
     elseif (key == IN_USE) then
-        timer.Remove("ixCharacterInteraction" .. client:SteamID64())
+        timer.Remove("ixCharacterInteraction" .. steamID64)
     end
 end
 
@@ -339,7 +340,6 @@ end
 
 function GM:CharacterLoaded(character)
     local client = character:GetPlayer()
-
     if (IsValid(client)) then
         local uniqueID = "ixSaveChar" .. client:SteamID64()
 
@@ -355,11 +355,8 @@ end
 
 function GM:PlayerSay(client, text)
     local chatType, message, anonymous = ix.chat.Parse(client, text, true)
-
-    if (chatType == "ic") then
-        if (ix.command.Parse(client, message)) then
-            return ""
-        end
+    if (chatType == "ic" and ix.command.Parse(client, message)) then
+        return ""
     end
 
     text = ix.chat.Send(client, chatType, message, anonymous)
@@ -498,7 +495,7 @@ end
 
 function GM:VoiceToggled(bAllowVoice)
     for _, v in player.Iterator() do
-        local uniqueID = v:SteamID64() .. "ixCanHearPlayersVoice"
+        local uniqueID = "ixCanHearPlayersVoice" .. v:SteamID64()
 
         if (bAllowVoice) then
             timer.Create(uniqueID, 0.5, 0, function()
@@ -645,11 +642,13 @@ function GM:PostPlayerLoadout(client)
     end
 
     if (ix.config.Get("allowVoice")) then
-        if ( timer.Exists(client:SteamID64() .. "ixCanHearPlayersVoice") ) then
-            timer.Remove(client:SteamID64() .. "ixCanHearPlayersVoice")
+        local steamID64 = client:SteamID64()
+        local timerName = "ixCanHearPlayersVoice" .. steamID64
+        if ( timer.Exists(timerName) ) then
+            timer.Remove(timerName)
         end
 
-        timer.Create(client:SteamID64() .. "ixCanHearPlayersVoice", 0.5, 0, function()
+        timer.Create(timerName, 0.5, 0, function()
             CalcPlayerCanHearPlayersVoice(client)
         end)
     end
@@ -845,8 +844,10 @@ function GM:PlayerDisconnected(client)
         v.ixVoiceHear[client] = nil
     end
 
-    if ( timer.Exists(client:SteamID64() .. "ixCanHearPlayersVoice") ) then
-        timer.Remove(client:SteamID64() .. "ixCanHearPlayersVoice")
+    local steamID64 = client:SteamID64()
+    local timerName = "ixCanHearPlayersVoice" .. steamID64
+    if ( timer.Exists(timerName) ) then
+        timer.Remove(timerName)
     end
 end
 
