@@ -4,9 +4,8 @@ local PANEL = {}
 function PANEL:Init()
     local entity = ix.gui.vendor.entity
 
-    self:SetSize(ScrW() / 4, ScrH() / 2)
-    self:SetX(ScrW() / 4 - self:GetWide() / 2)
-    self:CenterVertical()
+    self:SetSize(ScrW() / 3, ScrH() / 2)
+    self:Center()
     self:SetTitle(L"vendorEditor")
     self.lblTitle:SetTextColor(color_white)
 
