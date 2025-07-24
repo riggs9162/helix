@@ -18,7 +18,7 @@ function ldoc.realm_icon(realm)
 end
 
 function ldoc.is_kind_classmethod(kind)
-    return kind ~= "libraries"
+    return kind != "libraries"
 end
 
 function ldoc.repo_reference(item)

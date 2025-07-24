@@ -370,7 +370,7 @@ function ix.chat.Format(text)
 
     -- Ensure text ends with punctuation
     local last = text:utf8sub(-1)
-    if (last ~= "." and last ~= "!" and last ~= "?") then
+    if (last != "." and last != "!" and last != "?") then
         text = text .. "."
     end
 

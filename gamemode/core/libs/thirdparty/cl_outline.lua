@@ -67,9 +67,9 @@ local function SetRenderType(render_type)
     if ix.option.Get("disableOutlines", false) then return end
 
     if
-        render_type ~= OUTLINE_RENDERTYPE_BEFORE_VM
-        and render_type ~= OUTLINE_RENDERTYPE_BEFORE_EF
-        and render_type ~= OUTLINE_RENDERTYPE_AFTER_EF
+        render_type != OUTLINE_RENDERTYPE_BEFORE_VM
+        and render_type != OUTLINE_RENDERTYPE_BEFORE_EF
+        and render_type != OUTLINE_RENDERTYPE_AFTER_EF
     then return end
 
     RenderType = render_type
@@ -217,7 +217,7 @@ local function Render()
     local scene = render.GetRenderTarget()
 
     -- Only draw inside of the actual main screen RT, prevents breaking addons and other rendering
-    if scene ~= nil then return end
+    if scene != nil then return end
 
     -- Copy the current RT to another RT so we can restore this later on
     -- the way the drawing of this library works is as follows:
@@ -382,7 +382,7 @@ local function Render()
     -- when its only 1px thick, so if AA is on we add 1px to compensate.
     -- This is done in all cases to still differentiate between 1px and 2px outlines
     local outline_thickness = OutlineThickness
-    if enable_thin_line_workaround and cvMaterialAntialias:GetInt() ~= 0 then
+    if enable_thin_line_workaround and cvMaterialAntialias:GetInt() != 0 then
         outline_thickness = outline_thickness + 1
     end
 

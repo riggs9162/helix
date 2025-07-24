@@ -23,7 +23,7 @@
                     </div>
                 {% end %}
 
-                {% if (item.module and item.module.type ~= "hooks") then %}
+                {% if (item.module and item.module.type != "hooks") then %}
                     <a class="reference" href="{* ldoc.repo_reference(item) *}">View source &raquo;</a>
                 {% end %}
 
@@ -57,11 +57,11 @@
                             <li>
                                 <span class="tag parameter">{{displayName}}</span>
 
-                                {% if (type ~= "") then %}
+                                {% if (type != "") then %}
                                     <span class="tag">{* type *}</span>
                                 {% end %}
 
-                                {% if (default and default ~= true) then %}
+                                {% if (default and default != true) then %}
                                     <span class="tag default">default: {{default}}</span>
                                 {% elseif (default) then %}
                                     <span class="tag default">optional</span>
@@ -86,7 +86,7 @@
                             {% type = ldoc.typename(type) %}
 
                             <li>
-                                {% if (type ~= "") then %}
+                                {% if (type != "") then %}
                                     {* type *}
                                 {% else -- we'll assume that it will return a variable type if none is set %}
                                     <span class="tag type">any</span>
@@ -96,7 +96,7 @@
                             </li>
                         {% end %}
 
-                        {% if (i ~= #groups) then %}
+                        {% if (i != #groups) then %}
                             <div class="or"><span>OR</span></div>
                         {% end %}
                     {% end %}
