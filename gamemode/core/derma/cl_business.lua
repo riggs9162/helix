@@ -2,21 +2,19 @@
 local PANEL = {}
 
 function PANEL:Init()
-    -- being relative.
-    local size = 120
-    self:SetSize(size, size * 1.4)
+    self:SetText("")
 end
 
 function PANEL:SetItem(itemTable)
+    self.itemTable = itemTable
     self.itemName = L(itemTable.name):lower()
 
-    self.price = self:Add("DLabel")
-    self.price:Dock(BOTTOM)
-    self.price:SetText(itemTable.price and ix.currency.Get(itemTable.price) or L"free":utf8upper())
-    self.price:SetContentAlignment(5)
-    self.price:SetTextColor(color_white)
-    self.price:SetFont("ixSmallFont")
-    self.price:SetExpensiveShadow(1, Color(0, 0, 0, 200))
+    self:SetHelixTooltip(function(tooltip)
+        ix.hud.PopulateItemTooltip(tooltip, itemTable)
+    end)
+
+    local parent = self:GetParent()
+    self:SetSize(parent:GetWide() / 8, parent:GetWide() / 6)
 
     self.name = self:Add("DLabel")
     self.name:Dock(TOP)
@@ -25,32 +23,29 @@ function PANEL:SetItem(itemTable)
     self.name:SetTextColor(color_white)
     self.name:SetFont("ixSmallFont")
     self.name:SetExpensiveShadow(1, Color(0, 0, 0, 200))
+    self.name:SetMouseInputEnabled(false)
     self.name.Paint = function(this, w, h)
         surface.SetDrawColor(0, 0, 0, 75)
         surface.DrawRect(0, 0, w, h)
     end
 
+    self.price = self:Add("DLabel")
+    self.price:Dock(BOTTOM)
+    self.price:SetText(itemTable.price and ix.currency.Get(itemTable.price) or L"free":utf8upper())
+    self.price:SetContentAlignment(5)
+    self.price:SetTextColor(color_white)
+    self.price:SetFont("ixSmallFont")
+    self.price:SetExpensiveShadow(1, Color(0, 0, 0, 200))
+    self.price:SetMouseInputEnabled(false)
+
     self.icon = self:Add("ixSpawnIcon")
-    self.icon:SetZPos(1)
-    self.icon:SetSize(self:GetWide(), self:GetWide())
     self.icon:Dock(FILL)
     self.icon:DockMargin(5, 5, 5, 10)
+    self.icon:SetZPos(1)
+    self.icon:SetSize(self:GetWide(), self:GetWide())
     self.icon:InvalidateLayout(true)
     self.icon:SetModel(itemTable:GetModel(), itemTable:GetSkin())
-    self.icon:SetHelixTooltip(function(tooltip)
-        ix.hud.PopulateItemTooltip(tooltip, itemTable)
-    end)
-    self.icon.itemTable = itemTable
-    self.icon.DoClick = function(this)
-        if (IsValid(ix.gui.checkout)) then return end
-
-        local parent = ix.gui.business
-        local bAdded = parent:BuyItem(itemTable.uniqueID)
-
-        if (bAdded) then
-            surface.PlaySound("buttons/button14.wav")
-        end
-    end
+    self.icon:SetMouseInputEnabled(false)
     self.icon.PaintOver = function(this)
         if (itemTable and itemTable.PaintOver) then
             local w, h = this:GetSize()
@@ -61,10 +56,7 @@ function PANEL:SetItem(itemTable)
 
     local ent = self.icon:GetEntity()
     if (IsValid(ent)) then
-        local pos = ent:GetPos()
-        local ang = ent:GetAngles()
-
-        local best = PositionSpawnIcon(ent, pos, true)
+        local best = PositionSpawnIcon(ent, ent:GetPos(), true)
         local pos = best and best.origin or Vector(0, 0, 0)
         local ang = best and best.angles or Angle(0, 0, 0)
         local fov = best and best.fov or 75
@@ -84,13 +76,23 @@ function PANEL:SetItem(itemTable)
             end
         end
 
-        panel:SetCamPos(pos)
-        panel:SetFOV(fov)
-        panel:SetLookAng(ang)
+        self.icon:SetCamPos(pos)
+        self.icon:SetFOV(fov)
+        self.icon:SetLookAng(ang)
     end
 end
 
-vgui.Register("ixBusinessItem", PANEL, "DPanel")
+function PANEL:DoClick()
+    if (IsValid(ix.gui.checkout)) then return end
+
+    local parent = ix.gui.business
+    local bAdded = parent:BuyItem(self.itemTable.uniqueID)
+    if (bAdded) then
+        surface.PlaySound("buttons/button14.wav")
+    end
+end
+
+vgui.Register("ixBusinessItem", PANEL, "ixMenuButton")
 
 PANEL = {}
 
@@ -99,54 +101,37 @@ function PANEL:Init()
 
     self:SetSize(self:GetParent():GetSize())
 
-    self.categories = self:Add("DScrollPanel")
+    self.categories = self:Add("ixHelpMenuCategories")
     self.categories:Dock(LEFT)
-    self.categories:SetWide(260)
-    self.categories.Paint = function(this, w, h)
-        surface.SetDrawColor(0, 0, 0, 150)
-        surface.DrawRect(0, 0, w, h)
-    end
-    self.categories:DockPadding(5, 5, 5, 5)
-    self.categories:DockMargin(0, 46, 0, 0)
     self.categoryPanels = {}
 
-    self.scroll = self:Add("DScrollPanel")
-    self.scroll:Dock(FILL)
-
-    self.search = self:Add("DTextEntry")
+    self.search = self:Add("ixIconTextEntry")
     self.search:Dock(TOP)
-    self.search:SetTall(36)
-    self.search:SetFont("ixMediumFont")
-    self.search:DockMargin(10 + self:GetWide() * 0.35, 0, 5, 5)
+    self.search:SetFont("ixMenuButtonFont")
+    self.search:RequestFocus()
     self.search.OnTextChanged = function(this)
         local text = self.search:GetText():lower()
 
         if (self.selected) then
             self:LoadItems(self.selected.category, text:find("%S") and text or nil)
-            self.scroll:InvalidateLayout()
         end
     end
-    self.search.PaintOver = function(this, cw, ch)
-        if (self.search:GetValue() == "" and !self.search:HasFocus()) then
-            ix.util.DrawText("V", 10, ch/2 - 1, color_black, 3, 1, "ixIconsSmall")
-        end
-    end
+
+    self.scroll = self:Add("DScrollPanel")
+    self.scroll:Dock(FILL)
+    self.scroll:GetVBar():SetWide(0)
+    self.scroll:InvalidateParent(true)
+    self.scroll:InvalidateLayout(true)
 
     self.itemList = self.scroll:Add("DIconLayout")
     self.itemList:Dock(TOP)
-    self.itemList:DockMargin(10, 1, 5, 5)
-    self.itemList:SetSpaceX(10)
-    self.itemList:SetSpaceY(10)
-    self.itemList:SetMinimumSize(128, 400)
+    self.itemList:InvalidateParent(true)
+    self.itemList:InvalidateLayout(true)
 
-    self.checkout = self:Add("DButton")
+    self.checkout = self:Add("ixMenuButton")
     self.checkout:Dock(BOTTOM)
-    self.checkout:SetTextColor(color_white)
-    self.checkout:SetTall(36)
-    self.checkout:SetFont("ixMediumFont")
-    self.checkout:DockMargin(10, 10, 0, 0)
-    self.checkout:SetExpensiveShadow(1, Color(0, 0, 0, 150))
     self.checkout:SetText(L("checkout", 0))
+    self.checkout:SizeToContents()
     self.checkout.DoClick = function()
         if (!IsValid(ix.gui.checkout) and self:GetCartCount() > 0) then
             vgui.Create("ixBusinessCheckout"):SetCart(self.cart)
@@ -167,28 +152,14 @@ function PANEL:Init()
     end
 
     for category, realName in SortedPairs(self.categoryPanels) do
-        local button = self.categories:Add("DButton")
-        button:SetTall(36)
-        button:SetText(category)
+        local button = self.categories:Add("ixMenuButton")
         button:Dock(TOP)
-        button:SetTextColor(color_white)
-        button:DockMargin(5, 5, 5, 0)
-        button:SetFont("ixMediumFont")
-        button:SetExpensiveShadow(1, Color(0, 0, 0, 150))
-        button.Paint = function(this, w, h)
-            surface.SetDrawColor(self.selected == this and ix.config.Get("color") or dark)
-            surface.DrawRect(0, 0, w, h)
-
-            surface.SetDrawColor(0, 0, 0, 50)
-            surface.DrawOutlinedRect(0, 0, w, h)
-        end
+        button:SetText(category)
+        button:SizeToContents()
         button.DoClick = function(this)
             if (self.selected != this) then
                 self.selected = this
                 self:LoadItems(realName)
-                timer.Simple(0.01, function()
-                    self.scroll:InvalidateLayout()
-                end)
             end
         end
         button.category = realName
@@ -200,6 +171,8 @@ function PANEL:Init()
 
         self.categoryPanels[realName] = button
     end
+
+    self.categories:SizeToContents()
 
     if (self.selected) then
         self:LoadItems(self.selected.category)
@@ -228,10 +201,14 @@ function PANEL:BuyItem(uniqueID)
 end
 
 function PANEL:LoadItems(category, search)
-    category = category    or "misc"
+    self.scroll:InvalidateParent(true)
+    self.scroll:InvalidateLayout(true)
+
+    category = category or "misc"
     local items = ix.item.list
 
     self.itemList:Clear()
+    self.itemList:InvalidateParent(true)
     self.itemList:InvalidateLayout(true)
 
     for uniqueID, itemTable in SortedPairsByMemberValue(items, "name") do
