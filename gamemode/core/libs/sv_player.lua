@@ -82,7 +82,7 @@ do
         local query = mysql:Update("ix_players")
             query:Update("steam_name", name)
             query:Update("play_time", math.floor((self.ixPlayTime or 0) + (RealTime() - (self.ixJoinTime or RealTime() - 1))))
-            query:Update("data", util.TableToJSON(self.ixData))
+            query:Update("data", util.TableToJSON(self.ixData or {}))
             query:Where("steamid", steamID64)
         query:Execute()
 
