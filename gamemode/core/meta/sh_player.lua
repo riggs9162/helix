@@ -631,10 +631,10 @@ meta.cooldowns = meta.cooldowns or {}
 -- @tparam string action The name of the action to check.
 -- @treturn boolean Returns true if the player is on cooldown.
 -- @usage
--- if !Entity(1):HasCooldown("use_ability") then
+-- if !Entity(1):OnCooldown("use_ability") then
 --     Entity(1):SetCooldown("use_ability", 10) -- 10 second cooldown
 -- end
-function meta:HasCooldown(action)
+function meta:OnCooldown(action)
     return self.cooldowns[action] and self.cooldowns[action] > CurTime()
 end
 
@@ -642,7 +642,7 @@ end
 -- @realm shared
 -- @tparam string action The name of the action to set a cooldown for.
 -- @tparam number time The time (in seconds) for the cooldown.
--- @usage if !Entity(1):HasCooldown("use_ability") then
+-- @usage if !Entity(1):OnCooldown("use_ability") then
 --     Entity(1):SetCooldown("use_ability", 10) -- 10 second cooldown
 -- end
 function meta:SetCooldown(action, time)
