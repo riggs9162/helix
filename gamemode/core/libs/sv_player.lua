@@ -48,6 +48,8 @@ do
                     if (callback) then
                         callback(self.ixData)
                     end
+
+                    hook.Run("PlayerDataLoaded", self)
                 else
                     local insertQuery = mysql:Insert("ix_players")
                         insertQuery:Insert("steamid", steamID64)
@@ -61,13 +63,13 @@ do
                     if (callback) then
                         callback({})
                     end
+
+                    hook.Run("PlayerDataLoaded", self)
                 end
 
                 hook.Run("PostPlayerDataLoaded", self)
             end)
         query:Execute()
-
-        hook.Run("PlayerDataLoaded", self)
     end
 
     --- Saves all of the player's data to the database.
