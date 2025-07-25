@@ -674,7 +674,7 @@ end
 function GM:Move(client, moveData)
     local character = client:GetCharacter()
     if ( character ) then
-        if ( client:GetNetVar("actEnterAngle") ) then
+        if ( client:GetNetVar("frozenSequence") or client:GetNetVar("actEnterAngle") ) then
             moveData:SetForwardSpeed(0)
             moveData:SetSideSpeed(0)
             moveData:SetVelocity(Vector(0, 0, 0))

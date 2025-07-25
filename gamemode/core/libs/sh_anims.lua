@@ -490,11 +490,11 @@ if (SERVER) then
             self:SetNetVar("canShoot", false)
 
             if (!bNoFreeze) then
-                self:SetMoveType(MOVETYPE_NONE)
+                self:SetNetVar("frozenSequence", true)
             end
 
             if (time > 0) then
-                timer.Create("ixSeq"..self:EntIndex(), time, 1, function()
+                timer.Create("ixSeq" .. self:EntIndex(), time, 1, function()
                     if (IsValid(self)) then
                         self:LeaveSequence()
                     end
@@ -526,7 +526,7 @@ if (SERVER) then
         self:SetNetVar("forcedSequence", nil)
         self:SetNetVar("sequenceLoop", nil)
         self:SetNetVar("sequenceSpeed", nil)
-        self:SetMoveType(MOVETYPE_WALK)
+        self:SetNetVar("frozenSequence", nil)
         self.ixCouldShoot = nil
 
         if (self.ixSeqCallback) then
