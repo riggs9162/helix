@@ -73,16 +73,12 @@ function PLUGIN:CalcView(client, origin, angles, fov)
     if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
         local bNoclip = LocalPlayer():GetMoveType() == MOVETYPE_NOCLIP
 
-        if ((client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching()) then
-            crouchFactor = Lerp(ft*5, crouchFactor, 1)
-        else
-            crouchFactor = Lerp(ft*5, crouchFactor, 0)
-        end
+        crouchFactor = Lerp(ft * 5, crouchFactor, ((client:OnGround() and client:KeyDown(IN_DUCK)) or client:Crouching()) and 1 or 0)
 
         curAng = owner.camAng or Angle(0, 0, 0)
         view = {}
         traceData = {}
-            traceData.start =     client:GetPos() + client:GetViewOffset() +
+            traceData.start = client:GetPos() + client:GetViewOffset() +
                                 curAng:Up() * ix.option.Get("thirdpersonVertical", 10) +
                                 curAng:Right() * ix.option.Get("thirdpersonHorizontal", 0) -
                                 client:GetViewOffsetDucked() * .5 * crouchFactor
@@ -139,14 +135,16 @@ end
 function PLUGIN:InputMouseApply(cmd, x, y, ang)
     owner = LocalPlayer()
 
-    if (!owner.camAng) then
-        owner.camAng = Angle(0, 0, 0)
+    if (owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
+        if (!owner.camAng) then
+            owner.camAng = Angle(0, 0, 0)
+        end
+
+        owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
+        owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
+
+        return true
     end
-
-    owner.camAng.p = clmp(math.NormalizeAngle(owner.camAng.p + y / 50), -85, 85)
-    owner.camAng.y = math.NormalizeAngle(owner.camAng.y - x / 50)
-
-    if (owner:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then return true end
 end
 
 function PLUGIN:ShouldDrawLocalPlayer()
