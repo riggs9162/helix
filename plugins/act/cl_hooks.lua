@@ -42,9 +42,17 @@ local heightOffset = Vector(0, 0, 20)
 local idleHeightOffset = Vector(0, 0, 6)
 local traceMin = Vector(-4, -4, -4)
 local traceMax = Vector(4, 4, 4)
+local lerpAngles
 
-function PLUGIN:CalcView(client, origin)
-    if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then return end
+function PLUGIN:CalcView(client, origin, angles, fov)
+    if (client:CanOverrideView() and LocalPlayer():GetViewEntity() == LocalPlayer()) then
+        local head = GetHeadBone(client)
+        if (head) then
+            client:ManipulateBoneScale(head, Vector(1, 1, 1))
+        end
+
+        return
+    end
 
     local enterAngle = client:GetNetVar("actEnterAngle")
     local fraction = self.cameraFraction
@@ -78,8 +86,26 @@ function PLUGIN:CalcView(client, origin)
         ang:RotateAroundAxis(ang:Right(), 270)
         ang:RotateAroundAxis(ang:Up(), 270)
 
-        view.origin = pos + ang:Up() * 4
-        view.angles = ang
+        --view.origin = pos + ang:Up() * 4
+        --view.angles = Angle(ang.p, ang.y, angles.r)
+
+        local trace = {}
+        trace.start = client:EyePos()
+        trace.endpos = pos + ang:Up() * 4
+        trace.filter = client
+        trace.mins = traceMin
+        trace.maxs = traceMax
+        trace.mask = MASK_SHOT
+        local tr = util.TraceHull(trace)
+        view.origin = tr.HitPos
+
+        if (!lerpAngles) then
+            lerpAngles = Angle(ang.p, ang.y, angles.r)
+        else
+            lerpAngles = LerpAngle((FrameTime() * 10) * fraction, lerpAngles, Angle(ang.p, ang.y, angles.r))
+        end
+
+        view.angles = lerpAngles
     else
         view.origin = origin + forward * forwardOffset + height
     end

@@ -18,6 +18,13 @@ CAMI.RegisterPrivilege({
     Name = "Helix - Player Acts",
     MinAccess = "user"
 })
+ix.lang.AddTable("english", {
+    ["acts"] = "Acts"
+})
+
+ix.config.Add("actUpdateRenderAngles", true, "Whether to update the player's render angles when performing an act.", nil, {
+    category = "acts"
+})
 
 --- Registers a sequence as a performable animation (or "act") for a specific model class or multiple model classes.
 -- Acts allow players to perform immersive animations that enhance roleplay scenarios. This function ties an animation or a sequence
@@ -333,8 +340,9 @@ function PLUGIN:PostSetupActs()
 end
 
 function PLUGIN:UpdateAnimation(client, moveData)
-    local angle = client:GetNetVar("actEnterAngle")
+    if (!ix.config.Get("actUpdateRenderAngles", true)) then return end
 
+    local angle = client:GetNetVar("actEnterAngle")
     if (angle) then
         client:SetRenderAngles(angle)
     end
@@ -342,7 +350,6 @@ end
 
 do
     local keyBlacklist = IN_ATTACK + IN_ATTACK2
-
     function PLUGIN:StartCommand(client, command)
         if (client:GetNetVar("actEnterAngle")) then
             command:RemoveKey(keyBlacklist)
