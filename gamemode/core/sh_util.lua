@@ -1182,14 +1182,17 @@ function ix.util.EmitQueuedSounds(entity, sounds, delay, spacing, level, pitch, 
         end
 
         -- Get the length of the sound.
-        local length = SoundDuration(ADJUST_SOUND..v)
+        local length = SoundDuration(ADJUST_SOUND .. v)
         -- If the sound has a pause before it is played, add it here.
         delay = delay + preSet
 
         -- Have the sound play in the future.
         timer.Simple(delay, function()
             -- Check if the entity still exists and play the sound.
-            if (IsValid(entity)) then
+            if (isvector(entity)) then
+                -- If the entity is a vector, play the sound at that position.
+                EmitSound(ADJUST_SOUND .. v, entity, 0, channel or CHAN_AUTO, volume or 1, level or 75, 0, pitch or 100)
+            elseif (IsValid(entity)) then
                 entity:EmitSound(v, level, pitch)
             end
         end)
