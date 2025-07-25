@@ -64,6 +64,8 @@ local function CalcStaminaChange(client)
 
     offset = hook.Run("AdjustStaminaOffset", client, offset) or offset
 
+    local oldValue = client:GetLocalVar("stm", 0)
+
     if (CLIENT) then
         return offset -- for the client we need to return the estimated stamina change
     else
@@ -85,6 +87,8 @@ local function CalcStaminaChange(client)
 
                 hook.Run("PlayerStaminaGained", client)
             end
+
+            hook.Run("PlayerStaminaChanged", client, value, oldValue)
         end
     end
 end
