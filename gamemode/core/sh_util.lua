@@ -78,15 +78,15 @@ function ix.util.IncludeDir(directory, bFromLua)
 
     -- If we're in a schema, include relative to the schema.
     if (Schema and Schema.folder and Schema.loading) then
-        baseDir = Schema.folder.."/schema/"
+        baseDir = Schema.folder .. "/schema/"
     else
-        baseDir = baseDir.."/gamemode/"
+        baseDir = baseDir .. "/gamemode/"
     end
 
     -- Find all of the files within the directory.
-    for _, v in ipairs(file.Find((bFromLua and "" or baseDir)..directory.."/*.lua", "LUA")) do
+    for _, v in ipairs(file.Find((bFromLua and "" or baseDir) .. directory .. "/*.lua", "LUA")) do
         -- Include the file from the prefix.
-        ix.util.Include(directory.."/"..v)
+        ix.util.Include(directory .. "/" .. v)
     end
 end
 
@@ -206,17 +206,20 @@ do
 end
 
 function ix.util.Bind(self, callback)
-    return function(_, ...)
-        return callback(self, ...)
+    return function(_,  ...)
+        return callback(self,  ...)
     end
 end
 
+local hostip = GetConVar("hostip")
+local hostport = GetConVar("hostport")
+
 -- Returns the address:port of the server.
 function ix.util.GetAddress()
-    local address = tonumber(GetConVarString("hostip"))
+    local address = tonumber(hostip:GetString())
 
     if (!address) then
-        return "127.0.0.1"..":"..GetConVarString("hostport")
+        return "127.0.0.1" .. ":" .. hostport:GetString()
     end
 
     local ip = {}
@@ -224,7 +227,7 @@ function ix.util.GetAddress()
         ip[2] = bit.rshift(bit.band(address, 0x00FF0000), 16)
         ip[3] = bit.rshift(bit.band(address, 0x0000FF00), 8)
         ip[4] = bit.band(address, 0x000000FF)
-    return table.concat(ip, ".")..":"..GetConVarString("hostport")
+    return table.concat(ip, ".") .. ":" .. hostport:GetString()
 end
 
 --- Returns a cached copy of the given material, or creates and caches one if it doesn't exist. This is a quick helper function
@@ -263,7 +266,7 @@ function ix.util.FindPlayer(identifier, bAllowPatterns)
     end
 
     for _, v in player.Iterator() do
-        if (ix.util.StringMatches(v:Name(), identifier) or v:SteamID() == identifier or v:SteamID64() == identifier) then
+        if (ix.util.StringMatches(v:Name(), identifier) or v:SteamID64() == identifier or v:SteamID64() == identifier) then
             return v
         end
     end
@@ -332,14 +335,14 @@ end
 --- Returns a string that has the named arguments in the format string replaced with the given arguments.
 -- @realm shared
 -- @string format Format string
--- @tparam tab|... Arguments to pass to the formatted string. If passed a table, it will use that table as the lookup table for
+-- @tparam tab| ... Arguments to pass to the formatted string. If passed a table, it will use that table as the lookup table for
 -- the named arguments. If passed multiple arguments, it will replace the arguments in the string in order.
 -- @usage print(ix.util.FormatStringNamed("Hi, my name is {name}.", {name = "Bobby"}))
 -- > Hi, my name is Bobby.
 -- @usage print(ix.util.FormatStringNamed("Hi, my name is {name}.", "Bobby"))
 -- > Hi, my name is Bobby.
-function ix.util.FormatStringNamed(format, ...)
-    local arguments = {...}
+function ix.util.FormatStringNamed(format,  ...)
+    local arguments = { ...}
     local bArray = false -- Whether or not the input has numerical indices or named ones
     local input
 
@@ -381,13 +384,13 @@ do
         input = bNoUpperFirst and input or input:utf8sub(1, 1):utf8upper() .. input:utf8sub(2)
 
         -- extra parentheses to select first return value of gsub
-        return string.TrimRight((input:gsub("%u%l+", function(word)
+        return string.TrimRight(input:gsub("%u%l+", function(word)
             if (upperMap[word:utf8lower()]) then
                 word = word:utf8upper()
             end
 
             return word .. " "
-        end)))
+        end))
     end
 end
 
@@ -410,10 +413,10 @@ do
     local value
     local character
 
-    local function iterator(table)
+    local function iterator(tbl)
         repeat
             i = i + 1
-            value = table[i]
+            value = tbl[i]
             character = value and value:GetCharacter()
         until character or value == nil
 
@@ -585,7 +588,6 @@ if (CLIENT) then
         local words = string.Explode("%s", text, true)
         local lines = {}
         local line = ""
-        local lineWidth = 0 -- luacheck: ignore 231
 
         -- we don't need to calculate wrapping if we're under the max width
         if (surface.GetTextSize(text) <= maxWidth) then
@@ -800,10 +802,8 @@ function ix.util.IsUseableEntity(entity, requiredCaps)
     if (IsValid(entity)) then
         local caps = entity:ObjectCaps()
 
-        if (bit.band(caps, bit.bor(FCAP_IMPULSE_USE, FCAP_CONTINUOUS_USE, FCAP_ONOFF_USE, FCAP_DIRECTIONAL_USE))) then
-            if (bit.band(caps, requiredCaps) == requiredCaps) then
-                return true
-            end
+        if (bit.band(caps, bit.bor(FCAP_IMPULSE_USE, FCAP_CONTINUOUS_USE, FCAP_ONOFF_USE, FCAP_DIRECTIONAL_USE)) and bit.band(caps, requiredCaps) == requiredCaps) then
+            return true
         end
     end
 end
@@ -832,7 +832,7 @@ do
     local traceMin = Vector(-16, -16, -16)
     local traceMax = Vector(16, 16, 16)
 
-    function ix.util.FindUseEntity(player, origin, forward)
+    function ix.util.FindUseEntity(client, origin, forward)
         local tr
         local up = forward:Up()
         -- Search for objects in a sphere (tests for entities that are not solid, yet still useable)
@@ -855,7 +855,7 @@ do
                     start = searchCenter,
                     endpos = searchCenter + forward * 1024,
                     mask = useableContents,
-                    filter = player
+                    filter = client
                 })
 
                 tr.EndPos = searchCenter + forward * 1024
@@ -869,7 +869,7 @@ do
                     mins = traceMin,
                     maxs = traceMax,
                     mask = useableContents,
-                    filter = player
+                    filter = client
                 })
 
                 tr.EndPos = searchCenter + down * 72
@@ -886,8 +886,8 @@ do
 
             if (bUsable) then
                 local delta = tr.EndPos - tr.StartPos
-                local centerZ = origin.z - player:WorldSpaceCenter().z
-                delta.z = IntervalDistance(tr.EndPos.z, centerZ - player:OBBMins().z, centerZ + player:OBBMaxs().z)
+                local centerZ = origin.z - client:WorldSpaceCenter().z
+                delta.z = IntervalDistance(tr.EndPos.z, centerZ - client:OBBMins().z, centerZ + client:OBBMaxs().z)
                 local dist = delta:Length()
 
                 if (dist < 80) then
@@ -904,8 +904,8 @@ do
         -- check ground entity first
         -- if you've got a useable ground entity, then shrink the cone of this search to 45 degrees
         -- otherwise, search out in a 90 degree cone (hemisphere)
-        if (IsValid(player:GetGroundEntity()) and ix.util.IsUseableEntity(player:GetGroundEntity(), FCAP_USE_ONGROUND)) then
-            pNearest = player:GetGroundEntity()
+        if (IsValid(client:GetGroundEntity()) and ix.util.IsUseableEntity(client:GetGroundEntity(), FCAP_USE_ONGROUND)) then
+            pNearest = client:GetGroundEntity()
         end
 
         if (IsValid(pNearest)) then
@@ -938,7 +938,7 @@ do
                     start = searchCenter,
                     endpos = point,
                     mask = useableContents,
-                    filter = player,
+                    filter = client,
                     output = trCheckOccluded
                 })
 
@@ -1151,7 +1151,7 @@ if (system.IsLinux()) then
     end
 end
 
-local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or "../../hl2/sound/"
+local ADJUST_SOUND = SoundDuration("npc/metropolice/pain1.wav") > 0 and "" or " .. / .. /hl2/sound/"
 
 --- Emits sounds one after the other from an entity.
 -- @realm shared
@@ -1264,13 +1264,13 @@ end
 -- @realm shared
 -- @string text Text to trim
 -- @number length Maximum length of the text
--- @string[opt="..."] ending Ending to add if the text is too long
+-- @string[opt=" ..."] ending Ending to add if the text is too long
 -- @treturn string Trimmed text
 -- @usage print(ix.util.TrimText("Hello, world!", 5))
--- > Hello...
+-- > Hello ...
 function ix.util.TrimText(text, length, ending)
     if ( string.len(text) > length ) then
-        return text:sub(1, length) .. ( ending or "..." )
+        return text:sub(1, length) .. ( ending or " ..." )
     end
 
     return text
@@ -1571,14 +1571,14 @@ if ( CLIENT ) then
     -- @return Scaled size
     function ix.util.ScreenScale(size, useHeight)
         local screenW, screenH = ScrW(), ScrH()
-    
+
         -- Compute scale factors based on an exponential decay to make elements significantly smaller on large screens
         local scaleX = (BASE_RES_X / screenW) ^ 0.85
         local scaleY = (BASE_RES_Y / screenH) ^ 0.85
-        
+
         -- Choose the appropriate scale mode
         local scale = useHeight and scaleY or math.min(scaleX, scaleY)
-        
+
         -- Ensure elements do not disappear and maintain readability
         return math.max(math.floor(size * scale + 0.5), 1)
     end
@@ -1636,7 +1636,6 @@ end
 function ix.util.FindNearestEntity(pos, radius, entClass)
     local entities = ents.FindInSphere(pos, radius)
     local nearestEnt = nil
-    local nearestDist = math.huge
 
     table.sort(entities, function(a, b)
         return a:GetPos():Distance(pos) < b:GetPos():Distance(pos)
@@ -1679,15 +1678,15 @@ end
 -- @string dir The directory to search.
 -- @treturn table A table of file paths.
 function ix.util.FindFilesRecursive(dir)
-    local files, dirs = file.Find(dir.."/*", "GAME")
+    local files, dirs = file.Find(dir .. "/*", "GAME")
     local results = {}
 
     for _, f in ipairs(files) do
-        table.insert(results, dir.."/"..f)
+        table.insert(results, dir .. "/" .. f)
     end
 
     for _, d in ipairs(dirs) do
-        local subFiles = ix.util.FindFilesRecursive(dir.."/"..d)
+        local subFiles = ix.util.FindFilesRecursive(dir .. "/" .. d)
         for _, f in ipairs(subFiles) do
             table.insert(results, f)
         end
@@ -1712,9 +1711,9 @@ function ix.util.IsValidModel(model)
     end
 
     for _, directory in ipairs(directories) do
-        local files = file.Find("models/" .. directory .. "/*", "GAME")
+        local innerFiles = file.Find("models/" .. directory .. "/*", "GAME")
 
-        for _, found in ipairs(files) do
+        for _, found in ipairs(innerFiles) do
             if ( ix.util.StringMatches(found, model) ) then
                 return true
             end
@@ -1725,8 +1724,8 @@ function ix.util.IsValidModel(model)
 end
 
 local color_fallback = Color(115, 53, 142)
-function ix.util.Log(...)
-    local comp = {...}
+function ix.util.Log( ...)
+    local comp = { ...}
     table.insert(comp, "\n")
     MsgC(color_fallback, "[Helix] ", unpack(comp))
 end
