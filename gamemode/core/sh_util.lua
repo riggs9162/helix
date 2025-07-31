@@ -410,6 +410,27 @@ function ix.util.ContractCamelCase(input, bNoUpperFirst)
     end))
 end
 
+--- Converts a human-readable name into a slug-style identifier.
+--  • replaces all whitespace runs with underscores
+--  • lowercases ASCII letters only (non-ASCII letters stay as-is)
+--  e.g. "Hello World" → "hello_world"
+-- @param name string
+-- @return string
+function ix.util.NameToIdentifier(name)
+    -- trim leading/trailing spaces
+    local str = name:gsub("^%s+", ""):gsub("%s+$", "")
+
+    -- replace any whitespace (tabs, spaces, etc) with single underscores
+    str = str:gsub("%s+", "_")
+
+    -- lowercase all ASCII uppercase letters (A–Z); non-ASCII stays untouched
+    str = str:gsub("(%u)", function(c)
+        return c:lower()
+    end)
+
+    return str
+end
+
 function ix.util.GridVector(vec, gridSize)
     if (gridSize <= 0) then
         gridSize = 1
