@@ -35,17 +35,23 @@ function PANEL:Populate()
         local categoryPhrase = L(category)
         self:AddCategory(categoryPhrase)
 
-        -- we can use sortedpairs since configs don't have phrases to account for
+        local sorted = {}
         for k, v in SortedPairs(categories[category]) do
+            local newKey = ix.util.ContractCamelCase(ix.lang.GetPhrase(k))
+            sorted[newKey] = v
+            sorted[newKey].key = k -- store original key for net messages
+        end
+
+        for k, v in SortedPairs(sorted) do
             if (isfunction(v.hidden) and v.hidden()) then continue end
 
             local data = v.data.data
             local type = v.type
-            local value = ix.util.SanitizeType(type, ix.config.Get(k))
+            local value = ix.util.SanitizeType(type, ix.config.Get(v.key))
 
             local row = self:AddRow(type, categoryPhrase)
-            row:SetText(ix.util.ExpandCamelCase(k))
-            row:Populate(k, v.data)
+            row:SetText(ix.lang.GetPhrase(v.key))
+            row:Populate(v.key, v.data)
 
             -- type-specific properties
             if (type == ix.type.number) then
@@ -55,15 +61,15 @@ function PANEL:Populate()
             end
 
             row:SetValue(value, true)
-            row:SetShowReset(value != v.default, k, v.default)
+            row:SetShowReset(value != v.default, ix.lang.GetPhrase(v.key), v.default)
 
             row.OnValueChanged = function(panel)
                 local newValue = ix.util.SanitizeType(type, panel:GetValue())
 
-                panel:SetShowReset(newValue != v.default, k, v.default)
+                panel:SetShowReset(newValue != v.default, ix.lang.GetPhrase(v.key), v.default)
 
                 net.Start("ixConfigSet")
-                    net.WriteString(k)
+                    net.WriteString(v.key)
                     net.WriteType(newValue)
                 net.SendToServer()
             end
@@ -73,7 +79,7 @@ function PANEL:Populate()
                 panel:SetShowReset(false)
 
                 net.Start("ixConfigSet")
-                    net.WriteString(k)
+                    net.WriteString(v.key)
                     net.WriteType(v.default)
                 net.SendToServer()
             end
@@ -81,9 +87,9 @@ function PANEL:Populate()
             row:GetLabel():SetHelixTooltip(function(tooltip)
                 local title = tooltip:AddRow("name")
                 title:SetImportant()
-                title:SetText(k)
+                title:SetText(v.key) -- leave it as the key for clarity for developers
                 title:SizeToContents()
-                title:SetMaxWidth(math.max(title:GetMaxWidth(), ScrW() * 0.5))
+                title:SetMaxWidth(math.max(title:GetMaxWidth(), ScrW() / 2))
 
                 local description = tooltip:AddRow("description")
                 description:SetText(v.description)
@@ -148,7 +154,7 @@ function PANEL:Populate()
             title:SetImportant()
             title:SetText(v.name)
             title:SizeToContents()
-            title:SetMaxWidth(math.max(title:GetMaxWidth(), ScrW() * 0.5))
+            title:SetMaxWidth(math.max(title:GetMaxWidth(), ScrW() / 2))
 
             local description = tooltip:AddRow("description")
             description:SetText(v.description)

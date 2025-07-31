@@ -364,34 +364,50 @@ function ix.util.FormatStringNamed(format,  ...)
     return result
 end
 
-do
-    local upperMap = {
-        ["ooc"] = true,
-        ["looc"] = true,
-        ["afk"] = true,
-        ["url"] = true
-    }
-    --- Returns a string that is the given input with spaces in between each CamelCase word. This function will ignore any words
-    -- that do not begin with a capital letter. The words `ooc`, `looc`, `afk`, and `url` will be automatically transformed
-    -- into uppercase text. This will not capitalize non-ASCII letters due to limitations with Lua's pattern matching.
-    -- @realm shared
-    -- @string input String to expand
-    -- @bool[opt=false] bNoUpperFirst Whether or not to avoid capitalizing the first character. This is useful for lowerCamelCase
-    -- @treturn string Expanded CamelCase string
-    -- @usage print(ix.util.ExpandCamelCase("HelloWorld"))
-    -- > Hello World
-    function ix.util.ExpandCamelCase(input, bNoUpperFirst)
-        input = bNoUpperFirst and input or input:utf8sub(1, 1):utf8upper() .. input:utf8sub(2)
+local upperMap = {
+    ["ooc"] = true,
+    ["looc"] = true,
+    ["afk"] = true,
+    ["url"] = true
+}
+--- Returns a string that is the given input with spaces in between each CamelCase word. This function will ignore any words
+-- that do not begin with a capital letter. The words `ooc`, `looc`, `afk`, and `url` will be automatically transformed
+-- into uppercase text. This will not capitalize non-ASCII letters due to limitations with Lua's pattern matching.
+-- @realm shared
+-- @string input String to expand
+-- @bool[opt=false] bNoUpperFirst Whether or not to avoid capitalizing the first character. This is useful for lowerCamelCase
+-- @treturn string Expanded CamelCase string
+-- @usage print(ix.util.ExpandCamelCase("HelloWorld"))
+-- > Hello World
+function ix.util.ExpandCamelCase(input, bNoUpperFirst)
+    input = bNoUpperFirst and input or input:utf8sub(1, 1):utf8upper() .. input:utf8sub(2)
 
-        -- extra parentheses to select first return value of gsub
-        return string.TrimRight(input:gsub("%u%l+", function(word)
-            if (upperMap[word:utf8lower()]) then
-                word = word:utf8upper()
-            end
+    -- extra parentheses to select first return value of gsub
+    return string.TrimRight(input:gsub("%u%l+", function(word)
+        if (upperMap[word:utf8lower()]) then
+            word = word:utf8upper()
+        end
 
-            return word .. " "
-        end))
-    end
+        return word .. " "
+    end))
+end
+
+--- Returns the opposite of ExpandCamelCase. This will take a string with spaces and convert it into CamelCase.
+-- @realm shared
+-- @string input String to contract
+-- @bool[opt=false] bNoUpperFirst Whether or not to avoid capitalizing the first character. This is useful for lowerCamelCase
+-- @treturn string Contracted CamelCase string
+function ix.util.ContractCamelCase(input, bNoUpperFirst)
+    input = bNoUpperFirst and input or input:utf8sub(1, 1):utf8upper() .. input:utf8sub(2)
+
+    -- extra parentheses to select first return value of gsub
+    return string.TrimRight(input:gsub("%u%l+", function(word)
+        if (upperMap[word:utf8lower()]) then
+            word = word:utf8upper()
+        end
+
+        return word .. " "
+    end))
 end
 
 function ix.util.GridVector(vec, gridSize)

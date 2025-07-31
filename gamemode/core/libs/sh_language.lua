@@ -68,6 +68,44 @@ function ix.lang.AddTable(language, data)
     ix.lang.stored[language] = table.Merge(ix.lang.stored[language] or {}, data)
 end
 
+--- Gets a phrase from the language system. This will return the phrase in the current language set by the client, or the default language if the client is not valid. If the phrase does not exist, it will return the key itself.
+-- @realm shared
+-- @string key The phrase ID to get
+-- @param[opt] client The client to get the language for. If not provided, it will use the default language.
+-- @return The localized phrase, or the key itself if it does not exist.
+-- @usage print(ix.lang.GetPhrase("myPhrase"))
+function ix.lang.GetPhrase(key, client)
+    local languages = ix.lang.stored
+    if not languages then
+        return key
+    end
+
+    local output = key
+    if (SERVER) then
+        local langKey = IsValid(client) and ix.option.Get(client, "language", "english") or "english"
+        local info = languages[langKey] or languages.english
+
+        output = info and info[key] or languages.english[key] or key
+    else
+        local langKey = ix.option.Get("language", "english")
+        local info = languages[langKey]
+
+        output = info and info[key] or languages.english[key] or key
+    end
+
+    -- Remove extra spaces and newlines
+    output = string.gsub(output, "[\n\r]+", " ")
+    output = string.gsub(output, "%s+", " ")
+    output = string.Trim(output)
+
+    if (output == "" or output == key) then
+        -- If the output is empty or the same as the key, use the expanded camel case
+        output = ix.util.ExpandCamelCase(key)
+    end
+
+    return output
+end
+
 if (SERVER) then
     -- luacheck: globals L
     function L(key, client, ...)
