@@ -598,47 +598,48 @@ function GM:PlayerLoadout(client)
         ix.flag.OnSpawn(client)
         ix.attributes.Setup(client)
 
-        hook.Run("PostPlayerLoadout", client)
-
         client:SelectWeapon("ix_hands")
     else
         client:SetNoDraw(true)
         client:Lock()
         client:SetNotSolid(true)
     end
+
+    hook.Run("PostPlayerLoadout", client)
 end
 
 function GM:PostPlayerLoadout(client)
-    -- Reload All Attrib Boosts
     local character = client:GetCharacter()
-    if (character:GetInventory()) then
-        for k, _ in character:GetInventory():Iter() do
-            k:Call("OnLoadout", client)
+    if (character) then
+        if (character:GetInventory()) then
+            for k, _ in character:GetInventory():Iter() do
+                k:Call("OnLoadout", client)
 
-            if (k:GetData("equip") and k.attribBoosts) then
-                for attribKey, attribValue in pairs(k.attribBoosts) do
-                    character:AddBoost(k.uniqueID, attribKey, attribValue)
+                if (k:GetData("equip") and k.attribBoosts) then
+                    for attribKey, attribValue in pairs(k.attribBoosts) do
+                        character:AddBoost(k.uniqueID, attribKey, attribValue)
+                    end
                 end
             end
         end
-    end
 
-    -- If their faction wants to do something when the player's loadout is set, let it.
-    local faction = ix.faction.indices[client:Team()]
-    if (faction and faction.OnLoadout) then
-        faction:OnLoadout(client)
-    end
+        -- If their faction wants to do something when the player's loadout is set, let it.
+        local faction = ix.faction.indices[client:Team()]
+        if (faction and faction.OnLoadout) then
+            faction:OnLoadout(client)
+        end
 
-    -- Ditto, but for classes.
-    local class = ix.class.list[character:GetClass()]
-    if (class and class.OnLoadout) then
-        class:OnLoadout(client)
-    end
+        -- Ditto, but for classes.
+        local class = ix.class.list[character:GetClass()]
+        if (class and class.OnLoadout) then
+            class:OnLoadout(client)
+        end
 
-    -- Ditto, but for ranks.
-    local rank = ix.rank.list[character:GetRank()]
-    if (rank and rank.OnLoadout) then
-        rank:OnLoadout(client)
+        -- Ditto, but for ranks.
+        local rank = ix.rank.list[character:GetRank()]
+        if (rank and rank.OnLoadout) then
+            rank:OnLoadout(client)
+        end
     end
 
     if (ix.config.Get("allowVoice")) then
