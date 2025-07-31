@@ -566,9 +566,9 @@ do
                     if (delay > 0 and speaker.ixLastOOC) then
                         local lastOOC = CurTime() - speaker.ixLastOOC
 
-                        -- Use this method of checking time in case the oocDelay config changes.
+                        -- Use this method of checking time in case the oocNotify config changes.
                         if (lastOOC <= delay and !CAMI.PlayerHasAccess(speaker, "Helix - Bypass OOC Timer", nil)) then
-                            speaker:NotifyLocalized("oocDelay", delay - math.ceil(lastOOC))
+                            speaker:NotifyLocalized("oocNotify", delay - math.ceil(lastOOC))
 
                             return false
                         end
@@ -615,7 +615,7 @@ do
                 if (delay > 0 and speaker.ixLastLOOC) then
                     local lastLOOC = CurTime() - speaker.ixLastLOOC
 
-                    -- Use this method of checking time in case the oocDelay config changes.
+                    -- Use this method of checking time in case the oocNotify config changes.
                     if (lastLOOC <= delay and !CAMI.PlayerHasAccess(speaker, "Helix - Bypass OOC Timer", nil)) then
                         speaker:NotifyLocalized("loocDelay", delay - math.ceil(lastLOOC))
 
