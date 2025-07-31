@@ -228,6 +228,17 @@ if (SERVER) then
     end
 end
 
+--- Returns `true` if the character currently has a female model. This checks if the model has `female`, `alyx` or `mossman` in its
+-- name, or if the character's model class is `citizen_female`.
+-- @realm shared
+-- @treturn bool Whether or not the character has a female model
+function CHAR:IsFemale()
+    local model = self:GetModel():lower()
+
+    return (model:find("female") or model:find("alyx") or model:find("mossman")) != nil or
+        ix.anim.GetModelClass(model) == "citizen_female"
+end
+
 --- Returns the player that owns this character.
 -- @realm shared
 -- @treturn player Player that owns this character
