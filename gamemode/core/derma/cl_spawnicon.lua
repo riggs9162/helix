@@ -20,9 +20,7 @@ function PANEL:SetModel(model, skin, hidden)
     BaseClass.SetModel(self, model)
 
     local entity = self.Entity
-    if (!IsValid(entity)) then
-        return
-    end
+    if (!IsValid(entity)) then return end
 
     if (skin) then
         entity:SetSkin(skin)

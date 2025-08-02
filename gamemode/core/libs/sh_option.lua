@@ -108,6 +108,37 @@ function ix.option.Add(key, optionType, default, data)
     }
 end
 
+--- Creates a more simple option that doesn't require language phrases.
+-- @realm shared
+-- @string name Name of the option
+-- @string description Description of the option
+-- @string category Category of the option
+-- @ixtype optionType Type of the option
+-- @param default Default value of the option
+-- @tparam OptionStructure data Additional settings for this option
+-- @treturn string Unique ID of the option
+-- @usage ix.option.AddQuick("Viewmodel FOV", "The field of view of the viewmodel", "appearance", ix.type.number, 90, {
+--     min = 60,
+--     max = 120
+-- })
+function ix.option.AddQuick(name, description, category, optionType, default, data)
+    local key = string.sub(name, 1, 1):lower() .. string.sub(name, 2)
+    key = string.gsub(key, " ", "")
+
+    data = data or {}
+    data.category = category
+
+    local keyUpper = key:sub(1, 1):upper() .. key:sub(2)
+    ix.lang.AddTable("english", {
+        ["opt" .. keyUpper] = name,
+        ["optd" .. keyUpper] = description
+    })
+
+    ix.option.Add(key, optionType, default, data)
+
+    return key
+end
+
 --- Loads all saved options from disk.
 -- @realm shared
 -- @internal

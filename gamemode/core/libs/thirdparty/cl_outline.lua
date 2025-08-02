@@ -406,9 +406,7 @@ local function RenderOutlines()
 
     local listSizes = GetCurrentListsSize()
     for outlineThickness, renderEnts in pairs(GetCurrentLists()) do
-        if not listSizes[outlineThickness] or listSizes[outlineThickness] == 0 then
-            continue
-        end
+        if not listSizes[outlineThickness] or listSizes[outlineThickness] == 0 then continue end
         SetOutlineThickness(outlineThickness)
         Render()
     end

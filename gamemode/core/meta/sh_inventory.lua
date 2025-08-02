@@ -103,9 +103,7 @@ end
 -- @realm shared
 function META:FindError()
     for k, _ in self:Iter() do
-        if (k.width == 1 and k.height == 1) then
-            continue
-        end
+        if (k.width == 1 and k.height == 1) then continue end
 
         print("Finding error: " .. k.name)
         print("Item Position: " .. k.gridX, k.gridY)
@@ -162,16 +160,14 @@ end
 -- @player owner The player to take control over the inventory.
 -- @bool fullUpdate Whether or not to update the inventory immediately to the new owner.
 function META:SetOwner(owner, fullUpdate)
-    if (type(owner) == "Player" and owner:GetNetVar("char")) then
-        owner = owner:GetNetVar("char")
-    elseif (!isnumber(owner)) then
-        return
-    end
+    if (type(owner) == "Player" and owner:GetNetVar("character")) then
+        owner = owner:GetNetVar("character")
+    elseif (!isnumber(owner)) then return end
 
     if (SERVER) then
         if (fullUpdate) then
             for _, v in player.Iterator() do
-                if (v:GetNetVar("char") == owner) then
+                if (v:GetNetVar("character") == owner) then
                     self:Sync(v, true)
 
                     break
@@ -244,7 +240,6 @@ function META:CanItemFit(x, y, w, h, item2)
     return canFit
 end
 
-
 --- Returns the amount of slots currently filled in the Inventory.
 -- @realm shared
 -- @treturn number The amount of slots currently filled.
@@ -254,6 +249,23 @@ function META:GetFilledSlotCount()
     for x = 1, self.w do
         for y = 1, self.h do
             if ((self.slots[x] or {})[y]) then
+                count = count + 1
+            end
+        end
+    end
+
+    return count
+end
+
+--- Returns the amount of slots currently free in the Inventory.
+-- @realm shared
+-- @treturn number The amount of slots currently free.
+function META:GetFreeSlotCount()
+    local count = 0
+
+    for x = 1, self.w do
+        for y = 1, self.h do
+            if (!(self.slots[x] or {})[y]) then
                 count = count + 1
             end
         end
@@ -284,9 +296,7 @@ function META:FindEmptySlot(w, h, onlyMain)
     w = w or 1
     h = h or 1
 
-    if (w > self.w or h > self.h) then
-        return
-    end
+    if (w > self.w or h > self.h) then return end
 
     for y = 1, self.h - (h - 1) do
         for x = 1, self.w - (w - 1) do

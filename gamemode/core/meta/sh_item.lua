@@ -541,7 +541,7 @@ if (SERVER) then
             entity:SetPos(position)
 
             if (IsValid(client)) then
-                entity.ixSteamID = client:SteamID()
+                entity.ixSteamID = client:SteamID64()
                 entity.ixCharID = client:GetCharacter():GetID()
                 entity:SetNetVar("owner", entity.ixCharID)
             end
@@ -584,7 +584,7 @@ if (SERVER) then
             local characterID = client:GetCharacter():GetID()
 
             if (itemPlayerID and itemCharacterID) then
-                if (itemPlayerID == playerID and itemCharacterID != characterID) then
+                if (itemPlayerID == playerID and itemCharacterID != characterID and ix.config.Get("itemOwnership", false)) then
                     return false, "itemOwned"
                 end
             else
