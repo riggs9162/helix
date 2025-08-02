@@ -31,11 +31,11 @@ doesn't exist.
 
 The default item bases that come with Helix are:
 
-  - `ammo` - provides ammo to any items with the `weapons` base
-  - `bags` - holds an inventory that other items can be stored inside of
-  - `outfit` - changes the appearance of the player that wears it
-  - `pacoutfit` - changes the appearance of the player that wears it using PAC3
-  - `weapons` - makes any SWEP into an item that can be equipped
+- `ammo` - provides ammo to any items with the `weapons` base
+- `bags` - holds an inventory that other items can be stored inside of
+- `outfit` - changes the appearance of the player that wears it
+- `pacoutfit` - changes the appearance of the player that wears it using PAC3
+- `weapons` - makes any SWEP into an item that can be equipped
 
 These item bases usually come with extra values and methods that you can define/override in order to change their functionality.
 You should take a look at the source code for these bases to see their capabilities.
@@ -304,7 +304,6 @@ function ITEM:GetOwner()
     end
 
     local id = self:GetID()
-    if (!id) then return end
 
     for _, v in player.Iterator() do
         local character = v:GetCharacter()
@@ -542,7 +541,7 @@ if (SERVER) then
             entity:SetPos(position)
 
             if (IsValid(client)) then
-                entity.ixSteamID = client:SteamID64()
+                entity.ixSteamID = client:SteamID()
                 entity.ixCharID = client:GetCharacter():GetID()
                 entity:SetNetVar("owner", entity.ixCharID)
             end
@@ -585,7 +584,7 @@ if (SERVER) then
             local characterID = client:GetCharacter():GetID()
 
             if (itemPlayerID and itemCharacterID) then
-                if (itemPlayerID == playerID and itemCharacterID != characterID and ix.config.Get("itemOwnership", false)) then
+                if (itemPlayerID == playerID and itemCharacterID != characterID) then
                     return false, "itemOwned"
                 end
             else

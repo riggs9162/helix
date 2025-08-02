@@ -1031,9 +1031,9 @@ end
 function GM:CharacterPreSave(character)
     local client = character:GetPlayer()
 
-    for v in character:GetInventory():Iter() do
-        if (v.OnSave) then
-            v:Call("OnSave", client)
+    for k, _ in character:GetInventory():Iter() do
+        if (k.OnSave) then
+            k:Call("OnSave", client)
         end
     end
 

@@ -38,7 +38,7 @@ META.receivers = META.receivers or {}
 -- @usage print(ix.item.inventories[1])
 -- > "inventory[1]"
 function META:__tostring()
-    return "inventory["..(self.id or 0).."]"
+    return "inventory[" .. (self.id or 0) .. "]"
 end
 
 --- Initializes the inventory with the provided arguments.
@@ -103,7 +103,9 @@ end
 -- @realm shared
 function META:FindError()
     for k, _ in self:Iter() do
-        if (k.width == 1 and k.height == 1) then continue end
+        if (k.width == 1 and k.height == 1) then
+            continue
+        end
 
         print("Finding error: " .. k.name)
         print("Item Position: " .. k.gridX, k.gridY)
@@ -160,14 +162,16 @@ end
 -- @player owner The player to take control over the inventory.
 -- @bool fullUpdate Whether or not to update the inventory immediately to the new owner.
 function META:SetOwner(owner, fullUpdate)
-    if (type(owner) == "Player" and owner:GetNetVar("character")) then
-        owner = owner:GetNetVar("character")
-    elseif (!isnumber(owner)) then return end
+    if (type(owner) == "Player" and owner:GetNetVar("char")) then
+        owner = owner:GetNetVar("char")
+    elseif (!isnumber(owner)) then
+        return
+    end
 
     if (SERVER) then
         if (fullUpdate) then
             for _, v in player.Iterator() do
-                if (v:GetNetVar("character") == owner) then
+                if (v:GetNetVar("char") == owner) then
                     self:Sync(v, true)
 
                     break
@@ -258,23 +262,6 @@ function META:GetFilledSlotCount()
     return count
 end
 
---- Returns the amount of slots currently free in the Inventory.
--- @realm shared
--- @treturn number The amount of slots currently free.
-function META:GetFreeSlotCount()
-    local count = 0
-
-    for x = 1, self.w do
-        for y = 1, self.h do
-            if (!(self.slots[x] or {})[y]) then
-                count = count + 1
-            end
-        end
-    end
-
-    return count
-end
-
 --- Finds an empty slot of a specified width and height.
 -- In most cases, to check if an `Item` can actually fit in the `Inventory`,
 -- as if it can't, it will just return `nil`.
@@ -297,7 +284,9 @@ function META:FindEmptySlot(w, h, onlyMain)
     w = w or 1
     h = h or 1
 
-    if (w > self.w or h > self.h) then return end
+    if (w > self.w or h > self.h) then
+        return
+    end
 
     for y = 1, self.h - (h - 1) do
         for x = 1, self.w - (w - 1) do
@@ -583,7 +572,7 @@ function META:Iter()
 
             item = self.slots[x] and self.slots[x][y]
             x = x + 1
-        until item
+        until item and not isbool(item) -- skip reserved slots in which items have yet to be fully instantiated
 
         if (item) then
             return item, x, y
@@ -627,7 +616,7 @@ end
 -- @usage local item = inventory:HasItem("handheld_radio")
 --
 -- if (item) then
---     -- do something with the item table
+-- 	-- do something with the item table
 -- end
 function META:HasItem(targetID, data)
     for k, _ in self:Iter() do
@@ -642,6 +631,7 @@ function META:HasItem(targetID, data)
                         break
                     end
                 end
+
                 if (!bFound) then
                     continue
                 end
@@ -681,6 +671,7 @@ function META:HasItems(targetIDs)
             end
         end
     end
+
     return count <= 0, targetIDs
 end
 
@@ -713,6 +704,7 @@ function META:HasItemOfBase(baseID, data)
                         break
                     end
                 end
+
                 if (!bFound) then
                     continue
                 end
@@ -833,7 +825,7 @@ if (SERVER) then
 
             -- we need to check for owner since the item instance already exists
             if (!item.bAllowMultiCharacterInteraction and IsValid(client) and client:GetCharacter() and
-                item:GetPlayerID() == client:SteamID64() and item:GetCharacterID() != client:GetCharacter():GetID() and ix.config.Get("itemOwnership", false)) then
+                item:GetPlayerID() == client:SteamID64() and item:GetCharacterID() != client:GetCharacter():GetID()) then
                 return false, "itemOwned"
             end
 

@@ -280,8 +280,8 @@ else
                         end
                     end
                 end
-                client.pac_playerspawn = pac.RealTime -- used for events
 
+                client.pac_playerspawn = pac.RealTime -- used for events
                 entity.overridePAC3 = true
             end
         end

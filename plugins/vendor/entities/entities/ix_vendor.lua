@@ -19,8 +19,13 @@ function ENT:Initialize()
         self:SetUseType(SIMPLE_USE)
         self:SetMoveType(MOVETYPE_NONE)
         self:DrawShadow(true)
-        self:SetSolid(SOLID_BBOX)
-        self:PhysicsInit(SOLID_BBOX)
+        self:InitPhysObj()
+
+        self:AddCallback("OnAngleChange", function(entity)
+            local mins, maxs = entity:GetAxisAlignedBoundingBox()
+
+            entity:SetCollisionBounds(mins, maxs)
+        end)
 
         self.items = {}
         self.messages = {}
@@ -31,13 +36,6 @@ function ENT:Initialize()
         self:SetDescription("")
 
         self.receivers = {}
-
-        local physObj = self:GetPhysicsObject()
-
-        if (IsValid(physObj)) then
-            physObj:EnableMotion(false)
-            physObj:Sleep()
-        end
     end
 
     timer.Simple(1, function()
@@ -45,6 +43,25 @@ function ENT:Initialize()
             self:SetAnim()
         end
     end)
+end
+
+function ENT:InitPhysObj()
+    local mins, maxs = self:GetAxisAlignedBoundingBox()
+    local bPhysObjCreated = self:PhysicsInitBox(mins, maxs)
+
+    if (bPhysObjCreated) then
+        local physObj = self:GetPhysicsObject()
+        physObj:EnableMotion(false)
+        physObj:Sleep()
+    end
+end
+
+function ENT:GetAxisAlignedBoundingBox()
+    local mins, maxs = self:GetModelBounds()
+    mins = Vector(mins.x, mins.y, 0)
+    mins, maxs = self:GetRotatedAABB(mins, maxs)
+
+    return mins, maxs
 end
 
 function ENT:CanAccess(client)
@@ -63,7 +80,9 @@ function ENT:CanAccess(client)
         local class = ix.class.list[client:GetCharacter():GetClass()]
         local classID = class and class.uniqueID
 
-        if (classID and !self.classes[classID]) then return false end
+        if (classID and !self.classes[classID]) then
+            return false
+        end
     end
 
     return true
@@ -89,13 +108,21 @@ end
 function ENT:CanSellToPlayer(client, uniqueID)
     local data = self.items[uniqueID]
 
-    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then return false end
+    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then
+        return false
+    end
 
-    if (data[VENDOR_MODE] == VENDOR_BUYONLY) then return false end
+    if (data[VENDOR_MODE] == VENDOR_BUYONLY) then
+        return false
+    end
 
-    if (!client:GetCharacter():HasMoney(self:GetPrice(uniqueID))) then return false end
+    if (!client:GetCharacter():HasMoney(self:GetPrice(uniqueID))) then
+        return false
+    end
 
-    if (data[VENDOR_STOCK] and data[VENDOR_STOCK] < 1) then return false end
+    if (data[VENDOR_STOCK] and data[VENDOR_STOCK] < 1) then
+        return false
+    end
 
     return true
 end
@@ -103,18 +130,26 @@ end
 function ENT:CanBuyFromPlayer(client, uniqueID)
     local data = self.items[uniqueID]
 
-    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then return false end
+    if (!data or !client:GetCharacter() or !ix.item.list[uniqueID]) then
+        return false
+    end
 
-    if (data[VENDOR_MODE] != VENDOR_SELLONLY) then return false end
+    if (data[VENDOR_MODE] != VENDOR_SELLONLY) then
+        return false
+    end
 
-    if (!self:HasMoney(data[VENDOR_PRICE] or ix.item.list[uniqueID].price or 0)) then return false end
+    if (!self:HasMoney(data[VENDOR_PRICE] or ix.item.list[uniqueID].price or 0)) then
+        return false
+    end
 
     return true
 end
 
 function ENT:HasMoney(amount)
     -- Vendor not using money system so they can always afford it.
-    if (!self.money) then return true end
+    if (!self.money) then
+        return true
+    end
 
     return self.money >= amount
 end
@@ -155,7 +190,7 @@ if (SERVER) then
 
         if (!self:CanAccess(activator) or hook.Run("CanPlayerUseVendor", activator, self) == false) then
             if (self.messages[VENDOR_NOTRADE]) then
-                activator:ChatPrint(self:GetDisplayName()..": "..self.messages[VENDOR_NOTRADE])
+                activator:ChatPrint(self:GetDisplayName() .. ": " .. self.messages[VENDOR_NOTRADE])
             else
                 activator:NotifyLocalized("vendorNoTrade")
             end
@@ -166,7 +201,7 @@ if (SERVER) then
         self.receivers[#self.receivers + 1] = activator
 
         if (self.messages[VENDOR_WELCOME]) then
-            activator:ChatPrint(self:GetDisplayName()..": "..self.messages[VENDOR_WELCOME])
+            activator:ChatPrint(self:GetDisplayName() .. ": " .. self.messages[VENDOR_WELCOME])
         end
 
         local items = {}
@@ -218,7 +253,9 @@ if (SERVER) then
     end
 
     function ENT:SetStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
+            return
+        end
 
         self.items[uniqueID] = self.items[uniqueID] or {}
         self.items[uniqueID][VENDOR_STOCK] = math.min(value, self.items[uniqueID][VENDOR_MAXSTOCK])
@@ -230,13 +267,17 @@ if (SERVER) then
     end
 
     function ENT:AddStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
+            return
+        end
 
         self:SetStock(uniqueID, self:GetStock(uniqueID) + (value or 1))
     end
 
     function ENT:TakeStock(uniqueID, value)
-        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then return end
+        if (!self.items[uniqueID][VENDOR_MAXSTOCK]) then
+            return
+        end
 
         self:AddStock(uniqueID, -(value or 1))
     end

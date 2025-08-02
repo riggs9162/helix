@@ -53,22 +53,6 @@ function ix.option.Add(key, optionType, default, data)
     categories[category] = categories[category] or {}
     categories[category][key] = true
 
-    ix.option.stored[key] = {
-        key = key,
-        phrase = "opt" .. upperName,
-        description = "optd" .. upperName,
-        type = optionType,
-        default = default,
-        min = data.min or 0,
-        max = data.max or 10,
-        decimals = data.decimals or 0,
-        category = data.category or "misc",
-        bNetworked = data.bNetworked and true or false,
-        hidden = data.hidden or nil,
-        populate = data.populate or nil,
-        OnChanged = data.OnChanged or nil
-    }
-
     --- You can specify additional optional arguments for `ix.option.Add` by passing in a table of specific fields as the fourth
     -- argument.
     -- @table OptionStructure
@@ -92,52 +76,36 @@ function ix.option.Add(key, optionType, default, data)
     -- @field[type=boolean,opt=false] bNetworked Whether or not the server should be aware of this option for each client.
     -- @field[type=function,opt] OnChanged The function to run when this option is changed - this includes whether it was set
     -- by the player, or through code using `ix.option.Set`.
-    --     OnChanged = function(oldValue, value)
-    --         print("new value is", value)
-    --     end
+    -- 	OnChanged = function(oldValue, value)
+    -- 		print("new value is", value)
+    -- 	end
     -- @field[type=function,opt] hidden The function to check whether the option should be hidden from the options menu.
     -- @field[type=function,opt] populate The function to run when the option needs to be added to the menu. This is a required
     -- field for any array options. It should return a table of entries where the key is the value to set in `ix.option.Set`,
     -- and the value is the display name for the entry. An example:
     --
-    --     populate = function()
-    --         return {
-    --             ["english"] = "English",
-    --             ["french"] = "French",
-    --             ["spanish"] = "Spanish"
-    --         }
-    --     end
-end
-
---- Creates a more simple option that doesn't require language phrases.
--- @realm shared
--- @string name Name of the option
--- @string description Description of the option
--- @string category Category of the option
--- @ixtype optionType Type of the option
--- @param default Default value of the option
--- @tparam OptionStructure data Additional settings for this option
--- @treturn string Unique ID of the option
--- @usage ix.option.AddQuick("Viewmodel FOV", "The field of view of the viewmodel", "appearance", ix.type.number, 90, {
---     min = 60,
---     max = 120
--- })
-function ix.option.AddQuick(name, description, category, optionType, default, data)
-    local key = string.sub(name, 1, 1):lower() .. string.sub(name, 2)
-    key = string.gsub(key, " ", "")
-
-    data = data or {}
-    data.category = category
-
-    local keyUpper = key:sub(1, 1):upper() .. key:sub(2)
-    ix.lang.AddTable("english", {
-        ["opt" .. keyUpper] = name,
-        ["optd" .. keyUpper] = description
-    })
-
-    ix.option.Add(key, optionType, default, data)
-
-    return key
+    -- 	populate = function()
+    -- 		return {
+    -- 			["english"] = "English",
+    -- 			["french"] = "French",
+    -- 			["spanish"] = "Spanish"
+    -- 		}
+    -- 	end
+    ix.option.stored[key] = {
+        key = key,
+        phrase = data.phrase or "opt" .. upperName,
+        description = data.description or "optd" .. upperName,
+        type = optionType,
+        default = default,
+        min = data.min or 0,
+        max = data.max or 10,
+        decimals = data.decimals or 0,
+        category = data.category or "misc",
+        bNetworked = data.bNetworked and true or false,
+        hidden = data.hidden or nil,
+        populate = data.populate or nil,
+        OnChanged = data.OnChanged or nil
+    }
 end
 
 --- Loads all saved options from disk.

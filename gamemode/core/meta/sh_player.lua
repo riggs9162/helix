@@ -142,28 +142,28 @@ end
 -- end)
 -- -- prints "hello!" after looking at the entity for 4 seconds
 function meta:DoStaredAction(entity, callback, time, onCancel, distance)
-    local uniqueID = "ixStare"..self:SteamID64()
+    local uniqueID = "ixStare" .. self:SteamID64()
     local data = {}
     data.filter = self
 
     timer.Create(uniqueID, 0.1, time / 0.1, function()
-        if (IsValid(self) and IsValid(entity)) then
+        if ( IsValid(self) and IsValid(entity) ) then
             data.start = self:GetShootPos()
-            data.endpos = data.start + self:GetAimVector()*(distance or 96)
+            data.endpos = data.start + self:GetAimVector() * (distance or 96)
 
-            if (util.TraceLine(data).Entity != entity) then
+            if ( util.TraceLine(data).Entity != entity ) then
                 timer.Remove(uniqueID)
 
-                if (onCancel) then
+                if ( onCancel ) then
                     onCancel()
                 end
-            elseif (callback and timer.RepsLeft(uniqueID) == 0) then
+            elseif ( callback and timer.RepsLeft(uniqueID) == 0 ) then
                 callback()
             end
         else
             timer.Remove(uniqueID)
 
-            if (onCancel) then
+            if ( onCancel ) then
                 onCancel()
             end
         end
@@ -248,10 +248,8 @@ if (SERVER) then
                         data.filter = self
                     local traceEntity = util.TraceLine(data).Entity
 
-                    if (IsValid(traceEntity) and traceEntity == self.ixInteractionTarget and !traceEntity.ixInteractionDirty) then
-                        if (callback(self) != false) then
-                            traceEntity.ixInteractionDirty = true
-                        end
+                    if (IsValid(traceEntity) and traceEntity == self.ixInteractionTarget and !traceEntity.ixInteractionDirty and callback(self) != false) then
+                        traceEntity.ixInteractionDirty = true
                     end
                 end
             end)
@@ -290,7 +288,7 @@ if (SERVER) then
         finishTime = finishTime or (startTime + time)
 
         if (text == false) then
-            timer.Remove("ixAct"..self:SteamID64())
+            timer.Remove("ixAct" .. self:SteamID64())
 
             net.Start("ixActionBarReset")
             net.Send(self)
@@ -312,7 +310,7 @@ if (SERVER) then
         -- If we have provided a callback, run it delayed.
         if (callback) then
             -- Create a timer that runs once with a delay.
-            timer.Create("ixAct"..self:SteamID64(), time, 1, function()
+            timer.Create("ixAct" .. self:SteamID64(), time, 1, function()
                 -- Call the callback if the player is still valid.
                 if (IsValid(self)) then
                     callback(self)
@@ -365,7 +363,12 @@ if (SERVER) then
             self.ixRestrictWeps = self.ixRestrictWeps or {}
 
             for _, v in ipairs(self:GetWeapons()) do
-                self.ixRestrictWeps[#self.ixRestrictWeps + 1] = v:GetClass()
+                self.ixRestrictWeps[#self.ixRestrictWeps + 1] = {
+                    class = v:GetClass(),
+                    item = v.ixItem,
+                    clip = v:Clip1()
+                }
+
                 v:Remove()
             end
 
@@ -379,7 +382,13 @@ if (SERVER) then
 
             if (self.ixRestrictWeps) then
                 for _, v in ipairs(self.ixRestrictWeps) do
-                    self:Give(v)
+                    local weapon = self:Give(v.class, true)
+
+                    if (v.item) then
+                        weapon.ixItem = v.item
+                    end
+
+                    weapon:SetClip1(v.clip)
                 end
 
                 self.ixRestrictWeps = nil
@@ -447,66 +456,64 @@ if (SERVER) then
     -- get back up manually
     -- @number[opt=5] getUpGrace How much time in seconds to wait before the player is able to get back up manually. Set to
     -- the same number as `time` to disable getting up manually entirely
-    function meta:SetRagdolled(bState, time, getUpGrace, bAction, actionText)
+    function meta:SetRagdolled(bState, time, getUpGrace)
         if (!self:Alive()) then return end
 
         getUpGrace = getUpGrace or time or 5
-        if ( bAction == nil ) then bAction = true end
-        actionText = actionText or "@wakingUp"
 
-        if (bState) then
-            if (IsValid(self.ixRagdoll)) then
+        if ( bState ) then
+            if ( IsValid(self.ixRagdoll) ) then
                 self.ixRagdoll:Remove()
             end
 
             local entity = self:CreateServerRagdoll()
 
             entity:CallOnRemove("fixer", function()
-                if (IsValid(self)) then
+                if ( IsValid(self) ) then
                     self:SetLocalVar("blur", nil)
                     self:SetLocalVar("ragdoll", nil)
 
-                    if (!entity.ixNoReset) then
+                    if ( !entity.ixNoReset ) then
                         self:SetPos(entity:GetPos())
                     end
 
                     self:SetNoDraw(false)
                     self:SetNotSolid(false)
                     self:SetMoveType(MOVETYPE_WALK)
-                    self:SetLocalVelocity(IsValid(entity) and entity.ixLastVelocity or Vector(0, 0, 0))
+                    self:SetLocalVelocity(IsValid(entity) and entity.ixLastVelocity or vector_origin)
                 end
 
-                if (IsValid(self) and !entity.ixIgnoreDelete) then
+                if ( IsValid(self) and !entity.ixIgnoreDelete ) then
                     if (entity.ixWeapons) then
                         for _, v in ipairs(entity.ixWeapons) do
-                            if (v.class) then
+                            if ( v.class ) then
                                 local weapon = self:Give(v.class, true)
 
-                                if (v.item) then
+                                if ( v.item ) then
                                     weapon.ixItem = v.item
                                 end
 
                                 self:SetAmmo(v.ammo, weapon:GetPrimaryAmmoType())
                                 weapon:SetClip1(v.clip)
-                            elseif (v.item and v.invID == v.item.invID) then
+                            elseif ( v.item and v.invID == v.item.invID ) then
                                 v.item:Equip(self, true, true)
                                 self:SetAmmo(v.ammo, self.carryWeapons[v.item.weaponCategory]:GetPrimaryAmmoType())
                             end
                         end
                     end
 
-                    if (entity.ixActiveWeapon) then
-                        if (self:HasWeapon(entity.ixActiveWeapon)) then
+                    if ( entity.ixActiveWeapon ) then
+                        if ( self:HasWeapon(entity.ixActiveWeapon) ) then
                             self:SetActiveWeapon(self:GetWeapon(entity.ixActiveWeapon))
                         else
                             local weapons = self:GetWeapons()
-                            if (#weapons > 0) then
+                            if ( #weapons > 0 ) then
                                 self:SetActiveWeapon(weapons[1])
                             end
                         end
                     end
 
-                    if (self:IsStuck()) then
+                    if ( self:IsStuck() ) then
                         entity:DropToFloor()
                         self:SetPos(entity:GetPos() + Vector(0, 0, 16))
 
@@ -515,7 +522,7 @@ if (SERVER) then
                         for _, v in ipairs(positions) do
                             self:SetPos(v)
 
-                            if (!self:IsStuck()) then
+                            if ( !self:IsStuck() ) then
                                 return
                             end
                         end
@@ -529,23 +536,23 @@ if (SERVER) then
             entity.ixWeapons = {}
             entity.ixPlayer = self
 
-            if (getUpGrace) then
+            if ( getUpGrace ) then
                 entity.ixGrace = CurTime() + getUpGrace
             end
 
-            if (time and time > 0 and bAction) then
+            if ( time and time > 0 ) then
                 entity.ixStart = CurTime()
                 entity.ixFinish = entity.ixStart + time
 
-                self:SetAction(actionText, nil, nil, entity.ixStart, entity.ixFinish)
+                self:SetAction("@wakingUp", nil, nil, entity.ixStart, entity.ixFinish)
             end
 
-            if (IsValid(self:GetActiveWeapon())) then
+            if ( IsValid(self:GetActiveWeapon()) ) then
                 entity.ixActiveWeapon = self:GetActiveWeapon():GetClass()
             end
 
             for _, v in ipairs(self:GetWeapons()) do
-                if (v.ixItem and v.ixItem.Equip and v.ixItem.Unequip) then
+                if ( v.ixItem and v.ixItem.Equip and v.ixItem.Unequip ) then
                     entity.ixWeapons[#entity.ixWeapons + 1] = {
                         item = v.ixItem,
                         invID = v.ixItem.invID,
@@ -573,31 +580,31 @@ if (SERVER) then
 
             local uniqueID = "ixUnRagdoll" .. self:SteamID64()
 
-            if (time) then
+            if ( time ) then
                 timer.Create(uniqueID, 0.33, 0, function()
-                    if (IsValid(entity) and IsValid(self) and self.ixRagdoll == entity) then
+                    if ( IsValid(entity) and IsValid(self) and self.ixRagdoll == entity ) then
                         local velocity = entity:GetVelocity()
                         entity.ixLastVelocity = velocity
 
                         self:SetPos(entity:GetPos())
 
                         if ( bAction ) then
-                            if (velocity:Length2D() >= 8) then
-                                if (!entity.ixPausing) then
+                            if ( velocity:Length2D() >= 8 ) then
+                                if ( !entity.ixPausing ) then
                                     self:SetAction()
                                     entity.ixPausing = true
                                 end
 
                                 return
-                            elseif (entity.ixPausing) then
-                                self:SetAction(actionText, time)
+                            elseif ( entity.ixPausing ) then
+							    self:SetAction("@wakingUp", time)
                                 entity.ixPausing = false
                             end
                         end
 
                         time = time - 0.33
 
-                        if (time <= 0) then
+                        if ( time <= 0 ) then
                             entity:Remove()
                         end
                     else
@@ -606,7 +613,7 @@ if (SERVER) then
                 end)
             else
                 timer.Create(uniqueID, 0.33, 0, function()
-                    if (IsValid(entity) and IsValid(self) and self.ixRagdoll == entity) then
+                    if ( IsValid(entity) and IsValid(self) and self.ixRagdoll == entity ) then
                         self:SetPos(entity:GetPos())
                     else
                         timer.Remove(uniqueID)
@@ -616,7 +623,7 @@ if (SERVER) then
 
             self:SetLocalVar("ragdoll", entity:EntIndex())
             hook.Run("OnCharacterFallover", self, entity, true)
-        elseif (IsValid(self.ixRagdoll)) then
+        elseif ( IsValid(self.ixRagdoll) ) then
             self.ixRagdoll:Remove()
 
             hook.Run("OnCharacterFallover", self, nil, false)
@@ -631,7 +638,7 @@ meta.cooldowns = meta.cooldowns or {}
 -- @tparam string action The name of the action to check.
 -- @treturn boolean Returns true if the player is on cooldown.
 -- @usage
--- if !Entity(1):OnCooldown("use_ability") then
+-- if ( !Entity(1):OnCooldown("use_ability") ) then
 --     Entity(1):SetCooldown("use_ability", 10) -- 10 second cooldown
 -- end
 function meta:OnCooldown(action)
@@ -655,9 +662,9 @@ end
 -- @usage Entity(1):NotifyAdmin("This player did something suspicious.")
 function meta:NotifyAdmin(message)
     for _, client in player.Iterator() do
-        if client:IsAdmin() then
-            client:Notify(message)
-        end
+        if ( !client:IsAdmin() ) then continue end
+
+        client:Notify(message)
     end
 end
 

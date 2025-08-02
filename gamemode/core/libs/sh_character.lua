@@ -343,8 +343,6 @@ do
                 return false, "invalid", "name"
             elseif (value:gsub("%s", ""):utf8len() > maxLength) then
                 return false, "nameMaxLen", maxLength
-            elseif (hook.Run("IsCharacterNameValid", value) == false) then
-                return false, "charErrInvalid"
             end
 
             return hook.Run("GetDefaultCharacterName", client, payload.faction) or value:utf8sub(1, 70)
@@ -389,8 +387,6 @@ do
                 return false, "descMinLen", minLength
             elseif (!value:find("%s+") or !value:find("%S")) then
                 return false, "invalid", "description"
-            elseif (hook.Run("IsCharacterDescriptionValid", value) == false) then
-                return false, "charErrInvalid"
             end
 
             return value
@@ -437,8 +433,7 @@ do
         end,
         OnDisplay = function(self, container, payload)
             local scroll = container:Add("DScrollPanel")
-            scroll:Dock(TOP)
-            scroll:SetTall(128)
+            scroll:Dock(FILL) -- TODO: don't fill so we can allow other panels
             scroll.Paint = function(panel, width, height)
                 derma.SkinFunc("DrawImportantBackground", 0, 0, width, height, Color(255, 255, 255, 25))
             end
@@ -454,7 +449,7 @@ do
                 local models = faction:GetModels(LocalPlayer())
 
                 for k, v in SortedPairs(models) do
-                    local icon = layout:Add("ixSpawnIcon")
+                    local icon = layout:Add("SpawnIcon")
                     icon:SetSize(64, 128)
                     icon:InvalidateLayout(true)
                     icon.DoClick = function(this)
@@ -476,13 +471,7 @@ do
                     if (isstring(v)) then
                         icon:SetModel(v)
                     else
-                        icon:SetModel(v[1], v[2] or 0)
-
-                        if (v[3]) then
-                            for k2, v2 in pairs(v[3]) do
-                                icon.Entity:SetBodygroupName(k2, v2)
-                            end
-                        end
+                        icon:SetModel(v[1], v[2] or 0, v[3])
                     end
                 end
             end
@@ -513,21 +502,13 @@ do
                 elseif (istable(model)) then
                     newData.model = model[1]
 
-                    -- create a temporary model to get the bodygroups of the model
-                    local tempModel = ClientsideModel(newData.model, RENDERGROUP_OPAQUE)
-                    for k, v in ipairs(model[3] or {}) do
-                        local index = tempModel:FindBodygroupByName(name)
-                        if ( index > -1 ) then
-                            bodygroups = bodygroups or {}
-                            bodygroups[index] = v
-                        end
+                    -- save skin/bodygroups to character data
+                    local bodygroups = {}
+
+                    for i = 1, #model[3] do
+                        bodygroups[i - 1] = tonumber(model[3][i]) or 0
                     end
 
-                    -- remove the temporary model
-                    tempModel:Remove()
-                    tempModel = nil
-
-                    -- save all the bodygroups and skin
                     newData.data = newData.data or {}
                     newData.data.skin = model[2] or 0
                     newData.data.groups = bodygroups
@@ -547,16 +528,6 @@ do
     -- @treturn number Index of the class this character is in
     -- @function GetClass
     ix.char.RegisterVar("class", {
-        bNoDisplay = true,
-    })
-
-    -- SetRank shouldn't be used here, character:JoinRank should be used instead
-
-    --- Returns this character's current rank.
-    -- @realm shared
-    -- @treturn number Index of the rank this character is in
-    -- @function GetRank
-    ix.char.RegisterVar("rank", {
         bNoDisplay = true,
     })
 
@@ -629,7 +600,9 @@ do
         OnDisplay = function(self, container, payload)
             local maximum = hook.Run("GetDefaultAttributePoints", LocalPlayer(), payload) or 10
 
-            if (maximum < 1) then return end
+            if (maximum < 1) then
+                return
+            end
 
             local attributes = container:Add("DPanel")
             attributes:Dock(TOP)
@@ -655,7 +628,7 @@ do
                 payload.attributes[k] = 0
 
                 local bar = attributes:Add("ixAttributeBar")
-                bar:SetMax(maximum)
+                bar:SetMax(v.maxValue or maximum)
                 bar:Dock(TOP)
                 bar:DockMargin(2, 2, 2, 2)
                 bar:SetText(L(v.name))

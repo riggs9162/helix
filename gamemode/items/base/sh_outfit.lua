@@ -195,6 +195,7 @@ function ITEM:RemoveOutfit(client)
         self:RemoveAttachment(k, client)
     end
 
+    self:GetOwner():SetupHands()
     self:OnUnequipped()
 end
 
@@ -258,6 +259,7 @@ ITEM.functions.Equip = {
                 local itemTable = ix.item.instances[k.id]
 
                 if (itemTable.pacData and k.outfitCategory == item.outfitCategory and itemTable:GetData("equip")) then
+					client:NotifyLocalized(item.equippedNotify or "outfitAlreadyEquipped")
                     return false
                 end
             end

@@ -86,15 +86,7 @@ if (SERVER) then
 
             entity:SetModel(v.model)
             entity:SetSkin(v.skin or 0)
-            entity:SetSolid(SOLID_BBOX)
-            entity:PhysicsInit(SOLID_BBOX)
-
-            local physObj = entity:GetPhysicsObject()
-
-            if (IsValid(physObj)) then
-                physObj:EnableMotion(false)
-                physObj:Sleep()
-            end
+            entity:InitPhysObj()
 
             entity:SetNoBubble(v.bubble)
             entity:SetDisplayName(v.name)
@@ -120,11 +112,15 @@ if (SERVER) then
 
     function PLUGIN:CanVendorSellItem(client, vendor, itemID)
         local tradeData = vendor.items[itemID]
-        local character = client:GetCharacter()
+        local char = client:GetCharacter()
 
-        if (!tradeData or !character) then return false end
+        if (!tradeData or !char) then
+            return false
+        end
 
-        if (!character:HasMoney(tradeData[1] or 0)) then return false end
+        if (!char:HasMoney(tradeData[1] or 0)) then
+            return false
+        end
 
         return true
     end
@@ -170,11 +166,15 @@ if (SERVER) then
     end
 
     net.Receive("ixVendorEdit", function(length, client)
-        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)) then return end
+        if (!CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)) then
+            return
+        end
 
         local entity = client.ixVendor
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -279,8 +279,7 @@ if (SERVER) then
             data = {uniqueID, entity.classes[uniqueID]}
         elseif (key == "model") then
             entity:SetModel(data)
-            entity:SetSolid(SOLID_BBOX)
-            entity:PhysicsInit(SOLID_BBOX)
+            entity:InitPhysObj()
             entity:SetAnim()
         elseif (key == "useMoney") then
             if (entity.money) then
@@ -328,9 +327,13 @@ if (SERVER) then
 
         local entity = client.ixVendor
 
-        if (!IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192) then return end
+        if (!IsValid(entity) or client:GetPos():Distance(entity:GetPos()) > 192) then
+            return
+        end
 
-        if (!entity:CanAccess(client)) then return end
+        if (!entity:CanAccess(client)) then
+            return
+        end
 
         local uniqueID = net.ReadString()
         local isSellingToVendor = net.ReadBool()
@@ -430,7 +433,9 @@ else
     net.Receive("ixVendorOpen", function()
         local entity = net.ReadEntity()
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         entity.money = net.ReadUInt(16)
         entity.items = net.ReadTable()
@@ -444,7 +449,9 @@ else
     net.Receive("ixVendorEditor", function()
         local entity = net.ReadEntity()
 
-        if (!IsValid(entity) or !CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Vendors", nil)) then return end
+        if (!IsValid(entity) or !CAMI.PlayerHasAccess(LocalPlayer(), "Helix - Manage Vendors", nil)) then
+            return
+        end
 
         entity.money = net.ReadUInt(16)
         entity.items = net.ReadTable()
@@ -462,11 +469,15 @@ else
     net.Receive("ixVendorEdit", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then return end
+        if (!IsValid(panel)) then
+            return
+        end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -520,11 +531,15 @@ else
         local panel = ix.gui.vendor
         local editor = ix.gui.vendorEditor
 
-        if (!IsValid(panel) or !IsValid(editor)) then return end
+        if (!IsValid(panel) or !IsValid(editor)) then
+            return
+        end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         local key = net.ReadString()
         local data = net.ReadType()
@@ -583,11 +598,15 @@ else
     net.Receive("ixVendorMoney", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then return end
+        if (!IsValid(panel)) then
+            return
+        end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         local value = net.ReadUInt(16)
         value = value != -1 and value or nil
@@ -608,11 +627,15 @@ else
     net.Receive("ixVendorStock", function()
         local panel = ix.gui.vendor
 
-        if (!IsValid(panel)) then return end
+        if (!IsValid(panel)) then
+            return
+        end
 
         local entity = panel.entity
 
-        if (!IsValid(entity)) then return end
+        if (!IsValid(entity)) then
+            return
+        end
 
         local uniqueID = net.ReadString()
         local amount = net.ReadUInt(16)
@@ -640,7 +663,7 @@ end
 
 properties.Add("vendor_edit", {
     MenuLabel = "Edit Vendor",
-    Order = 9999,
+    Order = 999,
     MenuIcon = "icon16/user_edit.png",
 
     Filter = function(self, entity, client)
@@ -684,273 +707,5 @@ properties.Add("vendor_edit", {
             net.WriteTable(entity.factions)
             net.WriteTable(entity.classes)
         net.Send(client)
-    end
-})
-
-properties.Add("vendor_drop", {
-    MenuLabel = "Drop Vendor",
-    Order = 9999,
-    MenuIcon = "icon16/user.png",
-
-    Filter = function(self, entity, client)
-        if (!IsValid(entity)) then return false end
-        if (entity:GetClass() != "ix_vendor") then return false end
-        if (!gamemode.Call( "CanProperty", client, "vendor_drop", entity)) then return false end
-
-        return CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)
-    end,
-
-    Action = function(self, entity)
-        self:MsgStart()
-            net.WriteEntity(entity)
-        self:MsgEnd()
-    end,
-
-    Receive = function(self, length, client)
-        local entity = net.ReadEntity()
-
-        if (!IsValid(entity)) then return end
-        if (!self:Filter(entity, client)) then return end
-
-        local trace = util.TraceLine({
-            start = entity:GetPos(),
-            endpos = entity:GetPos() - Vector(0, 0, 1000),
-            mask = MASK_PLAYERSOLID,
-            filter = entity,
-        })
-
-        entity:SetPos(trace.HitPos)
-    end
-})
-
-properties.Add("vendor_face", {
-    MenuLabel = "Face Vendor (To Me)",
-    Order = 9999,
-    MenuIcon = "icon16/user.png",
-
-    Filter = function(self, entity, client)
-        if (!IsValid(entity)) then return false end
-        if (entity:GetClass() != "ix_vendor") then return false end
-        if (!gamemode.Call( "CanProperty", client, "vendor_face", entity)) then return false end
-
-        return CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)
-    end,
-
-    Action = function(self, entity)
-        self:MsgStart()
-            net.WriteEntity(entity)
-        self:MsgEnd()
-    end,
-
-    Receive = function(self, length, client)
-        local entity = net.ReadEntity()
-
-        if (!IsValid(entity)) then return end
-        if (!self:Filter(entity, client)) then return end
-
-        entity:SetAngles(Angle(0, (entity:GetPos() - client:GetPos()):Angle().y - 180, 0))
-    end
-})
-
-properties.Add("vendor_face_away", {
-    MenuLabel = "Face Vendor (Away from Me)",
-    Order = 9999,
-    MenuIcon = "icon16/user.png",
-
-    Filter = function(self, entity, client)
-        if (!IsValid(entity)) then return false end
-        if (entity:GetClass() != "ix_vendor") then return false end
-        if (!gamemode.Call( "CanProperty", client, "vendor_face_away", entity)) then return false end
-
-        return CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)
-    end,
-
-    Action = function(self, entity)
-        self:MsgStart()
-            net.WriteEntity(entity)
-        self:MsgEnd()
-    end,
-
-    Receive = function(self, length, client)
-        local entity = net.ReadEntity()
-
-        if (!IsValid(entity)) then return end
-        if (!self:Filter(entity, client)) then return end
-
-        entity:SetAngles(Angle(0, (entity:GetPos() - client:GetPos()):Angle().y, 0))
-    end
-})
-
-properties.Add("vendor_preset_save", {
-    MenuLabel = "Save Vendor Preset",
-    Order = 9999,
-    MenuIcon = "icon16/disk.png",
-
-    Filter = function(self, entity, client)
-        if (!IsValid(entity)) then return false end
-        if (entity:GetClass() != "ix_vendor") then return false end
-        if (!gamemode.Call( "CanProperty", client, "vendor_preset_save", entity)) then return false end
-
-        return CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)
-    end,
-
-    Action = function(self, entity)
-        Derma_StringRequest("Helix", "Enter a name for this vendor preset.", "", function(text)
-            if not text or text == "" then return end
-
-            local data = {}
-
-            for k, v in pairs(entity.items) do
-                if (!table.IsEmpty(v)) then
-                    data[k] = v
-                end
-            end
-
-            local bodygroups = {}
-
-            for _, v in ipairs(entity:GetBodyGroups() or {}) do
-                bodygroups[v.id] = entity:GetBodygroup(v.id)
-            end
-
-            local data = {
-                name = entity:GetDisplayName(),
-                description = entity:GetDescription(),
-                pos = entity:GetPos(),
-                angles = entity:GetAngles(),
-                model = entity:GetModel(),
-                skin = entity:GetSkin(),
-                bodygroups = bodygroups,
-                bubble = entity:GetNoBubble(),
-                items = data,
-                factions = entity.factions,
-                classes = entity.classes,
-                ranks = entity.ranks,
-                money = entity.money,
-                scale = entity.scale
-            }
-
-            local uniqueID = string.gsub(string.lower(text), "%s", "_")
-
-            local path = "helix/"..Schema.folder.."/savedvendors/"
-            file.CreateDir(path)
-
-            file.Write(path..uniqueID..".txt", util.TableToJSON(data, true))
-        end)
-    end,
-
-    /*
-    Receive = function(self, length, client)
-        local entity = net.ReadEntity()
-        local name = net.ReadString()
-
-        if (!IsValid(entity)) then return end
-        if (!self:Filter(entity, client)) then return end
-
-        local data = {}
-
-        for k, v in pairs(entity.items) do
-            if (!table.IsEmpty(v)) then
-                data[k] = v
-            end
-        end
-
-        local bodygroups = {}
-
-        for _, v in ipairs(entity:GetBodyGroups() or {}) do
-            bodygroups[v.id] = entity:GetBodygroup(v.id)
-        end
-
-        local data = {
-            name = entity:GetDisplayName(),
-            description = entity:GetDescription(),
-            pos = entity:GetPos(),
-            angles = entity:GetAngles(),
-            model = entity:GetModel(),
-            skin = entity:GetSkin(),
-            bodygroups = bodygroups,
-            bubble = entity:GetNoBubble(),
-            items = data,
-            factions = entity.factions,
-            classes = entity.classes,
-            ranks = entity.ranks,
-            money = entity.money,
-            scale = entity.scale
-        }
-
-        local uniqueID = string.gsub(string.lower(name), "%s", "_")
-
-        local path = "helix/"..Schema.folder.."/savedvendors/"
-        file.CreateDir(path)
-
-        file.Write(path..uniqueID..".txt", util.TableToJSON(data))
-    end
-    */
-})
-
-properties.Add("vendor_preset_load", {
-    MenuLabel = "Load Vendor Preset",
-    Order = 9999,
-    MenuIcon = "icon16/disk_multiple.png",
-
-    Filter = function(self, entity, client)
-        if (!IsValid(entity)) then return false end
-        if (entity:GetClass() != "ix_vendor") then return false end
-        if (!gamemode.Call( "CanProperty", client, "vendor_preset_load", entity)) then return false end
-
-        return CAMI.PlayerHasAccess(client, "Helix - Manage Vendors", nil)
-    end,
-
-    MenuOpen = function(self, option, entity, client)
-        local submenu = option:AddSubMenu()
-        local files, folders = file.Find("helix/"..Schema.folder.."/savedvendors/*.txt", "DATA")
-
-        for _, v in ipairs(files) do
-            local uniqueID = string.gsub(string.gsub(v, ".txt", ""), "%s", "_")
-
-            submenu:AddOption(v, function()
-                local data = file.Read("helix/"..Schema.folder.."/savedvendors/"..v, "DATA")
-                data = util.JSONToTable(data)
-
-                self:MsgStart()
-                    net.WriteEntity(entity)
-                    net.WriteString(uniqueID)
-                    net.WriteTable(data)
-                self:MsgEnd()
-            end)
-        end
-    end,
-
-    Action = function(self, entity)
-    end,
-
-    Receive = function(self, length, client)
-        local entity = net.ReadEntity()
-        local name = net.ReadString()
-        local data = net.ReadTable()
-
-        if (!IsValid(entity)) then return end
-        if (!self:Filter(entity, client)) then return end
-
-        if (data) then
-            entity:SetDisplayName(data.name)
-            entity:SetDescription(data.description)
-            -- entity:SetPos(data.pos)
-            -- entity:SetAngles(data.angles)
-            entity:SetModel(data.model)
-            entity:SetSkin(data.skin or 0)
-            entity:SetNoBubble(data.bubble)
-            entity.items = data.items
-            entity.factions = data.factions
-            entity.classes = data.classes
-            entity.ranks = data.ranks
-            entity.money = data.money
-            entity.scale = data.scale
-
-            for id, bodygroup in pairs(data.bodygroups or {}) do
-                entity:SetBodygroup(id, bodygroup)
-            end
-
-            PLUGIN:SaveData()
-        end
     end
 })
