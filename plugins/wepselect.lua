@@ -23,7 +23,9 @@ if (CLIENT) then
     end
 
     function PLUGIN:HUDShouldDraw(name)
-        if (name == "CHudWeaponSelection") then return false end
+        if (name == "CHudWeaponSelection") then
+            return false
+        end
     end
 
     function PLUGIN:HUDPaint()
@@ -70,12 +72,7 @@ if (CLIENT) then
                 end
 
                 surface.SetFont("ixWeaponSelectFont")
-
-                local weaponName = language.GetPhrase(weapons[i]:GetClass()):utf8upper()
-                if (weapons[i].GetPrintName) then
-                    weaponName = weapons[i]:GetPrintName():utf8upper()
-                end
-
+                local weaponName = language.GetPhrase(weapons[i]:GetPrintName()):utf8upper()
                 local _, ty = surface.GetTextSize(weaponName)
                 local scale = 1 - math.abs(theta * 2)
 
@@ -128,13 +125,17 @@ if (CLIENT) then
         bind = bind:lower()
 
         if (!pressed or !bind:find("invprev") and !bind:find("invnext")
-        and !bind:find("slot") and !bind:find("attack")) then return end
+        and !bind:find("slot") and !bind:find("attack")) then
+            return
+        end
 
         local currentWeapon = client:GetActiveWeapon()
         local bValid = IsValid(currentWeapon)
         local bTool
 
-        if (client:InVehicle() or (bValid and currentWeapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK))) then return end
+        if (client:InVehicle() or (bValid and currentWeapon:GetClass() == "weapon_physgun" and client:KeyDown(IN_ATTACK))) then
+            return
+        end
 
         if (bValid and currentWeapon:GetClass() == "gmod_tool") then
             local tool = client:GetTool()
@@ -192,6 +193,8 @@ if (CLIENT) then
     end
 
     function PLUGIN:ShouldPopulateEntityInfo(entity)
-        if (self.alpha > 0) then return false end
+        if (self.alpha > 0) then
+            return false
+        end
     end
 end
