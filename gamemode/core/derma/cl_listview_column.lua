@@ -18,41 +18,6 @@ end
 vgui.Register( "ixListViewHeaderLabel", PANEL, "DLabel" )
 
 --[[---------------------------------------------------------
-    ixListView_DraggerBar
------------------------------------------------------------]]
-
-local PANEL = {}
-
-function PANEL:Init()
-
-    self:SetCursor( "sizewe" )
-
-end
-
-function PANEL:Paint()
-
-    return true
-
-end
-
-function PANEL:OnCursorMoved()
-
-    if ( self.Depressed ) then
-
-        local x, y = self:GetParent():CursorPos()
-
-        self:GetParent():ResizeColumn( x )
-    end
-
-end
-
--- No example for this control
-function PANEL:GenerateExample( class, tabs, w, h )
-end
-
-vgui.Register( "ixListView_DraggerBar", PANEL, "ixMenuButton" )
-
---[[---------------------------------------------------------
     ixListView_Column
 -----------------------------------------------------------]]
 
@@ -74,10 +39,11 @@ Derma_Hook( PANEL, "PerformLayout", "Layout", "ListViewColumn" )
 function PANEL:Init()
 
     self.Header = vgui.Create( "ixMenuButton", self )
+    self.Header:SetFont( "ixMenuButtonFontSmall" )
+    self.Header:SetContentAlignment( 5 )
+    self.Header:SetTextInset( 0, 0 )
     self.Header.DoClick = function() self:DoClick() end
     self.Header.DoRightClick = function() self:DoRightClick() end
-
-    self.DraggerBar = vgui.Create( "ixListView_DraggerBar", self )
 
     self:SetMinWidth( 10 )
     self:SetMaxWidth( 19200 )
@@ -115,16 +81,8 @@ end
 
 function PANEL:PerformLayout()
 
-    if ( self:GetTextAlign() ) then
-        self.Header:SetContentAlignment( self:GetTextAlign() )
-    end
-
     self.Header:SetPos( 0, 0 )
     self.Header:SetSize( self:GetWide(), self:GetParent():GetHeaderHeight() )
-
-    self.DraggerBar:SetWide( 4 )
-    self.DraggerBar:StretchToParent( nil, 0, nil, 0 )
-    self.DraggerBar:AlignRight()
 
 end
 
