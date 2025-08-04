@@ -34,17 +34,18 @@ PANEL = {}
 
 function PANEL:Init()
     self:Dock(FILL)
+    self:InvalidateParent(true)
 
     self.categories = {}
     self.categorySubpanels = {}
     self.categoryPanel = self:Add("ixHelpMenuCategories")
 
     self.canvasPanel = self:Add("EditablePanel")
-    self.canvasPanel:Dock(FILL)
+    self.canvasPanel:SetSize(self:GetWide(), self:GetTall())
 
     self.idlePanel = self.canvasPanel:Add("Panel")
-    self.idlePanel:Dock(FILL)
-    self.idlePanel:DockMargin(8, 0, 0, 0)
+    self.idlePanel:SetSize(self.canvasPanel:GetWide() - 8, self.canvasPanel:GetTall())
+    self.idlePanel:SetPos(8, 0)
     self.idlePanel.Paint = function(_, width, height)
         surface.SetDrawColor(backgroundColor)
         surface.DrawRect(0, 0, width, height)
@@ -86,6 +87,11 @@ function PANEL:Init()
 
     self.categoryPanel:SizeToContents()
 
+    self.canvasPanel:SetWide(self:GetWide() - self.categoryPanel:GetWide())
+    self.canvasPanel:SetX(self.categoryPanel:GetWide())
+
+    self:InvalidateLayout()
+
     if (ix.gui.lastHelpMenuTab) then
         self:OnCategorySelected(ix.gui.lastHelpMenuTab)
     end
@@ -103,8 +109,8 @@ function PANEL:AddCategory(name)
 
     local panel = self.canvasPanel:Add("DScrollPanel")
     panel:SetVisible(false)
-    panel:Dock(FILL)
-    panel:DockMargin(8, 0, 0, 0)
+    panel:SetSize(self.canvasPanel:GetWide() - 8, self.canvasPanel:GetTall())
+    panel:SetPos(8, 0)
     panel:GetCanvas():DockPadding(8, 8, 8, 8)
 
     panel.Paint = function(_, width, height)
@@ -120,6 +126,26 @@ function PANEL:AddCategory(name)
     end
 
     self.categorySubpanels[name] = panel
+end
+
+function PANEL:InvalidateLayout()
+    self.categoryPanel:SizeToContents()
+
+    local width = self.categoryPanel:GetWide()
+    self.canvasPanel:SetWide(self:GetWide() - width)
+    self.canvasPanel:SetX(width)
+
+    if (IsValid(self.activeCategory)) then
+        self.activeCategory:SetWide(self.canvasPanel:GetWide() - 8)
+        self.activeCategory:SetPos(8, 0)
+    end
+
+    self.idlePanel:SetSize(self.canvasPanel:GetWide() - 8, self.canvasPanel:GetTall())
+
+    for _, v in pairs(self.categorySubpanels) do
+        v:SetSize(self.canvasPanel:GetWide() - 8, self.canvasPanel:GetTall())
+        v:SetPos(8, 0)
+    end
 end
 
 function PANEL:OnCategorySelected(name)
