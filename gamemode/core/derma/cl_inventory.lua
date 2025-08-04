@@ -652,6 +652,9 @@ function PANEL:AddIcon(model, x, y, w, h, skin)
             panel:SetCamPos(pos)
             panel:SetFOV(fov)
             panel:SetLookAng(ang)
+
+            ent:SetColor(itemTable.color or color_white)
+            ent:SetMaterial(itemTable.material or "")
         end
 
         if (self.panels[itemTable:GetID()]) then
