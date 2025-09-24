@@ -391,6 +391,15 @@ function GM:TranslateActivity(client, act)
         return newAct
     end
 
+    local weaponRaised = client:IsWepRaised()
+    local weapon = client:GetActiveWeapon()
+    if ( IsValid(weapon) ) then
+        -- Support for ARC9
+        if ( weapon.GetSafe and weapon:GetSafe() ) then
+            weaponRaised = false
+        end
+    end
+
     local animTable = clientTable.ixAnimTable
     if ( animTable ) then
         if ( !animTable[ACT_MP_JUMP] ) then
@@ -401,7 +410,7 @@ function GM:TranslateActivity(client, act)
 
         if ( animTable ) then
             if ( istable(animTable) ) then
-                local preferred = animTable[client:IsWepRaised() and 2 or 1]
+                local preferred = animTable[weaponRaised and 2 or 1]
                 newAct = preferred
             else
                 newAct = animTable
