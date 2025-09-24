@@ -26,6 +26,57 @@ else
     end
 end
 
+function meta:PlayGesture(slot, sequence)
+    if ( !isnumber(slot) or slot < 0 or slot > 6 ) then
+        ax.util:PrintError("Invalid gesture slot provided to Player:PlayGesture()")
+        return nil
+    end
+
+    if ( isstring(sequence) ) then
+        sequence = self:LookupSequence(sequence)
+        print("Player:PlayGesture() - Converted string sequence to ID:", sequence)
+    end
+
+    sequence = sequence or -1
+
+    if ( !isnumber(sequence) or sequence < 0 ) then
+        print("Invalid gesture sequence provided to Player:PlayGesture()")
+        return nil
+    end
+
+    if ( CLIENT ) then
+        self:AddVCDSequenceToGestureSlot(slot, sequence, 0, true)
+    else
+        net.Start("ixPlayerGesture")
+            net.WritePlayer(self)
+            net.WriteUInt(slot, 8)
+            net.WriteUInt(sequence, 16)
+        net.SendPVS(self:GetPos())
+    end
+end
+
+--- Returns the hold type of the player's active weapon, translated to a compatible hold type if necessary.
+-- If the player does not have a valid weapon, "normal" is returned.
+-- @realm shared
+-- @treturn string The hold type of the player's active weapon
+function meta:GetHoldType()
+    if ( !IsValid(self) ) then return "normal" end
+
+    local weapon = self:GetActiveWeapon()
+    if ( !IsValid(weapon) ) then
+        print("Warning: Player " .. self:Nick() .. " does not have a valid weapon!")
+        return "normal"
+    end
+
+    local holdType = weapon:GetHoldType()
+    if ( !holdType ) then
+        print("Warning: Weapon " .. weapon:GetClass() .. " returned nil hold type!")
+        return "normal"
+    end
+
+    return HOLDTYPE_TRANSLATOR[holdType] or holdType
+end
+
 --- Returns `true` if the player has their weapon raised.
 -- @realm shared
 -- @treturn bool Whether or not the player has their weapon raised

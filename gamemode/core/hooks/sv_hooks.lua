@@ -5,6 +5,7 @@ util.AddNetworkString("ixPlayerEndVoice")
 util.AddNetworkString("ixPlayerLoadout")
 util.AddNetworkString("ixPlayerStartVoice")
 util.AddNetworkString("ixStartChat")
+util.AddNetworkString("ixPlayerGesture")
 
 gameevent.Listen("OnRequestFullUpdate")
 hook.Add("OnRequestFullUpdate", "ixOnRequestFullUpdate", function(data)
