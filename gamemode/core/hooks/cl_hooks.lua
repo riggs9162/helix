@@ -982,6 +982,14 @@ net.Receive("ixPlayerDeath", function()
     ix.gui.deathScreen = vgui.Create("ixDeathScreen")
 end)
 
+
+net.Receive("ixPlayerGesture", function(len)
+    local sender = net.ReadPlayer()
+    local slot = net.ReadUInt(8)
+    local sequence = net.ReadUInt(16)
+    sender:PlayGesture(slot, sequence)
+end)
+
 function GM:Think()
     local client = LocalPlayer()
     if (IsValid(client) and client:Alive() and client.ixRaisedTween) then
