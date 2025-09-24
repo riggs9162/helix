@@ -91,20 +91,11 @@ function GM:EntityRemoved(entity)
     end
 end
 
-local function UpdateAnimationTable(client, weapon)
+local function UpdateAnimationTable(client)
     if ( !IsValid(client) ) then return end
 
-    if ( !IsValid(weapon) ) then
-        weapon = client:GetActiveWeapon()
-
-        if ( !IsValid(weapon) ) then
-            client:GetTable().ixAnimTable = nil
-            return
-        end
-    end
-
     local clientTable = client:GetTable()
-    local holdType = weapon:GetHoldType()
+    local holdType = client:GetHoldType()
 
     holdType = HOLDTYPE_TRANSLATOR[holdType] or holdType
 
@@ -119,7 +110,11 @@ local function UpdateAnimationTable(client, weapon)
 end
 
 function GM:PlayerWeaponChanged(client, weapon)
-    UpdateAnimationTable(client, weapon)
+    -- we need to delay this to the next frame because the weapon might not be fully
+    -- initialized yet and we need to get its hold type
+    timer.Simple(0, function()
+        UpdateAnimationTable(client)
+    end)
 
     if ( CLIENT ) then return end
 

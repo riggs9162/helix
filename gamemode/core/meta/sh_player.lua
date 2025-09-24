@@ -68,7 +68,7 @@ function meta:GetHoldType()
         return "normal"
     end
 
-    local holdType = weapon:GetHoldType()
+    local holdType = weapon.GetHoldType and weapon:GetHoldType() or weapon.HoldType or "normal"
     if ( !holdType ) then
         print("Warning: Weapon " .. weapon:GetClass() .. " returned nil hold type!")
         return "normal"
