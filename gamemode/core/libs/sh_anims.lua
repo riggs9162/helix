@@ -1017,6 +1017,17 @@ for _, model in pairs(player_manager.AllValidModels()) do
     ix.anim.SetModelClass(model, "player")
 end
 
+for t = 1, 3 do
+    for i = 1, 9 do
+        ix.anim.SetModelClass("models/humans/group0" .. t .. "/male_0" .. i .. ".mdl", "citizen_male")
+    end
+
+    for i = 1, 7 do
+        if ( i == 5 ) then continue end
+        ix.anim.SetModelClass("models/humans/group0" .. t .. "/female_0" .. i .. ".mdl", "citizen_female")
+    end
+end
+
 if (SERVER) then
     util.AddNetworkString("ixSequenceSet")
     util.AddNetworkString("ixSequenceReset")
