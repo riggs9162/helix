@@ -338,12 +338,14 @@ function ITEM:SetData(key, value, receivers, noSave, noCheckEntity)
 		end
 	end
 
-	if (receivers != false and (receivers or self:GetOwner())) then
+	local inventory = ix.item.inventories[self.invID]
+
+	if (receivers != false and (receivers or inventory and inventory.GetReceivers and inventory:GetReceivers() or self:GetOwner())) then
 		net.Start("ixInventoryData")
 			net.WriteUInt(self:GetID(), 32)
 			net.WriteString(key)
 			net.WriteType(value)
-		net.Send(receivers or self:GetOwner())
+		net.Send(receivers or inventory and inventory.GetReceivers and inventory:GetReceivers() or self:GetOwner())
 	end
 
 	if (!noSave and ix.db) then
@@ -485,6 +487,10 @@ function ITEM:Remove(bNoReplication, bNoDelete)
 
 		if (!bNoDelete) then
 			local item = ix.item.instances[self.id]
+
+			if (inv and inv.owner) then
+				hook.Run("InventoryItemRemoved", inv, item)
+			end
 
 			if (item and item.OnRemoved) then
 				item:OnRemoved()
